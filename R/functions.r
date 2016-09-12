@@ -16,7 +16,7 @@ ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
 #' @param tdist Generate disturbances from t dist'n on 3 d.f.? (As opposed to std Normal, the default)
 #' @param tau Magnitude of simulated treatment effect
 #'
-#' @return  Data frame w/ running variable R, x (?), yc, Z, Y
+#' @return  Data frame w/ running variable R, covariate x, yc, Z, Y
 #' @export
 #'
 makeData <- function(n,curve,tdist=FALSE,tau=0){
@@ -26,7 +26,7 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     if(tdist) x <- x+rt(n,3)
     else x <- x+rnorm(n)
 
-    yc <- .5*R+ +ifelse(R< -0.5,curve*R-sign(R)*.5*curve,0)
+    yc <- .5*R+ ifelse(R< -0.5,curve*R-sign(R)*.5*curve,0)
     yc <- yc+if(tdist) rt(n,3) else rnorm(n)
 
     Z <- R>0
