@@ -6,6 +6,6 @@ Accompanies the paper [Limitless regression discontinuity](http://arxiv.org/abs/
 
 ## Power/size simulations
 
-The power and size simulations presented in the August 2016 version of the paper were imported into this repo as part of R/functions.r (I think).   Subsequently (I hope) they were organized into files .... 
+The power and size simulations presented in the August 2016 version of the paper were imported into this repo as part of R/functions.r.   Subsequently (I hope) they were organized into files .... 
 
 
