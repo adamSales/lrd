@@ -5,6 +5,20 @@ library(robustbase)
 library(parallelsugar)
 
 ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
+
+
+#' Create simulated data set
+#'
+#'  With `curve=3` and `tdist=TRUE` we get the simulation as reported in arxiv v3
+#'
+#' @param n size (no. obs) in simulation
+#' @param curve Amount by which magnitude of slope increases as R passes below -.5
+#' @param tdist Generate disturbances from t dist'n on 3 d.f.? (As opposed to std Normal, the default)
+#' @param tau Magnitude of simulated treatment effect
+#'
+#' @return  Data frame w/ running variable R, x (?), yc, Z, Y
+#' @export
+#'
 makeData <- function(n,curve,tdist=FALSE,tau=0){
     R <- runif(n,-1,1)
 
