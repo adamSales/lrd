@@ -1,8 +1,14 @@
-library(nnet)
-library(RItools)
-library(rdd)
-library(robustbase)
-library(parallelsugar)
+
+##---------------------------
+## Library directives needed for various functions below.  (As 
+## dependencies are identified, associate them w/ functions, as in 
+## the Roxygen documentation preceding `sh` below.)
+## library(nnet)
+## library(RItools)
+## library(rdd)
+## library(robustbase)
+## library(parallelsugar)
+##---------------------------
 
 ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
 
@@ -79,6 +85,25 @@ test <- function(data, BW,tau=0,outcome='Y',method='sh'){
     meth(dat)
 }
 
+#' Robust balance test following robust covariate adjustment 
+#' 
+#' The test is the test associated with the Z coefficient after fitting
+#' a model from the robustbase suite that uses Z and R as independent variables.
+#' Covariance adjustment is via robust logistic regression if 
+#' ytilde is binary, robust linear regression otherwise. In the latter case,
+#' since we're using `robustbase::lmrob` with the `MM` method, the SE used 
+#' in the test is of the Huber-White type, allowing for heteroskedasticity 
+#' and accounting for  propagation of errors from the preliminary fitting
+#' done by the robust regression routine. 
+#' 
+#' This is the method recommended in version 2 of Limitless 
+#' Regression Discontinuity
+#'
+#' @param dat Data set with columns \code{ytilde}, \code{Z}, \code{R}
+#'
+#' @return scalar, the p-value associated w/ coefficient on Z
+#' @imports robustbase 
+#' @export
 sh <- function(dat){
     if(length(unique(dat$ytilde))>2)
         mod <- lmrob(ytilde~Z+R,data=dat,method='MM',control=ctl)
