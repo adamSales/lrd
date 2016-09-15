@@ -10,7 +10,6 @@
 ## library(parallelsugar)
 ##---------------------------
 
-ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
 
 
 #' Create simulated data set
@@ -105,6 +104,7 @@ test <- function(data, BW,tau=0,outcome='Y',method='sh'){
 #' @imports robustbase 
 #' @export
 sh <- function(dat){
+  ctl <- lmrob.control(k.max=500,maxit.scale=500)
     if(length(unique(dat$ytilde))>2)
         mod <- lmrob(ytilde~Z+R,data=dat,method='MM',control=ctl)
     else mod <- glmrob(ytilde~Z+R,data=dat,family=binomial)
@@ -117,6 +117,7 @@ cft <- function(dat){
 
 orig <- function(dat,multBal=FALSE){
     logistic <- FALSE
+    ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
     if(isTRUE(all.equal(sort(unique(dat$ytilde)),c(0,1)))) logistic <- TRUE
     if(logistic) mod <- glmrob(ytilde~R,family=binomial(logit),data=dat,control=ctl,method='MM')
     else mod <- lmrob(ytilde~R,data=dat,control=ctl,method='MM')
@@ -330,6 +331,7 @@ benDT <- function(dat,varb){
 }
 
 ben <- function(dat){
+  ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
     dat$Z <- as.numeric(dat$Z)
     mod <- lmrob(ytilde~Z+R,data=dat,method='MM',control=ctl)
 
