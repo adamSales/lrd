@@ -68,4 +68,5 @@ sims.V
 
 ```{r}
 sessionInfo()
+save(sims, sims.V, file="check-sh-deps.RData")
 ```
