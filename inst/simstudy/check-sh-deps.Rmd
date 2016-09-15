@@ -1,0 +1,71 @@
+---
+title: "Checking fitters and variance estimators"
+author: "B"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Dependencies.
+```{r}
+library(robustbase)
+source("../../R/functions.r")
+```
+
+## Simulation
+
+Simulation size.
+```{r}
+nreps = 3
+( nsample = c(5e1, 5e2, 5e3) )
+```
+
+Simulated coefficients and SEs
+```{r}
+sims = list()
+for (ns in nsample)
+sims[[as.character(ns)]] = 
+  replicate(nreps, {
+  ctl <- lmrob.control(k.max=500,maxit.scale=500)
+  dat = makeData(ns,curve=0,tdist=T,tau=0)
+  fit = lmrob(Y~Z+R, data=dat,method='MM',control=ctl)
+  zpos = pmatch('Z', names(coef(fit)))
+  c(coef(fit)[zpos], vhat=vcov(fit)[zpos,zpos])
+})
+```
+
+Are the coefficient estimates biased?  How much?
+```{r}
+sapply(sims, 
+       function(simres) t.test(simres[pmatch('Z', rownames(simres)),]))
+```
+
+How about the variance estimate?
+
+```{r}
+sims.V =
+  sapply(sims, 
+       function(simres) 
+       {
+         zbar = mean(simres[pmatch('Z', rownames(simres)),])
+         zbar.m2 =var(simres[pmatch('Z', rownames(simres)),])
+         zbar.m4 = mean( ((simres[pmatch('Z', rownames(simres)),]) - zbar)^4 )
+           v.simSE = (zbar.m4 - zbar.m2^2)/sqrt(ncol(simres)) 
+           vhatbar = mean(simres['vhat',])
+           vhatbarSE = sd(simres['vhat',])/sqrt(ncol(simres))
+           c(v.sim=zbar.m2, v.simSE=v.simSE, 
+             vhatbar=vhatbar, vhatbarSE=vhatbarSE)
+       }
+         )
+
+sims.V       
+```
+
+### Session details
+
+```{r}
+sessionInfo()
+```
