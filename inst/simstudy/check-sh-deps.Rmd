@@ -17,10 +17,11 @@ source("../../R/functions.r")
 
 ## Simulation
 
-Simulation size.
+Simulation parameters: number of sims, sample sizes, bandwidth.
 ```{r}
 nreps = 3
 ( nsample = c(5e1, 5e2, 5e3) )
+BW = 0.3
 ```
 
 Simulated coefficients, SEs and pvals
@@ -31,6 +32,7 @@ sims[[as.character(ns)]] =
   replicate(nreps, {
   ctl <- lmrob.control(k.max=500,maxit.scale=500)
   dat = makeData(ns,curve=0,tdist=T,tau=0)
+  dat = subset(dat, abs(R)<BW)
   fit = lmrob(Y~Z+R, data=dat,method='MM',control=ctl)
   zpos = pmatch('Z', names(coef(fit)))
   coef(summary(fit))[zpos,]
