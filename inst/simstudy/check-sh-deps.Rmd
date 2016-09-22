@@ -19,7 +19,8 @@ source("../../R/functions.r")
 
 Simulation parameters: number of sims, sample sizes, bandwidth.
 ```{r}
-nreps = 3
+if (!exists('nreps') ) nreps <- 3
+nreps
 ( nsample = c(5e1, 5e2, 5e3) )
 BW = 0.3
 ```
