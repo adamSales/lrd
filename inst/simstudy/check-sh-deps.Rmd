@@ -17,10 +17,18 @@ source("../../R/functions.r")
 
 ## Simulation
 
-Simulation parameters: number of sims, sample sizes, bandwidth.
+Simulation parameters: number of sims; seed.
 ```{r}
+
 if (!exists('nreps') ) nreps <- 3
 nreps
+set.seed(201609)
+
+```
+
+Scenarios to simulate: sample sizes, bandwidth.
+
+```{r}
 ( nsample = c(5e1, 5e2, 5e3) )
 BW = 0.3
 ```
