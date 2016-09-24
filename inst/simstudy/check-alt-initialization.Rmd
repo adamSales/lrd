@@ -38,15 +38,17 @@ Alternate settings for fitter.  The `ks2011like` variant mimics
 recommendations of Koller and Stahel (2011) _other_ than the central
 idea of implementing a 4-step estimator chain.  Sticking with two steps
 enables a sandwich-type variance calculation via
-`robustbase::.vcov.avar1`. 
+`robustbase::.vcov.avar1`.   However, during initial fitting we'll
+stick with covariance estimation via `robustbase:::.vcov.w`, which
+seems less likely to throw errors. 
 
 ```{r}
 
 controlsettings <- list()
-controlsettings$SMdefaults <- lmrob.control()
+controlsettings$SMdefaults <- lmrob.control(cov = '.vcov.w')
 controlsettings$ks2011like <- lmrob.control(method = 'SM', 
 psi = 'lqq', max.it = 500,
-     k.max = 2000)
+     k.max = 2000, cov = '.vcov.w')
 
 ```
 
@@ -77,8 +79,8 @@ for (ns in nsample)
                         fit = robustbase::lmrob(Y~Z+R, data=dat,
                             control=controlsettings[[ctls]],
                             init=initfunctions[[infn]])
-                        fit$method$cov <- "SM"
-                        newcov <- try(robustbase:::.vcov.avar1(fit))
+                        fit$control$method <- "SM"
+                        newcov <- try(robustbase:::.vcov.avar1(fit), silent=TRUE)
                         if (!inherits(newcov, "try-error")) fit$cov <- newcov
                         zpos = pmatch('Z', names(coef(fit)))
                         coef(summary(fit))[zpos,]
