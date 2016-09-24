@@ -34,9 +34,11 @@ BW = 0.3
 ```
 
 Simulated coefficients, SEs and pvals
-```{r}
+```{r, warning=FALSE}
 sims = list()
+simwarnings = list()
 for (ns in nsample)
+    {
 sims[[as.character(ns)]] = 
   replicate(nreps, {
   ctl <- lmrob.control(k.max=500,maxit.scale=500)
@@ -46,6 +48,9 @@ sims[[as.character(ns)]] =
   zpos = pmatch('Z', names(coef(fit)))
   coef(summary(fit))[zpos,]
 })
+simwarnings[[as.character(ns)]] <-
+    if (exists('last.warning')) last.warning else NULL
+}
 ```
 
 Sizes of the tests.
@@ -87,5 +92,5 @@ sims.V
 
 ```{r}
 sessionInfo()
-save(sims, sims.V, file="check-sh-deps.RData")
+save(sims, simwarnings, sims.V, file="check-sh-deps.RData")
 ```
