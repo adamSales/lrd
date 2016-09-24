@@ -52,8 +52,52 @@ test_that("Off-label use of .vcov.avar1()",{
               scale = init.S$scale, 
               residuals = init.S$resid)
      }
-    m3 <- lmrob(Y ~ .  + I(sstatus>0), data=coleman, method = "M", init = initFun3) 
+    m3 <- lmrob(Y ~ .  + I(sstatus>0), data=coleman, method = "M", init = initFun3)
+    ## The answer is in same ballpark as what you get w/ unrestricted `I(sstatus>0)` coef:
+    expect_false(isTRUE(all.equal(coef(m1), coef(m3), tol=.01))) 
+    expect_equal(coef(m1), coef(m3), tol=.02)
     m3$control$method <- "SM"
-    robustbase:::.vcov.avar1(m3, m3$x)
-    
-          })
+    expect_false(all.equal(m1$cov, robustbase:::.vcov.avar1(m3), check.attributes=F))
+    expect_equivalent(m1$cov, robustbase:::.vcov.avar1(m3), tol=.1)
+
+    ## this initfun variant is the same as initfun3, except it zeroes out
+    ## coeff's corresponding to the first term in the regression formula
+    initFun4 <- function(x, y, control, mf) {
+        stopifnot(!is.null(attr(x, "assign")))
+        stopifnot(any( zerocols <- (attr(x, "assign") == 1L) ))
+        xtrunc <- x[, !zerocols]
+        init.S <- lmrob.S(xtrunc, y, control)
+        thecoefs <- numeric(ncol(x))
+        thecoefs[!zerocols] <- init.S$coef
+        list(coefficients=thecoefs, 
+              scale = init.S$scale, 
+              residuals = init.S$resid)
+     }
+    m4 <- lmrob(Y ~ I(sstatus>0) + ., data=coleman, method = "M", init = initFun4)
+    expect_equal(coef(m3), coef(m4)[names(coef(m3))], tol=.01)
+  
+})
+
+test_that("Modified lmrob.S does what it should",{
+    expect_true(require('robustbase'))
+    data(coleman)
+     set.seed(0)
+    m5 <- lmrob(Y ~ I(sstatus>0) + ., data=coleman, method = "M", init = lmrob.S.mod)
+    initFun4 <- function(x, y, control, mf) {
+        stopifnot(!is.null(attr(x, "assign")))
+        stopifnot(any( zerocols <- (attr(x, "assign") == 1L) ))
+        xtrunc <- x[, !zerocols, drop=FALSE]
+        init.S <- lmrob.S(xtrunc, y, control)
+        thecoefs <- numeric(ncol(x))
+        thecoefs[!zerocols] <- init.S$coef
+        list(coefficients=thecoefs, 
+              scale = init.S$scale, 
+              residuals = init.S$resid)
+    }
+         set.seed(0)
+    m4 <- lmrob(Y ~ I(sstatus>0) + ., data=coleman, method = "M", init = initFun4)
+    expect_equivalent(coef(m4), coef(m5))
+    expect_equivalent(vcov(m4), vcov(m5))
+    m5$control$method <- m4$control$method <- "SM"    
+    expect_equivalent(robustbase:::.vcov.avar1(m4), robustbase:::.vcov.avar1(m5))
+})
