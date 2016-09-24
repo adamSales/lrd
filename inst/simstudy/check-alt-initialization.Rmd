@@ -1,0 +1,152 @@
+---
+title: "Alternate S-step initialization for small samples"
+author: "B"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Dependencies.
+```{r}
+library(robustbase)
+source("../../R/functions.r")
+source("../../R/lmrobmods.R")
+```
+
+## Simulation
+
+Simulation parameters: number of sims; seed.
+```{r}
+
+if (!exists('nreps') ) nreps <- 3
+nreps
+set.seed(201609)
+
+```
+
+Scenarios to simulate: sample size(s), bandwidth.
+
+```{r}
+( nsample = c(5e1, 5e2) )
+BW = 0.3
+```
+
+Alternate settings for fitter.  The `ks2011like` variant mimics
+recommendations of Koller and Stahel (2011) _other_ than the central
+idea of implementing a 4-step estimator chain.  Sticking with two steps
+enables a sandwich-type variance calculation via
+`robustbase::.vcov.avar1`. 
+
+```{r}
+
+controlsettings <- list()
+controlsettings$SMdefaults <- lmrob.control()
+controlsettings$ks2011like <- lmrob.control(method = 'SM', 
+psi = 'lqq', max.it = 500,
+     k.max = 2000)
+
+```
+
+Initialization via ordinary S-estimation or S-estimation as modified
+to enforce Z-coefficient to be 0.
+
+```{r}
+
+initfunctions <- list()
+initfunctions$S <- "S"
+(initfunctions$Smod <- lmrob.S.mod)
+
+```
+
+Simulated coefficients, SEs and pvals
+```{r, warning=FALSE}
+sims = list()
+simwarnings = list()
+
+for (ns in nsample)
+    for (ctls in names(controlsettings))
+        for (infn in names(initfunctions))
+            {
+                sims[[paste0(ns, ctls, infn, collapse=":")]] <- 
+                    replicate(nreps, {
+                        dat = makeData(ns,curve=0,tdist=T,tau=0)
+                        dat = subset(dat, abs(R)<BW)
+                        fit = robustbase::lmrob(Y~Z+R, data=dat,
+                            control=controlsettings[[ctls]],
+                            init=initfunctions[[infn]])
+                        fit$method$cov <- "SM"
+                        fit$cov <- robustbase:::.vcov.avar1(fit)
+                        zpos = pmatch('Z', names(coef(fit)))
+                        coef(summary(fit))[zpos,]
+                    })
+                simwarnings[[paste0(ns, ctls, infn, collapse=":")]] <-
+                    if (exists('last.warning')) last.warning else NULL
+            }
+```
+
+Proportion of trials in which convergence was achieved.
+
+```{r}
+
+converged <- sapply( sims, function(simres) sum(!is.na(simres['Std. Error',])) )
+n.trials <- sapply(sims, function(simres) ncol(simres) )
+round(converged/n.trials, 2)
+
+```
+
+Take out the ones for which it didn't converge, to simplify subsequent analysis
+
+```{r}
+for (s in 1L:length(sims))
+    sims[[s]] <- sims[[s]][,!is.na(sims[[s]]['Std. Error',])]
+```
+
+Sizes of the tests (omitting non-converged)
+```{r}
+sapply(sims, 
+       function(simres) {
+           res <- binom.test(sum(simres["Pr(>|t|)",] <=.05, na.rm=T), 
+                            ncol(simres), p=.05)[c('p.value', 'estimate', 'conf.int', 'alternative')]
+           c(list(n.notNA=ncol(simres)), res)
+       }
+)
+```
+Are the coefficient estimates biased?  How much?
+```{r}
+sapply(sims, 
+       function(simres) {
+           res <-  t.test(simres["Estimate",])[c('p.value', 'estimate', 'conf.int', 'alternative')]
+       c(list(n.notNA=ncol(simres)), res)
+   } )
+```
+
+How about the variance estimate?
+
+```{r}
+sims.V =
+  sapply(sims, 
+       function(simres) 
+       {
+         zbar = mean(simres["Estimate",])
+         zbar.m2 =var(simres["Estimate",])
+         zbar.m4 = mean( ((simres["Estimate",]) - zbar)^4 )
+           v.simSE = (zbar.m4 - zbar.m2^2)/sqrt(ncol(simres)) 
+           vhatbar = mean(simres['Std. Error',]^2)
+           vhatbarSE = sd(simres['Std. Error',]^2)/sqrt(ncol(simres))
+           c(v.sim=zbar.m2, v.simSE=v.simSE, 
+             vhatbar=vhatbar, vhatbarSE=vhatbarSE)
+       }
+         )
+
+sims.V       
+```
+
+### Session details
+
+```{r}
+sessionInfo()
+save(sims, simwarnings, converged, n.trials, sims.V, file="check-alt-initialization.RData")
+```
