@@ -78,7 +78,8 @@ for (ns in nsample)
                             control=controlsettings[[ctls]],
                             init=initfunctions[[infn]])
                         fit$method$cov <- "SM"
-                        fit$cov <- robustbase:::.vcov.avar1(fit)
+                        newcov <- try(robustbase:::.vcov.avar1(fit))
+                        if (!inherits(newcov, "try-error")) fit$cov <- newcov
                         zpos = pmatch('Z', names(coef(fit)))
                         coef(summary(fit))[zpos,]
                     })
