@@ -1,0 +1,633 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsthm}%,amssymb,amsfonts
+\usepackage[authoryear]{natbib}
+\usepackage{fullpage}
+\newcommand{\PP}{\mathrm{Pr}}
+\newcommand{\EE}{\mathbf{E}}
+\newcommand{\var}{\mathrm{Var}}
+\newcommand{\cov}{\mathrm{Cov}}
+ \newtheorem{prop}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newcommand{\mystrut}{\rule{0pt}{2\baselineskip}}
+
+\begin{document}
+
+To do's:
+\begin{itemize}
+\item Go through expressions for A matrices \& replace $\nabla U$'s
+  with $\nabla \EE U$'s. 
+\end{itemize}
+
+\section*{Chain of estimating equations}
+A ``detrending'' step gives rise to parameter estimates $\hat\theta$, 
+empirical solutions of a system of $k$ estimating equations.  The corresponding estimating
+function corresponds abstractly to a $k \times 1$ column vector
+$U(\theta)$ and concretely, post-estimation, to a $n \times k$ matrix
+$\mathbf{U}(\theta) = \{ [U_{i}(\theta)]^{t} : i \}$, and $k \times 1$
+column vector $\bar{U}(\theta) = n^{-1} \sum U_{i}(\theta)$. The
+purpose of this step is to set parameters involved in a residual
+transformation, $e_{\hat{\theta}} (\tilde{y} | r)$, which in turn figures in
+subsequent tests of treatment effect hypotheses.
+
+Suppose $U(\theta)$ and $\theta$ to be partitionable as $[U_{0}(\theta_{0}) \, ;\, 
+U_{1}(\theta_{0}, \theta_{1})  \, ;\,  U_{2}(\theta_{1}, \alpha)]$ and $\theta =
+(\theta_{0}, \theta_{1}, \alpha)$, respectively, with neither
+$\theta_{0}$ nor $\alpha$ figuring in the residual transformation, 
+ $e_{\theta} (\tilde{y} | r) \equiv e_{\theta_{1}} (\tilde{y} | r)$,
+ and 
+$$U_{2}(\theta_{1}, \alpha)  := e_{\theta} (\tilde{Y} | R) -
+\alpha.$$
+ (This structure would arise in robust MM-estimation of a linear detrender, which involves
+preliminary estimation of the scale parameter.  Then $\theta_{0}$
+consists of this scale parameter and associated preliminary
+coefficients.  Robust fitting ordinarily will not impose the constraint
+that $\sum_{i} e_{\hat{\theta}} (\tilde{y}_{i} | r_{i}) =0$, except
+with specially selected $e_{\theta}(\cdot | \cdot)$; i.e. $\alpha$ may differ from 0.) 
+Since $U_{2}(\hat{\theta}_{1}, \hat{\alpha}) = 0$, the definition of
+$U_{2}$ is equivalent to defining $\hat\alpha$ as $\overline{[e_{\hat{\theta}_{1}} (\tilde{Y} | R)]}$.
+We also have $\mathbf{U}(\theta) = [\mathbf{U}_{0}(\theta_{0})\, ;\, 
+\mathbf{U}_{1}(\theta_{0}, \theta_{1}) \, ;\, e_{\theta} (\tilde{\mathbf{Y}} |
+\mathbf{R}) - \alpha ]$; $\bar{U} = [\bar{U}_{0}^{t} ;
+\bar{U}_{1}^{t};  \bar{U}_{2}]^{t}$. 
+
+Our goal is to test $H: \EE \{ e_{\theta} (\tilde{Y} | R) | Z=1 \} =
+\EE \{ e_{\theta} (\tilde{Y} | R) | Z=0 \} $ The induced parameter $\alpha$ figures in a device for
+representing the test statistic $\overline{\big[ e_{\theta}(\tilde{Y} | R)]}_{Z=1} - \overline{\big[
+  e_{\theta}(\tilde{Y} | R )]}_{Z=0}$ in terms of yet another link in the estimating
+function chain.  Define  
+\begin{equation*} 
+    V(\theta, \tau) = Z \{e_{\theta}(\tilde{Y} | R) - \alpha -
+    \tau\}, 
+\end{equation*}
+so that $\bar{V}(\theta, \tau) = \bar{Z} \cdot \left\{
+  \overline{\big[e_{\theta}(\tilde{Y} | R) \big]}_{Z=1} - \alpha
+\right\}$. This definition of $\hat\tau$, as the solution of
+$\bar{V}(\hat\theta, \tau)$, is equivalent to 
+\begin{align*}
+\hat\tau &=
+\overline{\big[e_{\theta}(\tilde{Y} | R) \big]}_{Z=1} -
+            \overline{\big[e_{\theta}(\tilde{Y} | R) \big]}  \\
+&= (1-\bar{Z})  \big\{ \overline{\big[ e_{\theta}(\tilde{Y} | R)]}_{Z=1} - \overline{\big[
+  e_{\theta}(\tilde{Y} | R )]}_{Z=0}  \big\}.
+\end{align*}
+So we can recover the variance of (this random multiple of) $\overline{\big[ e_{\theta}(\tilde{Y} | R)]}_{Z=1} - \overline{\big[
+  e_{\theta}(\tilde{Y} | R )]}_{Z=0}$ as the $(\tau, \tau)$ 
+component of the covariance of  $(\hat\theta, \hat\tau)$ --- which we
+estimate in turn by analysis of the estimating equation stack 
+\begin{equation*}
+  \left[
+    \begin{array}{c}
+      \bar{U}(\theta) \\
+      \bar{V}(\theta, \tau)
+    \end{array}
+\right] = 0 . 
+\end{equation*}
+To accomplish this analysis we repeatedly apply formulas for
+covariances of chains of estimating equations.  
+
+\section*{$A_{UU}$, $B_{UU}$ and $\widehat{\var}(\hat\theta)$}
+Applied to $U$ alone, the sandwich formula
+\citep{stefanski2002calculus} alleges that $\var [ \hat\theta]  \approx
+n^{-1}  A_{UU}^{-1} B_{UU} A_{UU}^{-t}$, where 
+\begin{align*}
+  A_{UU} =& \nabla_{\theta} \bar{U} =
+\nabla_{\theta} \left[
+            \begin{array}{c}
+              \bar{U}_{0}(\theta_{0}) \\
+              \bar{U}_{1}(\theta_{0}, \theta_{1}) \\
+               \bar{U}_{2}(\theta_{0}, \theta_{1}, \alpha )
+            \end{array}
+\right] =
+\left[
+      \begin{array}{ccc}
+        A_{00} & 0 & 0\\ 
+A_{10} & A_{11} & 0 \\ 
+A_{20} & A_{21} & A_{22} \\
+      \end{array}
+\right]  \\
+\end{align*}
+and 
+\begin{equation*}
+%\nonumber
+ B_{UU} =   \left[ \begin{array}{ccc}
+        B_{00} & B_{10}^{t} & B_{20}^{t} \\ 
+B_{10} & B_{11} & B_{21}^{t} \\ 
+B_{20} & B_{21} & B_{22} \\
+      \end{array}
+\right]   .
+\end{equation*}
+
+
+To simplify matrix algebra, define 
+\begin{align*}
+A_{[01][01]} &= \nabla_{\theta_{0}, \theta_{1}}   
+\left[
+            \begin{array}{c}
+              \bar{U}_{0}(\theta_{0}) \\
+              \bar{U}_{1}(\theta_{0}, \theta_{1}) \\
+            \end{array}
+\right] = \left[
+  \begin{array}{cc}
+    A_{00}& 0 \\
+    A_{10} & A_{11} \\
+  \end{array}
+\right],\\
+A_{2[01]} &= \nabla_{\theta_{0}, \theta_{1}} \bar{U}_{2}  = \left[
+            A_{20} \, ;\, A_{21} \right] = [0 \, ; \, \nabla_{\theta_{1}} \overline{[e_{\theta}(\tilde{Y} | R)]}];\\
+B_{[01][01]} &= \left[
+               \begin{array}{cc}
+                 B_{00}& B_{10}^{t} \\
+                 B_{10} & B_{11} \\
+               \end{array}
+\right] ,\\
+B_{2[01]} &= \mathbf{U}_{2}^{t} [ \mathbf{U}_{0} \,;\, \mathbf{U}_{1}
+            ] .
+\end{align*}
+This allows us to write 
+\begin{align*}
+A_{UU}&= \left[
+  \begin{array}{cc}
+    A_{[01][01]} & 0 \\ 
+      A_{2[01]} & -1
+  \end{array}
+\right] 
+ \\
+% &= \left[
+%   \begin{array}{cc}
+%     A_{[01][01]} & 0 \\  {}
+%       [0\, ; \, \nabla_{\theta_{1}} \overline{[e_{\theta}(\tilde{Y} | R)]}]
+%                                       & -1
+%   \end{array}
+% \right] , 
+%  \\
+\end{align*}
+where $A_{2[01]} = \nabla_{\theta_{0}, \theta_{1}}
+    \overline{[e_{\theta}(\tilde{Y} | R ) ]}$.   
+
+% since $A_{20} = \nabla_{\theta_{0}}
+%     \overline{[e_{\theta_{1}}(\tilde{Y} | R ) ]} = 0$. 
+Also
+\begin{align*}
+B_{UU} &=  \left[ \begin{array}{cc}
+              B_{[01][01]}& n^{-1}\mathbf{U}_{[01]}^{t}  U_{2}\\ 
+              n^{-1} U_{2}^{t}\mathbf{U}_{[01]} & \hat{\sigma}^{2}_{
+                                                  e_{\theta}(\tilde{Y}|R)
+                                                  } \\ 
+      \end{array}
+\right]  , \\  
+\end{align*}
+$\hat{\sigma}^{2}_{ e_{\theta}(\tilde{Y}|R) }  = n^{-1}U_{2}'U_{2}$.
+In virtue of $A_{[01][01]}$ and $A_{UU}$ both having 0 upper-right
+submatrices, 
+\begin{align*}
+A_{[01][01]}^{-1} &=\left[
+               \begin{array}{cc}
+                 A_{00}^{-1}& 0 \\
+                  A_{11}^{-1} A_{10}A_{00}^{-1} & A_{11}^{-1} \\
+               \end{array}
+\right] \, \mathrm{and} \\
+  A_{UU}^{-1} &= \left[
+    \begin{array}{cc}
+      A_{[01][01]}^{-1}& 0 \\[1ex] {}
+       \{ \nabla_{\theta_{0}, \theta_{1}}
+      \overline{[e_{\theta}(\tilde{Y} | R)]} \} A_{[01][01]}^{-1} & -1 \\
+    \end{array}
+\right]  
+%% BELOW was a 3x3 rep'n that on reflection wasn't needed & pulled
+%% reader's attn into details prematurely. 
+% ,\, \mathrm{so}\\
+%   A_{UU}^{-1} &=\left[
+%                 \begin{array}{ccc}
+%                   A_{00}^{-1}& 0 & 0 \\
+%                   A_{11}^{-1} A_{10}A_{00}^{-1} & A_{11}^{-1} & 0 \\
+%                   \{\nabla_{\theta_{1}} \overline{[e_{\theta}(\tilde{Y} | R)]}\} A_{11}^{-1} A_{10}A_{00}^{-1} & \{\nabla_{\theta_{1}} \overline{[e_{\theta}(\tilde{Y} | R)]}\}A_{11}^{-1} & -1 \\
+%                 \end{array}
+% \right] 
+.
+\end{align*}
+
+Putting $A_{UU}^{-1}$ and $B_{UU}$ together gives sandwich estimates of $\var (\hat\theta)
+= \mathrm{Cov} ([\hat{\theta}_{0}, \hat{\theta}_{1}, \hat{\alpha}])$.
+Knowing that $\hat{\theta}_{0}$ won't directly contribute to the test
+statistic, one might restrict attention to $B_{UU}$ and the submatrix
+of $A_{UU}^{-1}$ consisting of its lowermost rows, the gradients of $U_{1}(\theta_{0}, \theta_{1})$
+and $U_{2}(\theta_{0}, \theta_{1}, \alpha)$. If we calculate and store
+$A_{11}^{-1}A_{10}A_{00}^{-1}$ and $A_{11}^{-1}$, we won't also need to store $A_{00}^{-1}$ in order to estimate $\mathrm{Cov}
+([\hat{\theta}_{1}, \hat{\alpha}]) $. 
+
+Ultimately we're interested in  $\var\hat\tau$, not $\mathrm{Cov} (\hat\theta)$; 
+$\mathrm{Cov} ([\hat\theta;  \hat\tau])$ is more relevant.  We'll see
+that for computing the $\var (\hat\tau)$ component of that covariance
+we won't need $A_{00}^{-1}$, either, provided that we have $A_{11}^{-1}A_{10}A_{00}^{-1}$ and $A_{11}^{-1}$. 
+
+But it's useful to note
+the quantities that a sandwich estimation routine will have to have
+computed, directly or indirectly, en route to providing sandwich
+estimates of $\var (\hat{\theta}_{1})$: $A_{11}^{-1} A_{10}A_{00}^{-1}$ and $A_{11}^{-1}$, if not
+necessarily the other part of $A_{[01][01]}^{-1}$ (ie $A_{00}^{-1}$).
+
+\section{$A_{VU}$, $A_{VV}$, $B_{UV}$, $B_{VV}$ and $\mathrm{Cov}(\hat\tau)$}
+
+The sandwich formula also says $\mathrm{Cov}(\hat\theta, \hat\tau) \approx  n^{-1} A^{-1} B A^{-t}$, where
+\begin{eqnarray*}
+  A =& \nabla_{\theta, \tau} \left(
+       \begin{array}{c}
+         \bar{U}\\ \bar{V}
+       \end{array}
+\right) =\left[
+      \begin{array}{c|c}
+        A_{UU} & 0 \\ \hline
+A_{VU} & A_{VV} \\
+      \end{array}
+\right] 
+= \left[
+  \begin{array}{c|c}
+    A_{UU}  & 0 \\ \hline
+       \nabla_{\theta} \bar{V}
+                                      & (\partial/\partial \tau)
+                                        \bar{V} \\
+  \end{array}
+\right] \\
+=& \left[
+  \begin{array}{c|c}
+    A_{UU}  & 0 \\ \hline
+       A_{VU} & - \bar{Z}\\
+  \end{array}
+\right] , \\
+\end{eqnarray*}
+where 
+\begin{align*}
+  A_{VU} &= \nabla_{\theta} \bar{V} = \nabla_{\theta_{0}, \theta_{1},
+           \alpha} \bar{Z} \{ \overline{\big[e_{\theta}(\tilde{Y} | R)
+           \big]}_{Z=1} -\alpha -\tau \}  \\
+&= \bar{Z}  \cdot  [0 \, ; \, \nabla_{\theta_{1}} \{      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} \} \, ;\,  -1  ], 
+\end{align*}
+and 
+\begin{equation*}
+%\nonumber
+ B =   \left[ \begin{array}{c|c}
+        B_{UU} & B_{VU}^{t} \\ \hline
+B_{VU} & B_{VV} \\
+      \end{array}
+\right]  
+ =  \left[ \begin{array}{cc}
+            B_{UU} & n^{-1}\mathbf{U}^{t}\mathbf{V} \\ 
+              n^{-1}\mathbf{V}^{t}\mathbf{U} &
+                                                       \bar{Z} \hat{\sigma}^{2}_{ e_{\theta}(\tilde{Y}|R) | Z=1} \\
+      \end{array}
+\right]  , 
+\end{equation*}
+$\hat{\sigma}^{2}_{ e_{\theta}(\tilde{Y}|R) | Z=1}  =   \mathbf{V}^{t}\mathbf{V}/(\mathbf{Z}'\mathbf{Z})$.
+
+% (don't need this anymore)
+% \begin{equation*}
+% A=   \left[
+%    \begin{array}{ccc}
+%          A_{[01][01]} & 0 & 0 \\ 
+%       \nabla_{\theta_{0},\theta_{1}} \overline{[e_{\theta_{1}}(\tilde{Y} | R ) ]}
+%                                       & -1 & 0 \\
+% \bar{Z}  \nabla_{\theta_{0}, \theta_{1}} \{ \overline{[e_{\theta}(\tilde{Y} |
+%     R)]}_{Z=1} \}\,  &  -\bar{Z}   & -\bar{Z}
+%    \end{array}
+% \right] 
+% \end{equation*}
+The lower-left entry of $A^{-1}BA^{-t}$, ie. $n\widehat{\var}
+(\hat\tau)$, depends only on $B$ and $A^{-1}$'s bottom row. 
+
+Applying inversion formulas for blocked matrices with upper-right 0's
+as above,
+\begin{equation}
+  \label{eq:1}
+  A^{-1} = \left[
+    \begin{array}{c|c}
+      A_{UU}^{-1}& 0 \\[1ex] \hline
+      \bar{Z}^{-1} A_{VU}A_{UU}^{-1} & - \bar{Z}^{-1}
+    \end{array}
+\right] .
+\end{equation}
+The lower-left submatrix (left part of bottom row) is expressible as 
+\begin{align*}
+  \bar{Z}^{-1} A_{VU}A_{UU}^{-1} &=  \left[\{ \nabla_{\theta_{0}, \theta_{1}} 
+  \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} \} \, ;\,  -1  \right]
+  \left[
+    \begin{array}{cc}
+      A_{[01][01]}^{-1}& 0 \\[1ex] {}
+       \{ \nabla_{\theta_{0}, \theta_{1}}
+      \overline{[e_{\theta}(\tilde{Y} | R)]} \} A_{[01][01]}^{-1} & -1 \\
+    \end{array}
+\right]  \\
+&= \left[\{ \nabla_{\theta_0 , \theta_1}
+  \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} \}  A_{[01][01]}^{-1} -
+  \{ \nabla_{\theta_{0}, \theta_{1}}
+      \overline{[e_{\theta}(\tilde{Y} | R)]} \} A_{[01][01]}^{-1}\, ;
+      \, 1 \right] \\
+&= \left[ ( \nabla_{\theta_0 , \theta_1} \{
+  \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1}  -
+  \overline{[e_{\theta}(\tilde{Y} | R)]} \} ) A_{[01][01]}^{-1} \, ;
+  \, 1 \right] \\
+&= \bigg[ \big[ 0 \, ; \,  \nabla_{\theta_1}  \{
+  \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1}  -
+  \overline{[e_{\theta}(\tilde{Y} | R)]} \} \big] A_{[01][01]}^{-1} \, ;
+  \, 1 \bigg] ,\\
+\end{align*}
+the final equality following from  $e_{\theta}(\cdot | \cdot) \equiv
+e_{\theta_{1}} (\cdot \ \cdot)$. So the bottom row as a whole is 
+\begin{align*}
+ \bigg[ \big[ 0& \, ; \,  \nabla_{\theta_1}  \{
+  \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1}  -
+  \overline{[e_{\theta}(\tilde{Y} | R)]} \} \big] A_{[01][01]}^{-1} &\, ;
+  \, 1 \, ; \, -\bar{Z}^{-1} \bigg] \\
+  \bigg[ \big[ 0& \, ; \,  \nabla_{\theta_1}  \{
+  \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1}  -
+  \overline{[e_{\theta}(\tilde{Y} | R)]} \} \big] \left[
+               \begin{array}{cc}
+                 A_{00}^{-1}& 0 \\
+                  A_{11}^{-1} A_{10}A_{00}^{-1} & A_{11}^{-1} \\
+               \end{array}
+\right]  &\, ;
+  \, 1 \, ; \, -\bar{Z}^{-1} \bigg] \\
+\bigg[
+   \nabla_{\theta_{1}} &\{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -  \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  A_{11}^{-1}
+    A_{10} A_{00}^{-1} \, ; \, 
+\nabla_{\theta_{1}} \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1}  -
+                         \overline{[e_{\theta}(\tilde{Y} | R)]}\}
+                         A_{11}^{-1}  &\, ; \, 
+1 \, ; \,   - \bar{Z}^{-1} \bigg] 
+\end{align*}
+
+and the lower-right entry of $n^{-1} A^{-1} B A^{-t}$ is 
+\begin{align*}
+n^{-1}\left[ \nabla_{\theta_{1}} \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  [ A_{11}^{-1}  
+    A_{10} A_{00}^{-1} \, ; \,  A_{11}^{-1} ] \, ; \,
+1 \, ; \,  - \bar{Z}^{-1} \right] \\
+\cdot B \left[
+  \begin{array}{c}
+    A_{00}^{-t} A_{10}^{t} A_{11}^{-t} \nabla_{\theta_{1}}^{t} \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}   \\  A_{11}^{-t} \nabla_{\theta_{1}}^{t} \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  \\
+1 \\  - \bar{Z}^{-1}
+  \end{array}
+\right]  ,
+\end{align*}
+with
+\begin{equation*}
+  B= \left[
+    \begin{array}{cccc}
+      B_{[01][01]} &  & n^{-1}\mathbf{U}_{0}^{t}\mathbf{U}_{2} &
+                                                                 n^{-1}\mathbf{U}_{0}^{t}
+                                                                 \mathbf{V} \\ 
+      &  & n^{-1} \mathbf{U}_{1}^{t} \mathbf{U}_{2} &
+                                                          n^{-1}\mathbf{U}_{1}^{t}\mathbf{V}
+      \\
+     n^{-1} \mathbf{U}_{2}^{t}\mathbf{U}_{0} & n^{-1}
+                                                \mathbf{U}_{2}^{t}\mathbf{U}_{1}
+                                                        & n^{-1}
+                                                \mathbf{U}_{2}^{t}\mathbf{U}_{2}
+                                                               &
+                                                                 n^{-1}\mathbf{U}_{2}^{t} \mathbf{V}
+      \\
+     n^{-1}\mathbf{V}^{t}\mathbf{U}_{0} &
+                                              n^{-1}\mathbf{V}^{t}\mathbf{U}_{1}
+                                                        &
+                                                          n^{-1}\mathbf{V}^{t}
+                                                          \mathbf{U}_{2}
+      &\bar{Z} \hat{\sigma}^{2}_{ e_{\theta}(\tilde{Y}|R) | Z=1}\\
+    \end{array}
+\right] .
+\end{equation*}
+
+To summarize what this means for computation:
+
+\begin{itemize}
+\item In terms of A matrices (bread), what's needed from the 0 and 1
+  fits is the same as what a fitting or covariance estimation routine
+  has to carry forward from stage 0 in order to build a proper
+  sandwich estimate of stage 1 coefficients, $\var (\theta_{1})$.  For
+  this one needs only the lower, $U_{1}$ submatrix of
+  $A_{[01][01]}^{-1}$.
+\item In terms of B matrices (meat), one appears to need everything
+  from stages 0 and 1. 
+\end{itemize}
+
+ 
+\section*{Simplifications when detrending parameters are estimated via M-S}
+
+The $B$-matrix requirements are meaningfully reduced in
+the important  special case that stages 0 and 1 comprise an
+S/M estimator chain, a.k.a. MM estimators
+\citet{yohai1987highefficiencyrobust}.  This is noted by \citet*{crouxetal2004robustSEforrobustreg},
+whose development is the basis for sandwich estimates of variance for
+robust regression as implemented in matlab, stata and R. 
+
+
+When $\bar{U}_{0} = 0$ defines estimates of scale and regression
+parameters $\sigma$ and $\beta_{0}$, so that $\theta_{0} =
+(\sigma, \beta_{0})$, separate the estimating functions as $U_{0} = [U_{\beta_{0}} \, ; \,
+U_{\sigma} ]$.  In S-estimation $\nabla_{\beta_{0}} 
+U_{\sigma} \propto U_{\beta_{0}}$. Since  $\EE
+U_{\beta_{0}}(\sigma, \beta_{0}) = 0$, with a bounded $\rho$ and
+$\psi$ functions we have $\nabla_{\beta_{0}}
+\EE U_{\sigma}(\sigma, \beta_{0}) =0$; the A-matrix simplifies:
+\begin{align*}
+  A_{00} &= \left[
+    \begin{array}{cc}
+      \nabla_{\beta_{0}} \EE \bar{U}_{\beta_{0}} & \partial/{\partial \sigma}
+                                                  \EE
+                                                  \bar{U}_{\beta_{0}}
+      \\
+      0 & \partial/{\partial \sigma} \EE \bar{U}_{\sigma}
+    \end{array}
+\right] , \, \mathrm{so} \\
+ A_{00}^{-1} &= \left[
+    \begin{array}{cc}
+      (\nabla_{\beta_{0}} \EE \bar{U}_{\beta_{0}})^{-1} & (\nabla_{\beta_{0}} \EE \bar{U}_{\beta_{0}})^{-1} (\partial/{\partial \sigma}
+                                                  \EE
+                                                  \bar{U}_{\beta_{0}})/(\partial/{\partial \sigma} \EE \bar{U}_{\sigma})
+      \\
+      0 &(\partial/{\partial \sigma} \EE \bar{U}_{\sigma})^{-1}
+    \end{array}
+\right]
+\end{align*}
+
+It gets better en route to inverting $A_{[01][01]}$. The bottom-left
+submatrix of $A_{[01][01]}$ is $A_{11}^{-1} A_{10} A_{00}^{-1}$.  The
+$A_{10}$ in the middle simplifies because $\beta_{0}$ doesn't figure
+in $U_{1}$ --- to first order, the only part of the 0 step that
+influences the solution of the 1 step is $\hat{\sigma}_{0}$.   That
+is, 
+\begin{align*}
+  A_{10} &= \nabla_{\beta_{0}, \sigma} \EE \bar{U}_{1}  = 
+                                                              [\nabla_{\beta_{0}}
+                                                              \EE
+                                                              \bar{U}_{1}
+                                                              \, ; \,
+                                                              \partial/{\partial \sigma}
+                                                              \EE
+                                                              \bar{U}_{1}
+                                                              ] \\
+&= [ 0\, ; \, \nabla_{\sigma} \EE \bar{U}_{1} ]
+\end{align*}
+When the matrices are multiplied we get
+\begin{equation*}
+  A_{10}A_{00}^{-1} = \left[ \mathbf{0} \, ; \,  (\partial/{\partial \sigma} \EE \bar{U}_{\sigma})^{-1}\nabla_{\sigma} \EE \bar{U}_{1} \right] .
+\end{equation*}
+In consequence, $A_{11}^{-1} A_{10} A_{00}^{-1}$ can also be blocked with
+0's at left and at right a single nonzero column:
+
+\begin{equation*}
+A_{11}^{-1} A_{10}A_{00}^{-1} =  [ \mathbf{0} \, ; \, (\partial/{\partial \sigma} \EE \bar{U}_{\sigma})^{-1}
+A_{11}^{-1} \partial/{\partial \sigma}\EE \bar{U}_{1} ].
+\end{equation*}
+
+Denoting the
+rightmost column of $A_{11}^{-1} A_{10}A_{00}^{-1} $, i.e. $(\partial/{\partial \sigma} \EE \bar{U}_{\sigma})^{-1}
+A_{11}^{-1} \partial/{\partial \sigma}\EE \bar{U}_{1}$,  as
+$\mathbf{a}$, we have 
+\begin{equation*}
+  A_{[01][01]}^{-1} =\left[
+               \begin{array}{cc|c}
+                 \multicolumn{2}{c|}{A_{00}^{-1}}& 0 \\ \hline\
+                 \mathbf{0} & \mathbf{a} & A_{11}^{-1} \\
+               \end{array}
+\right] ,
+\end{equation*}
+with the submatrix consisting of the bottom $k$ rows being the only
+part that's relevant to $\cov (\hat{\theta}_{1}, \hat{\alpha},
+\hat{\tau})$. 
+In particular, $\widehat{\mathrm{Var}} (\hat\tau)$ is
+the lower-right entry of $n^{-1} A^{-1} B A^{-t}$, which is
+expressible as
+\begin{align*}
+ n^{-1}\left[ \mathbf{0}\, ; \,\nabla_{\theta_{1}} \EE \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  [ 
+  \mathbf{a}\, ; \,   A_{11}^{-1} ] \, ; \,
+1 \, ; \,  - \bar{Z}^{-1} \right] & \\
+\cdot B &\left[
+  \begin{array}{c}
+    \mathbf{0} \\
+    \mathbf{a}^{t} \nabla_{\theta_{1}}^{t} \EE \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}   \\  A_{11}^{-t}
+    \nabla_{\theta_{1}}^{t} \EE \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  \\
+1 \\  - \bar{Z}^{-1}
+  \end{array}
+\right]  \\
+= n^{-1}\left[\nabla_{\theta_{1}} \EE \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  [ 
+  \mathbf{a}\, ; \,   A_{11}^{-1} ] \, ; \,
+1 \, ; \,  - \bar{Z}^{-1} \right] 
+& \cdot \\
+ n^{-1}\left[
+    \begin{array}{cccc}
+      \mathbf{U}_{\sigma}^{t}\mathbf{U}_{\sigma} & \mathbf{U}_{\sigma}^{t}\mathbf{U}_{1} & \mathbf{U}_{\sigma}^{t}\mathbf{U}_{2} &
+                                                                 \mathbf{U}_{\sigma}^{t}
+                                                                 \mathbf{V} \\ 
+     \mathbf{U}_{1}^{t}\mathbf{U}_{\sigma} &\mathbf{U}_{1}^{t}\mathbf{U}_{1}  &  \mathbf{U}_{1}^{t} \mathbf{U}_{2} &
+                                                          \mathbf{U}_{1}^{t}\mathbf{V}
+      \\
+      \mathbf{U}_{2}^{t}\mathbf{U}_{\sigma} & 
+                                                \mathbf{U}_{2}^{t}\mathbf{U}_{1}
+                                                        & 
+                                                \mathbf{U}_{2}^{t}\mathbf{U}_{2}
+                                                               &
+                                                                 \mathbf{U}_{2}^{t} \mathbf{V}
+      \\
+     \mathbf{V}^{t}\mathbf{U}_{\sigma} &
+                                              \mathbf{V}^{t}\mathbf{U}_{1}
+                                                        &
+                                                         \mathbf{V}^{t}
+                                                          \mathbf{U}_{2}
+      &\bar{Z} \hat{\sigma}^{2}_{ e_{\theta}(\tilde{Y}|R) | Z=1}\\
+    \end{array}
+\right] & \left[
+  \begin{array}{c}
+    \mathbf{a}^{t} \nabla_{\theta_{1}}^{t} \EE \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}   \\  A_{11}^{-t}
+    \nabla_{\theta_{1}}^{t} \EE \{
+      \overline{[e_{\theta}(\tilde{Y} | R)]}_{Z=1} -
+    \overline{[e_{\theta_{1}}(\tilde{Y} | R)]}\}  \\
+1 \\  - \bar{Z}^{-1}
+  \end{array}
+\right]  .
+\end{align*}
+
+
+This doesn't involve any of the rows of $A^{-1}$ that correspond to
+$U_{0}$; indeed, with the exception of $\sigma$, each of the columns
+of $A^{-1}$ that corresponds to a parameter defined by $U_{0}$ has
+dropped out as well.    Accordingly we identify $[\mathbf{a}\, ; \,   A_{11}^{-1}]$, the inverse of $A_{[01][01]}$'s  $(k+1) \times k$ lower-right submatrix, as the ``bread matrix''
+for stage 1.  it will be the return value for \texttt{bread.lmrob()}.  
+ As regards the $B$ matrix, the only estimating function component we 
+need from stage 0 is $\mathbf{U}_{\sigma}$; so we'll define
+$[\mathbf{U}_{\sigma} \, \, \mathbf{U}_{1}]$ as the value of
+\texttt{estfun.lmrob()}, and its scaled (by reciprocal sample size)
+cross-product as \texttt{meat.lmrob}. 
+
+Some translations to \texttt{.vcov.avar1} source code:
+\begin{itemize}
+\item Variable
+  \texttt{a} corresponds precisely to ``$\mathbf{a}$'' as used here.
+\item Their variable \texttt{A} is the inverse of an \textit{unscaled}
+  version of $A_{11}$, i.e. it's $n^{-1}A_{11}^{-1}$. (Note difference between \citet{crouxetal2004robustSEforrobustreg}  and
+\texttt{robustbase}\footnote{In the case of \textrm{A}, the code calculates an
+unscaled cross-product whereas the paper's is scaled for sample size, ie $A_{11}^{-1} \sigma$ rather
+than $n^{-1}A_{11}^{-1} \sigma$.}.)
+\item  Our $\mathbf{U}_{\sigma}(\hat{\theta}_{0})$ is \texttt{.vcov.avar1}'s
+\texttt{w0}$-$\texttt{bb}. 
+\item $n^{-1}\mathbf{U}_{\sigma}^{t}(\hat\theta)
+  \mathbf{U}_{\sigma}(\hat\theta)$ is calculated as \verb/mean(w0^2 - bb^2)/.
+\item The variable \texttt{Xww} coincides with
+$\mathbf{U}_{1}^{t}(\hat{\theta})
+\mathbf{U}_{\sigma}(\hat{\theta}_{0})$.
+\item $\mathbf{U}_{1}^{t}(\hat{\theta}) \mathbf{U}_{1}(\hat{\theta})$ is not
+stored as any constant but rather calculated on-the-fly as \verb+crossprod(x, x * w^2)+.
+\end{itemize}
+
+Observe also that \texttt{.vcov.avar1} goes on to check for
+non-positive definiteness of the final covariance matrix and try to
+rectify it --- all this could give  a negative estimate for $\var(\hat\tau)$.
+
+
+Implementation plan: generic R function \texttt{robscore()}, taking args
+\texttt{obj=} fitted model, \texttt{z=} comparison variable,
+\texttt{subset=NULL} to be evaluated w/in model frame of fitted model,
+and govering stage 2.  (Maybe later: allow lists of models as
+\texttt{obj}).  Assisted by \texttt{bread} and \texttt{meat} methods
+for \texttt{lmrob} objects, and perhaps for \texttt{glm}, to furish
+$U_{1}$ (as needed, $U_{0}$) specific material. (For now, no
+\texttt{predresid} or \texttt{estfun1for2}.)
+\bibliographystyle{asa}
+\bibliography{abbrev_long,misc}
+\end{document}
+
+
+ For the lower-right submatrix of the sandwich $A^{-1}BA^{-t}$, ie $\var \hat\tau$,  one has the  general expression \cite[e.g.,][A.6.6]{carroll2006measurement} 
+\begin{eqnarray*}
+  n \var [ \hat\theta\, ;\,  \hat\tau ]
+% \left(
+%   \begin{array}{c}
+%     \hat{\alpha} \\
+%     \hat{\beta}
+%   \end{array}
+%%\right)
+=& -A_{22}^{-1}A_{VU}A_{UU}^{-1}  \left(B_{UU} \cdot -A_{UU}^{-t}A_{VU}^{t}A_{22}^{-t} + B_{21}^{t} A_{22}^{-t}\right)  \\
+  &+  
+A_{22}^{-1}  \left(B_{21} \cdot -A_{UU}^{-t}A_{VU}^{t}A_{22}^{-t} + B_{22} A_{22}^{-t}\right) \\
+  =&  A_{22}^{-1} \big(A_{VU}A_{UU}^{-1}B_{UU}A_{UU}^{-t}A_{VU}^{t} - A_{VU}A_{UU}^{-1}B_{21}^{t} \\
+&                         -  B_{21}A_{UU}^{-t}A_{VU}^{t}  + B_{22}\big) A_{22}^{-t} \\
+=& A_{22}^{-1} \bigg\{ A_{VU}A_{UU}^{-1}B_{UU}A_{UU}^{-t}A_{VU}^{t} - A_{VU}A_{UU}^{-1}B_{21}^{t} - \big(A_{VU}A_{UU}^{-1}B_{21}^{t} \big)^{t} +  B_{22}\bigg\} A_{22}^{-t} \\
+=& A_{22}^{-1} \bigg\{ A_{VU}(A_{UU}^{-1}B_{UU}A_{UU}^{-t})A_{VU}^{t} -
+   A_{VU}(n^{-1}A_{UU}^{-1}\mathbf{U}_{1}^{t})\mathbf{U}_{2} - \big( A_{VU}(n^{-1}A_{UU}^{-1}\mathbf{U}_{1}^{t})\mathbf{U}_{2}\big)^{t} +  B_{22}\bigg\} A_{22}^{-t} \\
+\end{eqnarray*}
+

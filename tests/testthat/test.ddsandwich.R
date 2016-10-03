@@ -1,5 +1,17 @@
 context("Helper functions for building double-decker sandwich estimates of variance")
 
+test_that("Our bread and meat methods reproduce robustbase:::.vcov.avar1()", {
+    expect_true(require('robustbase'))
+    data(coleman)
+     set.seed(0)
+     m1 <- lmrob(Y ~ ., data=coleman) 
+    expect_equal(m1$control$cov, ".vcov.avar1")
+    expect_equivalent(robustbase:::.vcov.avar1(m1, m1$x), m1$cov)
+    expect_equivalent(sandwich(m1), m1$cov)
+})
+
+
+
 test_that("predresid's predictions match those of `predict`",{
    ## from example(lm)
    ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)

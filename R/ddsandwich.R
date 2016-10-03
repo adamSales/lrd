@@ -1,3 +1,101 @@
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title Bread method for lmrob objects
+##' @param x an lmrob object produced using an MM/SM estimator chain
+##' @param ... 
+##' @return k by (k+1) matrix, with first column for scale estimate and rows, remaining cols for coefficients
+##' 
+##' @author Ben B Hansen
+bread.lmrob <- function(x, ...)
+{
+  stopifnot(is.list(ctrl <- x$control))
+  if (!(!is.null(ctrl$method) && nchar(ctrl$method)<=2 &&
+      substr(ctrl$method, nchar(ctrl$method),nchar(ctrl$method))=="M") )
+      stop("bread.lmrob() supports only SM or MM estimates")
+
+       psi <- chi <- ctrl$psi
+    if (is.null(psi)) 
+        stop("parameter psi is not defined")
+    stopifnot(is.numeric(c.chi <- ctrl$tuning.chi), is.numeric(c.psi <- ctrl$tuning.psi))
+    r0 <- x$init$resid
+    r <- resid(x)
+    scale <- x$scale
+    xmat <- model.matrix(x)
+       bb <- 1/2
+    n <- length(r)
+    stopifnot(n == length(r0), is.matrix(xmat), n == nrow(xmat))
+    p <- ncol(xmat)
+    r.s <- r/scale
+    r0.s <- r0/scale
+    w <- robustbase::Mpsi(r.s, cc = c.psi, psi = psi, deriv = 1)
+    w0 <- robustbase::Mchi(r0.s, cc = c.chi, psi = chi, deriv = 1)
+    x.wx <- crossprod(xmat, xmat * w)
+    if (inherits(A <- tryCatch(solve(x.wx) * scale, error = function(e) e), 
+        "error")) {
+        A <- tryCatch(solve(x.wx, tol = 0) * scale, error = function(e) e)
+        if (inherits(A, "error")) 
+            { stop("X'WX is singular.") } else warning("X'WX is almost singular.")
+    }
+    ## At this point A has no sample size scaling, as in robustbase:::.vcov.avar1
+    ## The lack of scaling there precisely compensates for the lack of scaling of the crossproduct
+    a <- A %*% (crossprod(xmat, w * r.s)/mean(w0 * r0.s))
+    colnames(a) <- "sigma"
+    ## Now we restore sample size scaling to A
+    A <- n * A
+    
+    cbind(a, A)
+}
+
+estfun.lmrob <- function(x, ...)
+{
+  stopifnot(is.list(ctrl <- x$control))
+  if (!(!is.null(ctrl$method) && nchar(ctrl$method)<=2 &&
+      substr(ctrl$method, nchar(ctrl$method),nchar(ctrl$method))=="M") )
+      stop("estfun.lmrob() supports only SM or MM estimates")
+
+  xmat <- model.matrix(x)
+    xmat <- naresid(x$na.action, xmat)
+       psi <- chi <- ctrl$psi
+    if (is.null(psi)) 
+        stop("parameter psi is not defined")
+    stopifnot(is.numeric(c.chi <- ctrl$tuning.chi), is.numeric(c.psi <- ctrl$tuning.psi))
+    r0 <- x$init$resid
+    r <- resid(x)
+    scale <- x$scale
+
+       bb <- 1/2
+    n <- length(r)
+    stopifnot(n == length(r0), is.matrix(xmat), n == nrow(xmat))
+    p <- ncol(xmat)
+    r0.s <- r0/scale
+    w0 <- robustbase::Mchi(r0.s, cc = c.chi, psi = chi, deriv = 1)
+    Usigma <- w0 - bb
+
+    r.s <- r/scale
+    w <- robustbase::Mpsi(r.s, cc = c.psi, psi = psi, deriv = 1)
+    Ubeta <- w * xmat
+    rval <- cbind("sigma"=Usigma, Ubeta)
+       attr(rval, "assign") <- NULL
+    attr(rval, "contrasts") <- NULL
+    rval
+    }
+
+
+sandwich <- function (x, bread. = sandwich::bread, meat. = sandwich::meat, ...) 
+{
+    if (is.list(x) && !is.null(x$na.action)) 
+        class(x$na.action) <- "omit"
+    if (is.function(bread.)) 
+        bread. <- bread.(x)
+    if (is.function(meat.)) 
+        meat. <- meat.(x, ...)
+    n <- NROW(sandwich::estfun(x))
+    ## the t() in the below is the only difference from sandwich::sandwich()
+    return(1/n * (bread. %*% meat. %*% t(bread.)))
+}
+
+
 ##' Differences of dependent variables and model predictions on a new data set
 ##'
 ##' the prediction residuals themselves will be variables that balance tests are applied to.
@@ -7,6 +105,8 @@
 ##' make not contribution to this cross product, and can be ignored; thus the role for the partial mapping of
 ##' rows of one data frame into the other. 
 ##'
+##' DEPRACATED. After writing this, I decided to pursue a different approach. 
+##' 
 ##' @title Prediction residuals
 ##' @param model Fitted model 
 ##' @param newdata New data set
@@ -78,7 +178,8 @@ predresid <- function(model, newdata)
 ##' entries to match the order of stage 2 observations.  If stage 2 involves observations that didn't
 ##' figure in stage 1, then corresponding rows in the matrix produced by this function are set to 0. 
 ##'
-##' .. content for \details{} ..
+##' DEPRACATED. After writing this, I decided to pursue a different approach.
+##' 
 ##' @title First-stage estimating functions, aligned to second-stage estimating functions
 ##' @param model 
 ##' @param id.newdata common case IDs, aligned with data contributing to second stage fit
