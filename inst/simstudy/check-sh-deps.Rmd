@@ -2,7 +2,7 @@
 title: "Checking fitters and variance estimators"
 author: "B"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +13,7 @@ Dependencies.
 ```{r}
 library(robustbase)
 source("../../R/functions.r")
+source("../../R/ddsandwich.R")
 ```
 
 ## Simulation
@@ -45,6 +46,7 @@ sims[[as.character(ns)]] =
   dat = makeData(ns,curve=0,tdist=T,tau=0)
   dat = subset(dat, abs(R)<BW)
   fit = lmrob(Y~Z+R, data=dat,method='MM',control=ctl)
+  fit$cov <- .vcov.avar2(fit)
   zpos = pmatch('Z', names(coef(fit)))
   coef(summary(fit))[zpos,]
 })
