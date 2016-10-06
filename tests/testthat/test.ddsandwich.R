@@ -51,7 +51,9 @@ test_that("Our bread and meat methods reproduce robustbase:::.vcov.avar1()", {
     expect_equivalent(with(m1av1, cbind(a, n*A) ), bread.lmrob(m1))
     expect_equivalent(with(m1av1, cbind(w0.estfun-mean(w0.estfun), Xw) ), estfun.lmrob(m1))
     expect_equivalent(with(m1av1, crossprod(cbind(w0.estfun-mean(w0.estfun), Xw) )/n), meat(m1))
-    expect_false(isTRUE(all.equal(with(m1av1, (w0.estfun-mean(w0.estfun)) *Xw) , with(m1av1, w0.estfun *Xw))))
+    expect_false(isTRUE(all.equal( #this test demonstrates that centering the estimating function for scale
+        with(m1av1, (w0.estfun-mean(w0.estfun)) *Xw) , #changes the off-diagonal pieces of the corresponding 
+        with(m1av1, w0.estfun *Xw))))                  # column and row of the meat matrix
     expect_equivalent(sandwich(m1), .vcov.avar2(m1)) #this fails, not sure why
 })
 
