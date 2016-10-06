@@ -45,12 +45,14 @@ test_that("Our bread and meat methods reproduce robustbase:::.vcov.avar1()", {
     u2 <- a %*% crossprod(Xww, A)
     u3 <- A %*% tcrossprod(Xww, a)
     u4 <- mean(w0^2 - bb^2) * tcrossprod(a)
-    list(cov=(u1 - u2 - u3 + u4)/n, A=A, a=a, w=w,w0=w0,bb=bb, Xw=x*w, n=n)
+    list(cov=(u1 - u2 - u3 + u4)/n, A=A, a=a, w.estfun=w,r.s=r.s, w0.estfun=w0,bb=bb, Xw=x*w, n=n)
     }
     m1av1 <- altavar1(m1)
     expect_equivalent(with(m1av1, cbind(a, n*A) ), bread.lmrob(m1))
-    expect_equivalent(with(m1av1, cbind(w0-bb, Xw) ), estfun.lmrob(m1)) #failure here.  how come? 
-    expect_equivalent(sandwich(m1), m1$cov)
+    expect_equivalent(with(m1av1, cbind(w0.estfun-mean(w0.estfun), Xw) ), estfun.lmrob(m1))
+    expect_equivalent(with(m1av1, crossprod(cbind(w0.estfun-mean(w0.estfun), Xw) )/n), meat(m1))
+    expect_false(isTRUE(all.equal(with(m1av1, (w0.estfun-mean(w0.estfun)) *Xw) , with(m1av1, w0.estfun *Xw))))
+    expect_equivalent(sandwich(m1), .vcov.avar2(m1)) #this fails, not sure why
 })
 
 

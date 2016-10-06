@@ -64,24 +64,35 @@ estfun.lmrob <- function(x, ...)
     r <- resid(x)
     scale <- x$scale
 
-       bb <- 1/2
     n <- length(r)
     stopifnot(n == length(r0), is.matrix(xmat), n == nrow(xmat))
     p <- ncol(xmat)
     r0.s <- r0/scale
-    w0 <- robustbase::Mchi(r0.s, cc = c.chi, psi = chi, deriv = 1)
-    Usigma <- w0 - bb
+    w0 <- robustbase::Mchi(r0.s, cc = c.chi, psi = chi)
+    Usigma <- scale(w0, center=TRUE, scale=FALSE)
 
     r.s <- r/scale
-    w <- robustbase::Mpsi(r.s, cc = c.psi, psi = psi, deriv = 1)
-    Ubeta <- w * xmat
+    w <- robustbase::Mpsi(r.s, cc = c.psi, psi = psi)
+
+  Ubeta <- w * xmat
     rval <- cbind("sigma"=Usigma, Ubeta)
        attr(rval, "assign") <- NULL
     attr(rval, "contrasts") <- NULL
     rval
     }
 
-
+##' Overloading of sandwich::sandwich to accommodate non-square bread
+##'
+##' The sandwich package's sandwich function presumes the bread matrix
+##' to be symmetric. Obviously this won't do if the bread is rectangular but not
+##' square.  To accommodate that scenario, this calculates 
+##' @title 
+##' @param x a fitted model object, as in sandwich::sandwich
+##' @param bread. function or matrix, 
+##' @param meat. function or matrix, as in sandwich::sandwich
+##' @param ... additional arguments to downstream methods, as in sandwich::sandwich
+##' @return matrix, bread %*% meat %*% t(bread)
+##' @author Ben Hansen
 sandwich <- function (x, bread. = sandwich::bread, meat. = sandwich::meat, ...) 
 {
     if (is.list(x) && !is.null(x$na.action)) 
@@ -95,6 +106,47 @@ sandwich <- function (x, bread. = sandwich::bread, meat. = sandwich::meat, ...)
     return(1/n * (bread. %*% meat. %*% t(bread.)))
 }
 
+
+    .vcov.avar2 <- function (obj, x = obj$x)  {
+    stopifnot(is.list(ctrl <- obj$control))
+    if (!is.null(ctrl$method) && !ctrl$method %in% c("SM", "MM")) 
+        stop(".vcov.avar1() supports only SM or MM estimates")
+    psi <- chi <- ctrl$psi
+    if (is.null(psi)) 
+        stop("parameter psi is not defined")
+    stopifnot(is.numeric(c.chi <- ctrl$tuning.chi), is.numeric(c.psi <- ctrl$tuning.psi))
+    r0 <- obj$init$resid
+    r <- resid(obj)
+    scale <- obj$scale
+    if (is.null(x)) 
+        x <- model.matrix(obj)
+    bb <- 1/2
+    n <- length(r)
+    stopifnot(n == length(r0), is.matrix(x), n == nrow(x))
+    p <- ncol(x)
+    r.s <- r/scale
+    r0.s <- r0/scale
+    w <- Mpsi(r.s, cc = c.psi, psi = psi, deriv = 1)
+    w0 <- Mchi(r0.s, cc = c.chi, psi = chi, deriv = 1)
+    x.wx <- crossprod(x, x * w)
+    if (inherits(A <- tryCatch(solve(x.wx) * scale, error = function(e) e), 
+        "error")) {
+        warning("X'WX is almost singular. Consider rather using cov = \".vcov.w\"")
+        A <- tryCatch(solve(x.wx, tol = 0) * scale, error = function(e) e)
+        if (inherits(A, "error")) 
+            stop("X'WX is singular. Rather use cov = \".vcov.w\"")
+    }
+    a <- A %*% (crossprod(x, w * r.s)/mean(w0 * r0.s))
+    w <- Mpsi(r.s, cc = c.psi, psi = psi)
+    w0 <- Mchi(r0.s, cc = c.chi, psi = chi)
+    w0 <- scale(w0, scale=FALSE, center=TRUE)
+    Xww <- crossprod(x, w * w0)
+    u1 <- A %*% crossprod(x, x * w^2) %*% (n * A)
+    u2 <- a %*% crossprod(Xww, A)
+    u3 <- A %*% tcrossprod(Xww, a)
+    u4 <- mean(w0^2) * tcrossprod(a)
+    (u1 - u2 - u3 + u4)/n
+    }
 
 ##' Differences of dependent variables and model predictions on a new data set
 ##'
