@@ -46,7 +46,7 @@ sims[[as.character(ns)]] =
   dat = makeData(ns,curve=0,tdist=T,tau=0)
   dat = subset(dat, abs(R)<BW)
   fit = lmrob(Y~Z+R, data=dat,method='MM',control=ctl)
-  newcov <- try(.vcov.avar2(fit))
+  newcov <- try(sandwich(fit))
   fit$cov <- if (inherits(newcov, "try-error")) NA else newcov
   zpos = pmatch('Z', names(coef(fit)))
   coef(summary(fit))[zpos,]
@@ -81,8 +81,8 @@ sims.V =
          zbar.m2 =var(simres["Estimate",])
          zbar.m4 = mean( ((simres["Estimate",]) - zbar)^4 )
            v.simSE = (zbar.m4 - zbar.m2^2)/sqrt(ncol(simres)) 
-           vhatbar = mean(simres['Std. Error',]^2)
-           vhatbarSE = sd(simres['Std. Error',]^2)/sqrt(ncol(simres))
+           vhatbar = mean(simres['Std. Error',]^2, na.rm=T)
+           vhatbarSE = sd(simres['Std. Error',]^2, na.rm=T)/sqrt(sum(!is.na(simres['Std. Error',])))
            c(v.sim=zbar.m2, v.simSE=v.simSE, 
              vhatbar=vhatbar, vhatbarSE=vhatbarSE)
        }
