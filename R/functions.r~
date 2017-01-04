@@ -46,9 +46,6 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
 #' @param dat a data.frame. must contain variables `R` (the running variable) and `Z` (treatment) and, if method='ik', `Y` (outcome)
 #' @param covname a character string, the name of the covariate to test balance on (unless method='ik')
 #' @param method a character string. either 'sh' for Limitless, 'ik' for IK, or 'cft' for Permutations
-#'
-#' @return bandwidth choice (scalar)
-#'
 bw <- function(data,covname='x',method='sh'){
 
     short <- function(w) test(data,w,outcome=covname,method=method)
@@ -67,10 +64,7 @@ bw <- function(data,covname='x',method='sh'){
 #' @param dat a data.frame. must contain variables `R` (the running variable) and `Z` (treatment) and, if method='ik', `Y` (outcome) along with the covariates in arxiv v3, 'lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english', and 'age'
 #' @param alpha the level of the balance test
 #' @param method a character string. either 'sh' for Limitless, 'ik' for IK, or 'cft' for Permutations
-#'
-#' @return bandwidth choice (scalar)
-#'
-bwMult <- function(dat,alpha=0.15,method='sh'){
+bwMult <- function(dat,alpha=0.15,,method='sh'){
     short <- function(w) try(newBal(dat,w))
 
     bws <- seq(.3,2,0.01)
@@ -79,7 +73,7 @@ bwMult <- function(dat,alpha=0.15,method='sh'){
     while(p<alpha){
         i <- i-1
         if(i==0) return(i)
-        bw <- bws[i]
+        print(bw <- bws[i])
         pval <- short(bw)
         p <- ifelse(is.numeric(pval)&is.finite(pval),pval,0)
     }
@@ -94,9 +88,6 @@ bwMult <- function(dat,alpha=0.15,method='sh'){
 #' @param tau the treatment effect under the null hypothesis
 #' @param outcome the name of the outcome variable in data
 #' @param method 'sh' for Limitless, 'ik' for Local OLS, 'cft' for Local Permuation
-#'
-#' @return p-value testing H_0: treatment effect=tau (scalar)
-#'
 
 test <- function(data, BW,tau=0,outcome='Y',method='sh'){
     if(method=='ik') return(ik(data,BW)['pval'])
