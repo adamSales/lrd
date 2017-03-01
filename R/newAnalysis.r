@@ -8,6 +8,7 @@
 
 library(xtable)
 library(rdd)
+library(robustbase)
 
 source('R/functions.r')
 
