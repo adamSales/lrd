@@ -140,18 +140,6 @@ cft <- function(dat){
     return(with(dat,wilcox.test(ytilde~Z)$p.value))
 }
 
-orig <- function(dat,multBal=FALSE){
-    logistic <- FALSE
-    ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
-    if(isTRUE(all.equal(sort(unique(dat$ytilde)),c(0,1)))) logistic <- TRUE
-    if(logistic) mod <- glmrob(ytilde~R,family=binomial(logit),data=dat,control=ctl,method='MM')
-    else mod <- lmrob(ytilde~R,data=dat,control=ctl,method='MM')
-    dat$Ydt <- residuals(mod) #* weights(mod, type="robustness")
-    if(multBal) return(dat$Ydt)
-
-    xBalance(Z~Ydt,data=dat,report='chisquare.test')$overall$p.value
-}
-
 CI <- function(data,BW,grid=seq(-1,1,0.01),alpha=0.05,method='sh',outcome='Y'){
     if(method=='ik')
         if(missing(BW)) return(ik(dat)[1:3]) else return(ik(dat,BW)[1:3])
@@ -190,8 +178,7 @@ processRun <- function(n,curve,tdist,tau=0.3){
     rbind(
         SH=estimate(dat,'sh'),
         CFT=estimate(dat,'cft'),
-        IK=ik(dat),
-        shOrig=estimate(dat,'sh',bwmethod='orig')
+        IK=ik(dat)
         )
 }
 
