@@ -1,0 +1,100 @@
+---
+title: "Limitless regression discontinuity"
+author: "Adam Sales & Ben Hansen*"
+date: "Spring '17 SREE Conference"
+bibliography: ../../bibliography.bib
+output: 
+  ioslides_presentation
+---
+nocite:
+  @hansenSales2015cochran
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+# Potential outcomes vs structural modeling for RDDs
+
+## Academic probation and subsequent achievement: a "running" example | ... from Lindo, Sanders & Oreopoulos [-@lindo2010ability]  
+
+<div class="centered">
+<!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
+<img src="images/figure2_1.jpg" width="300px" height="300px" />
+</div>
+
+Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv [[R<0]]$'s causal effect on $Y$ (subsequent GPA)?
+
+## Regression discontinuity designs | (RDDs): Two views
+
+> - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
+> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E(Y|R)$; "local randomization"" gives them to us via ancova/permutation testing/.... 
+>- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization"." 
+
+# Methods for picking out RCTs within RDDs
+
+## Methods for picking out RCTs within RDDs {.build}
+
+>  Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+
+>  A: To separate unwanted chaff from locally randomized wheat, use specification tests....
+
+--------------
+
+(2 slides: balance, McCrary)
+
+
+## Methods for picking out RCTs within RDDs
+
+> Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+
+> A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
+> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used in refining a propensity score match, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.
+
+# Working your way around the donut
+
+## Working your way around the donut {.build}
+
+>  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
+>    A:  That hole in the middle only counts against limit interpretations of RDDs...
+
+------------------
+
+1 slide: RI
+
+
+
+## Working our way around the donut
+
+>  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
+
+
+>  A:  That hole in the middle only counts against limit-based interpretations of RDDs. Residual ignorability supports large-sample inference on differences of potential outcomes, as opposed to differences of limits of curves. 
+
+# Methods for limiting contamination sensitivity
+
+## Methods for limiting contamination sensitivity {.build}
+
+>   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
+
+>   A: You can address sensitivity to contamination during the _primary_ analysis...
+
+-----------------------
+
+2 slides: krafft, LSO with robustness weights
+
+## Methods for limiting contamination sensitivity
+
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method addresses this issue?
+
+
+> A: You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis.  The robust statistics literature finds that only an unusual type of regression limits contamination sensitivity.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.
+
+
+## References
+
+
+
+
+

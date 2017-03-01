@@ -20,3 +20,10 @@ or
 after replacing `<N>` with a simulation size number, e.g 1000.  
 
 
+# miscellaneous notes
+
+## soft links to material outside this repo
+
+- Directory for data we're not confident we're allowed to repackage: `dataResults/`
+- bibtex bibliography file: `bibliography.bib`  (points to drafts`/causalinference.bib`
+  in AS/BH shared dropbox folder. )
