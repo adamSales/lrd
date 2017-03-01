@@ -44,7 +44,7 @@ dat$lhsgrade_pct <- logit(dat$hsgrade_pct)
 #################
 print('1')
 ## test BW=0.5
-balance0.5 <- newBal(dat,0.5) #=0.77
+balance0.5 <- newBal(dat,0.5, method= 'ancovaHC', reduced.covars=F)
 test0.5 <- test(dat,0.5,outcome='nextGPA')
 CI0.5 <- CI(dat,0.5,outcome='nextGPA')
 
@@ -60,8 +60,8 @@ CI0.5 <- CI(dat,0.5,outcome='nextGPA')
 ### data-driven BW
 ##############
 print(2)
-BW <- bwMult(dat)
-balanceBW <- newBal(dat,BW)
+BW <- bwMult(dat, newbal.control=list(method='ancovaHC',reduced.covars=FALSE))
+balanceBW <- newBal(dat,BW, method='ancovaHC',reduced.covars=FALSE)
 testBW <- test(dat,BW,outcome='nextGPA')
 CIBW <- CI(dat,BW,outcome='nextGPA')
 
