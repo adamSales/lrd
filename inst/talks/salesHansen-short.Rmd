@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <div class="centered">
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_1.pdf" width="300px" height="300px" />
+<img src="images/figure2_1.jpg" width="300px" height="300px" />
 </div>
 
 Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv [[R<0]]$'s causal effect on $Y$ (subsequent GPA)?
@@ -41,13 +41,13 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 >  A: To separate unwanted chaff from locally randomized wheat, use specification tests....
 
 
-<!-- (3 slides: balance, covariate ignorability, McCrary)-->
+<!-- (2 slides: balance; McCrary)-->
 
-## $X$es should look "locally randomized" too {.smaller}
+## $X$es should look "locally randomized" {.smaller}
 
 <div class="centered">
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_2.pdf" width="300px" height="300px" />
+<img src="images/figure2_2.jpg" width="300px" height="300px" />
 </div>
 
 > - Bandwidth selectors don't look at covariates. 
@@ -65,10 +65,15 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 ## Testing balance on the density of $R$ | the McCrary [-@mccrary2008manipulation] test
 
+<img src="images/forcing-discrete.jpg" width="300px" height="300px" />
+</div>
 
 <div class="notes">
 
-The McCrary test is rejected, leaving a donut
+- The widely used McCrary test checks for equal density of R immediately to eithert side of the cutpoint 
+- no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
+- Removing that chunk and that chunk only gets us a pass on this test.  
+- thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  
 
 </div>
 
@@ -88,10 +93,23 @@ The McCrary test is rejected, leaving a donut
 
 <!-- 1 slide: RI -->
 
-## Residual ignorability {.build}
+## Residual ignorability {.build .smaller}
 
 <!-- ignorability of covariate residuals; outcome residual ignorability -->
 
+**_Notation_**: $e_\theta(\cdot| \cdot)$ denotes a _residual transformation_, typically $e_{(a,b)}(y |r) = y - a -br$.  
+
+(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, then $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; if from fit of $Y=\alpha + \beta R + \tau Z+ \epsilon$, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is a partial residual.)
+
+<!--Postpone more elaborate one until we need it? $e_{(a,b,s)}(y |r) = \mathrm{sign}(y -a -br) \min(|y-a-br|/s, 1.55)$. -->
+
+**_Assumption: Ignorability of covariate residuals_**.  For given $\hat{\theta}_x$, $e_{\theta}(\cdot |\cdot)$, 
+$$e_{\bar{\theta}_x} (X|R) \perp Z | \{R \in \mathcal{W}\},\, \text{where}\, \hat{\theta}_x \stackrel{P}{\rightarrow} \bar{\theta}_x.$$ 
+
+**_Assumption: Ignorability of potential outcome residuals_**. For given $\hat{\theta}_y$, $e_\theta(\cdot |\cdot )$,
+$$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, \hat{\theta}_y \stackrel{P}{\rightarrow} \bar{\theta}_y.$$ 
+
+**_Key advantages_**. Identification of $E[Y - Y_C| Z=1, R\in \mathcal{W}]$. $\mathcal{W}$ doesn't shrink as $n\uparrow \infty$. Donuts allowed.  
 
 ## Working our way around the donut
 
@@ -109,7 +127,22 @@ The McCrary test is rejected, leaving a donut
 >   A: You can address sensitivity to contamination during the _primary_ analysis...
 
 
-<!-- 2 slides: krafft, LSO with robustness weights -->
+<!-- 2 slides: LSO, Krafft points; bounded influence regression-->
+
+## Sensitivity to removing _groups_ of points {.build}
+
+Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? --Quite a bit less if we use _bounded influence robust regression_ than if we use OLS.
+
+<div class="columns-2">
+<img src="images/figure2.4a.jpg" width="300px" height="300px" />
+
+<img src="images/Krafft_points.jpg" width="300px" height="300px" />
+</div>
+
+##Bounded influence robust regression
+
+<!--residual trans w/ a redescending psi; contamination sensitivity; R and Stata implementations-->
+
 
 ## Methods for limiting contamination sensitivity
 
