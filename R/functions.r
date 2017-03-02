@@ -66,14 +66,21 @@ bw <- function(data,covname='x',method='sh'){
 #'
 #' @param dat a data.frame. must contain variables `R` (the running variable) and `Z` (treatment) and, if method='ik', `Y` (outcome) along with the covariates in arxiv v3, 'lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english', and 'age'
 #' @param alpha the level of the balance test
-#' @param method a character string. either 'sh' for Limitless, 'ik' for IK, or 'cft' for Permutations
-#'
+#' @param newbal.control list of optional arguments to `newBal`
+#' @param bsw numeric, a sequence of bandwidths to try (in increasing order)
+#' 
 #' @return bandwidth choice (scalar)
 #'
-bwMult <- function(dat,alpha=0.15,method='sh'){
-    short <- function(w) try(newBal(dat,w))
-
-    bws <- seq(.3,2,0.01)
+bwMult <- function(dat,alpha=0.15,newbal.control=list(method='sh'), bws = seq(.3,2,0.01)){
+    stopifnot(is.list(newbal.control),
+              !any(c('dat', 'BW') %in% names(newbal.control)),
+              is.numeric(bws) && all(bws >=0),
+              length(bws)==1 || !is.unsorted(bws))  
+    short <- function(w) {
+        nbargs <- c(list(dat=dat, BW=w), newbal.control)
+        try(do.call(newBal, nbargs))
+        }
+    
     p <- 0
     i <- length(bws)+1
     while(p<alpha){
@@ -135,21 +142,29 @@ sh <- function(dat){
     summary(mod)$coef[2,4]
 }
 
+#' Univariate covariance-adjusted balance test, using Huber-White SE
+#'
+#' The test is the test associated with the Z coefficient after fitting
+#' a linear or logistic-linear model with Z and R as independent variables.
+#' The Huber-White SE is the one provided by the sandwich package.
+#' #'
+#'
+#' @param dat Data set with columns \code{ytilde}, \code{Z}, \code{R}
+#'
+#' @return scalar, the p-value associated w/ coefficient on Z
+#' @imports sandwich
+#' @export
+ancovaHC <- function(dat) {
+    if(length(unique(dat$ytilde))>2)
+        mod <- lm(ytilde~Z+R,data=dat)
+    else mod <- glm(ytilde~Z+R,data=dat,family=binomial)
+    vcv <- sandwich::sandwich(mod)
+    tstat <- coef(mod)['Z']/sqrt(vcv['Z', 'Z'])
+    2 * pt(-abs(tstat), df=mod$df.residual, lower.tail=T)
+    }
 
 cft <- function(dat){
     return(with(dat,wilcox.test(ytilde~Z)$p.value))
-}
-
-orig <- function(dat,multBal=FALSE){
-    logistic <- FALSE
-    ctl <- lmrob.control(k.max=500,maxit.scale=500)#,setting= "KS2014")
-    if(isTRUE(all.equal(sort(unique(dat$ytilde)),c(0,1)))) logistic <- TRUE
-    if(logistic) mod <- glmrob(ytilde~R,family=binomial(logit),data=dat,control=ctl,method='MM')
-    else mod <- lmrob(ytilde~R,data=dat,control=ctl,method='MM')
-    dat$Ydt <- residuals(mod) #* weights(mod, type="robustness")
-    if(multBal) return(dat$Ydt)
-
-    xBalance(Z~Ydt,data=dat,report='chisquare.test')$overall$p.value
 }
 
 CI <- function(data,BW,grid=seq(-1,1,0.01),alpha=0.05,method='sh',outcome='Y'){
@@ -190,8 +205,7 @@ processRun <- function(n,curve,tdist,tau=0.3){
     rbind(
         SH=estimate(dat,'sh'),
         CFT=estimate(dat,'cft'),
-        IK=ik(dat),
-        shOrig=estimate(dat,'sh',bwmethod='orig')
+        IK=ik(dat)
         )
 }
 
@@ -405,9 +419,11 @@ outcomeSimTable <- function(results,power){
 
 }
 
-newBal <- function(dat,BW,method='sh'){
+newBal <- function(dat,BW,method='sh', reduced.covars=TRUE){
     ps <- NULL
-    for(varb in c('lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english','age')){
+    xvars <- c('lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english')
+    xvars <- if (reduced.covars) c(xvars, 'age') else c(xvars, 'age_at_entry')
+    for(varb in xvars){
       #  print(varb)
         ps <- c(ps,test(dat,BW,outcome=varb,method=method))
 
