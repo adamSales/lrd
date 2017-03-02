@@ -6,8 +6,8 @@ bibliography: ../../bibliography.bib
 output: 
   ioslides_presentation
 ---
-nocite:
-  @hansenSales2015cochran
+<!-- nocite:
+  @hansenSales2015cochran-->
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <div class="centered">
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_1.jpg" width="300px" height="300px" />
+<img src="images/figure2_1.pdf" width="300px" height="300px" />
 </div>
 
 Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv [[R<0]]$'s causal effect on $Y$ (subsequent GPA)?
@@ -29,8 +29,8 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 ## Regression discontinuity designs | (RDDs): Two views
 
 > - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
-> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E(Y|R)$; "local randomization"" gives them to us via ancova/permutation testing/.... 
->- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization"." 
+> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization"" gives them to us via ancova/permutation testing/.... 
+>- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization." 
 
 # Methods for picking out RCTs within RDDs
 
@@ -40,10 +40,37 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 >  A: To separate unwanted chaff from locally randomized wheat, use specification tests....
 
---------------
 
-(2 slides: balance, McCrary)
+<!-- (3 slides: balance, covariate ignorability, McCrary)-->
 
+## $X$es should look "locally randomized" too {.smaller}
+
+<div class="centered">
+<!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
+<img src="images/figure2_2.pdf" width="300px" height="300px" />
+</div>
+
+> - Bandwidth selectors don't look at covariates. 
+> - H.s. grades (vertical axis) not "balanced", due to trend.
+> - Narrowing window to avoid significant imbalance gets rid of too much data.
+> - Removing linear trend, then testing balance on residuals, works better.
+
+<div class="notes">
+
+- A modern bandwidth selection chose a window too wide for the linear model
+- permutation tests comparing $X$es above and below 0 reject for windows w/ half-width > .3
+- The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
+
+</div>
+
+## Testing balance on the density of $R$ | the McCrary [-@mccrary2008manipulation] test
+
+
+<div class="notes">
+
+The McCrary test is rejected, leaving a donut
+
+</div>
 
 ## Methods for picking out RCTs within RDDs
 
@@ -59,10 +86,11 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 >  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
 >    A:  That hole in the middle only counts against limit interpretations of RDDs...
 
-------------------
+<!-- 1 slide: RI -->
 
-1 slide: RI
+## Residual ignorability {.build}
 
+<!-- ignorability of covariate residuals; outcome residual ignorability -->
 
 
 ## Working our way around the donut
@@ -80,9 +108,8 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 >   A: You can address sensitivity to contamination during the _primary_ analysis...
 
------------------------
 
-2 slides: krafft, LSO with robustness weights
+<!-- 2 slides: krafft, LSO with robustness weights -->
 
 ## Methods for limiting contamination sensitivity
 
@@ -92,7 +119,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 > A: You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis.  The robust statistics literature finds that only an unusual type of regression limits contamination sensitivity.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.
 
 
-## References
+## References {.smaller}
 
 
 
