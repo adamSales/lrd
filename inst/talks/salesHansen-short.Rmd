@@ -19,8 +19,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Acad. probation and later grades | A "running" example (Lindo et al [-@lindo2010ability]) 
 
-<div class="columns-2">
-<img src="images/apsemaphore.jpg" width=180px height="270px" />
+<div class="centered">
+<!-- <img src="images/apsemaphore.jpg" width=180px height="270px" /> -->
 
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
 <img src="images/figure2_1.jpg" width="300px" height="300px" />
