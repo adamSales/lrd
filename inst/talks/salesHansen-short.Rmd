@@ -58,14 +58,24 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 <div class="notes">
 
 - A modern bandwidth selection chose a window too wide for the linear model
-- permutation tests comparing $X$es above and below 0 reject for windows w/ half-width > .3
+- permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
 - The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
 
 </div>
 
 ## Testing balance on the density of $R$ | the McCrary [-@mccrary2008manipulation] test
 
-<img src="images/forcing-discrete.jpg" width="300px" height="300px" />
+<div class="columns-2">
+
+
+>  - Purpose of test: expose whether subjects secured or avoided treatment by manipulating their $R$s.
+  
+>  - If so, then density of $R$ differs on either side of cutpoint.
+>  - A test of "balance" in (log) density
+>  - Here we fail, due to students at $Z=0$ who narrowly avoided AP.
+
+  <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
+
 </div>
 
 <div class="notes">
@@ -131,7 +141,9 @@ $$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, 
 
 ## Sensitivity to removing _groups_ of points {.build}
 
-Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? --Quite a bit less if we use _bounded influence robust regression_ than if we use OLS.
+Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? 
+
+Limiting such changes is an old problem in robust statistics, containing _contamination sensitivity_.  
 
 <div class="columns-2">
 <img src="images/figure2.4a.jpg" width="300px" height="300px" />
@@ -139,9 +151,25 @@ Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  W
 <img src="images/Krafft_points.jpg" width="300px" height="300px" />
 </div>
 
+<div class="notes">
+
+- A latent subgroup that doesn't belong is only problematic if they don't follow the same pattern as others.
+- If the latent subgroup is both different and large, we ought to be able to find it in tests.
+- Otherwise, we're in the domain of "$\epsilon$ contamination"
+- OLS handles $\epsilon$ contamination poorly. Methods that handle it differently explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
+- An example from molecular design occurs at right.  OLS gets distracted by the points at far right.  Bounded influence regression downweights them to get a very different fit.
+
+</div>
+
 ##Bounded influence robust regression
 
-<!--residual trans w/ a redescending psi; contamination sensitivity; R and Stata implementations-->
+- Bounded influence robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, for a carefully chosen $\psi(\cdot)$ and carefully estimated $s$.
+- Generate "robustness" weights $\in [0,1]$, and additional diagnostic.
+- Asymptotically, only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample.
+- Examples: "MM with bisquare psi-function and robust scale",...
+- Far trickier than "robust standard errors".  
+- In R, `robustbase::lmrob`; in Stata, `mmregress`.
+- (This method and $\mathcal{W}$ give similar estimates to LSO's.)
 
 
 ## Methods for limiting contamination sensitivity
