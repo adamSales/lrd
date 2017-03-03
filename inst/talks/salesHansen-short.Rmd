@@ -31,7 +31,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 ## Regression discontinuity designs | (RDDs): Two views
 
 > - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
-> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization"" gives them to us via ancova/permutation testing/.... 
+> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
 >- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization." 
 
 # Methods for picking out RCTs within RDDs
@@ -53,7 +53,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 </div>
 
 > - Bandwidth selectors don't look at covariates. 
-> - H.s. grades (vertical axis) not "balanced", due to trend.
+> - High school grades (vertical axis) not "balanced", due to trend.
 > - Narrowing window to avoid significant imbalance gets rid of too much data.
 > - Removing linear trend, then testing balance on residuals, works better.
 
