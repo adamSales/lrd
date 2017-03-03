@@ -168,12 +168,11 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 ##Bounded influence robust regression
 
 - Bounded influence robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, for a carefully chosen $\psi(\cdot)$ and carefully estimated $s$.
-- Generate "robustness" weights $\in [0,1]$, and additional diagnostic.
+- E.g., "MM with bisquare psi-function and robust scale",...
+- Generates "robustness" weights $\in [0,1]$, an additional diagnostic.
 - Asymptotically, only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample.
-- Examples: "MM with bisquare psi-function and robust scale",...
-- Far trickier than "robust standard errors".  
 - In R, `robustbase::lmrob`; in Stata, `mmregress`.
-- (This method and $\mathcal{W}$ give similar estimates to LSO's.)
+- (Our $\mathcal{W}$ + MM estimation w/ bisquare give similar estimates to Lindo et al's: +.23 [.17, .30].)
 
 
 ## Methods for limiting contamination sensitivity
