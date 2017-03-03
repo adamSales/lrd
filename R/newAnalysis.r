@@ -11,6 +11,7 @@ library(rdd)
 library(robustbase)
 
 source('R/functions.r')
+source('R/ddsandwich.R')
 
 logit=function(x) log(x*.01/(1-x*.01))
                                 #dat=read.csv('LindoDat.csv')

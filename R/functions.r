@@ -139,7 +139,11 @@ sh <- function(dat){
     if(length(unique(dat$ytilde))>2)
         mod <- lmrob(ytilde~Z+R,data=dat,method='MM',control=ctl)
     else mod <- glmrob(ytilde~Z+R,data=dat,family=binomial)
-    summary(mod)$coef[2,4]
+    
+    newcov <- try(sandwich(mod))
+    mod$cov <- if (inherits(newcov, "try-error")) NA else newcov
+    
+    coef(summary(mod))['Z',4]
 }
 
 #' Univariate covariance-adjusted balance test, using Huber-White SE
