@@ -17,9 +17,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Potential outcomes vs structural modeling for RDDs
 
-## Academic probation and subsequent achievement: a "running" example | ... from Lindo, Sanders & Oreopoulos [-@lindo2010ability]  
+## Acad. probation and later grades | A "running" example (Lindo et al [-@lindo2010ability]) 
 
-<div class="centered">
+<div class="columns-2">
+<img src="images/apsemaphore.jpg" width=180px height="270px" />
+
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
 <img src="images/figure2_1.jpg" width="300px" height="300px" />
 </div>
@@ -76,6 +78,8 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
   <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
 
+> - To avoid wrath of McCrary, exclude $\{i: Z_i =0\}$.
+
 </div>
 
 <div class="notes">
@@ -92,7 +96,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 > Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
 > A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
-> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used in refining a propensity score match, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.
+> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used in refining a propensity score match, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.  As in matching, remedies for test failure may involve reducing the sample.
 
 # Working your way around the donut
 
