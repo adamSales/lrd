@@ -142,8 +142,8 @@ sh <- function(dat){
     
     newcov <- try(sandwich(mod))
     mod$cov <- if (inherits(newcov, "try-error")) NA else newcov
-    
-    coef(summary(mod))['Z',4]
+    Z.pos = pmatch("Z", names(coef(mod)))
+    coef(summary(mod))[Z.pos,4]
 }
 
 #' Univariate covariance-adjusted balance test, using Huber-White SE
