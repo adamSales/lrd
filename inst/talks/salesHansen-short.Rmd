@@ -100,6 +100,10 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 # Working your way around the donut
 
+<!-- TO CONSIDER NEXT TIME YOU'RE PREPPING THIS PRES:
+If I can think of a way to add an image to the transition slide,
+this one would be cute: images/donut-partly-eaten.jpg -->
+
 ## Working your way around the donut {.build}
 
 >  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
