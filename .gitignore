@@ -1,5 +1,5 @@
 # project-specific
-bibliography.bib
+bibliography.bib # this should be a link pointing to 'causalinference.bib' file in shared dropbox folder
 dataResults/
 
 # History files
