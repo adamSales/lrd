@@ -17,7 +17,15 @@ logit=function(x) log(x*.01/(1-x*.01))
                                 #dat=read.csv('LindoDat.csv')
 
 if(!is.element('dat',ls())){
-  dat=read.csv('dataResults/LindoDat.csv')
+    require(foreign)
+    if(!'data'%in%list.files() | !'data_for_analysis.dta'%in%list.files('data/')){
+        ## download the data
+        temp <- tempfile()
+        download.file('https://www.aeaweb.org/aej/app/data/2008-0202_data.zip',temp)
+        unzip(temp,'AEJApp2008-0202_data/data_for_analysis.dta',
+              junkpaths=TRUE,exdir='data')
+    }
+  dat=read.dta('data/data_for_analysis.dta')
   dat=subset(dat,left_school!=1)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
   dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
