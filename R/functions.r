@@ -68,19 +68,19 @@ bw <- function(data,covname='x',method='sh'){
 #' @param alpha the level of the balance test
 #' @param newbal.control list of optional arguments to `newBal`
 #' @param bsw numeric, a sequence of bandwidths to try (in increasing order)
-#' 
+#'
 #' @return bandwidth choice (scalar)
 #'
 bwMult <- function(dat,alpha=0.15,newbal.control=list(method='sh'), bws = seq(.3,2,0.01)){
     stopifnot(is.list(newbal.control),
               !any(c('dat', 'BW') %in% names(newbal.control)),
               is.numeric(bws) && all(bws >=0),
-              length(bws)==1 || !is.unsorted(bws))  
+              length(bws)==1 || !is.unsorted(bws))
     short <- function(w) {
         nbargs <- c(list(dat=dat, BW=w), newbal.control)
         try(do.call(newBal, nbargs))
         }
-    
+
     p <- 0
     i <- length(bws)+1
     while(p<alpha){
@@ -139,10 +139,10 @@ sh <- function(dat){
     if(length(unique(dat$ytilde))>2)
         mod <- lmrob(ytilde~Z+R,data=dat,method='MM',control=ctl)
     else mod <- glmrob(ytilde~Z+R,data=dat,family=binomial)
-    
+
     newcov <- try(sandwich(mod))
     mod$cov <- if (inherits(newcov, "try-error")) NA else newcov
-    
+
     coef(summary(mod))['Z',4]
 }
 
@@ -171,14 +171,17 @@ cft <- function(dat){
     return(with(dat,wilcox.test(ytilde~Z)$p.value))
 }
 
-CI <- function(data,BW,grid=seq(-1,1,0.01),alpha=0.05,method='sh',outcome='Y'){
+
+CI <- function(data,BW,alpha=0.05,method='sh',outcome='Y'){
     if(method=='ik')
         if(missing(BW)) return(ik(dat)[1:3]) else return(ik(dat,BW)[1:3])
     shortFunction <- function(tau) test(data,BW,tau,outcome=outcome)
-    pvals <- vapply(grid,shortFunction,1)
-    if(all(is.na(pvals))) return(rep(NA,3))
-    c(CI1=min(grid[pvals>alpha]),CI2=max(grid[pvals>alpha]),HL=grid[which.max(pvals)])
+    HL <- optimize(shortFunction,c(-2,2),maximum=TRUE)$maximum
+    CI1 <- uniroot(function(tau) shortFunction(tau)-alpha,interval=c(-1,HL),extendInt='upX')$root
+    CI2 <- uniroot(function(tau) shortFunction(tau)-alpha,interval=c(HL,1),extendInt='downX')$root
+    c(CI1=CI1,CI2=CI2,HL=HL)
 }
+
 
 
 estimate <- function(dat,method,justTest=FALSE,outcome,running,treat,bwmethod=method){
@@ -355,7 +358,7 @@ IV <- function(dat){
   #  dat$Z <- ifelse(dat$totcredits_year1==4,
   #                  dat$R<(dat$gpacutoff*5-1)/4-dat$gpacutoff,dat$gpalscutoff)
 
-    dat$Z <- dat$R< ifelse(dat$totcredits_year1<=4,0.2,0)
+    dat$Z <- as.numeric(dat$R< ifelse(dat$totcredits_year1<=4,0.2,0))
 
 
     dat$D <- dat$probation_year1
