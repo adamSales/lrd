@@ -238,14 +238,14 @@ to C).
 Simplicity recommends a linear specification for the outcome
 regression on the forcing variable, and the scatter of $Y$ versus $R$
 did not suggest otherwise; so we designated
-\marginpar{$\mu^{1} \mapsto \mu$?} %Manuscript has moved away from
+%\marginpar{$\mu^{1} \mapsto \mu$?} %Manuscript has moved away from
                                 %talk about adding monomials or
                                 %splines to the specification. Maybe
                                 %the 1 is just adds potential for confusion.
-$\mu_{\beta}^{1}(R_i)=\alpha +\beta R_i$
+$\mu_{\beta}(R_i)=\beta_0+\beta_1 R_i$
 (subject to potential revision following diagnostic checks).
 
-To test $\mu_{\beta}^1$ and $\mathcal{W}_{0.5}$, we combine specification checks
+To test $\mu_{\beta}$ and $\mathcal{W}_{0.5}$, we combine specification checks
 discussed in Section~\ref{sec:specification}.
 
 We conducted balance tests with each of the following covariates: high-school
@@ -286,9 +286,12 @@ high-school grade percentile rankings, %\marginpar{Remember to connect
 %  to IK failure!}
 and suggests that the curvature in relationship of (logit-transformed)
 high-school grade percentiles with $R$ is greater than that of $R$'s
-relationship with the outcome; including them in the balance check,
-after residualizing based on an admittedly weak model, lends a
+relationship with the outcome; including them in the balance check%,
+ after residualizing %based on an admittedly weak model,
+lends a
 counterbalancing measure of conservatism to the assessment.
+\marginpar{What does ``an admittedly weak model'' mean?}
+
 
 In addition to the substantively motivated bandwidth of 0.5, we
 determined the bandwidth that would been selected following the
@@ -296,191 +299,28 @@ adaptive procedure of applying placebo tests sequentially and choosing
 the largest bandwidth not to be rejected.
 Testing at level $\alpha=0.15$ at each step, this ended with the bandwidth \Sexpr{BW}.
 
-\subsection{Evidence of manipulation, and a ``fuzzy'' remedy} %A McCrary-Test Failure: Fixing a Broken RDD
-\label{sec:recov-from-fail} \marginpar{Revert to donut. Also save some
-length?}
-
 The McCrary density test identifies a discontinuity in the running
 variable at the cutpoint
 \Sexpr{stopifnot(mccrary1<.0001)} %\Sexpr{latexSN(signif(mccrary1,2))}.
-($p<.0001$).  AP is a dubious distinction, and students may try to
-avoid it; along these lines, Figure~\ref{mccrary} may suggest an
-explanation of the McCrary result. The left panel of the figure displays
-the number of students at each possible value of $R$---the data for
-the McCrary test---with a dotted line at the cutoff, $r=0$.  The
-number of students $i$ for whom $r_i=0$ seems large;
-these students just barely avoided probation.  Most of this group
-(71\%) attempted 4 or fewer credits rather than 4.5 or more, despite
-4.5 or more being the more common choice throughout $\mathcal{W}$
-(55\% vs 45\%) and in the vicinity of the cutpoint; see
-Figure~\ref{mccrary}'s right panel.  These patterns are consistent with a
-particular form of sorting: some students dropped a course in which
-they were performing poorly, in order to avoid AP.
-
-\begin{figure}[htb]
-\centering
-\mbox{
-\subfigure[]{\includegraphics[width=.45\textwidth]{graphics/forcing-discrete.pdf}}
-\quad
-\subfigure[]{\includegraphics[width=.45\textwidth]{graphics/forcing-density.pdf}}
-}
-\caption{Distribution of running variable ($R$), centered first-year
-  GPA, in window $\mathcal{W} = (-.5, .5)$. Although attempting 4.5 or
-  more credits is more common, the spike seen in the left panel at $R=0$
-  consists mostly  (71\%) of students attempting 4 or fewer credits.
-  These students narrowly avoided AP.  Some may have dropped classes
-  in order to do so, a form of ``sorting'' \citep{mccrary2008manipulation}.}
-\label{mccrary}
-\end{figure}
-
-<<>>=
-hipts <- with(subset(dat, abs(dist_from_cut)<=.5), names(which( table(dist_from_cut)>230 )))
-stopifnot(length(hipts)==3) #If not, what changed?  If change is OK then adjust next line
-conn.chars <- c(",", " and", "")
-@
-The appearance of an anomaly is at least partly a by-product of
-discreteness of the data. If the cutpoint has a surprising large
-fraction of
-students attempting relatively few credits, so too do
-Figure~\ref{mccrary}a's other three high points, at $R=$
-\Sexpr{paste(paste0(hipts,conn.chars), collapse=" ")};
-attempting four or fewer credits is more common at
-each of these discrete $R$-coordinates, despite smoothed densities
-being higher at each point for the 4.5 credits or more
-group (Figure~\ref{mccrary}b). Being
-averages of fewer components,  GPAs of four or fewer credits are necessarily clumpier than
-GPAs of 4.5 credits or more; they generate higher spikes.
-
-That being said, contextual considerations suggest taking the finding
-of the McCrary test, a probe for ``[m]anipulation of the running
-variable'' \citep{mccrary2008manipulation}, at face value.  It would
-be odd for university students \textit{not} to manipulate their GPAs,
-by whatever means may be available; and the data are consistent with
-a common reaction to getting overwhelmed having been to shed credits. Even
-with clumps smoothed over, Figure~\ref{mccrary}b shows
-the relative frequency of taking 4 or fewer credits to be greater at the lower
-end of $\mathcal{W}$, i.e. among struggling students.
-
-Does running variable manipulation undercut the basis of the RDD?  Not
-necessarily, as \citet[p.700]{mccrary2008manipulation} explained;
-furthermore, when the basis of the analysis is \eqref{ycheck},
-compensatory manipulations of the design can shield it from
-exaggerated sorting around $R=0$.  This is because \eqref{ycheck}
-only asserts residual independence from $Z$, a condition that is
-weaker than that of independence from $R$ and that can be adjusted to dodge specific
-threats.  In the case of LSO, consider an alternate specification
-according to which: for
-the subset of students attempting four or fewer credits, ${Z} =1$ if
-and only if $R < 0.15$; for students attempting 4.5 credits or more,
-$Z=1$ whenever $R<0$, as before.  If the threat of AP caused some
-students to ``sort'' over the $R=0$ threshold by trimming their course
-schedules, then perhaps our model should assign these students to
-treatment ($Z=1$), not control ($Z=0$). This $0.15$ increment is large enough
-to subsume students who avoided AP only by removing courses they were
-headed for Ds in, in the process dropping from five to four credits,
-within the treatment group,
-but at the same time small enough to leave other struggling, if
-marginally better performing, students within the group considered control.
-
-
-As in the main analysis, $D$ is an indicator of having actually been
-placed on AP; once $Z$ has been revised to accord with this ``fuzzy''
-specification for the RDD, procedures for pretesting,
-post-testing and effect estimation are unchanged.
-The alternate analysis is of the instrumental variables (IV) type; as
-such its estimates and confidence intervals require the exclusion restriction
-\citep{Angrist:etal:1996} that the AP policy
-affected subsequent GPA only for students placed on AP.
-
-
-%% We explore two strategies to limit damage from sorting.
-%% Following the discussion in Section~\ref{sec:choosing-mathcalw-f}, both strategies
-%% use the SIUP to control familywise error
-%% rates for the McCrary test at $\alpha_\mathcal{G}=0.05$.
-
-%% The first strategy we will consider we refer to as the ``donut'' strategy, following \citet{eggers2015validity}.
-%% The donut strategy begins with the intuition that subjects closest to
-%% the cutoff are most likely to sort.
-%% If so, removing subjects close to the cutoff will eliminate,
-%% or ameliorate, the sorting threat.
-%% Along those lines, we will specify a sequence of nested intervals
-%% around the cutoff: $\mathbf{I}=\{I_1,I_2,...\}=\{[-k,k]: k=0,0.01,0.02,...\}$.
-%% For increasing $k$, we will remove from the dataset subjects $i$ for
-%% whom $r_i\in I_k$, and perform the McCrary test on the remaining
-%% subjects, yielding a p-value $p_k$.
-%% Let $k^*$ be the first (that is, smallest) $k$ for which $p_k>\alpha_\mathcal{G}$:
-%% $\min_k\{k:p_k>\alpha_\mathcal{G}\}$.
-%% Then let $\mathcal{W}_{k^*}=\{i: r_i\in k^*\}$ the minimal set of
-%% subjects whose removal engenders a McCrary p-value greater than $\alpha_\mathcal{G}$.
-%% The resulting window of analysis is
-%% $\mathcal{W}^{\mathrm{donut}}=\mathcal{W}-\mathcal{W}_{k*}$, the window of
-%% interest $\mathcal{W}$ with subjects in $\mathcal{W}_{k^*}$ removed.
-
-%% As it happens, in the LSO data, only the first step of this process is necessary:
-%% The McCrary p-value after removing subjects with $r_i=0$ is
-%% $p=$\Sexpr{signif(mccraryNo0,2)}, which is greater than $\alpha_\mathcal{G}=0.05$.
-%% Therefore, we let $\mathcal{W}^{\mathrm{donut}}_{0.5}=\{i: -0.5\le r_i \le 0.5\text{
-%%   and } r_i\ne0\}$.
-<<eval=FALSE>>=
-stopifnot(mccraryNo0>.05)
-@
-
-%% The donut analysis removes students who would have been on AP, but manipulated
-%% their way out.
-%% This, however, may only be a partial solution.
-%% It remains the case that were savvyness measured, it
-%% would predict treatment status: being less-savvy increases students'
-%% probabilities of being put on AP.
-%% This is because the manipulators' peers, who \emph{could have} but
-%% \emph{did not} avoid AP, remain in the dataset, and on AP.
-
-%% This motivates a second strategy, which we refer to as the
-%% ``surgical'' strategy.
-%% In this approach, we consider a sequence of substantive
-%% hypotheses of sets of students who may have either sorted, or could
-%% potentially have sorted but did not.
-%% First, we assume that the sorting students with $r=0$ attempting four credits
-%% were previously taking five credits.
-%% Then, assume the sorters dropped a class they would have otherwise failed.
-%% Their centered first-year GPAs would have been $-$0.30
-%% or $-$0.32, depending on campus.
-%% %% \footnote{Recall, the large university
-%% %%   at which this study takes place has three campuses; at campuses one
-%% %%   and two, the GPA cutoff for AP is 1.5; at campus three it is 1.6.}
-%% This suggests removing students with $r=0$, which presumably includes
-%% many students who \emph{did} sort, and students with $r=-0.3$ or
-%% $-0.32$, depending on campus,
-%% which includes students who could have sorted but did not.
-%% Removing these students yields a McCrary p-value of
-%% $p=$\Sexpr{signif(mccrarySurgical,2)}, also greater than
-%% $\alpha_\mathcal{G}=0.05$.  If the resulting p-value had been less
-%% than $\alpha_\mathcal{G}$, however, we could have hypothesized
-%% additional sorters or potential sorters and removed them from the
-%% dataset as well.
-%<<eval=FALSE>>=
-%stopifnot(mccrarySurgical>.05)
-%@
-
-% Unlike the donut strategy, the surgical strategy emerged from
-% substantive data considerations; therefore, our primary estimates
-% are based on $\mathcal{W}^{\mathrm{surgical}}$.
-% However, as a robustness check, we also consider
-% $\mathcal{W}^{\mathrm{donut}}$.
-
-% Each of the two strategies involves dropping data from the window of
-% analysis and choosing a new $\mathcal{W}$.
-% These operations are complementary to the bandwidth-based restrictions
-% discussed in Sections~\ref{sec:window} and \ref{sec:bandwidthChoice}.
-% That is, for each McCrary fix, we can specify multiple bandwidths, and vice-versa.
-% In other words, for a given $b$ we may specify
-% $\mathcal{W}_b^{\mathrm{donut}}=\{i: r_i\in [-b,b] \text{ and } r_i\ne 0\}$ and
-% $\mathcal{W}_b^{\mathrm{surgical}}=\{i: r_i \in [-b,b] \text{ and } r_i \ne 0,-0.3\}$.
-
-% Notably, removing subjects at the cutoff, as both strategies do,
-% is awkward for the
-% standard approach to RDDs, since these subjects are closest to the target of
-% estimation.
-% However, in our limitless approach, it is rather natural.
+($p<0.0001$).  AP is a dubious distinction, and savvy students may try to
+avoid it, perhaps by dropping a course, pleading with an instructor,
+or otherwise manipulating their GPAs.
+Inspection of the distribution of $R$ reveals an unusual
+number of students whose first-year GPAs were exactly equal to the AP
+cutoff, $R=0$.
+Further, among the students with $R=0$, the number
+attempting four or fewer credits was unusually high, suggesting that
+some students may have dropped a class to barely avoid AP.
+On the other hand, the appearance of an anomaly is at least partly a by-product of
+discreteness of the data.
+GPAs of four or fewer credits are necessarily clumpier than
+GPAs of 4.5 credits or more since they average fewer components.
+Indeed, $R$'s other high points within $b=0.5$ of the cutpoint,
+$R=$\Sexpr{paste(paste0(hipts,conn.chars), collapse=" ")}, also
+feature more students attempting four or fewer credits.
+In any event, repeating the McCrary procedure
+in a window $\mathcal{W}=\{i: |R_i|\in (0,0.5)\}$, with students with
+$R=0$ removed, results in a p-value of \Sexpr{signif(mccrarySurgical,2)}.
 
 \subsection{AP Outcome Analysis}
 

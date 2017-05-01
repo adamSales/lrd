@@ -238,14 +238,14 @@ to C).
 Simplicity recommends a linear specification for the outcome
 regression on the forcing variable, and the scatter of $Y$ versus $R$
 did not suggest otherwise; so we designated
-%\marginpar{$\mu^{1} \mapsto \mu$?} %Manuscript has moved away from
+\marginpar{$\mu^{1} \mapsto \mu$?} %Manuscript has moved away from
                                 %talk about adding monomials or
                                 %splines to the specification. Maybe
                                 %the 1 is just adds potential for confusion.
-$\mu_{\beta}(R_i)=\alpha +\beta R_i$
+$\mu_{\beta}^{1}(R_i)=\alpha +\beta R_i$
 (subject to potential revision following diagnostic checks).
 
-To test $\mu_{\beta}$ and $\mathcal{W}_{0.5}$, we combine specification checks
+To test $\mu_{\beta}^1$ and $\mathcal{W}_{0.5}$, we combine specification checks
 discussed in Section~\ref{sec:specification}.
 
 We conducted balance tests with each of the following covariates: high-school
@@ -286,18 +286,19 @@ high-school grade percentile rankings, %\marginpar{Remember to connect
 %  to IK failure!}
 and suggests that the curvature in relationship of (logit-transformed)
 high-school grade percentiles with $R$ is greater than that of $R$'s
-relationship with the outcome; including them in the balance check%,
- after residualizing %based on an admittedly weak model,
-lends a
+relationship with the outcome; including them in the balance check,
+after residualizing based on an admittedly weak model, lends a
 counterbalancing measure of conservatism to the assessment.
-\marginpar{What does ``an admittedly weak model'' mean?}
-
 
 In addition to the substantively motivated bandwidth of 0.5, we
 determined the bandwidth that would been selected following the
 adaptive procedure of applying placebo tests sequentially and choosing
 the largest bandwidth not to be rejected.
 Testing at level $\alpha=0.15$ at each step, this ended with the bandwidth \Sexpr{BW}.
+
+\subsection{Evidence of manipulation, and a ``fuzzy'' remedy} %A McCrary-Test Failure: Fixing a Broken RDD
+\label{sec:recov-from-fail} \marginpar{Revert to donut. Also save some
+length?}
 
 The McCrary density test identifies a discontinuity in the running
 variable at the cutpoint
