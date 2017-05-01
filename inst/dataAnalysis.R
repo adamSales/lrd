@@ -51,9 +51,18 @@ dat$lhsgrade_pct <- logit(dat$hsgrade_pct)
 #################
 ## main analysis
 #################
+## The sh method uses `lmrob`, which in turn requires a random
+## seed.  For confidence interval and estimation routines it's
+## helpful to use the same seed throughout, as this means the
+## S-estimation initializers will always be sampling the same
+## subsets of the sample.
+set.seed(201705)
+lmrob_seed <- .Random.seed
+
+
 print('1')
 ## test BW=0.5
-balance0.5 <- newBal(dat,0.5, method= 'ancovaHC', reduced.covars=F)
+balance0.5 <- newBal(dat,0.5, reduced.covars=F)
 test0.5 <- test(dat,0.5,outcome='nextGPA')
 CI0.5 <- CI(dat,0.5,outcome='nextGPA')
 
@@ -70,7 +79,7 @@ CI0.5 <- CI(dat,0.5,outcome='nextGPA')
 ##############
 print(2)
 BW <- bwMult(dat, newbal.control=list(method='ancovaHC',reduced.covars=FALSE))
-balanceBW <- newBal(dat,BW, method='ancovaHC',reduced.covars=FALSE)
+balanceBW <- newBal(dat,BW, reduced.covars=FALSE)
 testBW <- test(dat,BW,outcome='nextGPA')
 CIBW <- CI(dat,BW,outcome='nextGPA')
 

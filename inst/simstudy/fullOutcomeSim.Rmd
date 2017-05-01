@@ -81,3 +81,7 @@ kable(powTab, digits=2,
 caption="Table 4: Power")
 ```
 
+Session information
+```{r}
+sessionInfo()
+```

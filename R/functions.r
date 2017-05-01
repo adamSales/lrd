@@ -62,16 +62,18 @@ bw <- function(data,covname='x',method='sh'){
 }
 
 
-#' Choose a bandwidth using either Limitless or Permutations method with covariates in arxiv v3, or the IK method
+#' Choose a bandwidth using one of several methods
 #'
-#' @param dat a data.frame. must contain variables `R` (the running variable) and `Z` (treatment) and, if method='ik', `Y` (outcome) along with the covariates in arxiv v3, 'lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english', and 'age'
+#' Method options include Limitless, a permutation-testing method, or the IK method
+#'
+#' @param dat a data.frame. must contain variables `R` (the running variable) and `Z` (treatment) and, if method='ik', `Y` (outcome) along with these covariates: 'lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english', and 'age'
 #' @param alpha the level of the balance test
 #' @param newbal.control list of optional arguments to `newBal`
 #' @param bsw numeric, a sequence of bandwidths to try (in increasing order)
 #'
 #' @return bandwidth choice (scalar)
 #'
-bwMult <- function(dat,alpha=0.15,newbal.control=list(method='sh'), bws = seq(.3,2,0.01)){
+bwMult <- function(dat,alpha=0.15,newbal.control=list(method='ancovaHC'), bws = seq(.3,2,0.01)){
     stopifnot(is.list(newbal.control),
               !any(c('dat', 'BW') %in% names(newbal.control)),
               is.numeric(bws) && all(bws >=0),
@@ -135,7 +137,10 @@ test <- function(data, BW,tau=0,outcome='Y',method='sh'){
 #' @imports robustbase
 #' @export
 sh <- function(dat){
-  ctl <- lmrob.control(k.max=500,maxit.scale=500)
+    
+    ctl <- if (exists('lmrob_seed')) {
+        lmrob.control(seed=lmrob_seed, k.max=500, maxit.scale=500)
+        } else lmrob.control(          k.max=500, maxit.scale=500)
     if(length(unique(dat$ytilde))>2)
         mod <- lmrob(ytilde~Z+R,data=dat,method='MM',control=ctl)
     else mod <- glmrob(ytilde~Z+R,data=dat,family=binomial)
@@ -163,7 +168,9 @@ ancovaHC <- function(dat) {
         mod <- lm(ytilde~Z+R,data=dat)
     else mod <- glm(ytilde~Z+R,data=dat,family=binomial)
     vcv <- sandwich::sandwich(mod)
-    tstat <- coef(mod)['Z']/sqrt(vcv['Z', 'Z'])
+    Z.pos.c <- pmatch("Z", names(coef(mod)))
+    Z.pos.v <- pmatch("Z", colnames(vcv))
+    tstat <- coef(mod)[Z.pos.c]/sqrt(vcv[Z.pos.v, Z.pos.v])
     2 * pt(-abs(tstat), df=mod$df.residual, lower.tail=T)
     }
 
@@ -426,7 +433,7 @@ outcomeSimTable <- function(results,power){
 
 }
 
-newBal <- function(dat,BW,method='sh', reduced.covars=TRUE){
+newBal <- function(dat,BW,method='ancovaHC', reduced.covars=TRUE){
     ps <- NULL
     xvars <- c('lhsgrade_pct','totcredits_year1','male','loc_campus1','loc_campus2','bpl_north_america','english')
     xvars <- if (reduced.covars) c(xvars, 'age') else c(xvars, 'age_at_entry')
