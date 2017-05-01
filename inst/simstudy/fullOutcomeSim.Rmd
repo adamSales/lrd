@@ -31,7 +31,7 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-
+source("../../R/ddsandwich.R")
 set.seed(201609)
 st <- system.time(results <- fullOutcomeSim(nreps,pval=TRUE))
 save(results, file="../../data/simResults.RData")
