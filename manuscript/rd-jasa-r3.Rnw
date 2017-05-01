@@ -353,15 +353,7 @@ somewhat smaller point estimate.
 % Mon Jun 27 17:58:03 2016
 \begin{table}[ht]
 \centering
-\begin{tabular}{rllll}
-  \hline
- & estimate & 95\% CI & bandwidth & $|\mathcal{W}|$ \\
-  \hline
-$\mathcal{W} $ & 0.23 & (0.17,0.3) & 0.5 & 9737 \\
-  $\mathcal{W}_{a} $& 0.26 & (0.2,0.31) & 0.69 & 13785 \\
-  IV & 0.13 & (-0.06,0.32) & 0.5 & 9737 \\ \\
-   \hline
-\end{tabular}
+\input{tab-results}
 \label{tab:results}
 \caption{Estimates of AP effects using the method of Section~\ref{sec:theMethod}, a
   variant selecting $\mathcal{W} $ adaptively and the instrumental
@@ -392,15 +384,7 @@ dataset.
 % Wed Jun 29 11:46:37 2016
 \begin{table}[ht]
 \centering
-\begin{tabular}{rllll}
-  \hline
- & estimate & 95\% CI & bandwidth & $|\mathcal{W}|$ \\
-  \hline
-Local Permutation & 0.16 & (0.04,0.27) & 0.16 & 2999 \\
-  ``Limitless'' & 0.23 & (0.17,0.3) & 0.5 & 9737 \\
-  Local OLS & 0.24 & (0.19,0.28) & 1.25 & 25065 \\
-   \hline
-\end{tabular}
+\input{tab-alt}
 \label{alt}
 \caption{The effect of Academic Probation from our main analysis compared with permutation and OLS analyses.}
 \end{table}
