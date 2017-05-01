@@ -3,6 +3,11 @@ explorations of distribution-free large sample inference for regression disconti
 
 Accompanies the paper [Limitless regression discontinuity](http://arxiv.org/abs/1403.5478).
 
+## Data analysis
+
+See file inst/dataAnalysis.R (or perhaps dataAnalysis.R if you
+unpacked a tarball to get here).   Commands to be run from main
+directory/package root directory.
 
 ## Power/size simulations
 
