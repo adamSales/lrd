@@ -33,8 +33,12 @@ library('sandwich')
 library('nnet')
 
 set.seed(201609)
-results <- fullOutcomeSim(nreps,pval=TRUE)
+st <- system.time(results <- fullOutcomeSim(nreps,pval=TRUE))
 save(results, file="../../data/simResults.RData")
+cat(paste0(date(), ', nreps=0', nreps, '\n'),
+    paste(c(names(st),'\n', collapse=T)),
+    st,
+    file='fullOutcomeSim-runtime.txt', append=TRUE)
 } else load('../../data/simResults.RData')
 ```
 
