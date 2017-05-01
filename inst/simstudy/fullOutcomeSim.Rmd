@@ -1,0 +1,79 @@
+---
+title: "Tables from simulations presented in lrd paper"
+author: "lrd authors"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+General dependencies.
+```{r}
+library('knitr')
+source("../../R/functions.r")
+```
+
+
+
+Initialization. Note that `nreps=0` corresponds to no simulations,
+just print results from previously saved simulations.
+In order to re-run the simulations, the `nreps`
+variable should have been set to a positive integer before initiating this script. 
+
+```{r}
+if (!exists('nreps') ) nreps <- 0
+nreps
+if (nreps) {
+library('robustbase')
+library('rdd')
+library('RItools')
+library('sandwich')
+library('nnet')
+
+set.seed(201609)
+results <- fullOutcomeSim(nreps,pval=TRUE)
+save(results, file="../../data/simResults.RData")
+} else load('../../data/simResults.RData')
+```
+
+Some hand-formatting went into the tables in the paper. This code generates the same numbers, in the same configuration, but without the formatting.
+```{r}
+sizeTab <- NULL
+ns <- c(50,500,5000)
+meths <- c('cft','sh','ik')
+bws_size <- c(0.3,0.5,0.75)
+for(n in ns){
+    row <- NULL
+    for(meth in meths){
+        for(bw in bws_size){
+            row <- c(row, mean(results[[paste(n,TRUE,3,bw,0,sep='_')]][,meth]<=0.05,na.rm=TRUE))
+        }
+    }
+    sizeTab <- rbind(sizeTab,row)
+}
+row.names(sizeTab) <- paste0('n=',ns)
+colnames(sizeTab) <- paste(rep(meths, each=3), bws_size, sep="_")
+kable(sizeTab, digits=2, 
+caption="Table 3: Empirical Size of Hypothesis Tests")
+```
+
+```{r}
+powTab <-NULL
+bws_pow <- c(0.3,0.5)
+for(n in ns){
+    row <- NULL
+    for(meth in meths){
+        for(bw in bws_pow){
+            row <- c(row, mean(results[[paste(n,TRUE,3,bw,1,sep='_')]][,meth]<=0.05,na.rm=TRUE))
+        }
+    }
+    powTab <- rbind(powTab,row)
+    }
+row.names(powTab) <- paste0('n=',ns)
+colnames(powTab) <- paste(rep(meths, each=2), bws_pow, sep="_")
+kable(powTab, digits=2, 
+caption="Table 4: Power")
+```
+
