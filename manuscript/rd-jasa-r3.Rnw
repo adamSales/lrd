@@ -286,18 +286,21 @@ high-school grade percentile rankings, %\marginpar{Remember to connect
 %  to IK failure!}
 and suggests that the curvature in relationship of (logit-transformed)
 high-school grade percentiles with $R$ is greater than that of $R$'s
-relationship with the outcome; including them in the balance check%,
- after residualizing %based on an admittedly weak model,
+relationship with the outcome; including them in the balance check
 lends a
 counterbalancing measure of conservatism to the assessment.
-\marginpar{What does ``an admittedly weak model'' mean?}
-
 
 In addition to the substantively motivated bandwidth of 0.5, we
 determined the bandwidth that would been selected following the
 adaptive procedure of applying placebo tests sequentially and choosing
 the largest bandwidth not to be rejected.
 Testing at level $\alpha=0.15$ at each step, this ended with the bandwidth \Sexpr{BW}.
+
+<<>>=
+hipts <- with(subset(dat, abs(dist_from_cut)<=.5), names(which( table(dist_from_cut)>230 )))
+stopifnot(length(hipts)==3) #If not, what changed?  If change is OK then adjust next line
+conn.chars <- c(",", " and", "")
+@
 
 The McCrary density test identifies a discontinuity in the running
 variable at the cutpoint
