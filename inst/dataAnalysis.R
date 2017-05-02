@@ -112,6 +112,19 @@ print(xtable(resultsTab),
       file="tab-results.tex", floating=F)
 
 
+## To do: compare robustness weights plots for the next 2 models
+modHL <- lmrob(nextGPA~Z+R+offset(CI0.5['HL']*Z),
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      )
+modM <- lmrob(nextGPA~Z+R,
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      ) 
 
 psRocio <- vapply(seq(0.01,0.2,0.01), function(b) newBal(dat,BW=b,method='cft'),1)
 bRocio <- max(seq(0.01,0.2,0.01)[psRocio>=0.15],na.rm=TRUE)
