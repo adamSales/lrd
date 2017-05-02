@@ -22,7 +22,7 @@ just print results from previously saved simulations.
 In order to re-run the simulations, the `nreps`
 variable should have been set to a positive integer before initiating this script. 
 
-```{r}
+```{r  warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
 nreps
 if (nreps) {
@@ -61,6 +61,8 @@ row.names(sizeTab) <- paste0('n=',ns)
 colnames(sizeTab) <- paste(rep(meths, each=3), bws_size, sep="_")
 kable(sizeTab, digits=2, 
 caption="Table 3: Empirical Size of Hypothesis Tests")
+cat(kable(sizeTab, format="latex", digits=2),
+    file="tab-levelSimulation.tex", sep="\n")
 ```
 
 ```{r}
@@ -79,6 +81,8 @@ row.names(powTab) <- paste0('n=',ns)
 colnames(powTab) <- paste(rep(meths, each=2), bws_pow, sep="_")
 kable(powTab, digits=2, 
 caption="Table 4: Power")
+cat(kable(powTab, format="latex", digits=2),
+    file="tab-powerSimulation.tex", sep="\n")
 ```
 
 Session information

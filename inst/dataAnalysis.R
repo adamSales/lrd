@@ -103,13 +103,13 @@ round2 <- function(x) round(x,2)
 nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
 
 resultsTab <-
-
     rbind(
         main=c(round2(CI0.5['HL']),ciChar(round2(c(CI0.5['CI1'],CI0.5['CI2']))),bw=0.5,n=nfunc(0.5)),
         data_driven=c(round2(CIBW['HL']),ciChar(round2(c(CIBW['CI1'],CIBW['CI2']))),bw=BW,n=nfunc(BW)),
     IV=c(round2(testCI['HL']),ciChar(round2(c(testCI['CI1'],testCI['CI2']))),bw=0.5,n=nfunc(0.5)))
 
-
+print(xtable(resultsTab),
+      file="tab-results.tex", floating=F)
 
 
 
@@ -131,7 +131,9 @@ altTable <- rbind(
 
 
 
-xtable(altTable,caption='Null Hypothesis p-values, 95\\% confidence intervals, and point estimates for our main analysis, compared with the analysis in Cattaneo, et al. (2014), and the conventional local-linear estimate with the Imbens and Kalyanaraman (2012) bandwidth.',label='alt')
+print(xtable(altTable),
+      file="tab-alt.tex", floating=F)
+
 
 
 IKbalanceTest <- newBal(dat,1.25)
