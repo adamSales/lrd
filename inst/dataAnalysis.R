@@ -14,7 +14,20 @@ source('R/functions.r')
 source('R/ddsandwich.R')
 
 logit=function(x) log(x*.01/(1-x*.01))
-                                #dat=read.csv('LindoDat.csv')
+                                        #dat=read.csv('LindoDat.csv')
+
+ciChar <- function(ci,est=FALSE){
+    ci <- round(ci,2)
+    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
+    if(est) ci.out <- c(ci.out,as.character(ci[3]))
+    ci.out
+}
+
+round2 <- function(x) round(x,2)
+
+nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
+
+
 
 if(!is.element('dat',ls())){
     require(foreign)
@@ -62,9 +75,7 @@ lmrob_seed <- .Random.seed
 
 print('1')
 ## test BW=0.5
-balance0.5 <- newBal(dat,0.5, reduced.covars=F)
-test0.5 <- test(dat,0.5,outcome='nextGPA')
-CI0.5 <- CI(dat,0.5,outcome='nextGPA')
+SHmain <- sh(subset(dat,R!=0),0.5,'nextGPA')
 
 #################
 ### donut
@@ -78,40 +89,33 @@ CI0.5 <- CI(dat,0.5,outcome='nextGPA')
 ### data-driven BW
 ##############
 print(2)
-BW <- bwMult(dat, newbal.control=list(method='ancovaHC',reduced.covars=FALSE))
-balanceBW <- newBal(dat,BW, reduced.covars=FALSE)
-testBW <- test(dat,BW,outcome='nextGPA')
-CIBW <- CI(dat,BW,outcome='nextGPA')
+SHdataDriven <- sh(dat=subset(dat,R!=0),outcome='nextGPA')
 
-
-###########
-### IV
-###########
+##############3
+### quadratic in R
+###############3
 print(3)
-datIV <- dat
-testCI <- IV(datIV)
-#balanceIV <- newBal(testCI$
+SHquad <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,2)')
 
-ciChar <- function(ci,est=FALSE){
-    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
-    if(est) ci.out <- c(ci.out,as.character(ci[3]))
-    ci.out
-}
+###########
+### ITT
+##########
+print(4)
+SHitt <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 
-round2 <- function(x) round(x,2)
 
-nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
+
 
 resultsTab <-
-
-    rbind(
-        main=c(round2(CI0.5['HL']),ciChar(round2(c(CI0.5['CI1'],CI0.5['CI2']))),bw=0.5,n=nfunc(0.5)),
-        data_driven=c(round2(CIBW['HL']),ciChar(round2(c(CIBW['CI1'],CIBW['CI2']))),bw=BW,n=nfunc(BW)),
-    IV=c(round2(testCI['HL']),ciChar(round2(c(testCI['CI1'],testCI['CI2']))),bw=0.5,n=nfunc(0.5)))
-
-
+    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,include_0=SHquad),
+                            function(res) c(round2(res$CI['est']),
+                                            ciChar(res$CI[1:2]),
+                                            bw=res$BW,
+                                            n=res$n)))
 
 
+
+bRocio <- bwMult(subset(dat,R!=0),balMult.control=list(method='cft',reduced.covars=FALSE))
 
 psRocio <- vapply(seq(0.01,0.2,0.01), function(b) newBal(dat,BW=b,method='cft'),1)
 bRocio <- max(seq(0.01,0.2,0.01)[psRocio>=0.15],na.rm=TRUE)
