@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 General dependencies.
 ```{r}
 library('knitr')
-source("../../R/functions.r")
+source("../R/functions.r")
 ```
 
 
@@ -31,15 +31,15 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("../../R/ddsandwich.R")
+source("../R/ddsandwich.R")
 set.seed(201609)
 st <- system.time(results <- fullOutcomeSim(nreps,pval=TRUE))
-save(results, file="../../data/simResults.RData")
+save(results, file="../data/simResults.RData")
 cat(paste0(date(), ', nreps=0', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='fullOutcomeSim-runtime.txt', append=TRUE)
-} else load('../../data/simResults.RData')
+} else load('../data/simResults.RData')
 ```
 
 Some hand-formatting went into the tables in the paper. This code generates the same numbers, in the same configuration, but without the formatting.
