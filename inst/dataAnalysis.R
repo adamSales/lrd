@@ -27,6 +27,8 @@ round2 <- function(x) round(x,2)
 
 nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
 
+Wfunc <- function(W)
+    paste0('[',round2(W[1]), ',',round2(W[2]),')')
 
 
 if(!is.element('dat',ls())){
@@ -75,7 +77,7 @@ lmrob_seed <- .Random.seed
 
 print('1')
 ## test BW=0.5
-SHmain <- sh(subset(dat,R!=0),0.5,'nextGPA')
+SHmain <- sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
 #################
 ### donut
@@ -107,41 +109,59 @@ SHitt <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 
 
 resultsTab <-
-    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,include_0=SHquad),
-                            function(res) c(round2(res$CI['est']),
+    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,quad=SHquad,ITT=SHitt),
+                            function(res) c(round2(res$CI[3]),
                                             ciChar(res$CI[1:2]),
-                                            bw=res$BW,
+                                            W=Wfunc(res$W),
+                                            n=res$n)))
+
+
+print(xtable(resultsTab),
+      file="tab-results.tex", floating=F)
+
+CFT <- cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
+IK <- ik(subset(dat,R!=0),outcome='nextGPA')
+
+altTab <-
+    do.call('rbind', lapply(list(Limitless=SHitt,`Local Permutation`=CFT,`Local OLS`=IK),
+                            function(res) c(round2(res$CI[3]),
+                                            ciChar(res$CI[1:2]),
+                                            W=Wfunc(res$W),
                                             n=res$n)))
 
 
 
-bRocio <- bwMult(subset(dat,R!=0),balMult.control=list(method='cft',reduced.covars=FALSE))
-
-psRocio <- vapply(seq(0.01,0.2,0.01), function(b) newBal(dat,BW=b,method='cft'),1)
-bRocio <- max(seq(0.01,0.2,0.01)[psRocio>=0.15],na.rm=TRUE)
-#datR <- bw(bRocio,datDN=datSurg)
-
-cftTest <- test(dat,BW=bRocio,method='cft',outcome='nextGPA')
-cftCI <- CI(dat,BW=bRocio,method='cft',outcome='nextGPA')
-
-conv <- RDestimate(nextGPA~dist_from_cut,data=dat,cutpoint=-0.005,kernel='rectangular')
 
 
 
-altTable <- rbind(
-    Local_Permutation=c(round2(cftCI['HL']),ciChar(round2(c(cftCI['CI1'],cftCI['CI2']))),bw=bRocio,n=nfunc(bRocio)),
-    Limitless=c(round2(CI0.5['HL']),ciChar(round2(c(CI0.5['CI1'],CI0.5['CI2']))),bw=0.5,n=nfunc(0.5)),
-    Local_OLS=c(round2(-conv$est[1]),ciChar(sort(-conv$ci[1,])),bw=round2(conv$bw[1]),n=nfunc(conv$bw[1])))
+print(xtable(altTab),
+      file="tab-alt.tex", floating=F)
+
+
+## To do: compare robustness weights plots for the next 2 models
+modHL <- lmrob(nextGPA~Z+R+offset(SHmain$CI[3]*Z),
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      )
+modM <- lmrob(nextGPA~Z+R,
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      )
 
 
 
-xtable(altTable,caption='Null Hypothesis p-values, 95\\% confidence intervals, and point estimates for our main analysis, compared with the analysis in Cattaneo, et al. (2014), and the conventional local-linear estimate with the Imbens and Kalyanaraman (2012) bandwidth.',label='alt')
 
 
-IKbalanceTest <- newBal(dat,1.25)
 
 mccrary1 <- DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
 
+
+ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
+ntot <- nrow(dat)
 
 save(list=ls(),file='RDanalysis.RData')
 
