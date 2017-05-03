@@ -234,7 +234,7 @@ ik <- function(dat,BW=NULL,outcome){
 }
 
 
-#' Wrapper for Imbens-Kalyanaraman style RDD analysis
+#' Imbens-Kalyanaraman style RDD analysis
 #'
 #' Uses OLS to estimate the RDD Local Average Treatment Effect (LATE) as in
 #' Imbens, G. and Kalyanaraman, K. (2012). Uses a "rectangular" kernal.
@@ -243,19 +243,14 @@ ik <- function(dat,BW=NULL,outcome){
 #'
 #'
 #' @param dat Data set with columns \code{Z}, \code{R}, and an outcome variable
-#' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be estimated from the
-#' data
+#' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be
+#' estimated from the data
 #' @param varb A string specifying the name of the outcome or covariate variable
 #' @param rhs Ignored
 #' @param justP if TRUE only returns the p-value
 #'
-#' @return a list consisting of
-#'  \item p.value The p-value testing no effect
-#'  \item CI a vector of confidence limits and the HL treatment effect
-#'  \item BW the RDD bandwidth
-#'  \item bal.pval a p-value testing for covariate balance
-#'  \item n the number of subjects in the window of analysis
-#'  \item W the range of R values in the window of analysis
+#' @return if justP=TRUE, returns the p-value for an effect. if justP=FALSE,
+#' returns the fitted RDD model (an object of class "RD").
 #' @imports rdd
 #' @export
 
