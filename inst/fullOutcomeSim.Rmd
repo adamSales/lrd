@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 General dependencies.
 ```{r}
 library('knitr')
-source("../../R/functions.r")
+source("../R/functions.r")
 ```
 
 
@@ -22,7 +22,7 @@ just print results from previously saved simulations.
 In order to re-run the simulations, the `nreps`
 variable should have been set to a positive integer before initiating this script. 
 
-```{r}
+```{r  warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
 nreps
 if (nreps) {
@@ -31,15 +31,15 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("../../R/ddsandwich.R")
+source("../R/ddsandwich.R")
 set.seed(201609)
 st <- system.time(results <- fullOutcomeSim(nreps,pval=TRUE))
-save(results, file="../../data/simResults.RData")
+save(results, file="../data/simResults.RData")
 cat(paste0(date(), ', nreps=0', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='fullOutcomeSim-runtime.txt', append=TRUE)
-} else load('../../data/simResults.RData')
+} else load('../data/simResults.RData')
 ```
 
 Some hand-formatting went into the tables in the paper. This code generates the same numbers, in the same configuration, but without the formatting.
@@ -61,6 +61,8 @@ row.names(sizeTab) <- paste0('n=',ns)
 colnames(sizeTab) <- paste(rep(meths, each=3), bws_size, sep="_")
 kable(sizeTab, digits=2, 
 caption="Table 3: Empirical Size of Hypothesis Tests")
+cat(kable(sizeTab, format="latex", digits=2),
+    file="tab-levelSimulation.tex", sep="\n")
 ```
 
 ```{r}
@@ -79,6 +81,8 @@ row.names(powTab) <- paste0('n=',ns)
 colnames(powTab) <- paste(rep(meths, each=2), bws_pow, sep="_")
 kable(powTab, digits=2, 
 caption="Table 4: Power")
+cat(kable(powTab, format="latex", digits=2),
+    file="tab-powerSimulation.tex", sep="\n")
 ```
 
 Session information

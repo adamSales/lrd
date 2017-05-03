@@ -160,7 +160,8 @@ HLsh <- function(dat,BW,outcome='Y',rhs=rhs){
 
     shortFunction <- function(tau)
         testSH(dat=dat,BW=BW,tau=tau,outcome=outcome,return.coef=TRUE,rhs=rhs)
-    uniroot(shortFunction,interval=c(-1,1),extendInt='yes')$root
+    out <- try(uniroot(shortFunction,interval=c(-1,1),extendInt='yes')$root)
+    ifelse(inherits(out, 'try-error'),NA,out)
 }
 
 
@@ -254,7 +255,7 @@ ik <- function(dat,BW=NULL,outcome){
 #' @imports rdd
 #' @export
 
-ikTest <- function(dat,BW,varb,rhs=NULL,justP=TRUE){
+ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
     if(!missing(varb)) dat$Y <- -dat[[varb]]
     if(missing(BW) | is.null(BW))
         mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,cutpoint=-0.005))
@@ -348,25 +349,19 @@ balMult <- function(dat,BW,method='sh',reduced.covars=TRUE,rhs=NULL){
 #'
 #' @return bandwidth choice (scalar)
 #'
-bw <- function(dat,covname='x',method='sh',alphax=0.15){
+bw <- function(dat,covname='x',method='sh',alphax=0.15,plt=FALSE){
 
     if(method=='ik') return(IKbandwidth(dat$R,dat$Y,kernel='rectangular'))
-    else test <- switch(method,"sh"= testSH, "cft"=cft)
-    short <- function(w) test(dat=dat,BW=w,varb=covname)
-
-    bws <- seq(0,1,0.01)
-    p <- 0
-    i <- length(bws)+1
-    while(p<alphax){
-        i <- i-1
-        if(i==0) return(i)
-        bw <- bws[i]
-        pval <- short(bw)
-        p <- ifelse(is.numeric(pval)&is.finite(pval),pval,0)
-    }
-    bws[i]
-
+    else test <- switch(method,"sh"= balOneSH, "cft"=cft)
+    short <- function(w) test(dat=dat,BW=w,varb=covname)# - alphax
+    #uniroot(short,interval=c(min(max(dat$R),-min(dat$R))-0.1,min(max(dat$R),-min(dat$R))),
+    #                  extendInt='downX')$root
+    bws <- seq(0.02,min(max(dat$R),-min(dat$R)),0.01)
+    ps <- vapply(bws,short,1)
+    if(plt) plot(ps)
+    bws[max(which(ps>alphax))]
 }
+
 
 
 #' Choose a bandwidth using one of several methods
@@ -439,9 +434,17 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     data.frame(R=R,x=x,yc=yc,Z=Z,Y=Y)
 }
 
+shbw <- function(dat){
+    BW <- bw(dat)
+    c(BW,testSH(dat,BW,rhs='~poly(R,3)+Z'),HLsh(ddd,BW,rhs='~poly(R,3)+Z'))
+}
 
+ikSim <- function(dat){
+    mod <- ikTest(dat, justP=FALSE)
+    c(mod$bw[1],mod$p[1],mod$est[1])
+}
 
-outcomeSimOne <- function(n,curve,tdist,BW,tau=0,pval=TRUE){
+Outcomesimone <- function(n,curve,tdist,BW,tau=0,pval=TRUE){
     dat <- makeData(n=n,curve=curve,tdist=tdist,tau=tau)
 
     if(pval) func <- function(test) test(dat=dat,BW=BW)
@@ -460,6 +463,19 @@ outcomeSimOneCell <- function(B,n,curve,tdist,tau=0,pval=TRUE,BW){
         results <- rbind(results,res)
  #   }
     results
+}
+
+outcomeSimFlexBW <- function(n,curve,tdist,tau,pval=TRUE){
+    dat <- makeData(n=n,curve=curve,tdist=tdist,tau=tau)
+
+    func <- function(test) test(dat)
+
+   c( vapply(list(shbw,ikSim),
+                                        #,cftTest),
+                      func,numeric(3)),
+               n,curve,tdist,tau)#,c('sh','ik',
+                                    #'cft',
+                                  #  'n','curve','tdist','tau'))
 }
 
 
