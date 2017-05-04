@@ -129,7 +129,19 @@ altTab <-
                                             W=Wfunc(res$W),
                                             n=res$n)))
 
-
+## To do: compare robustness weights plots for the next 2 models
+modHL <- lmrob(nextGPA~Z+R+offset(CI0.5['HL']*Z),
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      )
+modM <- lmrob(nextGPA~Z+R,
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      ) 
 
 
 
