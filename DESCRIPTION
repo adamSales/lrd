@@ -1,0 +1,11 @@
+Package: lrd
+Title: Computations accompanying the paper Limitless Regression Discontinuity
+Version: 0.0.0.9000
+Authors@R: c(
+   person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
+      person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")) )
+Description: Repository of computations for our paper Limitless Regression Discontinuity, as an R package
+Depends: R (>= 3.1.0)
+License: MIT
+Encoding: UTF-8
+LazyData: true

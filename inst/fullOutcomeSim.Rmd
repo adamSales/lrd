@@ -13,7 +13,7 @@ General dependencies.
 ```{r}
 requireNamespace('knitr')
 requireNamespace('devtools')
-source("../R/functions.r")
+if (!require("lrd")) source("../R/functions.r")
 ```
 
 

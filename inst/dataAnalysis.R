@@ -11,9 +11,10 @@ library(rdd)
 library(robustbase)
 library(ggplot2)
 
-
-source('R/functions.r')
-source('R/ddsandwich.R')
+if (!require('lrd')){
+    source('R/functions.r')
+    source('R/ddsandwich.R')
+    }
 
 logit=function(x) log(x*.01/(1-x*.01))
                                 #dat=read.csv('LindoDat.csv')
