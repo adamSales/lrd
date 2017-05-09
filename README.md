@@ -12,8 +12,8 @@ directory/package root directory.
 ## Power/size simulations
 
 
-Simulation scripts live in ./inst (or perhaps ./ if
-you unpacked a tarball to get here)
+Simulation scripts live in ./inst (or perhaps `system.file(package="lrd")` if
+you've installed lrd as an R package.)
 
 The fullOutcomeSim.Rmd script displays and optionally re-runs power and
 size simulations presented in the paper. 
@@ -24,12 +24,20 @@ To run it from the command line, do
 or
 >   Rscript -e 'setwd("./inst/"); knitr::knit("fullOutcomeSim.Rmd")'
 
+If you've installed lrd as an R package, you'd do (CHECK ME)
+
+>   Rscript -e 'rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+or
+>   Rscript -e 'knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+
+
 This will generate an html file with code and results from whatever
 simulations are saved in "data/simResults.RData".
 
 To not only display the simulation results but also reproduce them, do 
 >   Rscript -e 'nreps=<N>; setwd("./inst/"); rmarkdown::render("fullOutcomeSim.Rmd")'
-
+or
+>   Rscript -e 'nreps=<N>; rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 after replacing "`<N>`" with the number of simulations you want, e.g 1000.  
 
 

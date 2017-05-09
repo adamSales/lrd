@@ -11,8 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 General dependencies.
 ```{r}
-library('knitr')
-source("../R/functions.r")
+requireNamespace('knitr')
+requireNamespace('devtools')
+if (!require("lrd")) source("../R/functions.r")
 ```
 
 
@@ -59,9 +60,9 @@ for(n in ns){
 }
 row.names(sizeTab) <- paste0('n=',ns)
 colnames(sizeTab) <- paste(rep(meths, each=3), bws_size, sep="_")
-kable(sizeTab, digits=2, 
+knitr::kable(sizeTab, digits=2, 
 caption="Table 3: Empirical Size of Hypothesis Tests")
-cat(kable(sizeTab, format="latex", digits=2),
+cat(knitr::kable(sizeTab, format="latex", digits=2),
     file="tab-levelSimulation.tex", sep="\n")
 ```
 
@@ -79,13 +80,13 @@ for(n in ns){
     }
 row.names(powTab) <- paste0('n=',ns)
 colnames(powTab) <- paste(rep(meths, each=2), bws_pow, sep="_")
-kable(powTab, digits=2, 
+knitr::kable(powTab, digits=2, 
 caption="Table 4: Power")
-cat(kable(powTab, format="latex", digits=2),
+cat(knitr::kable(powTab, format="latex", digits=2),
     file="tab-powerSimulation.tex", sep="\n")
 ```
 
 Session information
 ```{r}
-sessionInfo()
+devtools::session_info()
 ```
