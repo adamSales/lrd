@@ -38,3 +38,10 @@ vignettes/*.pdf
 
 # directory for storing non-committed artifacts
 dataResults/
+inst/totalPolySim.RData
+
+R/.#functions.r
+
+R/#functions.r#
+
+R/functions.r~

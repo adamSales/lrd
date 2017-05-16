@@ -156,7 +156,7 @@ testSH <- function(dat,BW,tau=0,outcome='Y',return.coef=FALSE,rhs=NULL){
 #' @imports robustbase
 #' @export
 
-HLsh <- function(dat,BW,outcome='Y',rhs=NULL){
+HLsh <- function(dat,BW,outcome='Y',rhs=rhs){
 
     shortFunction <- function(tau)
         testSH(dat=dat,BW=BW,tau=tau,outcome=outcome,return.coef=TRUE,rhs=rhs)
@@ -304,7 +304,7 @@ cftTest <- function(dat,BW,varb,alpha=0.05,rhs=NULL,justP=TRUE){
     if(sum(dat$R<0 & -BW<dat$R)<2 || sum(dat$R>0 & dat$R<BW)<2) return(NA)
     dat <- dat[abs(dat$R)<BW,]
 
-    if(!missing(varb)) dat$Y <- dat[[varb]]
+    if(!missing(varb)) dat$Y <- -dat[[varb]]
 
     wilcox <- with(dat,wilcox.test(Y~Z,conf.int=!justP,conf.level=1-alpha))
     if(justP) return(wilcox$p.value)
@@ -352,7 +352,7 @@ balMult <- function(dat,BW,method='sh',reduced.covars=TRUE,rhs=NULL){
 bw <- function(dat,covname='x',method='sh',alphax=0.15,plt=FALSE){
 
     if(method=='ik') return(IKbandwidth(dat$R,dat$Y,kernel='rectangular'))
-    else test <- switch(method,"sh"= balOneSH, "cft"=cftTest)
+    else test <- switch(method,"sh"= balOneSH, "cft"=cft)
     short <- function(w) test(dat=dat,BW=w,varb=covname)# - alphax
     #uniroot(short,interval=c(min(max(dat$R),-min(dat$R))-0.1,min(max(dat$R),-min(dat$R))),
     #                  extendInt='downX')$root

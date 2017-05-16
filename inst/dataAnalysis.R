@@ -9,15 +9,27 @@
 library(xtable)
 library(rdd)
 library(robustbase)
-library(ggplot2)
 
-if (!require('lrd')){
-    source('R/functions.r')
-    source('R/ddsandwich.R')
-    }
+source('R/functions.r')
+source('R/ddsandwich.R')
 
 logit=function(x) log(x*.01/(1-x*.01))
-                                #dat=read.csv('LindoDat.csv')
+                                        #dat=read.csv('LindoDat.csv')
+
+ciChar <- function(ci,est=FALSE){
+    ci <- round(ci,2)
+    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
+    if(est) ci.out <- c(ci.out,as.character(ci[3]))
+    ci.out
+}
+
+round2 <- function(x) round(x,2)
+
+nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
+
+Wfunc <- function(W)
+    paste0('[',round2(W[1]), ',',round2(W[2]),')')
+
 
 if(!is.element('dat',ls())){
     require(foreign)
@@ -65,9 +77,7 @@ lmrob_seed <- .Random.seed
 
 print('1')
 ## test BW=0.5
-balance0.5 <- newBal(dat,0.5, reduced.covars=F)
-test0.5 <- test(dat,0.5,outcome='nextGPA')
-CI0.5 <- CI(dat,0.5,outcome='nextGPA')
+SHmain <- sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
 #################
 ### donut
@@ -81,94 +91,89 @@ CI0.5 <- CI(dat,0.5,outcome='nextGPA')
 ### data-driven BW
 ##############
 print(2)
-BW <- bwMult(dat, newbal.control=list(method='ancovaHC',reduced.covars=FALSE))
-balanceBW <- newBal(dat,BW, reduced.covars=FALSE)
-testBW <- test(dat,BW,outcome='nextGPA')
-CIBW <- CI(dat,BW,outcome='nextGPA')
+SHdataDriven <- sh(dat=subset(dat,R!=0),outcome='nextGPA')
 
-
-###########
-### IV
-###########
+##############3
+### quadratic in R
+###############3
 print(3)
-datIV <- dat
-testCI <- IV(datIV)
-#balanceIV <- newBal(testCI$
+SHquad <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,2)')
 
-ciChar <- function(ci,est=FALSE){
-    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
-    if(est) ci.out <- c(ci.out,as.character(ci[3]))
-    ci.out
-}
+###########
+### ITT
+##########
+print(4)
+SHitt <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 
-round2 <- function(x) round(x,2)
 
-nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
+
 
 resultsTab <-
-    rbind(
-        main=c(round2(CI0.5['HL']),ciChar(round2(c(CI0.5['CI1'],CI0.5['CI2']))),bw=0.5,n=nfunc(0.5)),
-        data_driven=c(round2(CIBW['HL']),ciChar(round2(c(CIBW['CI1'],CIBW['CI2']))),bw=BW,n=nfunc(BW)),
-    IV=c(round2(testCI['HL']),ciChar(round2(c(testCI['CI1'],testCI['CI2']))),bw=0.5,n=nfunc(0.5)))
+    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,quad=SHquad,ITT=SHitt),
+                            function(res) c(round2(res$CI[3]),
+                                            ciChar(res$CI[1:2]),
+                                            W=Wfunc(res$W),
+                                            n=res$n)))
+
 
 print(xtable(resultsTab),
       file="tab-results.tex", floating=F)
 
+CFT <- cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
+IK <- ik(subset(dat,R!=0),outcome='nextGPA')
 
-###########
-### Explorations -- remove/edit me!
-###########
+altTab <-
+    do.call('rbind', lapply(list(Limitless=SHitt,`Local Permutation`=CFT,`Local OLS`=IK),
+                            function(res) c(round2(res$CI[3]),
+                                            ciChar(res$CI[1:2]),
+                                            W=Wfunc(res$W),
+                                            n=res$n)))
+
 ## To do: compare robustness weights plots for the next 2 models
-modHL <- lmrob(nextGPA~R+offset(CI0.5['HL']*Z),
-      data=dat,subset=(abs(R)<.5 &R!=0),
-      method='MM'
+modHL <- lmrob(nextGPA~Z+R+offset(CI0.5['HL']*Z),
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
       )
 modM <- lmrob(nextGPA~Z+R,
-      data=dat,subset=(abs(R)<.5 &R!=0),
-      method='MM'
-      )
-
-pl_modHL<- ggplot(data.frame(R=modHL$model$R, 
-                        robweights=weights(modHL, type='robustness')), 
-             aes(x=R, y=robweights))
-pl_modM <- ggplot(data.frame(R=modM$model$R, 
-                        robweights=weights(modM, type='robustness')), 
-             aes(x=R, y=robweights))
-#pl_modHL + geom_point(alpha=.1) + stat_smooth()
-#pl_modM + geom_point(alpha=.1) + stat_smooth()
-###########
-### End explorations
-###########
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      ) 
 
 
 
-psRocio <- vapply(seq(0.01,0.2,0.01), function(b) newBal(dat,BW=b,method='cft'),1)
-bRocio <- max(seq(0.01,0.2,0.01)[psRocio>=0.15],na.rm=TRUE)
-#datR <- bw(bRocio,datDN=datSurg)
 
-cftTest <- test(dat,BW=bRocio,method='cft',outcome='nextGPA')
-cftCI <- CI(dat,BW=bRocio,method='cft',outcome='nextGPA')
-
-conv <- RDestimate(nextGPA~dist_from_cut,data=dat,cutpoint=-0.005,kernel='rectangular')
-
-
-
-altTable <- rbind(
-    Local_Permutation=c(round2(cftCI['HL']),ciChar(round2(c(cftCI['CI1'],cftCI['CI2']))),bw=bRocio,n=nfunc(bRocio)),
-    Limitless=c(round2(CI0.5['HL']),ciChar(round2(c(CI0.5['CI1'],CI0.5['CI2']))),bw=0.5,n=nfunc(0.5)),
-    Local_OLS=c(round2(-conv$est[1]),ciChar(sort(-conv$ci[1,])),bw=round2(conv$bw[1]),n=nfunc(conv$bw[1])))
-
-
-
-print(xtable(altTable),
+print(xtable(altTab),
       file="tab-alt.tex", floating=F)
 
 
+## To do: compare robustness weights plots for the next 2 models
+modHL <- lmrob(nextGPA~Z+R+offset(SHmain$CI[3]*Z),
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      )
+modM <- lmrob(nextGPA~Z+R,
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      )
 
-IKbalanceTest <- newBal(dat,1.25)
+
+
+
+
 
 mccrary1 <- DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
 
+
+ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
+ntot <- nrow(dat)
 
 save(list=ls(),file='RDanalysis.RData')
 
