@@ -36,14 +36,14 @@ Wfunc <- function(W)
 
 if(!is.element('dat',ls())){
     require(foreign)
-    if(!'data'%in%list.files() | !'data_for_analysis.dta'%in%list.files('data/')){
+    if(!'extdata'%in%list.files() | !'data_for_analysis.dta'%in%list.files('extdata/')){
         ## download the data
         temp <- tempfile()
         download.file('https://www.aeaweb.org/aej/app/data/2008-0202_data.zip',temp)
         unzip(temp,'AEJApp2008-0202_data/data_for_analysis.dta',
-              junkpaths=TRUE,exdir='data')
+              junkpaths=TRUE,exdir='extdata')
     }
-  dat=read.dta('data/data_for_analysis.dta')
+  dat=read.dta('extdata/data_for_analysis.dta')
   dat=subset(dat,left_school!=1)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
   dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
