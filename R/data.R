@@ -20,5 +20,5 @@
 #'     \item{age_at_entry}
 #'     \item{nextGPA} 
 #' }
-#' @ source \url{https://www.aeaweb.org/aej/app/data/2008-0202_data.zip}
+#' @source \url{https://www.aeaweb.org/aej/app/data/2008-0202_data.zip}
 "dat_excerpt" 
