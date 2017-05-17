@@ -9,12 +9,9 @@
 library(xtable)
 library(rdd)
 library(robustbase)
-library(ggplot2)
 
-if (!require('lrd')){
-    source('R/functions.r')
-    source('R/ddsandwich.R')
-    }
+source('R/functions.r')
+source('R/ddsandwich.R')
 
 logit=function(x) log(x*.01/(1-x*.01))
                                         #dat=read.csv('LindoDat.csv')
@@ -132,32 +129,19 @@ altTab <-
                                             W=Wfunc(res$W),
                                             n=res$n)))
 
-###########
-### Explorations -- remove/edit me!
-###########
 ## To do: compare robustness weights plots for the next 2 models
-modHL <- lmrob(nextGPA~R+offset(CI0.5['HL']*Z),
-      data=dat,subset=(abs(R)<.5 &R!=0),
-      method='MM'
+modHL <- lmrob(nextGPA~Z+R+offset(CI0.5['HL']*Z),
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
       )
 modM <- lmrob(nextGPA~Z+R,
-      data=dat,subset=(abs(R)<.5 &R!=0),
-      method='MM'
-      )
-
-pl_modHL<- ggplot(data.frame(R=modHL$model$R, 
-                        robweights=weights(modHL, type='robustness')), 
-             aes(x=R, y=robweights))
-pl_modM <- ggplot(data.frame(R=modM$model$R, 
-                        robweights=weights(modM, type='robustness')), 
-             aes(x=R, y=robweights))
-#pl_modHL + geom_point(alpha=.1) + stat_smooth()
-#pl_modM + geom_point(alpha=.1) + stat_smooth()
-###########
-### End explorations
-###########
-
-
+      data=dat,subset=(abs(R)<.05),
+      method='MM',
+      control=lmrob.control(seed=lmrob_seed,
+                            k.max=500, maxit.scale=500)
+      ) 
 
 
 

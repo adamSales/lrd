@@ -33,8 +33,23 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
+*.tex
+*.html
+
 # Backup files created by editors
 *~
 
-# directory for storing non-committed artifacts
-dataResults/
+# directories for storing non-committed artifacts
+dataResults
+manuscript
+
+# Other cruft
+bibliography.bib
+.DS_Store
+
+inst/totalPolySim.RData
+
+R/.#functions.r
+
+R/#functions.r#
+
