@@ -34,12 +34,14 @@
 #' \code{R}. Defaults to \code{"R+Z"}
 #'
 #' @return a list consisting of
-#'  \item p.value The p-value testing no effect
-#'  \item CI a vector of confidence limits and the HL treatment effect
-#'  \item BW the RDD bandwidth
-#'  \item bal.pval a p-value testing for covariate balance
-#'  \item n the number of subjects in the window of analysis
-#'  \item W the range of R values in the window of analysis
+#' \describe{
+#'  \item{p.value} The p-value testing no effect
+#'  \item{CI} a vector of confidence limits and the HL treatment effect
+#'  \item{BW} the RDD bandwidth
+#'  \item{bal.pval} a p-value testing for covariate balance
+#'  \item{n} the number of subjects in the window of analysis
+#'  \item{W} the range of R values in the window of analysis
+#' }
 #' @import robustbase
 #' @export
 
@@ -181,9 +183,11 @@ HLsh <- function(dat,BW,outcome='Y',rhs=rhs){
 #' @param rhs A string specifying the \eqn{\mu_\beta(\cdot)} model relating the outcome to \code{R}. Defaults to \code{"R+Z"}
 #'
 #' @return a vector including
-#'  \item CI1 and
-#'  \item CI2, the lower and upper bounds of the confidence interval
-#'  \item est, the HL point estiate
+#' \describe{
+#'  \item{CI1} and
+#'  \item{CI2}, the lower and upper bounds of the confidence interval;
+#'  \item{est}, the HL point estimate
+#' }
 #' @import robustbase
 #' @export
 CIsh <- function(dat,BW,outcome='Y',est,alpha=0.05,rhs=rhs){
@@ -217,12 +221,14 @@ CIsh <- function(dat,BW,outcome='Y',est,alpha=0.05,rhs=rhs){
 #' @param outcome A string specifying the name of the outcome variable
 #'
 #' @return a list consisting of
-#'  \item p.value The p-value testing no effect
-#'  \item CI a vector of confidence limits and the HL treatment effect
-#'  \item BW the RDD bandwidth
-#'  \item bal.pval a p-value testing for covariate balance
-#'  \item n the number of subjects in the window of analysis
-#'  \item W the range of R values in the window of analysis
+#' \describe{
+#'  \item{p.value} The p-value testing no effect
+#'  \item{CI} a vector of confidence limits and the HL treatment effect
+#'  \item{BW} the RDD bandwidth
+#'  \item{bal.pval} a p-value testing for covariate balance
+#'  \item{n} the number of subjects in the window of analysis
+#'  \item{W} the range of R values in the window of analysis
+#' }
 #' @import rdd
 #' @export
 
