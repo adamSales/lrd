@@ -12,7 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 General dependencies.
 ```{r}
 library('knitr')
-source("../R/functions.r")
+library('lrd')
+# source("../R/functions.r")
 ```
 
 

@@ -18,11 +18,12 @@ Referring to the directory set up in step 1 as TEMPDIR, install the
 dependency packages using either
 
 ```{r}
-install.packages(???, repo=URL_OF_FAVORITE_CRAN_MIRROR)
+install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"), lib.loc=TEMPDIR)
 ```
 or
 ```{r}
-install.packages(???, repo=URL_OF_FAVORITE_CRAN_MIRROR, lib.loc=TEMPDIR)
+install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"),
+       repo=URL_OF_FAVORITE_CRAN_MIRROR, lib.loc=TEMPDIR)
 ```
 according to your preference.  Then install the `lrd` package via
 
@@ -32,32 +33,41 @@ install.packages(LRD_TARBALL , lib.loc=TEMPDIR)
 
 # Replicating computations in paper
 
+Once installed, you can load the package via
+
+```{r}
+library("lrd", lib.loc=TEMPDIR)
+```
+
 ## Data analysis
 
-See file inst/dataAnalysis.R (or perhaps dataAnalysis.R if you
-unpacked a tarball to get here).   Commands to be run from main
-directory/package root directory.
+With the lrd package loaded, you can locate our data analysis file using
+`system.file("dataAnalysis.R", package="lrd")`.  Run it via
+
+```{r}
+source( system.file("dataAnalysis.R", package="lrd") )
+```
 
 ## Power/size simulations
 
 
-Simulation scripts live in ./inst (or perhaps ./ if
-you unpacked a tarball to get here)
 
 The fullOutcomeSim.Rmd script displays and optionally re-runs power and
-size simulations presented in the paper. 
+size simulations presented in the paper.  With the lrd package loaded, you can locate it using
+`system.file("fullOutcomeSim.Rmd", package="lrd")`.
+
 
 To run it from the command line, do 
 
->   Rscript -e 'setwd("./inst/"); rmarkdown::render("fullOutcomeSim.Rmd")'
+>   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 or
->   Rscript -e 'setwd("./inst/"); knitr::knit("fullOutcomeSim.Rmd")'
+>   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
 This will generate an html file with code and results from whatever
-simulations are saved in "data/simResults.RData".
+simulations may be saved in "data/simResults.RData".
 
 To not only display the simulation results but also reproduce them, do 
->   Rscript -e 'nreps=<N>; setwd("./inst/"); rmarkdown::render("fullOutcomeSim.Rmd")'
+>   Rscript -e 'nreps=<N>; withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
 after replacing "`<N>`" with the number of simulations you want, e.g 1000.  
 
