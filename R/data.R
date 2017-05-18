@@ -2,8 +2,8 @@
 #'
 #' Data set with demographics, academic achievement info on
 #' 42 thousand students at 3 unnamed Canadian universities.
-#' (Actually only the first 5 rows of the data set are bundled with this
-#' package -- for the full data, see URL below.)
+#' (Actually only the column headers of the data set are bundled here
+#' -- for the actual data, see URL below.)
 #'
 #' @format A data frame of  42187 rows and 90 variables, including:
 #' \describe{
