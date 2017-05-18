@@ -34,6 +34,7 @@
 ##' @param whereto path specification for directory to data file to
 ##' @return path of downloaded dta file
 ##' @author Ben B Hansen
+##' @export
 fetchLSOdata <- function(whereto="extdata")
 {
     stopifnot(is.character(whereto), length(whereto)==1,

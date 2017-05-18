@@ -32,16 +32,10 @@ Wfunc <- function(W)
 
 
 if(!is.element('dat',ls())){
-    if (system.file(package="lrd")!=character(0))
-    {
-        if (system.file("extdata", package="lrd")==character(0))
-            dir.create(paste(system.file(package="lrd"), "extdata", sep="/"))
+    if (system.file(package="lrd")!="")
         extdata_dir <- system.file("extdata", package="lrd")
-    } else if (!'extdata'%in%list.files() | !'data_for_analysis.dta'%in%list.files('extdata/'))
-    {
-        extdata_dir <- 'extdata'
-    }
-    LSO_dta_location <- fetchLSOdata()
+    } else extdata_dir <- 'extdata'
+    LSO_dta_location <- fetchLSOdata(extdata_dir)
   dat=foreign::read.dta(LSO_dta_location)
   dat=subset(dat,left_school!=1)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
