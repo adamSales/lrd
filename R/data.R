@@ -2,6 +2,8 @@
 #'
 #' Data set with demographics, academic achievement info on
 #' 42 thousand students at 3 unnamed Canadian universities.
+#' (Actually only the column headers of the data set are bundled here
+#' -- for the actual data, see URL below.)
 #'
 #' @format A data frame of  42187 rows and 90 variables, including:
 #' \describe{
@@ -18,5 +20,28 @@
 #'     \item{age_at_entry}
 #'     \item{nextGPA} 
 #' }
-#' @ source \url{https://www.aeaweb.org/aej/app/data/2008-0202_data.zip}
-"dat" 
+#' @source \url{https://www.aeaweb.org/aej/app/data/2008-0202_data.zip}
+"dat_excerpt" 
+
+##' Retrieve Lindo et al replication materials, including data
+##'
+##' Downloads the data from the AEJ website.
+##' 
+##' The \code{whereto} parameter should be a character string not ending
+##' in \sQuote{\code{/}} (the path separator).
+##' 
+##' @title Fetch Lindo et al data 
+##' @param whereto path specification for directory to data file to
+##' @return path of downloaded dta file
+##' @author Ben B Hansen
+##' @export
+fetchLSOdata <- function(whereto="extdata")
+{
+    stopifnot(is.character(whereto), length(whereto)==1,
+              substr(whereto, nchar(whereto), nchar(whereto))!="/")
+    temp <- tempfile()
+    download.file('https://www.aeaweb.org/aej/app/data/2008-0202_data.zip',temp)
+    unzip(temp,'AEJApp2008-0202_data/data_for_analysis.dta',
+          junkpaths=TRUE,exdir=extdata_dir)
+    paste0(whereto, "/data_for_analysis.dta")
+    }

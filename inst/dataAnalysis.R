@@ -32,15 +32,11 @@ Wfunc <- function(W)
 
 
 if(!is.element('dat',ls())){
-    require(foreign)
-    if(!'data'%in%list.files() | !'data_for_analysis.dta'%in%list.files('data/')){
-        ## download the data
-        temp <- tempfile()
-        download.file('https://www.aeaweb.org/aej/app/data/2008-0202_data.zip',temp)
-        unzip(temp,'AEJApp2008-0202_data/data_for_analysis.dta',
-              junkpaths=TRUE,exdir='data')
-    }
-  dat=read.dta('data/data_for_analysis.dta')
+    if (system.file(package="lrd")!="")
+        extdata_dir <- system.file("extdata", package="lrd")
+    } else extdata_dir <- 'extdata'
+    LSO_dta_location <- fetchLSOdata(extdata_dir)
+  dat=foreign::read.dta(LSO_dta_location)
   dat=subset(dat,left_school!=1)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
   dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5

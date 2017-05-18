@@ -34,13 +34,15 @@
 #' \code{R}. Defaults to \code{"R+Z"}
 #'
 #' @return a list consisting of
-#'  \item p.value The p-value testing no effect
-#'  \item CI a vector of confidence limits and the HL treatment effect
-#'  \item BW the RDD bandwidth
-#'  \item bal.pval a p-value testing for covariate balance
-#'  \item n the number of subjects in the window of analysis
-#'  \item W the range of R values in the window of analysis
-#' @imports robustbase
+#' \describe{
+#'  \item{p.value} The p-value testing no effect
+#'  \item{CI} a vector of confidence limits and the HL treatment effect
+#'  \item{BW} the RDD bandwidth
+#'  \item{bal.pval} a p-value testing for covariate balance
+#'  \item{n} the number of subjects in the window of analysis
+#'  \item{W} the range of R values in the window of analysis
+#' }
+#' @import robustbase
 #' @export
 
 sh <- function(dat,BW,outcome,Dvar='probation_year1',alpha=0.05,rhs=NULL){
@@ -67,7 +69,7 @@ sh <- function(dat,BW,outcome,Dvar='probation_year1',alpha=0.05,rhs=NULL){
 #' \code{R}. Defaults to \code{"R+Z"}
 #'
 #' @return scalar, the p-value associated w/ coefficient on Z
-#' @imports sandwich
+#' @import sandwich
 #' @export
 balOneSH <- function(dat,BW,varb,rhs=NULL){
 
@@ -114,7 +116,7 @@ balOneSH <- function(dat,BW,varb,rhs=NULL){
 #'
 #' @return scalar, if return.coef the coefficient on Z; otherwise the p-value associated
 #' w/ coefficient on Z
-#' @imports robustbase
+#' @import robustbase
 #' @export
 testSH <- function(dat,BW,tau=0,outcome='Y',return.coef=FALSE,rhs=NULL){
     if(sum(dat$R<0 & -BW<dat$R)<2 || sum(dat$R>0 & dat$R<BW)<2) return(NA)
@@ -153,7 +155,7 @@ testSH <- function(dat,BW,tau=0,outcome='Y',return.coef=FALSE,rhs=NULL){
 #' \code{R}. Defaults to \code{"R+Z"}
 #'
 #' @return scalar, the Hodges-Lehmann estimate
-#' @imports robustbase
+#' @import robustbase
 #' @export
 
 HLsh <- function(dat,BW,outcome='Y',rhs=NULL){
@@ -181,10 +183,12 @@ HLsh <- function(dat,BW,outcome='Y',rhs=NULL){
 #' @param rhs A string specifying the \eqn{\mu_\beta(\cdot)} model relating the outcome to \code{R}. Defaults to \code{"R+Z"}
 #'
 #' @return a vector including
-#'  \item CI1 and
-#'  \item CI2, the lower and upper bounds of the confidence interval
-#'  \item est, the HL point estiate
-#' @imports robustbase
+#' \describe{
+#'  \item{CI1} and
+#'  \item{CI2}, the lower and upper bounds of the confidence interval;
+#'  \item{est}, the HL point estimate
+#' }
+#' @import robustbase
 #' @export
 CIsh <- function(dat,BW,outcome='Y',est,alpha=0.05,rhs=rhs){
 
@@ -217,13 +221,15 @@ CIsh <- function(dat,BW,outcome='Y',est,alpha=0.05,rhs=rhs){
 #' @param outcome A string specifying the name of the outcome variable
 #'
 #' @return a list consisting of
-#'  \item p.value The p-value testing no effect
-#'  \item CI a vector of confidence limits and the HL treatment effect
-#'  \item BW the RDD bandwidth
-#'  \item bal.pval a p-value testing for covariate balance
-#'  \item n the number of subjects in the window of analysis
-#'  \item W the range of R values in the window of analysis
-#' @imports rdd
+#' \describe{
+#'  \item{p.value} The p-value testing no effect
+#'  \item{CI} a vector of confidence limits and the HL treatment effect
+#'  \item{BW} the RDD bandwidth
+#'  \item{bal.pval} a p-value testing for covariate balance
+#'  \item{n} the number of subjects in the window of analysis
+#'  \item{W} the range of R values in the window of analysis
+#' }
+#' @import rdd
 #' @export
 
 ik <- function(dat,BW=NULL,outcome){
@@ -252,7 +258,7 @@ ik <- function(dat,BW=NULL,outcome){
 #'
 #' @return if justP=TRUE, returns the p-value for an effect. if justP=FALSE,
 #' returns the fitted RDD model (an object of class "RD").
-#' @imports rdd
+#' @import rdd
 #' @export
 
 ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
