@@ -97,16 +97,16 @@ totalOutcomeOne <- function(n,tdist,tau){
       cft25=tryNA(cftSim(dat,0.25)),cft5=tryNA(cftSim(dat,0.5)),cftQ=tryNA(cftSim(dat)))
 }
 
-totalOutcomeSim <- function(){
+totalOutcomeSim <- function(nreps=5000){
     res <- list()
-    B <- 5000
+    #B <- 5000
 
 
         for(n in c(100,500,5000)){
             for(tau in c(0,0.2)){
                 for(tdist in c(TRUE,FALSE)){
                     res[[paste(n,tau,ifelse(tdist,'t','norm'),sep='_')]] <-
-                       sapply(1:B,function(i) totalOutcomeOne(n,tdist,tau))
+                       sapply(1:nreps,function(i) totalOutcomeOne(n,tdist,tau))
                 }
             }
         }
