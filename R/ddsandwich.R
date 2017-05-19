@@ -10,6 +10,7 @@
 ##' @return k by (k+1) matrix, with first column for scale estimate and rows, remaining cols for coefficients
 ##' 
 ##' @author lrd author 2
+##' @export
 bread.lmrob <- function(x, ...)
 {
   stopifnot(is.list(ctrl <- x$control))
@@ -49,7 +50,16 @@ bread.lmrob <- function(x, ...)
     
     cbind(a, A)
 }
-
+##' 
+##'
+##' Only SM or MM estimates supported
+##' 
+##' @title Estfun method for lmrob objects
+##' @param x a fitted lmrob
+##' @param ... 
+##' @return an estfun object, as in the sandwich package
+##' @author lrd author 2
+##' @export
 estfun.lmrob <- function(x, ...)
 {
   stopifnot(is.list(ctrl <- x$control))

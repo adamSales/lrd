@@ -9,9 +9,7 @@
 library(xtable)
 library(rdd)
 library(robustbase)
-library('lrd')
-#source('R/functions.r')
-#source('R/ddsandwich.R')
+requireNamespace('lrd')
 
 logit=function(x) log(x*.01/(1-x*.01))
 
@@ -32,10 +30,10 @@ Wfunc <- function(W)
 
 
 if(!is.element('dat',ls())){
-    if (system.file(package="lrd")!="")
+    if (system.file(package="lrd")!="") {
         extdata_dir <- system.file("extdata", package="lrd")
     } else extdata_dir <- 'extdata'
-    LSO_dta_location <- fetchLSOdata(extdata_dir)
+    LSO_dta_location <- lrd::fetchLSOdata(extdata_dir)
   dat=foreign::read.dta(LSO_dta_location)
   dat=subset(dat,left_school!=1)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
@@ -73,7 +71,7 @@ lmrob_seed <- .Random.seed
 
 print('1')
 ## test BW=0.5
-SHmain <- sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
+SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
 #################
 ### donut
@@ -87,19 +85,19 @@ SHmain <- sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 ### data-driven BW
 ##############
 print(2)
-SHdataDriven <- sh(dat=subset(dat,R!=0),outcome='nextGPA')
+SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
 
 ##############3
 ### quadratic in R
 ###############3
 print(3)
-SHquad <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,2)')
+SHquad <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,2)')
 
 ###########
 ### ITT
 ##########
 print(4)
-SHitt <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
+SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 
 
 
@@ -115,8 +113,8 @@ resultsTab <-
 print(xtable(resultsTab),
       file="tab-results.tex", floating=F)
 
-CFT <- cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- ik(subset(dat,R!=0),outcome='nextGPA')
+CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
+IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
 
 altTab <-
     do.call('rbind', lapply(list(Limitless=SHitt,`Local Permutation`=CFT,`Local OLS`=IK),
@@ -165,7 +163,7 @@ modM <- lmrob(nextGPA~Z+R,
 
 
 
-mccrary1 <- DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
+mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
 
 
 ncomp <- with(dat,sum(gpalscutoff& !probation_year1))

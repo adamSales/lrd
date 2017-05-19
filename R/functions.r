@@ -134,7 +134,7 @@ testSH <- function(dat,BW,tau=0,outcome='Y',return.coef=FALSE,rhs=NULL){
 
     mod <- lmrob(form,data=dat,method='MM',control=ctl)
 
-    newcov <- try(sandwich(mod))
+    newcov <- try(lrd:::sandwich(mod))
     mod$cov <- if (inherits(newcov, "try-error")) NA else newcov
     Z.pos = pmatch("Z", names(coef(mod)))
     if(return.coef) return(coef(mod)[Z.pos])
@@ -291,7 +291,25 @@ ikMultBal <- function(dat,BW,xvars,int=FALSE){
 ################
 ### CFT Method
 ##############
-
+##' RDD analysis method modeled on Cattaneo et al 2014, J Causal Inference
+##'
+##' 
+##' @title CFT analysis method
+##' @param dat 
+##' @param BW 
+##' @param outcome 
+##' @param alpha 
+##' @param rhs 
+##' @return list of
+##' \describe{
+##'  \item{p.value} of Fisher-style no effect hypothesis
+##'  \item{CI} vector of confidence limits, estimate
+##'  \item{bal.pval} balance p-value
+##'  \item{n} number of observations inselected window
+##'  \item{W}  window 
+##' }
+##' @author lrd author 1
+##' @export
 cft <- function(dat,BW,outcome,alpha=0.05,rhs=NULL){
     if(missing(BW) |is.null(BW))
         BW <- bwMult(dat,balMult.control=list(method='cft',reduced.covars=FALSE))
