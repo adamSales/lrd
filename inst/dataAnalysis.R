@@ -1,10 +1,10 @@
-## run four analyses for our method:
-## main: BW=0.5, throw out R=0
-## nodo: BW=0.5, no exclusion to satisfy McCrary
-## data-driven: adaptive choice of BW
-## IV
+#' run four analyses for our method:
+#' main: BW=0.5, throw out R=0
+#' nodo: BW=0.5, no exclusion to satisfy McCrary
+#' data-driven: adaptive choice of BW
+#' IV
 
-## to be run from main directory
+#' to be run from main directory
 
 library(xtable)
 library(rdd)
@@ -40,7 +40,7 @@ if(!is.element('dat',ls())){
   dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
   dat$lhsgrade_pct=logit(dat$hsgrade_pct)
   dat$age <- dat$age_at_entry>=19
-}                                    #dat=read.csv('LindoDat.csv')
+}
 
 
 dat$R <- dat$dist_from_cut
@@ -57,41 +57,41 @@ dat$Z <- dat$gpalscutoff
 dat$hsgrade_pct[dat$hsgrade_pct==100] <- 99.5
 dat$lhsgrade_pct <- logit(dat$hsgrade_pct)
 
-#################
-## main analysis
-#################
-## The sh method uses `lmrob`, which in turn requires a random
-## seed.  For confidence interval and estimation routines it's
-## helpful to use the same seed throughout, as this means the
-## S-estimation initializers will always be sampling the same
-## subsets of the sample.
+
+#' ## main analysis ##
+
+#' The sh method uses `lmrob`, which in turn requires a random
+#' seed.  For confidence interval and estimation routines it's
+#' helpful to use the same seed throughout, as this means the
+#' S-estimation initializers will always be sampling the same
+#' subsets of the sample.
 set.seed(201705)
 lmrob_seed <- .Random.seed
 
 
 print('1')
-## test BW=0.5
+#' test BW=0.5
 SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
-#################
-### No-donut variant
-#################
+
+#' ## No-donut variant ##
+
 SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
-###############
-### data-driven (adaptive) BW
-##############
+
+#' ## data-driven (adaptive) BW ##
+
 print(2)
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
 
-##############3
-### quadratic in R
-###############3
+
+#' ## quadratic in R ## 
+
 print(3)
 SHquad <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,2)')
 
 ###########
-### ITT
+#' ## ITT
 ##########
 print(4)
 SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
@@ -128,7 +128,7 @@ print(xtable(altTab),
       file="tab-alt.tex", floating=F)
 
 
-## To do: compare robustness weights plots for the next 2 models
+#' To do: compare robustness weights plots for the next 2 models
 mod1 <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),
               data=dat,subset=(R!=0 & abs(R)<.5),
