@@ -1,7 +1,6 @@
 ## run four analyses for our method:
-## "main": BW=0.5, keep all data
-## donut: BW=0.5, throw out R=0
-## data driven BW
+## "main": BW=0.5, throw out R=0
+## adaptive BW
 ## IV
 
 ## to be run from main directory
@@ -82,7 +81,7 @@ SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year
 ## CIdonut <- CI(donut,0.5,outcome='nextGPA')
 
 ###############
-### data-driven BW
+### data-driven (adaptive) BW
 ##############
 print(2)
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
@@ -123,19 +122,6 @@ altTab <-
                                             W=Wfunc(res$W),
                                             n=res$n)))
 
-## To do: compare robustness weights plots for the next 2 models
-modHL <- lmrob(nextGPA~Z+R+offset(CI0.5['HL']*Z),
-      data=dat,subset=(abs(R)<.05),
-      method='MM',
-      control=lmrob.control(seed=lmrob_seed,
-                            k.max=500, maxit.scale=500)
-      )
-modM <- lmrob(nextGPA~Z+R,
-      data=dat,subset=(abs(R)<.05),
-      method='MM',
-      control=lmrob.control(seed=lmrob_seed,
-                            k.max=500, maxit.scale=500)
-      ) 
 
 
 
@@ -145,17 +131,19 @@ print(xtable(altTab),
 
 
 ## To do: compare robustness weights plots for the next 2 models
-modHL <- lmrob(nextGPA~Z+R+offset(SHmain$CI[3]*Z),
-      data=dat,subset=(abs(R)<.05),
-      method='MM',
-      control=lmrob.control(seed=lmrob_seed,
+mod1 <- lmrob(nextGPA~Z+R,
+              offset=(SHmain$CI[3]*probation_year1),
+              data=dat,subset=(R!=0 & abs(R)<.5),
+              method='MM',
+              control=lmrob.control(seed=lmrob_seed,
                             k.max=500, maxit.scale=500)
       )
-modM <- lmrob(nextGPA~Z+R,
-      data=dat,subset=(abs(R)<.05),
-      method='MM',
-      control=lmrob.control(seed=lmrob_seed,
-                            k.max=500, maxit.scale=500)
+mod0 <- lmrob(nextGPA~Z+R,
+              offset=(SHmain$CI[3]*probation_year1),
+              data=dat,subset=(abs(R)<.5),
+              method='MM',
+              control=lmrob.control(seed=lmrob_seed,
+                                    k.max=500, maxit.scale=500)
       )
 
 
