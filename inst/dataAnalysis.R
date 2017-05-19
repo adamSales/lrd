@@ -1,6 +1,7 @@
 ## run four analyses for our method:
-## "main": BW=0.5, throw out R=0
-## adaptive BW
+## main: BW=0.5, throw out R=0
+## nodo: BW=0.5, no exclusion to satisfy McCrary
+## data-driven: adaptive choice of BW
 ## IV
 
 ## to be run from main directory
@@ -73,12 +74,9 @@ print('1')
 SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
 #################
-### donut
+### No-donut variant
 #################
-## donut <- subset(dat,dist_from_cut!=0)
-## balanceDonut <- newBal(donut,0.5)
-## testDonut <- test(donut,0.5,outcome='nextGPA')
-## CIdonut <- CI(donut,0.5,outcome='nextGPA')
+SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
 ###############
 ### data-driven (adaptive) BW
