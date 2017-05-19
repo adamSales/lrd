@@ -13,7 +13,8 @@ General dependencies.
 ```{r}
 library('knitr')
 library('lrd')
-# source("../R/functions.r")
+source("../R/functions.r")
+source("../R/simulations.r")
 ```
 
 
@@ -21,7 +22,7 @@ library('lrd')
 Initialization. Note that `nreps=0` corresponds to no simulations,
 just print results from previously saved simulations.
 In order to re-run the simulations, the `nreps`
-variable should have been set to a positive integer before initiating this script. 
+variable should have been set to a positive integer before initiating this script.
 
 ```{r  warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
@@ -60,7 +61,7 @@ for(n in ns){
 }
 row.names(sizeTab) <- paste0('n=',ns)
 colnames(sizeTab) <- paste(rep(meths, each=3), bws_size, sep="_")
-kable(sizeTab, digits=2, 
+kable(sizeTab, digits=2,
 caption="Table 3: Empirical Size of Hypothesis Tests")
 cat(kable(sizeTab, format="latex", digits=2),
     file="tab-levelSimulation.tex", sep="\n")
@@ -80,7 +81,7 @@ for(n in ns){
     }
 row.names(powTab) <- paste0('n=',ns)
 colnames(powTab) <- paste(rep(meths, each=2), bws_pow, sep="_")
-kable(powTab, digits=2, 
+kable(powTab, digits=2,
 caption="Table 4: Power")
 cat(kable(powTab, format="latex", digits=2),
     file="tab-powerSimulation.tex", sep="\n")
