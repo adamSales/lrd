@@ -88,9 +88,11 @@ makeDataSort <- function(n,tdist=FALSE,tau=0,sortPer=0.1){
 #' @param dat data frame with variables R, x, Y, Z
 #'
 #' @return vector with elements
+#' \itemize{
 #'  \item bandwidth
 #'  \item p-value
 #'  \item HL point estimate
+#' }
 #' @export
 #'
 #'
@@ -109,9 +111,11 @@ shbw <- function(ddd,BW=NULL){
 #' @param dat data frame with variables R, x, Y, Z
 #'
 #' @return vector with elements
+#' \itemize{
 #'  \item bandwidth
 #'  \item p-value
 #'  \item HL point estimate
+#' }
 #' @export
 #'
 ikSim <- function(dat,BW=NULL){
