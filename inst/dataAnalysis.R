@@ -151,6 +151,11 @@ ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                    aes(x=R,y=robweights))
 ggp_main + geom_point(alpha=.1) + stat_smooth()
 
+#' What were the R values for the lowest-weight points?
+
+subset(ggp_main$data, robweights<.3)
+
+
 #' When we fit without omitting R=0 students, here is
 #' the best fitting version of the model.
 lmrob_nodo <- lmrob(nextGPA~Z+R,
@@ -181,6 +186,9 @@ ggp_nodo <- ggplot(data.frame(R=lmrob_nodo$model$R,
                    aes(x=R,y=robweights))
 ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 
+#' What were the R values for the lowest-weight points?
+
+subset(ggp_nodo$data, robweights<.3)
 
 
 mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)

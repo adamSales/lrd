@@ -37,47 +37,6 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     data.frame(R=R,x=x,yc=yc,Z=Z,Y=Y)
 }
 
-makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
-    curve <- 3
-    R <- runif(n,-1,1)
-
-    yc <- .5*R
-    if(shape=='antiSym')
-        yc <- ifelse(abs(R)>0.5,3*R+sign(R)*(0.5-3)*0.5,yc)
-    if(shape=='oneSide')
-        yc <- yc+ ifelse(R> 0.5,3*R+(0.5-3)*0.5,yc)
-    if(shape=='sym')
-        yc <- ifelse(abs(R)> 0.5,sign(R)*3*R+(sign(R)*0.5-3)*0.5,yc)
-
-    if(plt) plot(R,yc)
-
-    yc <- yc+if(tdist) rt(n,3) else rnorm(n)
-
-    Z <- R>0
-
-    Y <- yc+Z*tau
-
-    data.frame(R=R,Z=Z,Y=Y)
-}
-
-
-makeDataSort <- function(n,tdist=FALSE,tau=0,sortPer=0.1){
-    R <- runif(n,-1,1)
-    R <- round(R,2)
-
-    yc <- R+if(tdist) rt(n,3) else rnorm(n)
-
-    sorter <- sample(1:n,n*sortPer,replace=FALSE)
-
-    Robs <- R
-    Robs[sorter] <- ifelse(R[sorter]<0,0,R[sorter])
-
-    Z <- Robs< 0
-
-    Y <- yc+Z*tau
-
-    data.frame(R=Robs,Y=Y,Z=Z)
-}
 
 
 
@@ -129,39 +88,6 @@ cftSim <- function(dat,BW=NULL){
     c(BW=BW,p=mod$p.value,est=mod$estimate)
 }
 
-Outcomesimone <- function(n,curve,tdist,BW,tau=0,pval=TRUE){
-    dat <- makeData(n=n,curve=curve,tdist=tdist,tau=tau)
-
-    if(pval) func <- function(test) test(dat=dat,BW=BW)
-    else func <- function(method) CI(dat,BW,method=method)
-
-    setNames(c(vapply(list(testSH,ikTest,cftTest),func,numeric(ifelse(pval,1,3))),
-      n,curve,tdist,BW,tau),c('sh','ik','cft','n','curve','tdist','BW','tau'))
-}
-
-
-outcomeSimOneCell <- function(B,n,curve,tdist,tau=0,pval=TRUE,BW){
-    results <- NULL
-#    for(BW in c(0.25,0.5,1)){
-        func <- function(i) outcomeSimOne(n,curve,tdist,BW,tau=tau,pval=pval)
-        res <- do.call('rbind',lapply(1:B,func))#clusterApply(cl,1:B,func))
-        results <- rbind(results,res)
- #   }
-    results
-}
-
-outcomeSimFlexBW <- function(n,curve,tdist,tau,pval=TRUE){
-    dat <- makeData(n=n,curve=curve,tdist=tdist,tau=tau)
-
-    func <- function(test) test(dat)
-
-   c( vapply(list(shbw,ikSim),
-                                        #,cftTest),
-                      func,numeric(3)),
-               n,curve,tdist,tau)#,c('sh','ik',
-                                    #'cft',
-                                  #  'n','curve','tdist','tau'))
-}
 
 totalOutcomeOne <- function(n,tdist,tau){
     dat <- makeData(n=n,curve=3,tdist=tdist,tau=tau)
@@ -171,16 +97,16 @@ totalOutcomeOne <- function(n,tdist,tau){
       cft25=tryNA(cftSim(dat,0.25)),cft5=tryNA(cftSim(dat,0.5)),cftQ=tryNA(cftSim(dat)))
 }
 
-totalOutcomeSim <- function(){
+totalOutcomeSim <- function(nreps=5000){
     res <- list()
-    B <- 5000
+    #B <- 5000
 
 
         for(n in c(100,500,5000)){
             for(tau in c(0,0.2)){
                 for(tdist in c(TRUE,FALSE)){
                     res[[paste(n,tau,ifelse(tdist,'t','norm'),sep='_')]] <-
-                       sapply(1:B,function(i) totalOutcomeOne(n,tdist,tau))
+                       sapply(1:nreps,function(i) totalOutcomeOne(n,tdist,tau))
                 }
             }
         }
@@ -188,58 +114,37 @@ totalOutcomeSim <- function(){
 }
 
 
-outcomeSimFlexBWbig <- function(n,curve,tdist,tau){
-    dat <- makeData(n=n,curve=curve,tdist=tdist,tau=tau)
-
-    func <- function(test){
-        out <- test(dat)
-        if(inherits(out,'try-error')) return(rep(NA,3))
-        out
-    }
-
-    c(vapply(list(sh1=shbw,sh3=shbwCube,ik1=ikSim,ik2=ikSimQuad,ik3=ikSimCube),
-             func,numeric(3)),
-      n,curve,tdist,tau)#,c('sh','ik',
-    #'cft',
-                                        #  'n','curve','tdist','tau'))
-}
-
-
-fullOutcomeSim <- function(B,pval=TRUE){
-    results <- list()
-    tdist <- TRUE
-    curve <- 3
-    #for(tdist in c(FALSE,TRUE))
-        for(n in c(50,500,5000))
-    #        for(curve in c(1,3,5))
-                for(tau in c(0,1))
-                    for(BW in c(0.3,0.5,0.75,1)){
-                            print(paste(n,tdist,curve))
-                            results[[paste(n,tdist,curve,BW,tau,sep='_')]] <-
-                                outcomeSimOneCell(B=B,n=n,curve=curve,tdist=tdist,BW=BW,tau=tau)
-                        }
-    save(results,file='outcomeSimFinal.RData')
-    results
-}
-
-
-sortSim <- function(B){
-    out <- vapply(1:B,
-           function(i){
-               dat <- makeDataSort(500)
-               c(testSH(dat,1),ikTest(dat,1))
-           }
-          ,numeric(2))
-    cat('SH level: ',mean(out[,1]<0.05),'   IK level:',mean(out[,2]<0.05),'\n')
-    out
-}
-
 
 
 
 ###############
 ### polynomial sim
 ###############
+makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
+    curve <- 3
+    R <- runif(n,-1,1)
+
+    yc <- .5*R
+    if(shape=='antiSym')
+        yc <- ifelse(abs(R)>0.5,3*R+sign(R)*(0.5-3)*0.5,yc)
+    if(shape=='oneSide')
+        yc <- yc+ ifelse(R> 0.5,3*R+(0.5-3)*0.5,yc)
+    if(shape=='sym')
+        yc <- ifelse(abs(R)> 0.5,sign(R)*3*R+(sign(R)*0.5-3)*0.5,yc)
+
+    if(plt) plot(R,yc)
+
+    yc <- yc+if(tdist) rt(n,3) else rnorm(n)
+
+    Z <- R>0
+
+    Y <- yc+Z*tau
+
+    data.frame(R=R,Z=Z,Y=Y)
+}
+
+
+
 ikPoly <- function(dat,deg){
     mod <- lm(Y~poly(R,deg)*Z,data=dat)
     Z.pos <- which(grepl('Z',names(coef(mod))) & !grepl(':',names(coef(mod))))
@@ -259,16 +164,6 @@ polySim <- function(n,degs=1:5,shape='lin',tdist=TRUE,tau=0){
     }
 
     do.call('c',lapply(degs,func))
-}
-
-polySim2 <- function(n,degs=1:5,shape='lin',tdist=TRUE,tau=0){
-    dat <- makeDataShapes( n=n,shape=shape,tdist=tdist,tau=tau)
-
-    func <- function(deg){
-        c(tryNA(shPoly(dat,deg),2),tryNA(ikPoly(dat,deg),2))
-    }
-
-    c(do.call('c',lapply(degs,func)),ikSim(dat)[2:3])
 }
 
 

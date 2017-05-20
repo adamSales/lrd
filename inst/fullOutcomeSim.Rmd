@@ -13,7 +13,9 @@ General dependencies.
 ```{r}
 library('knitr')
 library('lrd')
-# source("../R/functions.r")
+source("../R/functions.r")
+source("../R/simulations.r")
+source("../R/displaySim.r")
 ```
 
 
@@ -21,7 +23,7 @@ library('lrd')
 Initialization. Note that `nreps=0` corresponds to no simulations,
 just print results from previously saved simulations.
 In order to re-run the simulations, the `nreps`
-variable should have been set to a positive integer before initiating this script. 
+variable should have been set to a positive integer before initiating this script.
 
 ```{r  warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
@@ -34,14 +36,42 @@ library('sandwich')
 library('nnet')
 source("../R/ddsandwich.R")
 set.seed(201609)
-st <- system.time(results <- fullOutcomeSim(nreps,pval=TRUE))
-save(results, file="../data/simResults.RData")
-cat(paste0(date(), ', nreps=0', nreps, '\n'),
+st <- system.time(results <- totalOutcomeSim(nreps))
+save(results, file="../../dataResults/outcomeSim.RData")
+cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='fullOutcomeSim-runtime.txt', append=TRUE)
-} else load('../data/simResults.RData')
+} else load('../../dataResults/outcomeSim.RData')
 ```
+
+```{r}
+levTab <- levels(outcomeSim)
+powTab <- power(outcomeSim)
+cat('
+\\begin{table}
+\\footnotesize
+\\begin{tabular}{cc|ccccccc|cccccc}
+\\hline
+&&& \\multicolumn{6}{c}{Treatment Effect$=0$}&\\multicolumn{6}{c}{Treatment Effect$=0.2$}\\\\
+&&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}&\\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}\\\\
+$n$& Error &$b=$ &', paste(rep('0.25&0.5',ncol(levTab)),collapse='&'),'\\\\
+\\hline \n',file="tab-levelSimulation.tex")
+for(i in 1:nrow(levTab)){
+    spec <- strsplit(rownames(levTab)[i],' ')[[1]]
+    if(spec[1]=='norm'){
+        cat('\\hline \n',file="tab-levelSimulation.tex",append=TRUE)
+        cat('\\multirow{2}{*}{',round(as.numeric(spec[2])/2),'} & $\\mathcal{N}(0,1)$ &&',file="tab-levelSimulation.tex",append=TRUE)
+    } else cat(' & $t_3$ &&',"tab-levelSimulation.tex",append=TRUE)
+    cat(paste(round(c(levTab[i,],powTab[i,]),2),collapse='&'),'\\\\ \n',file="tab-levelSimulation.tex",append=TRUE)
+}
+cat('\\hline
+\\end{tabular}
+\\caption{Proportion of ',length(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
+\\label{tab:level}',sep='',file="tab-levelSimulation.tex",append=TRUE)
+cat('\\end{table}\n',file="tab-levelSimulation.tex",append=TRUE)
+```
+
 
 Some hand-formatting went into the tables in the paper. This code generates the same numbers, in the same configuration, but without the formatting.
 ```{r}
@@ -60,7 +90,7 @@ for(n in ns){
 }
 row.names(sizeTab) <- paste0('n=',ns)
 colnames(sizeTab) <- paste(rep(meths, each=3), bws_size, sep="_")
-kable(sizeTab, digits=2, 
+kable(sizeTab, digits=2,
 caption="Table 3: Empirical Size of Hypothesis Tests")
 cat(kable(sizeTab, format="latex", digits=2),
     file="tab-levelSimulation.tex", sep="\n")
@@ -80,7 +110,7 @@ for(n in ns){
     }
 row.names(powTab) <- paste0('n=',ns)
 colnames(powTab) <- paste(rep(meths, each=2), bws_pow, sep="_")
-kable(powTab, digits=2, 
+kable(powTab, digits=2,
 caption="Table 4: Power")
 cat(kable(powTab, format="latex", digits=2),
     file="tab-powerSimulation.tex", sep="\n")
