@@ -9,6 +9,7 @@
 library(xtable)
 library(rdd)
 library(robustbase)
+library(ggplot2)
 requireNamespace('lrd')
 
 logit=function(x) log(x*.01/(1-x*.01))
@@ -129,23 +130,56 @@ print(xtable(altTab),
 
 
 #' To do: compare robustness weights plots for the next 2 models
-mod1 <- lmrob(nextGPA~Z+R,
+lmrob_main <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),
               data=dat,subset=(R!=0 & abs(R)<.5),
               method='MM',
               control=lmrob.control(seed=lmrob_seed,
                             k.max=500, maxit.scale=500)
-      )
-mod0 <- lmrob(nextGPA~Z+R,
-              offset=(SHmain$CI[3]*probation_year1),
+              )
+
+#' Robustness weights are mostly near 1, never below .25. 
+robwts_main <- weights(lmrob_main, type="robustness")
+summary(robwts_main)
+
+#' Not too much pattern to the robustness weights --
+#' although the lowest values do occur at slightly above
+#' the cutpoint, where we'd see savvy students whose
+#' rose above the cut due to savvyness. 
+ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
+                              robweights=robwts_main),
+                   aes(x=R,y=robweights))
+ggp_main + geom_point(alpha=.1) + stat_smooth()
+
+#' When we fit without omitting R=0 students, here is
+#' the best fitting version of the model.
+lmrob_nodo <- lmrob(nextGPA~Z+R,
+              offset=(SHnodo$CI[3]*probation_year1),
               data=dat,subset=(abs(R)<.5),
               method='MM',
               control=lmrob.control(seed=lmrob_seed,
                                     k.max=500, maxit.scale=500)
       )
 
+robwts_nodo <- weights(lmrob_nodo, type="robustness")
+
+#' Do we the observations at R=0 stand out?
+#' With no donut, robustness weights have a slight tendency
+#' to be lower among observations at R=0.
+by(robwts_nodo,
+   lmrob_nodo$model$R==0, summary)
+t.test(wt~atcut, data.frame(wt=robwts_nodo,
+                            atcut=(lmrob_nodo$model$R==0)),
+       var.equal=F, alternative="g")
 
 
+#' The plot is similar to that of the main analysis,
+#' with some low robustness weight observations as R=0
+#' but also plenty of ordinary weight observations there.
+ggp_nodo <- ggplot(data.frame(R=lmrob_nodo$model$R,
+                              robweights=robwts_nodo),
+                   aes(x=R,y=robweights))
+ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 
 
 
