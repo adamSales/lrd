@@ -192,7 +192,7 @@ subset(ggp_nodo$data, robweights<.3)
 
 
 mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
-
+mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
 
 ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
 ntot <- nrow(dat)
