@@ -118,7 +118,7 @@ capture.output(
 prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
 file="lrd/inst/tab-polynomialSimulation.tex")
 kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
-      caption='Full results for polynomial simulation',digits=TRUE)
+      caption='Full results for polynomial simulation',digits=2)
 ```
 
 
