@@ -86,10 +86,10 @@ print(2)
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
 
 
-#' ## quadratic in R ## 
+#' ## cubic in R ##
 
 print(3)
-SHquad <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,2)')
+SHcubic <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
 
 ###########
 #' ## ITT
@@ -101,15 +101,16 @@ SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 
 
 resultsTab <-
-    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,quad=SHquad,ITT=SHitt),
+    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,cubic=SHcubic,ITT=SHitt),
                             function(res) c(round2(res$CI[3]),
                                             ciChar(res$CI[1:2]),
                                             W=Wfunc(res$W),
                                             n=res$n)))
 
+colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 print(xtable(resultsTab),
-      file="tab-results.tex", floating=F)
+      file="tab-results.tex", floating=F,,sanitize.colnames.function=function(x) x)
 
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
 IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
@@ -123,10 +124,10 @@ altTab <-
 
 
 
-
+colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 print(xtable(altTab),
-      file="tab-alt.tex", floating=F)
+      file="tab-alt.tex", floating=F,sanitize.colnames.function=function(x) x)
 
 
 #' To do: compare robustness weights plots for the next 2 models
@@ -138,14 +139,14 @@ lmrob_main <- lmrob(nextGPA~Z+R,
                             k.max=500, maxit.scale=500)
               )
 
-#' Robustness weights are mostly near 1, never below .25. 
+#' Robustness weights are mostly near 1, never below .25.
 robwts_main <- weights(lmrob_main, type="robustness")
 summary(robwts_main)
 
 #' Not too much pattern to the robustness weights --
 #' although the lowest values do occur at slightly above
 #' the cutpoint, where we'd see savvy students whose
-#' rose above the cut due to savvyness. 
+#' rose above the cut due to savvyness.
 ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                               robweights=robwts_main),
                    aes(x=R,y=robweights))

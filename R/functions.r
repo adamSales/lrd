@@ -293,20 +293,20 @@ ikMultBal <- function(dat,BW,xvars,int=FALSE){
 ##############
 ##' RDD analysis method modeled on Cattaneo et al 2014, J Causal Inference
 ##'
-##' 
+##'
 ##' @title CFT analysis method
-##' @param dat 
-##' @param BW 
-##' @param outcome 
-##' @param alpha 
-##' @param rhs 
+##' @param dat
+##' @param BW
+##' @param outcome
+##' @param alpha
+##' @param rhs
 ##' @return list of
 ##' \describe{
 ##'  \item{p.value} of Fisher-style no effect hypothesis
 ##'  \item{CI} vector of confidence limits, estimate
 ##'  \item{bal.pval} balance p-value
 ##'  \item{n} number of observations inselected window
-##'  \item{W}  window 
+##'  \item{W}  window
 ##' }
 ##' @author lrd author 1
 ##' @export
@@ -343,7 +343,7 @@ cftTest <- function(dat,BW,varb,alpha=0.05,rhs=NULL,justP=TRUE){
 
 
 
-balMult <- function(dat,BW,method='sh',reduced.covars=TRUE,rhs=NULL){
+balMult <- function(dat,BW,method='sh',reduced.covars=TRUE,rhs=NULL,bonferonni=TRUE){
     ps <- NULL
     balTest <- switch(method, "sh"=balOneSH,"cft"=cftTest,"ik"=ikTest)
 
@@ -357,7 +357,8 @@ balMult <- function(dat,BW,method='sh',reduced.covars=TRUE,rhs=NULL){
         ps <- c(ps,balTest(dat=dat,BW=BW,varb=varb,rhs=rhs))
 
     }
-    min(1,min(ps*length(ps)))
+    if(bonferonni) ps <- ps*length(ps)
+    min(1,min(ps))
 }
 
 
