@@ -14,10 +14,11 @@ General dependencies.
 ```{r}
 #print(getwd())
 library('knitr')
-library('lrd')
-source("lrd/R/functions.r")
-source("lrd/R/simulations.r")
-source("lrd/R/displaySim.r")
+if(!require('lrd')){
+ source("lrd/R/functions.r")
+ source("lrd/R/simulations.r")
+ source("lrd/R/displaySim.r")
+}
 ```
 
 
@@ -50,7 +51,8 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 ```{r}
 levTab <- levels(outcomeSim)
 powTab <- power(outcomeSim)
-sink("lrd/inst/tab-levelSimulation.tex")
+capture.output({
+
 cat('
 \\begin{table}
 \\footnotesize
@@ -73,6 +75,11 @@ cat('\\hline
 \\caption{Proportion of ',length(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
 \\label{tab:level}',sep='')
 cat('\\end{table}\n')
+},file="lrd/inst/tab-levelSimulation.tex")
+
+kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2)
+kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2)
+
 ```
 
 
@@ -107,7 +114,11 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 The following gives the code for Table 4 in the paper:
 
 ```{r}
-prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly')
+capture.output(
+prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
+file="lrd/inst/tab-polynomialSimulation.tex")
+kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
+      caption='Full results for polynomial simulation',digits=TRUE)
 ```
 
 

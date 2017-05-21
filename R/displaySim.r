@@ -26,7 +26,7 @@ resTab <- function(run,full=FALSE){
     tab
 }
 
-prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE){
+prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE,md=FALSE){
     tab <- NULL
     for(dgm in c('lin','antiSym','oneSide')){
         tab <- rbind(tab,
@@ -34,9 +34,14 @@ prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE){
                      ikSum(ikp[[paste0(dgm,'_t')]],full=full)))
         if(full)
             tab <- rbind(cbind(resTab(totalPoly[[paste0(dgm,'_norm')]],full=full)[,-c(5,10)],
-                     ikSum(ikp[[paste0(dgm,'_norm')]]),full=full),tab)
+                     ikSum(ikp[[paste0(dgm,'_norm')]],full=full)),tab)
     }
-
+    if(md){
+        colnames(tab) <- c(paste('Rob, deg=',1:4),paste('OLS, deg=',1:4),'Loc.Lin')
+        rownames(tab) <- paste(rep(c('lin','antiSym','oneSide'),each=nrow(tab)/6,times=2),
+                              rep(c('t err','norm err'),each=nrow(tab)/2),rownames(tab))
+        return(tab)
+    }
     cat('
         \\begin{table}[ht]
 \\centering

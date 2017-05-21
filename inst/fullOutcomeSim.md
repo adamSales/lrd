@@ -12,17 +12,20 @@ General dependencies.
 ```r
 #print(getwd())
 library('knitr')
-library('lrd')
+if(!require('lrd')){
+ source("lrd/R/functions.r")
+ source("lrd/R/simulations.r")
+ source("lrd/R/displaySim.r")
+}
 ```
 
 ```
-## Error in library("lrd"): there is no package called 'lrd'
+## Loading required package: lrd
 ```
 
-```r
-source("lrd/R/functions.r")
-source("lrd/R/simulations.r")
-source("lrd/R/displaySim.r")
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'lrd'
 ```
 
 
@@ -64,7 +67,8 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 ```r
 levTab <- levels(outcomeSim)
 powTab <- power(outcomeSim)
-sink("lrd/inst/tab-levelSimulation.tex")
+capture.output({
+
 cat('
 \\begin{table}
 \\footnotesize
@@ -74,21 +78,6 @@ cat('
 &&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}&\\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}\\\\
 $n$& Error &$b=$ &', paste(rep('0.25&0.5',ncol(levTab)),collapse='&'),'\\\\
 \\hline \n')
-```
-
-```
-## 
-## \begin{table}
-## \footnotesize
-## \begin{tabular}{cc|ccccccc|cccccc}
-## \hline
-## &&& \multicolumn{6}{c}{Treatment Effect$=0$}&\multicolumn{6}{c}{Treatment Effect$=0.2$}\\
-## &&& \multicolumn{ 2 }{c}{Permutation}&\multicolumn{ 2 }{c}{``Limitless''}&\multicolumn{ 2 }{c}{Local OLS}&\multicolumn{ 2 }{c}{Permutation}&\multicolumn{ 2 }{c}{``Limitless''}&\multicolumn{ 2 }{c}{Local OLS}\\
-## $n$& Error &$b=$ & 0.25&0.5&0.25&0.5&0.25&0.5&0.25&0.5&0.25&0.5&0.25&0.5 \\
-## \hline
-```
-
-```r
 for(i in 1:nrow(levTab)){
     spec <- strsplit(rownames(levTab)[i],' ')[[1]]
     if(spec[1]=='norm'){
@@ -97,41 +86,41 @@ for(i in 1:nrow(levTab)){
     } else cat(' & $t_3$ &&')
     cat(paste(round(c(levTab[i,],powTab[i,]),2),collapse='&'),'\\\\ \n')
 }
-```
-
-```
-## \hline 
-## \multirow{2}{*}{ 50 } & $\mathcal{N}(0,1)$ &&0.06&0.13&0.09&0.07&0.09&0.07&0.11&0.33&0.1&0.08&0.11&0.08 \\ 
-##  & $t_3$ &&0.05&0.1&0.09&0.07&0.09&0.07&0.09&0.23&0.09&0.08&0.09&0.07 \\ 
-## \hline 
-## \multirow{2}{*}{ 250 } & $\mathcal{N}(0,1)$ &&0.11&0.48&0.06&0.05&0.06&0.05&0.41&0.93&0.1&0.12&0.09&0.12 \\ 
-##  & $t_3$ &&0.09&0.36&0.05&0.05&0.05&0.06&0.29&0.79&0.08&0.1&0.06&0.08 \\ 
-## \hline 
-## \multirow{2}{*}{ 2500 } & $\mathcal{N}(0,1)$ &&0.57&1&0.05&0.05&0.05&0.05&1&1&0.41&0.67&0.36&0.66 \\ 
-##  & $t_3$ &&0.43&1&0.05&0.06&0.05&0.05&0.99&1&0.3&0.51&0.16&0.29 \\
-```
-
-```r
 cat('\\hline
 \\end{tabular}
 \\caption{Proportion of ',length(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
 \\label{tab:level}',sep='')
+cat('\\end{table}\n')
+},file="lrd/inst/tab-levelSimulation.tex")
+
+kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2)
 ```
 
-```
-## \hline
-## \end{tabular}
-## \caption{Proportion of 5000 simulations resulting in a p-value below $\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
-## \label{tab:level}
-```
+
+
+|          | cft 25| cft 5| sh 25| sh 5| ik 25| ik 5|
+|:---------|------:|-----:|-----:|----:|-----:|----:|
+|norm 100  |   0.06|  0.13|  0.09| 0.07|  0.09| 0.07|
+|t 100     |   0.05|  0.10|  0.09| 0.07|  0.09| 0.07|
+|norm 500  |   0.11|  0.48|  0.06| 0.05|  0.06| 0.05|
+|t 500     |   0.09|  0.36|  0.05| 0.05|  0.05| 0.06|
+|norm 5000 |   0.57|  1.00|  0.05| 0.05|  0.05| 0.05|
+|t 5000    |   0.43|  1.00|  0.05| 0.06|  0.05| 0.05|
 
 ```r
-cat('\\end{table}\n')
+kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2)
 ```
 
-```
-## \end{table}
-```
+
+
+|          | cft 25| cft 5| sh 25| sh 5| ik 25| ik 5|
+|:---------|------:|-----:|-----:|----:|-----:|----:|
+|norm 100  |   0.11|  0.33|  0.10| 0.08|  0.11| 0.08|
+|t 100     |   0.09|  0.23|  0.09| 0.08|  0.09| 0.07|
+|norm 500  |   0.41|  0.93|  0.10| 0.12|  0.09| 0.12|
+|t 500     |   0.29|  0.79|  0.08| 0.10|  0.06| 0.08|
+|norm 5000 |   1.00|  1.00|  0.41| 0.67|  0.36| 0.66|
+|t 5000    |   0.99|  1.00|  0.30| 0.51|  0.16| 0.29|
 
 
 The polynomial sim was run in two parts: first for robust regression
@@ -174,36 +163,41 @@ The following gives the code for Table 4 in the paper:
 
 
 ```r
-prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly')
+capture.output(
+prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
+file="lrd/inst/tab-polynomialSimulation.tex")
+kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
+      caption='Full results for polynomial simulation',digits=TRUE)
 ```
 
-```
-## 
-##         \begin{table}[ht]
-## \centering
-## \begin{tabular}{cr|llll|llll|l| } 
-##   \hline 
-## && \multicolumn{4}{c|}{Limitless} &  \multicolumn{4}{c|}{OLS} &\makecell[c]{Local\\Linear}  \\
-##  &degree&1&2&3&4&1&2&3&4&   \\
-## \hline
-## \hline
-## \multirow{ 2 }{*}{ Linear }& level &0.05&0.05&0.05&0.05&0.05&0.05&0.05&0.06&0.07\\ 
-## & RMSE &0.23&0.23&0.30&0.30&0.31&1.08&4.72&21.82&0.49\\ 
-## \hline
-## \hline
-## \multirow{ 2 }{*}{ Anti-Sym }& level &0.80&0.80&0.05&0.05&0.55&0.37&0.06&0.08&0.08\\ 
-## & RMSE &0.64&0.64&0.30&0.30&0.70&2.04&4.94&23.77&0.51\\ 
-## \hline
-## \hline
-## \multirow{ 2 }{*}{ One-Side }& level &0.27&0.28&0.06&0.05&0.18&0.13&0.06&0.05&0.07\\ 
-## & RMSE &0.38&0.38&0.30&0.30&0.44&1.38&4.86&22.37&0.49\\ 
-## 
-##  \hline
-## \end{tabular}
-## \caption{Results from 5000 simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \ref{fig:dgms}.}
-## \label{tab:poly}
-## \end{table}
-```
+
+
+|                       | Rob, deg= 1| Rob, deg= 2| Rob, deg= 3| Rob, deg= 4| OLS, deg= 1| OLS, deg= 2| OLS, deg= 3| OLS, deg= 4| Loc.Lin|
+|:----------------------|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-------:|
+|lin t err level        |         0.4|         0.4|         0.1|         0.1|         0.4|         0.3|         0.1|         0.1|     0.1|
+|lin t err RMSE         |         0.4|         0.4|         0.2|         0.3|         0.4|         1.1|         2.9|        13.2|     0.0|
+|lin t err bias         |        -0.3|        -0.3|         0.0|         0.0|        -0.3|         0.9|         0.9|        -4.4|     0.3|
+|lin t err sd           |         0.2|         0.2|         0.2|         0.3|         0.2|         0.6|         2.7|        12.4|     0.3|
+|antiSym t err level    |         0.9|         0.9|         0.0|         0.1|         0.9|         0.8|         0.1|         0.1|     0.1|
+|antiSym t err RMSE     |         0.6|         0.6|         0.2|         0.2|         0.7|         1.8|         3.2|        15.4|     0.0|
+|antiSym t err bias     |        -0.6|        -0.6|         0.0|         0.0|        -0.6|         1.7|         1.7|        -8.9|     0.3|
+|antiSym t err sd       |         0.2|         0.2|         0.2|         0.2|         0.2|         0.6|         2.7|        12.6|     0.3|
+|oneSide t err level    |         0.0|         0.0|         0.1|         0.1|         0.0|         0.0|         0.1|         0.1|     0.1|
+|oneSide t err RMSE     |         0.2|         0.2|         0.2|         0.2|         0.2|         0.6|         2.8|        12.7|     0.0|
+|oneSide t err bias     |         0.0|         0.0|         0.0|         0.0|         0.0|         0.0|         0.0|        -0.4|     0.3|
+|oneSide t err sd       |         0.2|         0.2|         0.2|         0.2|         0.2|         0.6|         2.8|        12.7|     0.3|
+|lin norm err level     |         0.1|         0.0|         0.1|         0.1|         0.0|         0.0|         0.0|         0.1|     0.1|
+|lin norm err RMSE      |         0.2|         0.2|         0.3|         0.3|         0.3|         1.1|         4.7|        21.8|     0.0|
+|lin norm err bias      |         0.0|         0.0|         0.0|         0.0|         0.0|         0.0|         0.0|        -0.4|     0.5|
+|lin norm err sd        |         0.2|         0.2|         0.3|         0.3|         0.3|         1.1|         4.7|        21.8|     0.5|
+|antiSym norm err level |         0.8|         0.8|         0.1|         0.0|         0.5|         0.4|         0.1|         0.1|     0.1|
+|antiSym norm err RMSE  |         0.6|         0.6|         0.3|         0.3|         0.7|         2.0|         4.9|        23.8|     0.0|
+|antiSym norm err bias  |        -0.6|        -0.6|         0.0|         0.0|        -0.6|         1.7|         1.8|        -8.9|     0.5|
+|antiSym norm err sd    |         0.2|         0.2|         0.3|         0.3|         0.3|         1.1|         4.6|        22.0|     0.5|
+|oneSide norm err level |         0.3|         0.3|         0.1|         0.1|         0.2|         0.1|         0.1|         0.1|     0.1|
+|oneSide norm err RMSE  |         0.4|         0.4|         0.3|         0.3|         0.4|         1.4|         4.9|        22.4|     0.0|
+|oneSide norm err bias  |        -0.3|        -0.3|         0.0|         0.0|        -0.3|         0.9|         0.9|        -4.1|     0.5|
+|oneSide norm err sd    |         0.2|         0.2|         0.3|         0.3|         0.3|         1.1|         4.8|        22.0|     0.5|
 
 
 Session information
@@ -218,7 +212,7 @@ sessionInfo()
 ## Running under: OS X 10.12.3 (Sierra)
 ## 
 ## locale:
-## [1] C
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -227,6 +221,8 @@ sessionInfo()
 ## [1] knitr_1.15.1
 ## 
 ## loaded via a namespace (and not attached):
-## [1] compiler_3.3.1 magrittr_1.5   tools_3.3.1    stringi_1.1.1 
-## [5] stringr_1.1.0  evaluate_0.10
+##  [1] backports_1.0.5 magrittr_1.5    rprojroot_1.2   rsconnect_0.5  
+##  [5] htmltools_0.3.5 tools_3.3.1     yaml_2.1.13     Rcpp_0.12.8    
+##  [9] stringi_1.1.1   rmarkdown_1.5   highr_0.6       stringr_1.1.0  
+## [13] digest_0.6.10   evaluate_0.10
 ```
