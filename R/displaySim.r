@@ -26,7 +26,7 @@ resTab <- function(run,full=FALSE){
     tab
 }
 
-prntTab2 <- function(caption='',label='tab:poly',full=TRUE){
+prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE){
     tab <- NULL
     for(dgm in c('lin','antiSym','oneSide')){
         tab <- rbind(tab,

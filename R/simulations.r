@@ -187,9 +187,9 @@ polyDisp <- function(sim){
 
 
 
-totalPolySim <- function(){
+totalPolySim <- function(nreps=5000){
     res <- list()
-    B=5000
+    #B=5000
     n=500
     tau=0
     degs <- 1:5
@@ -197,7 +197,7 @@ totalPolySim <- function(){
     for(shape in c('lin','antiSym','oneSide')){
         for(tdist in c(TRUE,FALSE)){
             res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
-                sapply(1:B,function(i) polySim(n,degs,shape,tdist,tau))
+                sapply(1:nreps,function(i) polySim(n,degs,shape,tdist,tau))
         }
     }
     res
@@ -209,9 +209,9 @@ polyIKone <- function(n,shape,tdist,tau){
     c(mod$p[1],mod$est[1])
 }
 
-totalPolySimIK <- function(){
+totalPolySimIK <- function(nreps=5000){
     res <- list()
-    B=5000
+    #B=5000
     n=500
     tau=0
     degs <- 1:5
@@ -221,7 +221,7 @@ totalPolySimIK <- function(){
             cat(shape,' ',tdist,'\n')
             print(Sys.time())
             res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
-                sapply(1:B,function(i) polyIKone(n,shape,tdist,tau))
+                sapply(1:nreps,function(i) polyIKone(n,shape,tdist,tau))
         }
     }
     res
