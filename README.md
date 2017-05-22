@@ -28,7 +28,7 @@ install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"),
 according to your preference.  Then install the `lrd` package via
 
 ```{r}
-install.packages(LRD_TARBALL , lib.loc=TEMPDIR)
+install.packages("TEMPDIR/TARBALL", repos = NULL, type = "source")
 ```
 
 # Replicating computations in paper
