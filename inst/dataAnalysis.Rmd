@@ -145,6 +145,8 @@ resultsTab <-
 
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
+kable(resultsTab)
+
 print(xtable(resultsTab),
       file="tab-results.tex", floating=F,sanitize.colnames.function=function(x) x)
 ```
@@ -164,6 +166,8 @@ altTab <-
 
 
 colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
+
+kable(altTab)
 
 print(xtable(altTab),
       file="tab-alt.tex", floating=F,sanitize.colnames.function=function(x) x)
