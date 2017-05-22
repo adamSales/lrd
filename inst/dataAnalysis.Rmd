@@ -1,17 +1,29 @@
-#' run four analyses for our method:
-#' main: BW=0.5, throw out R=0
-#' nodo: BW=0.5, no exclusion to satisfy McCrary
-#' data-driven: adaptive choice of BW
-#' IV
+---
+title: "Data Analysis for LRD paper"
+author: "lrd authors"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
 
-#' to be run from main directory
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '.')
+```
 
-library(xtable)
-library(rdd)
-library(robustbase)
+General dependencies.
+```{r}
+#print(getwd())
+library('knitr')
 library(ggplot2)
-requireNamespace('lrd')
+if(!require('lrd')){
+ source("lrd/R/functions.r")
+ source("lrd/R/simulations.r")
+ source("lrd/R/displaySim.r")
+}
+```
 
+Initialization.
+```{r load-data,warning=FALSE,message=FALSE}
 logit=function(x) log(x*.01/(1-x*.01))
 
 
@@ -29,34 +41,57 @@ nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
 Wfunc <- function(W)
     paste0('[',round2(W[1]), ',',round2(W[2]),')')
 
+```
 
+
+Load data. This routine will download and unzip the Lind et al. replication
+material into the `exdata` subdirectory.
+```{r}
 if(!is.element('dat',ls())){
     if (system.file(package="lrd")!="") {
         extdata_dir <- system.file("extdata", package="lrd")
     } else extdata_dir <- 'extdata'
     LSO_dta_location <- lrd::fetchLSOdata(extdata_dir)
-  dat=foreign::read.dta(LSO_dta_location)
-  dat=subset(dat,left_school!=1)
-  dat$dist_from_cut <- round(dat$dist_from_cut,2)
-  dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
-  dat$lhsgrade_pct=logit(dat$hsgrade_pct)
-  dat$age <- dat$age_at_entry>=19
+    dat=foreign::read.dta(LSO_dta_location)
+                                        #dat=subset(dat,left_school!=1)
+    dat$dist_from_cut <- round(dat$dist_from_cut,2)
+    dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
+    dat$lhsgrade_pct=logit(dat$hsgrade_pct)
+  #dat$age <- dat$age_at_entry>=19
+    dat$R <- dat$dist_from_cut
+    dat$Z <- dat$gpalscutoff
 }
+```
+
+Total sample size, and number of "compliers" (students whose actual AP
+status matched what would have been predicted from first-year GPA)
+```{r}
+ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
+ntot <- nrow(dat)
+```
 
 
-dat$R <- dat$dist_from_cut
-dat$Z <- dat$gpalscutoff
+Create plots for Figure 1:
+```{r}
 
-## pdf('graphics/figure2_1.pdf')
-## smoothplot(dat$dist_from_cut,dat$nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA')
-## dev.off()
+figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),FUN=mean,na.rm=TRUE)
+figDat$n <- as.vector(table(dat$R))
+figDat <- within(figDat,n <- 2*n/max(n))
 
-## pdf('graphics/hs_gpa.pdf')
-## smoothplot(dat$dist_from_cut,logit(dat$hsgrade_pct),xlab='First Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)')
-## dev.off()
+pdf('rddFig.pdf')
+with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA')
+dev.off()
 
-dat$hsgrade_pct[dat$hsgrade_pct==100] <- 99.5
-dat$lhsgrade_pct <- logit(dat$hsgrade_pct)
+pdf('hs_gpa.pdf')
+with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
+dev.off()
+```
+
+The McCrary density test failure and recovery described in Section 4.1
+```{r}
+mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
+mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
+```
 
 
 #' ## main analysis ##
@@ -66,16 +101,17 @@ dat$lhsgrade_pct <- logit(dat$hsgrade_pct)
 #' helpful to use the same seed throughout, as this means the
 #' S-estimation initializers will always be sampling the same
 #' subsets of the sample.
+#'
+
+```{r}
 set.seed(201705)
 lmrob_seed <- .Random.seed
-
 
 print('1')
 #' test BW=0.5
 SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
-
-#' ## No-donut variant ##
+#' ## No-donut variant (not reported)##
 
 SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
@@ -84,7 +120,6 @@ SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
 print(2)
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
-
 
 #' ## cubic in R ##
 
@@ -97,8 +132,9 @@ SHcubic <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,
 print(4)
 SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 
-
-
+```
+Create Table 1:
+```{r}
 
 resultsTab <-
     do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,cubic=SHcubic,ITT=SHitt),
@@ -111,7 +147,10 @@ colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 print(xtable(resultsTab),
       file="tab-results.tex", floating=F,sanitize.colnames.function=function(x) x)
+```
 
+Results from two alternative methods, creating Table 2:
+```{r}
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
 IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
 
@@ -128,13 +167,11 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 print(xtable(altTab),
       file="tab-alt.tex", floating=F,sanitize.colnames.function=function(x) x)
+```
 
 
 
-### CFT Bandwidth
-cftBW <- bwMult(dat,balMult.control=list(method='cft',reduced.covars=FALSE))
-
-
+```{r}
 #' To do: compare robustness weights plots for the next 2 models
 lmrob_main <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),
@@ -195,15 +232,18 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 #' What were the R values for the lowest-weight points?
 
 subset(ggp_nodo$data, robweights<.3)
+```
 
 
-mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
-mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
-
-ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
-ntot <- nrow(dat)
-
+Save results:
+```{r}
 save(list=ls(),file='RDanalysis.RData')
+```
+
+Session information
+```{r}
+sessionInfo()
+```
 
 
 

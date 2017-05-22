@@ -74,10 +74,10 @@ prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE,md=FALSE
 ikSum <- function(run,full=TRUE)
     if(full) return(c(level=mean(run[1,]<0.05,na.rm=TRUE),
                       RMSE=sqrt(mean(run[2,]^2,na.rm=TRUE)),
-bias=mean(run[2,],na.rm=TRUE),
-sd=sd(run[2,],na.rm=TRUE))) else
+                      bias=mean(run[2,],na.rm=TRUE),
+                      sd=sd(run[2,],na.rm=TRUE))) else
 return(c(level=mean(run[1,]<0.05,na.rm=TRUE),
-RMSE=sqrt(mean(run[2,]^2,na.rm=TRUE))))
+         RMSE=sqrt(mean(run[2,]^2,na.rm=TRUE))))
 
 ##### functions to summarize outcome simulation
 ###
@@ -139,3 +139,4 @@ power <- function(os){
 
     tab
 }
+
