@@ -83,7 +83,7 @@ with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Av
 dev.off()
 
 pdf('hs_gpa.pdf')
-with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
+with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
 dev.off()
 ```
 
