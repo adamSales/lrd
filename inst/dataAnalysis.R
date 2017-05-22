@@ -110,7 +110,7 @@ resultsTab <-
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 print(xtable(resultsTab),
-      file="tab-results.tex", floating=F,,sanitize.colnames.function=function(x) x)
+      file="tab-results.tex", floating=F,sanitize.colnames.function=function(x) x)
 
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
 IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
