@@ -79,7 +79,7 @@ figDat$n <- as.vector(table(dat$R))
 figDat <- within(figDat,n <- 2*n/max(n))
 
 pdf('rddFig.pdf')
-with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA')
+with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA'))
 dev.off()
 
 pdf('hs_gpa.pdf')
