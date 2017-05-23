@@ -329,8 +329,10 @@ cftTest <- function(dat,BW,varb,alpha=0.05,rhs=NULL,justP=TRUE){
     dat <- dat[abs(dat$R)<BW,]
 
     if(!missing(varb)) dat$Y <- dat[[varb]]
-
-    wilcox <- with(dat,wilcox.test(Y[Z==1],Y[Z==0],conf.int=!justP,conf.level=1-alpha))
+    if(length(unique(dat$Y))==2){
+        wilcox <- with(dat,fisher.test(Y,Z,conf.int=!justP,conf.level=1-alpha))
+    }
+    else wilcox <- with(dat,wilcox.test(Y[Z==1],Y[Z==0],conf.int=!justP,conf.level=1-alpha))
     if(justP) return(wilcox$p.value)
     return(wilcox[c('p.value','conf.int','estimate')])
 }
