@@ -111,7 +111,9 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
     }
 ```
 
-The following gives the code for Table 4 in the paper:
+The following gives the results in Table 4 of the paper, in addition
+to the break-down of RMSE into bias and variance, and analogous
+results for normally-distributed errors.
 
 ```{r}
 capture.output(
