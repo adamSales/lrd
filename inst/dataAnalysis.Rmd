@@ -15,6 +15,9 @@ General dependencies.
 #print(getwd())
 library('knitr')
 library(ggplot2)
+library(xtable)
+library(robustbase)
+library(rdd)
 if(!require('lrd')){
  source("lrd/R/functions.r")
  source("lrd/R/simulations.r")
@@ -71,20 +74,22 @@ ntot <- nrow(dat)
 ```
 
 
-Create plots for Figure 1:
-```{r}
+Create plots for Figure 1. First of the outcome (subsequent GPA):
+```{r rddFig}
 
 figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),FUN=mean,na.rm=TRUE)
 figDat$n <- as.vector(table(dat$R))
 figDat <- within(figDat,n <- 2*n/max(n))
 
-pdf('rddFig.pdf')
+#pdf('rddFig.pdf')
 with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA'))
-dev.off()
-
-pdf('hs_gpa.pdf')
+#dev.off()
+```
+then a covariate (High-School GPA):
+```{r hs_gpaFig}
+#pdf('hs_gpa.pdf')
 with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
-dev.off()
+#dev.off()
 ```
 
 The McCrary density test failure and recovery described in Section 4.1
@@ -241,7 +246,7 @@ subset(ggp_nodo$data, robweights<.3)
 
 Save results:
 ```{r}
-save(list=ls(),file='RDanalysis.RData')
+save(list=ls(),file=paste0('dataResults/RDanalysis-',format(Sys.time(),"%m%d%H%M"),'.RData'))
 ```
 
 Session information
