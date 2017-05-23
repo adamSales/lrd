@@ -35,7 +35,7 @@
 ##' @title Fetch Lindo et al data
 ##' @param whereto path specification for directory to data file to
 ##' @return path of downloaded dta file
-##' @author Ben B Hansen
+##' @author lrd author 2
 ##' @export
 fetchLSOdata <- function(whereto="extdata")
 {
