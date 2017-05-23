@@ -95,14 +95,14 @@ mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
 ```
 
 
-#' ## main analysis ##
+## main analysis ##
 
-#' The sh method uses `lmrob`, which in turn requires a random
-#' seed.  For confidence interval and estimation routines it's
-#' helpful to use the same seed throughout, as this means the
-#' S-estimation initializers will always be sampling the same
-#' subsets of the sample.
-#'
+The sh method uses `lmrob`, which in turn requires a random
+seed.  For confidence interval and estimation routines it's
+helpful to use the same seed throughout, as this means the
+S-estimation initializers will always be sampling the same
+subsets of the sample.
+
 
 ```{r}
 set.seed(201705)
@@ -111,7 +111,7 @@ lmrob_seed <- .Random.seed
 
 SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
-## No-donut variant (not reported)##
+# No-donut variant (not discussed in text)
 SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
@@ -162,9 +162,14 @@ print(xtable(altTab),
 ```
 
 
+## Examine robustness weights
 
+If there are regions of the data of high influence, the robust fitter
+should reject or downweight more frequently in those regions, and we'll see dips
+on the plot of robustness weights vs R.
+
+Here is the plot corresponding to the main analysis presented in the paper. 
 ```{r}
-#' To do: compare robustness weights plots for the next 2 models
 lmrob_main <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),
               data=dat,subset=(R!=0 & abs(R)<.5),
@@ -172,27 +177,36 @@ lmrob_main <- lmrob(nextGPA~Z+R,
               control=lmrob.control(seed=lmrob_seed,
                             k.max=500, maxit.scale=500)
               )
+```
 
-#' Robustness weights are mostly near 1, never below .25.
+Robustness weights are mostly near 1, never below .25.
+```{r}
 robwts_main <- weights(lmrob_main, type="robustness")
 summary(robwts_main)
+```
 
-#' Not too much pattern to the robustness weights --
-#' although the lowest values do occur at slightly above
-#' the cutpoint, where we'd see savvy students whose
-#' rose above the cut due to savvyness.
+Not too much pattern to the robustness weights --
+although the lowest values do occur at slightly above
+the cutpoint, where we'd see savvy students whose
+rose above the cut due to savvyness.
+
+```{r}
 ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                               robweights=robwts_main),
                    aes(x=R,y=robweights))
 ggp_main + geom_point(alpha=.1) + stat_smooth()
+```
 
-#' What were the R values for the lowest-weight points?
+What were the R values for the lowest-weight points?
 
+```{r}
 subset(ggp_main$data, robweights<.3)
+```
 
+When we fit without omitting R=0 students, here is
+the best fitting version of the model.
 
-#' When we fit without omitting R=0 students, here is
-#' the best fitting version of the model.
+```{r}
 lmrob_nodo <- lmrob(nextGPA~Z+R,
               offset=(SHnodo$CI[3]*probation_year1),
               data=dat,subset=(abs(R)<.5),
@@ -202,20 +216,24 @@ lmrob_nodo <- lmrob(nextGPA~Z+R,
       )
 
 robwts_nodo <- weights(lmrob_nodo, type="robustness")
+```
 
-#' Do we the observations at R=0 stand out?
-#' With no donut, robustness weights have a slight tendency
-#' to be lower among observations at R=0.
+Do the observations at R=0 stand out?
+With no donut, robustness weights have a slight tendency
+to be lower among observations at R=0.
+
+```{r}
 by(robwts_nodo,
    lmrob_nodo$model$R==0, summary)
 t.test(wt~atcut, data.frame(wt=robwts_nodo,
                             atcut=(lmrob_nodo$model$R==0)),
        var.equal=F, alternative="g")
+```
 
-
-#' The plot is similar to that of the main analysis,
-#' with some low robustness weight observations as R=0
-#' but also plenty of ordinary weight observations there.
+The plot is similar to that of the main analysis,
+with some low robustness weight observations as R=0
+but also plenty of ordinary weight observations there.
+```{r}
 ggp_nodo <- ggplot(data.frame(R=lmrob_nodo$model$R,
                               robweights=robwts_nodo),
                    aes(x=R,y=robweights))
