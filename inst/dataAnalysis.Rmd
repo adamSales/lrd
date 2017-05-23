@@ -1,5 +1,5 @@
 ---
-title: "Data Analysis for LRD paper"
+title: "LRD paper Appendix C, Data Analysis"
 author: "lrd authors"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
@@ -7,11 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = '.')
+options(scipen=1, digits=3)
 ```
-# Limitless Regression Discontinuity
-
-## Appendix C, Data Analysis
 
 General dependencies.
 ```{r}
@@ -240,7 +237,7 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 
 Save results:
 ```{r}
-save(list=ls(),file=paste0('dataResults/RDanalysis-',format(Sys.time(),"%m%d%H%M"),'.RData'))
+save(list=ls(),file=paste0('RDanalysis-',format(Sys.time(),"%m%d%H%M"),'.RData'))
 ```
 
 Session information

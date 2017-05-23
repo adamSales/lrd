@@ -1,5 +1,5 @@
 ---
-title: "Tables from simulations presented in lrd paper"
+title: "LRD paper Appendix D, Simulations invocation and results"
 author: "lrd authors"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
@@ -21,6 +21,7 @@ if(!require('lrd')){
  source("lrd/R/functions.r")
  source("lrd/R/simulations.r")
  source("lrd/R/displaySim.r")
+ source("lrd/R/ddsandwich.R")
 }
 ```
 
@@ -40,7 +41,6 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("lrd/R/ddsandwich.R")
 set.seed(201609)
 st <- system.time(outcomeSim <- totalOutcomeSim(nreps))
 save(outcomeSim, file="dataResults/outcomeSim.RData")
@@ -98,7 +98,6 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("lrd/R/ddsandwich.R")
 set.seed(201609)
 st2 <- system.time(totalPoly <- totalOutcomeSim(nreps))
 st3 <- system.time(ikp <- totalPolySimIK(nreps))
