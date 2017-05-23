@@ -81,15 +81,11 @@ figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),FUN=mean,
 figDat$n <- as.vector(table(dat$R))
 figDat <- within(figDat,n <- 2*n/max(n))
 
-#pdf('rddFig.pdf')
 with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA'))
-#dev.off()
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
-#pdf('hs_gpa.pdf')
 with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
-#dev.off()
 ```
 
 The McCrary density test failure and recovery described in Section 4.1
@@ -112,32 +108,19 @@ mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
 set.seed(201705)
 lmrob_seed <- .Random.seed
 
-print('1')
-#' test BW=0.5
+
 SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 
-#' ## No-donut variant (not reported)##
-
+## No-donut variant (not reported)##
 SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
-
-#' ## data-driven (adaptive) BW ##
-
-print(2)
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
 
-#' ## cubic in R ##
-
-print(3)
 SHcubic <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
 
-###########
-#' ## ITT
-##########
-print(4)
 SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
-
 ```
+
 Create Table 1:
 ```{r}
 
