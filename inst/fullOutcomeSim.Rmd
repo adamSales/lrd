@@ -9,6 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_knit$set(root.dir = '.')
 ```
+# Limitless Regression Discontinuity
+
+## Appendix C, Simulations
 
 General dependencies.
 ```{r}
