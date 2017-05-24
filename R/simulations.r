@@ -21,20 +21,16 @@ tryNA <- function(...,num=1){
 #' @export
 #'
 makeData <- function(n,curve,tdist=FALSE,tau=0){
-    R <- runif(n,-1,1)
+    R <- runif(n,-0.5,0.5)
 
-    x <- R+ifelse(abs(R) > 0.5,curve*R-sign(R)*.5*curve,0)
-    if(tdist) x <- x+rt(n,3)
-    else x <- x+rnorm(n)
-
-    yc <- .5*R+ifelse(abs(R) > 0.5,curve*R-sign(R)*.5*curve,0)
+    yc <- .5*R
     yc <- yc+if(tdist) rt(n,3) else rnorm(n)
 
     Z <- R>0
 
     Y <- yc+Z*tau
 
-    data.frame(R=R,x=x,yc=yc,Z=Z,Y=Y)
+    data.frame(R=R,yc=yc,Z=Z,Y=Y)
 }
 
 
@@ -57,7 +53,7 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
 #'
 shbw <- function(ddd,BW=NULL){
     if(missing(BW) | is.null(BW)) BW <- bw(ddd)
-    c(BW=BW,p=testSH(ddd,BW),est=HLsh(ddd,BW))
+    c(BW=BW,p=testSH(ddd,BW))
 }
 
 
@@ -78,23 +74,27 @@ shbw <- function(ddd,BW=NULL){
 #' @export
 #'
 ikSim <- function(dat,BW=NULL){
-    mod <- if(missing(BW)|is.null(BW)) ikTest(dat, justP=FALSE) else ikTest(dat,BW,justP=FALSE)
-    c(BW=mod$bw[1],p=mod$p[1],est=mod$est[1])
+    if(missing(BW)|is.null(BW)){
+        mod <- ikTest(dat, justP=FALSE)
+        BW <- mod$bw
+        p <- mod$p[1]
+    }  else p <- ikTest(dat,BW,justP=TRUE)
+    c(BW=BW,p=p)
 }
 
 cftSim <- function(dat,BW=NULL){
     if(missing(BW) | is.null(BW)) BW <- bw(dat,method='cft')
-    mod=cftTest(dat,BW,'Y',justP=FALSE)
-    c(BW=BW,p=mod$p.value,est=mod$estimate)
+    p=cftTest(dat,BW,'Y',justP=TRUE)
+    c(BW=BW,p=p)
 }
 
 
 totalOutcomeOne <- function(n,tdist,tau){
     dat <- makeData(n=n,curve=3,tdist=tdist,tau=tau)
 
-    c(sh25=tryNA(shbw(dat,0.25)),sh5=tryNA(shbw(dat,0.5)),shQ=tryNA(shbw(dat)),
-      ik25=tryNA(ikSim(dat,0.25)),ik5=tryNA(ikSim(dat,0.5)),shQ=tryNA(ikSim(dat)),
-      cft25=tryNA(cftSim(dat,0.25)),cft5=tryNA(cftSim(dat,0.5)),cftQ=tryNA(cftSim(dat)))
+    c(sh25=tryNA(shbw(dat,0.25),2),sh5=tryNA(shbw(dat,0.5),2),
+      ik25=tryNA(ikSim(dat,0.25),2),ik5=tryNA(ikSim(dat,0.5),2),
+      cft25=tryNA(cftSim(dat,0.25),2),cft5=tryNA(cftSim(dat,0.5),2))
 }
 
 totalOutcomeSim <- function(nreps=5000){
@@ -102,7 +102,7 @@ totalOutcomeSim <- function(nreps=5000){
     #B <- 5000
 
 
-        for(n in c(100,500,5000)){
+        for(n in c(50,250,2500)){
             for(tau in c(0,0.2)){
                 for(tdist in c(TRUE,FALSE)){
                     res[[paste(n,tau,ifelse(tdist,'t','norm'),sep='_')]] <-

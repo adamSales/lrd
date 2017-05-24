@@ -100,12 +100,19 @@ toMat <- function(run){
 }
 
 
+toMat <- function(run){
+    if(is.matrix(run) | is.data.frame(run)) return(t(run))
+    ncomp <- sapply(run,length)
+    run <- run[ncomp==12]
+    do.call('rbind',run)
+}
+
 levels <- function(os){
     tab <- NULL
-    for(n in c(100,500,5000))
+    for(n in c(50,250,2500))
         for(err in c('norm','t')){
             run <- toMat(os[[paste0(n,'_0_',err)]])
-            colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
+            #colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
             row <- NULL
             for(meth in c('cft','sh','ik'))
                 for(bw in c('25','5')){
@@ -120,12 +127,13 @@ levels <- function(os){
     tab
 }
 
+
 power <- function(os){
     tab <- NULL
-    for(n in c(100,500,5000))
+    for(n in c(50,250,2500))
         for(err in c('norm','t')){
             run <- toMat(os[[paste0(n,'_0.2_',err)]])
-            colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
+            #colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
             row <- NULL
             for(meth in c('cft','sh','ik'))
                 for(bw in c('25','5')){
