@@ -26,6 +26,7 @@ resTab <- function(run,full=FALSE){
     tab
 }
 
+#' @export
 prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE,md=FALSE){
     tab <- NULL
     for(dgm in c('lin','antiSym','oneSide')){
@@ -107,6 +108,7 @@ toMat <- function(run){
     do.call('rbind',run)
 }
 
+#' @export
 levels <- function(os){
     tab <- NULL
     for(n in c(50,250,2500))
@@ -127,7 +129,7 @@ levels <- function(os){
     tab
 }
 
-
+#' @export
 power <- function(os){
     tab <- NULL
     for(n in c(50,250,2500))

@@ -266,7 +266,7 @@ ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
     if(missing(BW) | is.null(BW))
         mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,cutpoint=-0.005))
     else  mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,bw=BW,cutpoint=-0.005))
-    if(class(mod)=='try-error') return(rep(NA,5))
+    if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
     if(justP) return(mod$p[1])
     mod
 }
@@ -295,11 +295,11 @@ ikMultBal <- function(dat,BW,xvars,int=FALSE){
 ##'
 ##'
 ##' @title CFT analysis method
-##' @param dat
-##' @param BW
-##' @param outcome
-##' @param alpha
-##' @param rhs
+##' @param dat Data set with columns \code{Z}, \code{R}, and an outcome variable
+##' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be estimated from the data
+##' @param outcome A string specifying the name of the outcome or covariate variable
+##' @param alpha 1-confidence interval level
+##' @param rhs Ignored
 ##' @return list of
 ##' \describe{
 ##'  \item{p.value} of Fisher-style no effect hypothesis
@@ -375,7 +375,7 @@ balMult <- function(dat,BW,method='sh',reduced.covars=TRUE,rhs=NULL,bonferonni=T
 #' Permutations
 #'
 #' @return bandwidth choice (scalar)
-#'
+#' @export
 bw <- function(dat,covname='x',method='sh',alphax=0.15,plt=FALSE){
 
     if(method=='ik') return(IKbandwidth(dat$R,dat$Y,kernel='rectangular'))
@@ -404,7 +404,7 @@ bw <- function(dat,covname='x',method='sh',alphax=0.15,plt=FALSE){
 #' @param bsw numeric, a sequence of bandwidths to try (in increasing order)
 #'
 #' @return bandwidth choice (scalar)
-#'
+#' @export
 bwMult <- function(dat,alpha=0.15,balMult.control=list(method='sh',reduced.covars=FALSE), bws = seq(0,2,0.01)){
     stopifnot(is.list(balMult.control),
               !any(c('dat', 'BW') %in% names(balMult.control)),

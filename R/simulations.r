@@ -97,6 +97,16 @@ totalOutcomeOne <- function(n,tdist,tau){
       cft25=tryNA(cftSim(dat,0.25),2),cft5=tryNA(cftSim(dat,0.5),2))
 }
 
+
+#' Run the level/power simulation from Table 3
+#'
+#' @import rdd robustbase
+#'
+#' @param nreps Number of simulation replications
+#'
+#' @return list of output for each simulation run
+#' @export
+#'
 totalOutcomeSim <- function(nreps=5000){
     res <- list()
     #B <- 5000
@@ -186,7 +196,15 @@ polyDisp <- function(sim){
 }
 
 
-
+#' Run the polynomial simulation from Table 4 (LRD & OLS, not Local Linear)
+#'
+#' @import robustbase
+#'
+#' @param nreps Number of simulation replications
+#'
+#' @return list of output for each simulation run
+#' @export
+#'
 totalPolySim <- function(nreps=5000){
     res <- list()
     #B=5000
@@ -209,6 +227,16 @@ polyIKone <- function(n,shape,tdist,tau){
     c(mod$p[1],mod$est[1])
 }
 
+
+#' Run the polynomial simulation from Table 4 (just Local Linear)
+#'
+#' @import rdd
+#'
+#' @param nreps Number of simulation replications
+#'
+#' @return list of output for each simulation run
+#' @export
+#'
 totalPolySimIK <- function(nreps=5000){
     res <- list()
     #B=5000
