@@ -60,6 +60,7 @@ size simulations presented in the paper.  With the lrd package loaded, you can l
 To run it from the command line, do 
 
 >   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+
 or
 >   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
@@ -67,9 +68,9 @@ This will generate an html file with code and results from whatever
 simulations may be saved in "data/simResults.RData".
 
 To not only display the simulation results but also reproduce them, do 
->   Rscript -e 'nreps=<N>; withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+>   Rscript -e 'nreps={N}; withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
-after replacing "`<N>`" with the number of simulations you want, e.g 1000.  
+after replacing "`{N}`" with the number of simulations you want, e.g 1000.  
 
 
 
