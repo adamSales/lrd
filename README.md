@@ -1,7 +1,7 @@
 # limitlessRD
 explorations of distribution-free large sample inference for regression discontinuity designs
 
-Accompanies the paper [Limitless regression discontinuity](http://arxiv.org/abs/1403.5478).
+Accompanies the paper "Limitless regression discontinuity".
 
 ## Setup
 
