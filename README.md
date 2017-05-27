@@ -45,8 +45,10 @@ With the lrd package loaded, you can locate our data analysis file using
 `system.file("dataAnalysis.R", package="lrd")`.  Run it via
 
 ```{r}
-source( system.file("dataAnalysis.R", package="lrd") )
+rmarkdown::render( system.file("dataAnalysis.Rmd", package="lrd") )
 ```
+
+(You'll need to have the rmarkdown package installed, of course.)
 
 ## Power/size simulations
 
