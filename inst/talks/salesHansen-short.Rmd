@@ -26,7 +26,7 @@ knitr::opts_chunk$set(echo = FALSE)
 <img src="images/figure2_1.jpg" width="300px" height="300px" />
 </div>
 
-Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv [[R<0]]$'s causal effect on $Y$ (subsequent GPA)?
+Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv \mathcal{I}[R<0]$'s causal effect on $Y$ (subsequent GPA)?
 
 ## Regression discontinuity designs | (RDDs): Two views
 
@@ -52,10 +52,10 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 <img src="images/figure2_2.jpg" width="300px" height="300px" />
 </div>
 
-> - Bandwidth selectors don't look at covariates. 
-> - High school grades (vertical axis) not "balanced", due to trend.
-> - Narrowing window to avoid significant imbalance gets rid of too much data.
-> - Removing linear trend, then testing balance on residuals, works better.
+> - Bandwidth selectors don't look at covariates, e.g. high school $G$rades ($y$ axis). 
+> - Due to trend, clear that $E[G | R\leq 0] \neq E[G | R >0 ]$ -- no _balance_ on $G$.
+> - Confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough to make imbalance non-significant? -- Doesn't change underlying trend, gets rid of a lot of data.
+> - Better: first model trend, e.g. $G \approx \alpha_G + \beta_G R$; then test whether balanced on _residual_, $e_{(\alpha_G, \beta_G)}(G|R)$, not $G$ itself; narrow $\mathcal{W}$ as needed to pass this test.
 
 <div class="notes">
 
@@ -117,7 +117,7 @@ this one would be cute: images/donut-partly-eaten.jpg -->
 
 **_Notation_**: $e_\theta(\cdot| \cdot)$ denotes a _residual transformation_, typically $e_{(a,b)}(y |r) = y - a -br$.  
 
-(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, then $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; if from fit of $Y=\alpha + \beta R + \tau Z+ \epsilon$, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is a partial residual.)
+(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, then $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; if from fit of $Y=\alpha + \beta R + \tau Z+ \epsilon$, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is a partial residual. Both are OK.)
 
 <!--Postpone more elaborate one until we need it? $e_{(a,b,s)}(y |r) = \mathrm{sign}(y -a -br) \min(|y-a-br|/s, 1.55)$. -->
 
