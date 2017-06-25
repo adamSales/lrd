@@ -1,0 +1,230 @@
+---
+title: "Limitless regression discontinuity"
+author: "Adam Sales & Ben Hansen*"
+date: "2017 ICSA Conference, Chicago"
+bibliography: ../../bibliography.bib
+output: 
+  ioslides_presentation
+---
+<!-- nocite:
+  @hansenSales2015cochran-->
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+# Potential outcomes vs structural modeling for RDDs
+
+## Acad. probation and later grades | A "running" example (Lindo et al [-@lindo2010ability]) 
+
+<div class="centered">
+<!-- <img src="images/apsemaphore.jpg" width=180px height="270px" /> -->
+
+<!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
+<img src="images/figure2_1.jpg" width="300px" height="300px" />
+</div>
+
+Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv \mathcal{I}[R<0]$'s causal effect on $Y$ (subsequent GPA)?
+
+## Regression discontinuity designs | (RDDs): Two views
+
+> - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
+> - Potential outcomes view [@lee2008randomized; Cattaneo et al 2014; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
+>- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization." 
+
+# Methods for picking out RCTs within RDDs
+
+## Methods for picking out RCTs within RDDs {.build}
+
+>  Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+
+>  A: To separate unwanted chaff from locally randomized wheat, use specification tests....
+
+
+<!-- (2 slides: balance; McCrary)-->
+
+## $X$es should look "locally randomized" {.smaller}
+
+<div class="centered">
+<!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
+<img src="images/figure2_2.jpg" width="300px" height="300px" />
+</div>
+
+> - Bandwidth selectors don't look at covariates, e.g. high school $G$rades ($y$ axis). 
+> - Due to trend, clear that $E[G | R\leq 0] \neq E[G | R >0 ]$ -- no _balance_ on $G$.
+> - Confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough to make imbalance non-significant? -- Doesn't change underlying trend, gets rid of a lot of data.
+> - Better: first model trend, e.g. $G \approx \alpha_G + \beta_G R$; then test whether balanced on _residual_, $e_{(\alpha_G, \beta_G)}(G|R)$, not $G$ itself; narrow $\mathcal{W}$ as needed to pass this test.
+
+<div class="notes">
+
+- A modern bandwidth selection chose a window too wide for the linear model
+- permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
+- The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
+
+</div>
+
+## Testing balance on the density of $R$ | the McCrary [-@mccrary2008manipulation] test
+
+<div class="columns-2">
+
+
+>  - Purpose of test: expose whether subjects secured or avoided treatment by manipulating their $R$s.
+  
+>  - If so, then density of $R$ differs on either side of cutpoint.
+>  - A test of "balance" in (log) density
+>  - Here we fail, due to students at $Z=0$ who narrowly avoided AP.
+
+  <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
+
+> - To avoid wrath of McCrary, exclude $\{i: Z_i =0\}$.
+
+</div>
+
+<div class="notes">
+
+- The widely used McCrary test checks for equal density of R immediately to eithert side of the cutpoint 
+- no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
+- Removing that chunk and that chunk only gets us a pass on this test.  
+- thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  
+
+</div>
+
+## Methods for picking out RCTs within RDDs
+
+> Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+
+> A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
+> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used in refining a propensity score match, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.  As in matching, remedies for test failure may involve reducing the sample.
+
+# Working your way around the donut
+
+<!-- TO CONSIDER NEXT TIME YOU'RE PREPPING THIS PRES:
+If I can think of a way to add an image to the transition slide,
+this one would be cute: images/donut-partly-eaten.jpg -->
+
+## Working your way around the donut {.build}
+
+>  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
+>    A:  That hole in the middle only counts against limit interpretations of RDDs...
+
+<!-- 1 slide: RI -->
+
+## Residual ignorability {.build .smaller}
+
+<!-- ignorability of covariate residuals; outcome residual ignorability -->
+
+**_Notation_**: $e_\theta(\cdot| \cdot)$ denotes a _residual transformation_, typically $e_{(a,b)}(y |r) = y - a -br$.  
+
+(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, then $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; if from fit of $Y=\alpha + \beta R + \tau Z+ \epsilon$, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is a partial residual. Both are OK.)
+
+<!--Postpone more elaborate one until we need it? $e_{(a,b,s)}(y |r) = \mathrm{sign}(y -a -br) \min(|y-a-br|/s, 1.55)$. -->
+
+**_Assumption: Ignorability of covariate residuals_**.  For given $\hat{\theta}_x$, $e_{\theta}(\cdot |\cdot)$, 
+$$e_{\bar{\theta}_x} (X|R) \perp Z | \{R \in \mathcal{W}\},\, \text{where}\, \hat{\theta}_x \stackrel{P}{\rightarrow} \bar{\theta}_x.$$ 
+
+**_Assumption: Ignorability of potential outcome residuals_**. For given $\hat{\theta}_y$, $e_\theta(\cdot |\cdot )$,
+$$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, \hat{\theta}_y \stackrel{P}{\rightarrow} \bar{\theta}_y.$$ 
+
+**_Key advantages_**. Identification of $E[Y - Y_C| Z=1, R\in \mathcal{W}]$. $\mathcal{W}$ doesn't shrink as $n\uparrow \infty$. Donuts allowed.  
+
+## Working our way around the donut
+
+>  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
+
+
+>  A:  That hole in the middle only counts against limit-based interpretations of RDDs. Residual ignorability supports large-sample inference on differences of potential outcomes, as opposed to differences of limits of curves. 
+
+# Methods for limiting contamination sensitivity
+
+## Methods for limiting contamination sensitivity {.build}
+
+>   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
+
+>   A: You can address sensitivity to contamination during the _primary_ analysis...
+
+
+<!-- 2 slides: LSO, Krafft points; bounded influence regression-->
+
+## Sensitivity to removing _groups_ of points {.build}
+
+Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? 
+
+Limiting such changes is an old problem in robust statistics, containing _contamination sensitivity_.  
+
+<div class="columns-2">
+<img src="images/figure2.4a.jpg" width="300px" height="300px" />
+
+<img src="images/Krafft_points.jpg" width="300px" height="300px" />
+</div>
+
+<div class="notes">
+
+- A latent subgroup that doesn't belong is only problematic if they don't follow the same pattern as others.
+- If the latent subgroup is both different and large, we ought to be able to find it in tests.
+- Otherwise, we're in the domain of "$\epsilon$ contamination"
+- OLS handles $\epsilon$ contamination poorly. Methods that handle it differently explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
+- An example from molecular design occurs at right.  OLS gets distracted by the points at far right.  Bounded influence regression downweights them to get a very different fit.
+
+</div>
+
+##Bounded influence robust regression | some relevant history
+
+- Robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, some $\psi(\cdot)$, $s(\cdot)$.
+- After much study, robustness literature identified pairs $(\psi, s)$ ensuring boundedness of influence function while retaining parametric rate, efficiency.
+- E.g., "MM with bisquare psi-function and robust scale",...
+- In R, `robustbase::lmrob`; in Stata, `mmregress`.
+- <!-- Asymptotically,--> Only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
+
+
+## Methods for limiting contamination sensitivity
+
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method addresses this issue?
+
+
+> A: You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis.  The robust statistics literature finds that only an unusual type of regression limits contamination sensitivity.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.
+
+# Are the answers any different?
+
+## Are the answers any different? {.build}
+
+> Q: Does bounded influence regression (following testing and adjustment of $\mathcal{W}$) give answers that are any different than RDD methods already in use?
+
+> A: Sometimes yes, sometimes no....
+
+
+
+##  Results for the LSO study
+
+ Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
+ 
+|                  |Estimate |95\% CI     |$\mathcal{W}$ |n     |
+|:-----------------|:--------|:-----------|:-------------|:-----|
+|Limitless         |0.24     |(0.17,0.31) |[0.01,0.50)  | 10000|
+|Local Permutation |0.11     |(0.05,0.17) |[0.01,0.18)   |  3400|
+|Local OLS         |0.23     |(0.19,0.28) |[0.01,1.24)   | 26000| 
+
+ 
+ 
+## The robustness weights diagnostic {.build}
+
+- Robust regression fitting generates "robustness" weights $\in [0,1]$, showing which observations the fitter deemed to be anomalous.
+- If $\mathcal{W}$ is still too wide, or its donut hole isn't wide enough, plot of robustness weights against $R$ gives an additional shot at detection.  
+- ![](./images/robwts.jpeg)
+
+<!--  (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)- (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)- (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.) -->
+
+
+## Are the answers any different?
+
+> Q: Does bounded influence regression (following testing and adjustment of $\mathcal{W}$) give answers that are any different than RDD methods already in use?
+
+> A: Sometimes yes, sometimes no. If not, then you're told why not, and the answer is likely to impugn the other method.
+
+## References {.smaller}
+
+
+
+
+
