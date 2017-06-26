@@ -83,9 +83,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 </div>
 
 <div class="notes">
-
-- The widely used McCrary test checks for equal density of R immediately to either side of the cutpoint 
-- no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
+-
 - Removing that chunk and that chunk only gets us a pass on this test.  
 - thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  
 
@@ -161,11 +159,10 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 
 <div class="notes">
 
-- A latent subgroup that doesn't belong is only problematic if they don't follow the same pattern as others.
+- At right, molecular design example discussed in _Robust Statistics_ text.  Think of rightmost 3 points as latent subgroup.  Large effect on OLS, less on robust method.
 - If the latent subgroup is both different and large, we ought to be able to find it in tests.
 - Otherwise, we're in the domain of "$\epsilon$ contamination"
-- OLS handles $\epsilon$ contamination poorly. Methods that handle it differently explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
-- An example from molecular design occurs at right.  OLS gets distracted by the points at far right.  Bounded influence regression downweights them to get a very different fit.
+- OLS handles $\epsilon$ contamination poorly. Methods that handle it better explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
 
 </div>
 
