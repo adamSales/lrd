@@ -175,7 +175,7 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 - After much study, robustness literature identified pairs $(\psi, s)$ ensuring boundedness of influence function while retaining parametric rate & efficiency.
 - E.g., "MM with bisquare psi-function and robust scale",...
 - In R, `robustbase::lmrob`; in Stata, `mmregress`.
-- <!-- Asymptotically,--> Only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
+- <!-- Asymptotically,--> Only bounded influence regression limits sensitivity to contamination of a $O(n^{-1/2})$ share of the sample [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
 
 
 ## Methods for limiting contamination sensitivity
@@ -183,9 +183,7 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 > Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
 
 
-> A: With RDDs, there's a better option than post hoc sensitivity analysis.  
-You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis, with the help of robust regression.
-While unfamiliar, these methods are efficient, easy to use and readily available in R and Stata.
+> A: With RDDs, there's a better option than post hoc sensitivity analysis.  You can address sensitivity to contamination (as opposed to omitted variable sensitivity) as a part of the primary analysis, with the help of robust regression.  While unfamiliar, these methods are efficient, easy to use and readily available in R and Stata.
 
 # Are the answers any different?
 
@@ -198,16 +196,17 @@ While unfamiliar, these methods are efficient, easy to use and readily available
 
 ## Simulation {.build .smaller}
 
-<img src="images/tab-levelSimulation.jpg" width="768px" height="324px" />
-
+ <img src="images/tab-levelSimulation.jpg" width="768px" height="324px" />
+ 
 - Each method mildly anti-conservative for small $n$.  
 - Only limitless, local OLS improve as $n$ increases.
+
 - Under Normal errors, limitless and local OLS are similarly powered.
 - Under $t_3$ errors, limitless has much more power.
 
 ##  Data analysis
 
- Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare $\Psi$ tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
+ Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare psi tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
  
 |                  |Estimate |95\% CI     |$\mathcal{W}$ |n     |
 |:-----------------|:--------|:-----------|:-------------|-----:|
