@@ -1,7 +1,7 @@
 ---
 title: "Limitless regression discontinuity"
-author: "Adam Sales & Ben Hansen*"
-date: "2017 ICSA Conference, Chicago"
+author: "Adam Sales, Ben Hansen (presenting)"
+date: "2017 ICSA Applied Statistics Symposium, Chicago"
 bibliography: ../../bibliography.bib
 output: 
   ioslides_presentation
@@ -55,7 +55,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 > - Bandwidth selectors don't look at covariates, e.g. high school $G$rades ($y$ axis). 
 > - Due to trend, clear that $E[G | R\leq 0] \neq E[G | R >0 ]$ -- no _balance_ on $G$.
 > - Confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough to make imbalance non-significant? -- Doesn't change underlying trend, gets rid of a lot of data.
-> - Better: first model trend, e.g. $G \approx \alpha_G + \beta_G R$; then test whether balanced on _residual_, $e_{(\alpha_G, \beta_G)}(G|R)$, not $G$ itself; narrow $\mathcal{W}$ as needed to pass this test.
+> - Better: first model trend, e.g. $G \approx \alpha_G + \beta_G R$; then test whether balanced on _residual_, $e_{(\alpha_G, \beta_G)}(G|R)$, not $G$ itself. Narrow $\mathcal{W}$ as needed to pass this test.
 
 <div class="notes">
 
@@ -84,7 +84,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 <div class="notes">
 
-- The widely used McCrary test checks for equal density of R immediately to eithert side of the cutpoint 
+- The widely used McCrary test checks for equal density of R immediately to either side of the cutpoint 
 - no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
 - Removing that chunk and that chunk only gets us a pass on this test.  
 - thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  
@@ -142,14 +142,14 @@ $$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, 
 
 >   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
 
->   A: You can address sensitivity to contamination during the _primary_ analysis...
+>   A: With RDDs, there's a better option than post hoc sensitivity analysis.  One addresses sensitivity to contamination during the _primary_ analysis...
 
 
 <!-- 2 slides: LSO, Krafft points; bounded influence regression-->
 
 ## Sensitivity to removing _groups_ of points {.build}
 
-Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? 
+Suppose a latent subgroup, "savvy," that's over-represented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? 
 
 Limiting such changes is an old problem in robust statistics, containing _contamination sensitivity_.  
 
@@ -169,10 +169,10 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 
 </div>
 
-##Bounded influence robust regression | some relevant history
+##Bounded influence robust regression | a high-level review {.build}
 
 - Robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, some $\psi(\cdot)$, $s(\cdot)$.
-- After much study, robustness literature identified pairs $(\psi, s)$ ensuring boundedness of influence function while retaining parametric rate, efficiency.
+- After much study, robustness literature identified pairs $(\psi, s)$ ensuring boundedness of influence function while retaining parametric rate & efficiency.
 - E.g., "MM with bisquare psi-function and robust scale",...
 - In R, `robustbase::lmrob`; in Stata, `mmregress`.
 - <!-- Asymptotically,--> Only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
@@ -180,10 +180,12 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 
 ## Methods for limiting contamination sensitivity
 
-> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method addresses this issue?
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
 
 
-> A: You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis.  The robust statistics literature finds that only an unusual type of regression limits contamination sensitivity.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.
+> A: With RDDs, there's a better option than post hoc sensitivity analysis.  
+You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis, with the help of robust regression.
+While unfamiliar, these methods are efficient, easy to use and readily available in R and Stata.
 
 # Are the answers any different?
 
@@ -194,13 +196,21 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 > A: Sometimes yes, sometimes no....
 
 
+## Simulation {.build .smaller}
 
-##  Results for the LSO study
+<img src="images/tab-levelSimulation.jpg" width="768px" height="324px" />
 
- Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
+- Each method mildly anti-conservative for small $n$.  
+- Only limitless, local OLS improve as $n$ increases.
+- Under Normal errors, limitless and local OLS are similarly powered.
+- Under $t_3$ errors, limitless has much more power.
+
+##  Data analysis
+
+ Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare $\Psi$ tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
  
 |                  |Estimate |95\% CI     |$\mathcal{W}$ |n     |
-|:-----------------|:--------|:-----------|:-------------|:-----|
+|:-----------------|:--------|:-----------|:-------------|-----:|
 |Limitless         |0.24     |(0.17,0.31) |[0.01,0.50)  | 10000|
 |Local Permutation |0.11     |(0.05,0.17) |[0.01,0.18)   |  3400|
 |Local OLS         |0.23     |(0.19,0.28) |[0.01,1.24)   | 26000| 
@@ -213,14 +223,14 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 - If $\mathcal{W}$ is still too wide, or its donut hole isn't wide enough, plot of robustness weights against $R$ gives an additional shot at detection.  
 - ![](./images/robwts.jpeg)
 
-<!--  (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)- (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)- (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.) -->
+<!--  (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)-->
 
 
 ## Are the answers any different?
 
 > Q: Does bounded influence regression (following testing and adjustment of $\mathcal{W}$) give answers that are any different than RDD methods already in use?
 
-> A: Sometimes yes, sometimes no. If not, then you're told why not, and the answer is likely to impugn the other method.
+> A: Sometimes yes, sometimes no. Differences are more likely with heavy tailed errors, which give the robust method a heavy efficiency advantage. When differences occur, diagnostics show you why, and are likely to impugn the other method.
 
 ## References {.smaller}
 
