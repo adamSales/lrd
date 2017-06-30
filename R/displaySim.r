@@ -34,7 +34,8 @@ prntTab <- function(totalPoly,ikp,caption='',label='tab:poly',full=TRUE,md=FALSE
                      cbind(resTab(totalPoly[[paste0(dgm,'_t')]],full=full)[,-c(5,10)],
                      ikSum(ikp[[paste0(dgm,'_t')]],full=full)))
         if(full)
-            tab <- rbind(cbind(resTab(totalPoly[[paste0(dgm,'_norm')]],full=full)[,-c(5,10)],
+            tab <- rbind(tab,
+                cbind(resTab(totalPoly[[paste0(dgm,'_norm')]],full=full)[,-c(5,10)],
                      ikSum(ikp[[paste0(dgm,'_norm')]],full=full)),tab)
     }
     if(md){
