@@ -11,11 +11,7 @@ General dependencies.
 
 ```r
 library('knitr')
-if(!require('lrd')){
- source("lrd/R/functions.r")
- source("lrd/R/simulations.r")
- source("lrd/R/displaySim.r")
-}
+stopifnot(require('lrd'))
 ```
 
 
@@ -42,9 +38,8 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("lrd/R/ddsandwich.R")
 set.seed(201609)
-st <- system.time(outcomeSim <- lrd:::totalOutcomeSim(nreps))
+st <- system.time(outcomeSim <- lrd::totalOutcomeSim(nreps))
 save(outcomeSim, file="dataResults/outcomeSim.RData")
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
@@ -55,8 +50,8 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 
 
 ```r
-levTab <- lrd:::levels(outcomeSim)
-powTab <-lrd:::power(outcomeSim)
+levTab <- lrd::levels(outcomeSim)
+powTab <-lrd::power(outcomeSim)
 capture.output({
 
 cat('
@@ -81,7 +76,7 @@ cat('\\hline
 \\caption{Proportion of ',length(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
 \\label{tab:level}',sep='')
 cat('\\end{table}\n')
-},file="lrd/inst/tab-levelSimulation.tex")
+},file="dataResults/tab-levelSimulation.tex")
 
 kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2)
 ```
@@ -133,10 +128,9 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("lrd/R/ddsandwich.R")
 set.seed(201609)
-st2 <- system.time(totalPoly <- lrd:::totalPolySim(nreps))
-st3 <- system.time(ikp <- lrd:::totalPolySimIK(nreps))
+st2 <- system.time(totalPoly <- lrd::totalPolySim(nreps))
+st3 <- system.time(ikp <- lrd::totalPolySimIK(nreps))
 save(totalPoly,file="dataResults/totalPolySim.RData")
 save(ikp,file="dataResults/ikp.RData")
 cat(paste0(date(), ', nreps=', nreps, '\n'),
@@ -171,8 +165,8 @@ results for normally-distributed errors.
 
 ```r
 capture.output(
-lrd:::prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
-file="lrd/inst/tab-polynomialSimulation.tex")
+lrd::prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
+file="dataResults/tab-polynomialSimulation.tex")
 kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
       caption='Full results for polynomial simulation',digits=2)
 ```
@@ -181,18 +175,58 @@ kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
 
 |                       | Rob, deg= 1| Rob, deg= 2| Rob, deg= 3| Rob, deg= 4| OLS, deg= 1| OLS, deg= 2| OLS, deg= 3| OLS, deg= 4| Loc.Lin|
 |:----------------------|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-------:|
-|lin t err level        |        0.38|        0.39|        0.06|        0.07|        0.40|        0.28|        0.06|        0.07|    0.08|
-|lin t err RMSE         |        0.36|        0.36|        0.25|        0.25|        0.36|        1.08|        2.91|       13.46|    0.29|
-|lin t err bias         |       -0.31|       -0.31|       -0.01|       -0.01|       -0.31|        0.86|        0.90|       -4.18|    0.00|
-|lin t err sd           |        0.19|        0.18|        0.25|        0.25|        0.18|        0.65|        2.77|       12.79|    0.29|
+|lin t err level        |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|lin t err RMSE         |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|lin t err bias         |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|lin t err sd           |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|lin t err level        |        0.05|        0.05|        0.06|        0.06|        0.05|        0.05|        0.05|        0.05|    0.07|
+|lin t err RMSE         |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|lin t err bias         |        0.00|        0.00|        0.00|        0.00|        0.00|        0.00|        0.01|        0.16|    0.00|
+|lin t err sd           |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|lin t err level        |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|lin t err RMSE         |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|lin t err bias         |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|lin t err sd           |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|lin t err level        |        0.78|        0.78|        0.05|        0.05|        0.54|        0.37|        0.07|        0.07|    0.07|
+|lin t err RMSE         |        0.63|        0.63|        0.30|        0.30|        0.70|        2.07|        5.17|       24.14|    0.50|
+|antiSym t err bias     |       -0.60|       -0.60|       -0.02|       -0.02|       -0.62|        1.74|        1.80|       -9.47|    0.00|
+|antiSym t err sd       |        0.20|        0.20|        0.30|        0.30|        0.32|        1.12|        4.85|       22.21|    0.50|
 |antiSym t err level    |        0.92|        0.92|        0.06|        0.06|        0.93|        0.77|        0.10|        0.11|    0.07|
 |antiSym t err RMSE     |        0.64|        0.64|        0.25|        0.25|        0.65|        1.84|        3.25|       15.39|    0.30|
 |antiSym t err bias     |       -0.61|       -0.61|       -0.02|       -0.01|       -0.63|        1.72|        1.77|       -8.63|    0.01|
 |antiSym t err sd       |        0.18|        0.18|        0.25|        0.25|        0.18|        0.64|        2.73|       12.74|    0.30|
-|oneSide t err level    |        0.05|        0.05|        0.06|        0.06|        0.05|        0.05|        0.05|        0.05|    0.07|
-|oneSide t err RMSE     |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
-|oneSide t err bias     |        0.00|        0.00|        0.00|        0.00|        0.00|        0.00|        0.01|        0.16|    0.00|
-|oneSide t err sd       |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|antiSym t err level    |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|antiSym t err RMSE     |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|antiSym t err bias     |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|antiSym t err sd       |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|antiSym t err level    |        0.05|        0.05|        0.06|        0.06|        0.05|        0.05|        0.05|        0.05|    0.07|
+|antiSym t err RMSE     |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|antiSym t err bias     |        0.00|        0.00|        0.00|        0.00|        0.00|        0.00|        0.01|        0.16|    0.00|
+|antiSym t err sd       |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|oneSide t err level    |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|oneSide t err RMSE     |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|oneSide t err bias     |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|oneSide t err sd       |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|oneSide t err level    |        0.78|        0.78|        0.05|        0.05|        0.54|        0.37|        0.07|        0.07|    0.07|
+|oneSide t err RMSE     |        0.63|        0.63|        0.30|        0.30|        0.70|        2.07|        5.17|       24.14|    0.50|
+|oneSide t err bias     |       -0.60|       -0.60|       -0.02|       -0.02|       -0.62|        1.74|        1.80|       -9.47|    0.00|
+|oneSide t err sd       |        0.20|        0.20|        0.30|        0.30|        0.32|        1.12|        4.85|       22.21|    0.50|
+|oneSide t err level    |        0.28|        0.28|        0.06|        0.06|        0.19|        0.13|        0.05|        0.05|    0.07|
+|oneSide t err RMSE     |        0.39|        0.38|        0.31|        0.31|        0.45|        1.40|        4.76|       22.35|    0.49|
+|oneSide t err bias     |       -0.31|       -0.31|       -0.01|       -0.01|       -0.32|        0.85|        0.90|       -4.87|   -0.01|
+|oneSide t err sd       |        0.23|        0.23|        0.31|        0.31|        0.31|        1.11|        4.68|       21.81|    0.49|
+|oneSide t err level    |        0.38|        0.39|        0.06|        0.07|        0.40|        0.28|        0.06|        0.07|    0.08|
+|oneSide t err RMSE     |        0.36|        0.36|        0.25|        0.25|        0.36|        1.08|        2.91|       13.46|    0.29|
+|lin norm err bias      |       -0.31|       -0.31|       -0.01|       -0.01|       -0.31|        0.86|        0.90|       -4.18|    0.00|
+|lin norm err sd        |        0.19|        0.18|        0.25|        0.25|        0.18|        0.65|        2.77|       12.79|    0.29|
+|lin norm err level     |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|lin norm err RMSE      |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|lin norm err bias      |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|lin norm err sd        |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|lin norm err level     |        0.05|        0.05|        0.06|        0.06|        0.05|        0.05|        0.05|        0.05|    0.07|
+|lin norm err RMSE      |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|lin norm err bias      |        0.00|        0.00|        0.00|        0.00|        0.00|        0.00|        0.01|        0.16|    0.00|
+|lin norm err sd        |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
 |lin norm err level     |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
 |lin norm err RMSE      |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
 |lin norm err bias      |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
@@ -201,6 +235,26 @@ kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
 |antiSym norm err RMSE  |        0.63|        0.63|        0.30|        0.30|        0.70|        2.07|        5.17|       24.14|    0.50|
 |antiSym norm err bias  |       -0.60|       -0.60|       -0.02|       -0.02|       -0.62|        1.74|        1.80|       -9.47|    0.00|
 |antiSym norm err sd    |        0.20|        0.20|        0.30|        0.30|        0.32|        1.12|        4.85|       22.21|    0.50|
+|antiSym norm err level |        0.92|        0.92|        0.06|        0.06|        0.93|        0.77|        0.10|        0.11|    0.07|
+|antiSym norm err RMSE  |        0.64|        0.64|        0.25|        0.25|        0.65|        1.84|        3.25|       15.39|    0.30|
+|antiSym norm err bias  |       -0.61|       -0.61|       -0.02|       -0.01|       -0.63|        1.72|        1.77|       -8.63|    0.01|
+|antiSym norm err sd    |        0.18|        0.18|        0.25|        0.25|        0.18|        0.64|        2.73|       12.74|    0.30|
+|antiSym norm err level |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|antiSym norm err RMSE  |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|antiSym norm err bias  |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|antiSym norm err sd    |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|antiSym norm err level |        0.05|        0.05|        0.06|        0.06|        0.05|        0.05|        0.05|        0.05|    0.07|
+|antiSym norm err RMSE  |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|oneSide norm err bias  |        0.00|        0.00|        0.00|        0.00|        0.00|        0.00|        0.01|        0.16|    0.00|
+|oneSide norm err sd    |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
+|oneSide norm err level |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
+|oneSide norm err RMSE  |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|oneSide norm err bias  |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
+|oneSide norm err sd    |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
+|oneSide norm err level |        0.78|        0.78|        0.05|        0.05|        0.54|        0.37|        0.07|        0.07|    0.07|
+|oneSide norm err RMSE  |        0.63|        0.63|        0.30|        0.30|        0.70|        2.07|        5.17|       24.14|    0.50|
+|oneSide norm err bias  |       -0.60|       -0.60|       -0.02|       -0.02|       -0.62|        1.74|        1.80|       -9.47|    0.00|
+|oneSide norm err sd    |        0.20|        0.20|        0.30|        0.30|        0.32|        1.12|        4.85|       22.21|    0.50|
 |oneSide norm err level |        0.28|        0.28|        0.06|        0.06|        0.19|        0.13|        0.05|        0.05|    0.07|
 |oneSide norm err RMSE  |        0.39|        0.38|        0.31|        0.31|        0.45|        1.40|        4.76|       22.35|    0.49|
 |oneSide norm err bias  |       -0.31|       -0.31|       -0.01|       -0.01|       -0.32|        0.85|        0.90|       -4.87|   -0.01|
