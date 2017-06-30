@@ -1,5 +1,5 @@
 ---
-title: "Tables from simulations presented in lrd paper"
+title: "Appendix D, tables from simulations"
 author: "lrd authors"
 date: "25 May, 2017"
 output: html_document
