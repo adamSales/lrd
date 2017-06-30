@@ -13,11 +13,7 @@ knitr::opts_knit$set(root.dir = '.')
 General dependencies.
 ```{r}
 library('knitr')
-if(!require('lrd')){
- source("lrd/R/functions.r")
- source("lrd/R/simulations.r")
- source("lrd/R/displaySim.r")
-}
+stopifnot(require('lrd'))
 ```
 
 
@@ -36,9 +32,8 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("lrd/R/ddsandwich.R")
 set.seed(201609)
-st <- system.time(outcomeSim <- lrd:::totalOutcomeSim(nreps))
+st <- system.time(outcomeSim <- lrd::totalOutcomeSim(nreps))
 save(outcomeSim, file="dataResults/outcomeSim.RData")
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
@@ -48,8 +43,8 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 ```
 
 ```{r}
-levTab <- lrd:::levels(outcomeSim)
-powTab <-lrd:::power(outcomeSim)
+levTab <- lrd::levels(outcomeSim)
+powTab <-lrd::power(outcomeSim)
 capture.output({
 
 cat('
@@ -74,7 +69,7 @@ cat('\\hline
 \\caption{Proportion of ',length(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
 \\label{tab:level}',sep='')
 cat('\\end{table}\n')
-},file="lrd/inst/tab-levelSimulation.tex")
+},file="dataResults/tab-levelSimulation.tex")
 
 kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2)
 kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2)
@@ -94,10 +89,9 @@ library('rdd')
 library('RItools')
 library('sandwich')
 library('nnet')
-source("lrd/R/ddsandwich.R")
 set.seed(201609)
-st2 <- system.time(totalPoly <- lrd:::totalPolySim(nreps))
-st3 <- system.time(ikp <- lrd:::totalPolySimIK(nreps))
+st2 <- system.time(totalPoly <- lrd::totalPolySim(nreps))
+st3 <- system.time(ikp <- lrd::totalPolySimIK(nreps))
 save(totalPoly,file="dataResults/totalPolySim.RData")
 save(ikp,file="dataResults/ikp.RData")
 cat(paste0(date(), ', nreps=', nreps, '\n'),
@@ -116,8 +110,8 @@ results for normally-distributed errors.
 
 ```{r}
 capture.output(
-lrd:::prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
-file="lrd/inst/tab-polynomialSimulation.tex")
+lrd::prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
+file="dataResults/tab-polynomialSimulation.tex")
 kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
       caption='Full results for polynomial simulation',digits=2)
 ```
