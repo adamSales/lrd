@@ -18,11 +18,7 @@ library(ggplot2)
 library(xtable)
 library(robustbase)
 library(rdd)
-if(!require('lrd')){
- source("lrd/R/functions.r")
- source("lrd/R/simulations.r")
- source("lrd/R/displaySim.r")
-}
+stopifnot(require('lrd'))
 ```
 
 Initialization.
@@ -95,14 +91,14 @@ mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
 ```
 
 
-#' ## main analysis ##
+## main analysis ##
 
-#' The sh method uses `lmrob`, which in turn requires a random
-#' seed.  For confidence interval and estimation routines it's
-#' helpful to use the same seed throughout, as this means the
-#' S-estimation initializers will always be sampling the same
-#' subsets of the sample.
-#'
+The sh method uses `lmrob`, which in turn requires a random
+seed.  For confidence interval and estimation routines it's
+helpful to use the same seed throughout, as this means the
+S-estimation initializers will always be sampling the same
+subsets of the sample.
+
 
 ```{r}
 set.seed(201705)
