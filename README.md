@@ -18,18 +18,18 @@ Referring to the directory set up in step 1 as TEMPDIR, install the
 dependency packages using either
 
 ```{r}
-install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"), lib.loc=TEMPDIR)
+install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"), lib=TEMPDIR)
 ```
 or
 ```{r}
 install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"),
-       repo=URL_OF_FAVORITE_CRAN_MIRROR, lib.loc=TEMPDIR)
+       repo=URL_OF_FAVORITE_CRAN_MIRROR, lib=TEMPDIR)
 ```
 according to your preference.  Then install the `lrd` package via
 
 ```{r}
 install.packages("lrd_0.0.0.9000.tar.gz", repos = NULL,
-                          lib.loc=TEMPDIR, type = "source")
+                          lib=TEMPDIR, type = "source")
 ```
 
 # Replicating computations in paper
