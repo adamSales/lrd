@@ -28,7 +28,7 @@ install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"),
 according to your preference.  Then install the `lrd` package via
 
 ```{r}
-install.packages("lrd_0.0.1.9000.tar.gz", repos = NULL,
+install.packages("lrd_0.0.2.9000.tar.gz", repos = NULL,
                           lib=TEMPDIR, type = "source")
 ```
 
@@ -49,38 +49,36 @@ With the lrd package loaded, you can locate our data analysis file using
 `system.file("dataAnalysis.R", package="lrd")`.  Run it via e.g.
 
 ```{r}
-rmarkdown::render( system.file("dataAnalysis.Rmd", package="lrd") )
+knitr::knit( system.file("dataAnalysis.Rmd", package="lrd") )
 ```
 
-which requires that you have the rmarkdown package installed.  (If you
-can't install it, try installing the knitr package instead. The
-parallel command with `knitr::knit` in place of `rmarkdown::render`
-should work, creating a markdown file instead of a PDF.)
+which requires that you have the knitr package installed. 
 
 ## Power/size simulations
 
-Create a subdirectory called `dataResults` in your working directory.
-The script will store simulation artifacts here.
+The simulations take a while.  Results from our run are bundled with
+the lrd package -- see "`fullOutcomeSim*.md`" and
+"`fullOutcomeSim*.pdf`" files in the package root directory.
+
 
 The fullOutcomeSim.Rmd script displays and optionally re-runs power and
 size simulations presented in the paper.  With the lrd package loaded, you can locate it using
 `system.file("fullOutcomeSim.Rmd", package="lrd")`.
 
+To run it, first create a subdirectory called `dataResults` in your working directory.
+The script will store simulation artifacts here.
 
-To run it from the command line, do 
+To reproduce the simulation results from the command line, do 
+>   Rscript -e 'nreps={N}; library("lrd", lib.loc=TEMPDIR); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
->   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+after replacing "`{N}`" with the number of simulations you want.  (We used 5000.)  
 
-or
->   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+Once they've been generated one can do
 
-This will generate an html file with code and results from whatever
-simulations may be saved in "data/simResults.RData".
+>   Rscript -e 'library("lrd", lib.loc=TEMPDIR); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
-To not only display the simulation results but also reproduce them, do 
->   Rscript -e 'nreps={N}; withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
-
-after replacing "`{N}`" with the number of simulations you want, e.g 1000.  
+to generate an html file with code and results from whatever
+simulations may be saved in "dataResults/simResults.RData".
 
 
 
