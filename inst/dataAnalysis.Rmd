@@ -77,11 +77,13 @@ figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),FUN=mean,
 figDat$n <- as.vector(table(dat$R))
 figDat <- within(figDat,n <- 2*n/max(n))
 
-with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA'))
+with(figDat,plot(R,nextGPA,
+xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA'))
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
-with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
+with(figDat,plot(R,lhsgrade_pct,xlab=
+'First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
 ```
 
 The McCrary density test failure and recovery described in Section 4.1
