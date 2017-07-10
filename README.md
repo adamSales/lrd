@@ -42,18 +42,25 @@ library("lrd", lib.loc=TEMPDIR)
 
 ## Data analysis
 
+Create a subdirectory called `dataResults` in your working directory.
+The script will store analysis artifacts here.
+
 With the lrd package loaded, you can locate our data analysis file using
-`system.file("dataAnalysis.R", package="lrd")`.  Run it via
+`system.file("dataAnalysis.R", package="lrd")`.  Run it via e.g.
 
 ```{r}
 rmarkdown::render( system.file("dataAnalysis.Rmd", package="lrd") )
 ```
 
-(You'll need to have the rmarkdown package installed, of course.)
+which requires that you have the rmarkdown package installed.  (If you
+can't install it, try installing the knitr package instead. The
+parallel command with `knitr::knit` in place of `rmarkdown::render`
+should work, creating a markdown file instead of a PDF.)
 
 ## Power/size simulations
 
-
+Create a subdirectory called `dataResults` in your working directory.
+The script will store simulation artifacts here.
 
 The fullOutcomeSim.Rmd script displays and optionally re-runs power and
 size simulations presented in the paper.  With the lrd package loaded, you can locate it using
