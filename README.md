@@ -28,7 +28,7 @@ install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"),
 according to your preference.  Then install the `lrd` package via
 
 ```{r}
-install.packages("lrd_0.0.0.9000.tar.gz", repos = NULL,
+install.packages("lrd_0.0.1.9000.tar.gz", repos = NULL,
                           lib=TEMPDIR, type = "source")
 ```
 
