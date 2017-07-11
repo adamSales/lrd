@@ -1,7 +1,8 @@
-# limitlessRD
-explorations of distribution-free large sample inference for regression discontinuity designs
+# Analysis replication materials
 
-Accompanies the paper "Limitless regression discontinuity".
+July 2017
+
+Accompanies the paper "Bounded Influence Robust Regression of Imperfect Regression Discontinuity Designs".
 
 ## Setup
 
