@@ -116,12 +116,11 @@ levels <- function(os){
             run <- toMat(os[[paste0(n,'_0_',err)]])
             #colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
             row <- NULL
-            for(meth in c('cft','sh','ik'))
-                for(bw in c('25','5')){
-                    col <- pmatch(paste0(meth,bw,'.p'),colnames(run))
-                    row <- c(row,mean(run[,col]<0.05,na.rm=TRUE))
-                    names(row)[length(row)] <- paste(meth,bw)
-                }
+            for(meth in c('cft','sh','ik')){
+                col <- pmatch(paste0(meth,'.p'),colnames(run))
+                row <- c(row,mean(run[,col]<0.05,na.rm=TRUE))
+                names(row)[length(row)] <- meth
+            }
             tab <- rbind(tab,row)
             rownames(tab)[nrow(tab)] <- paste(err,n)
         }
@@ -137,11 +136,10 @@ power <- function(os){
             run <- toMat(os[[paste0(n,'_0.2_',err)]])
             #colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
             row <- NULL
-            for(meth in c('cft','sh','ik'))
-                for(bw in c('25','5')){
-                    col <- pmatch(paste0(meth,bw,'.p'),colnames(run))
-                    row <- c(row,mean(run[,col]<0.05,na.rm=TRUE))
-                    names(row)[length(row)] <- paste(meth,bw)
+            for(meth in c('cft','sh','ik')){
+                col <- pmatch(paste0(meth,'.p'),colnames(run))
+                row <- c(row,mean(run[,col]<0.05,na.rm=TRUE))
+                    names(row)[length(row)] <- meth
                 }
             tab <- rbind(tab,row)
             rownames(tab)[nrow(tab)] <- paste(err,n)
