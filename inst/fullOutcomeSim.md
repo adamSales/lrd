@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "25 May, 2017"
+date: "16 October, 2017"
 output: html_document
 ---
 
@@ -32,7 +32,7 @@ nreps
 ```
 
 ```
-## [1] 5000
+## [1] 10
 ```
 
 ```r
@@ -62,11 +62,11 @@ capture.output({
 cat('
 \\begin{table}
 \\footnotesize
-\\begin{tabular}{cc|ccccccc|cccccc}
+\\begin{tabular}{cc|ccccccc}
 \\hline
-&&& \\multicolumn{6}{c}{Treatment Effect$=0$}&\\multicolumn{6}{c}{Treatment Effect$=0.2$}\\\\
-&&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}&\\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}\\\\
-$n$& Error &$b=$ &', paste(rep('0.25&0.5',ncol(levTab)),collapse='&'),'\\\\
+
+&&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}\\\\
+$n$& Error &&', paste(rep('Level&Power',ncol(levTab)),collapse='&'),'\\\\
 \\hline \n')
 for(i in 1:nrow(levTab)){
     spec <- strsplit(rownames(levTab)[i],' ')[[1]]
@@ -74,28 +74,28 @@ for(i in 1:nrow(levTab)){
         cat('\\hline \n')
         cat('\\multirow{2}{*}{',round(as.numeric(spec[2])),'} & $\\mathcal{N}(0,1)$ &&')
     } else cat(' & $t_3$ &&')
-    cat(paste(round(c(levTab[i,],powTab[i,])*100,1),collapse='&'),'\\\\ \n')
+    cat(paste(paste(round(levTab[i,]*100),round(powTab[i,]*100),sep='&'),collapse='&'),'\\\\ \n')
 }
 cat('\\hline
 \\end{tabular}
-\\caption{Proportion of ',length(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. The left column gives sample sizes with $b=0.5$; the sample size when $b=0.25$ is roughly half the listed $n$ value. When the treatment effect is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
+\\caption{Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power with a treatment effect of 0.2.}
 \\label{tab:level}',sep='')
 cat('\\end{table}\n')
-},file="lrd/inst/tab-levelSimulation.tex")
+},file="tab-levelSimulation.tex")
 
 kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2)
 ```
 
 
 
-|          | cft 25| cft 5| sh 25| sh 5| ik 25| ik 5|
-|:---------|------:|-----:|-----:|----:|-----:|----:|
-|norm 50   |   0.06|  0.14|  0.09| 0.07|  0.10| 0.07|
-|t 50      |   0.06|  0.11|  0.08| 0.06|  0.08| 0.06|
-|norm 250  |   0.11|  0.49|  0.05| 0.05|  0.06| 0.05|
-|t 250     |   0.09|  0.35|  0.06| 0.05|  0.06| 0.05|
-|norm 2500 |   0.58|  1.00|  0.05| 0.05|  0.05| 0.05|
-|t 2500    |   0.42|  1.00|  0.05| 0.05|  0.05| 0.05|
+|          | cft|  sh|  ik|
+|:---------|---:|---:|---:|
+|norm 50   | 0.3| 0.2| 0.0|
+|t 50      | 0.2| 0.3| 0.1|
+|norm 250  | 0.7| 0.1| 0.1|
+|t 250     | 0.5| 0.0| 0.0|
+|norm 2500 | 1.0| 0.0| 0.0|
+|t 2500    | 1.0| 0.1| 0.0|
 
 ```r
 kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2)
@@ -103,14 +103,14 @@ kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =
 
 
 
-|          | cft 25| cft 5| sh 25| sh 5| ik 25| ik 5|
-|:---------|------:|-----:|-----:|----:|-----:|----:|
-|norm 50   |   0.11|  0.32|  0.09| 0.08|  0.10| 0.08|
-|t 50      |   0.09|  0.23|  0.09| 0.07|  0.09| 0.07|
-|norm 250  |   0.41|  0.93|  0.09| 0.13|  0.08| 0.12|
-|t 250     |   0.29|  0.80|  0.07| 0.10|  0.06| 0.07|
-|norm 2500 |   1.00|  1.00|  0.41| 0.68|  0.37| 0.67|
-|t 2500    |   1.00|  1.00|  0.29| 0.52|  0.17| 0.30|
+|          | cft|  sh|  ik|
+|:---------|---:|---:|---:|
+|norm 50   | 0.3| 0.1| 0.2|
+|t 50      | 0.3| 0.1| 0.0|
+|norm 250  | 1.0| 0.2| 0.2|
+|t 250     | 0.9| 0.3| 0.1|
+|norm 2500 | 1.0| 0.8| 0.8|
+|t 2500    | 1.0| 0.7| 0.3|
 
 
 The polynomial sim was run in two parts: first for robust regression
@@ -123,7 +123,7 @@ nreps
 ```
 
 ```
-## [1] 5000
+## [1] 10
 ```
 
 ```r
@@ -151,17 +151,17 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 
 ```
 ## lin   TRUE 
-## [1] "2017-05-26 02:41:25 CDT"
+## [1] "2017-10-16 18:41:56 CDT"
 ## lin   FALSE 
-## [1] "2017-05-26 02:43:20 CDT"
+## [1] "2017-10-16 18:41:57 CDT"
 ## antiSym   TRUE 
-## [1] "2017-05-26 02:45:13 CDT"
+## [1] "2017-10-16 18:41:57 CDT"
 ## antiSym   FALSE 
-## [1] "2017-05-26 02:47:04 CDT"
+## [1] "2017-10-16 18:41:57 CDT"
 ## oneSide   TRUE 
-## [1] "2017-05-26 02:48:54 CDT"
+## [1] "2017-10-16 18:41:58 CDT"
 ## oneSide   FALSE 
-## [1] "2017-05-26 02:50:46 CDT"
+## [1] "2017-10-16 18:41:58 CDT"
 ```
 
 The following gives the results in Table 4 of the paper, in addition
@@ -181,30 +181,30 @@ kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
 
 |                       | Rob, deg= 1| Rob, deg= 2| Rob, deg= 3| Rob, deg= 4| OLS, deg= 1| OLS, deg= 2| OLS, deg= 3| OLS, deg= 4| Loc.Lin|
 |:----------------------|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-------:|
-|lin t err level        |        0.38|        0.39|        0.06|        0.07|        0.40|        0.28|        0.06|        0.07|    0.08|
-|lin t err RMSE         |        0.36|        0.36|        0.25|        0.25|        0.36|        1.08|        2.91|       13.46|    0.29|
-|lin t err bias         |       -0.31|       -0.31|       -0.01|       -0.01|       -0.31|        0.86|        0.90|       -4.18|    0.00|
-|lin t err sd           |        0.19|        0.18|        0.25|        0.25|        0.18|        0.65|        2.77|       12.79|    0.29|
-|antiSym t err level    |        0.92|        0.92|        0.06|        0.06|        0.93|        0.77|        0.10|        0.11|    0.07|
-|antiSym t err RMSE     |        0.64|        0.64|        0.25|        0.25|        0.65|        1.84|        3.25|       15.39|    0.30|
-|antiSym t err bias     |       -0.61|       -0.61|       -0.02|       -0.01|       -0.63|        1.72|        1.77|       -8.63|    0.01|
-|antiSym t err sd       |        0.18|        0.18|        0.25|        0.25|        0.18|        0.64|        2.73|       12.74|    0.30|
-|oneSide t err level    |        0.05|        0.05|        0.06|        0.06|        0.05|        0.05|        0.05|        0.05|    0.07|
-|oneSide t err RMSE     |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
-|oneSide t err bias     |        0.00|        0.00|        0.00|        0.00|        0.00|        0.00|        0.01|        0.16|    0.00|
-|oneSide t err sd       |        0.18|        0.18|        0.24|        0.24|        0.18|        0.62|        2.71|       12.59|    0.28|
-|lin norm err level     |        0.05|        0.04|        0.05|        0.05|        0.05|        0.05|        0.05|        0.05|    0.06|
-|lin norm err RMSE      |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
-|lin norm err bias      |        0.00|        0.00|        0.00|        0.00|       -0.01|       -0.02|       -0.04|        0.02|    0.00|
-|lin norm err sd        |        0.22|        0.22|        0.30|        0.30|        0.31|        1.08|        4.71|       21.83|    0.47|
-|antiSym norm err level |        0.78|        0.78|        0.05|        0.05|        0.54|        0.37|        0.07|        0.07|    0.07|
-|antiSym norm err RMSE  |        0.63|        0.63|        0.30|        0.30|        0.70|        2.07|        5.17|       24.14|    0.50|
-|antiSym norm err bias  |       -0.60|       -0.60|       -0.02|       -0.02|       -0.62|        1.74|        1.80|       -9.47|    0.00|
-|antiSym norm err sd    |        0.20|        0.20|        0.30|        0.30|        0.32|        1.12|        4.85|       22.21|    0.50|
-|oneSide norm err level |        0.28|        0.28|        0.06|        0.06|        0.19|        0.13|        0.05|        0.05|    0.07|
-|oneSide norm err RMSE  |        0.39|        0.38|        0.31|        0.31|        0.45|        1.40|        4.76|       22.35|    0.49|
-|oneSide norm err bias  |       -0.31|       -0.31|       -0.01|       -0.01|       -0.32|        0.85|        0.90|       -4.87|   -0.01|
-|oneSide norm err sd    |        0.23|        0.23|        0.31|        0.31|        0.31|        1.11|        4.68|       21.81|    0.49|
+|lin t err level        |        0.20|        0.30|        0.00|        0.00|        0.40|        0.40|        0.00|        0.10|    0.30|
+|lin t err RMSE         |        0.34|        0.34|        0.22|        0.23|        0.35|        1.21|        2.52|       12.17|    0.35|
+|lin t err bias         |       -0.28|       -0.29|        0.02|        0.02|       -0.30|        1.01|        0.59|       -3.52|    0.04|
+|lin t err sd           |        0.19|        0.18|        0.23|        0.24|        0.19|        0.70|        2.58|       12.28|    0.36|
+|antiSym t err level    |        0.90|        0.90|        0.00|        0.00|        0.90|        0.70|        0.20|        0.00|    0.00|
+|antiSym t err RMSE     |        0.71|        0.71|        0.23|        0.23|        0.70|        1.91|        4.04|       11.29|    0.29|
+|antiSym t err bias     |       -0.67|       -0.67|       -0.04|       -0.03|       -0.67|        1.80|        2.26|       -8.34|   -0.09|
+|antiSym t err sd       |        0.24|        0.24|        0.24|        0.24|        0.22|        0.67|        3.53|        8.02|    0.29|
+|oneSide t err level    |        0.00|        0.00|        0.10|        0.10|        0.00|        0.10|        0.10|        0.00|    0.20|
+|oneSide t err RMSE     |        0.16|        0.16|        0.30|        0.30|        0.16|        0.81|        3.39|       13.30|    0.36|
+|oneSide t err bias     |       -0.03|       -0.04|       -0.05|       -0.05|       -0.02|        0.02|        0.35|        5.95|    0.01|
+|oneSide t err sd       |        0.16|        0.17|        0.31|        0.31|        0.16|        0.85|        3.56|       12.54|    0.38|
+|lin norm err level     |        0.10|        0.10|        0.10|        0.10|        0.00|        0.10|        0.00|        0.10|    0.00|
+|lin norm err RMSE      |        0.26|        0.27|        0.32|        0.33|        0.25|        1.55|        4.82|       29.07|    0.47|
+|lin norm err bias      |        0.06|        0.07|        0.02|        0.03|        0.00|        0.31|       -2.29|      -12.42|   -0.06|
+|lin norm err sd        |        0.27|        0.27|        0.33|        0.34|        0.26|        1.60|        4.47|       27.71|    0.49|
+|antiSym norm err level |        0.60|        0.60|        0.10|        0.10|        0.30|        0.60|        0.20|        0.00|    0.10|
+|antiSym norm err RMSE  |        0.64|        0.63|        0.38|        0.37|        0.68|        2.05|        6.48|       15.99|    0.42|
+|antiSym norm err bias  |       -0.59|       -0.58|        0.11|        0.11|       -0.58|        1.73|        3.17|       -0.64|   -0.06|
+|antiSym norm err sd    |        0.26|        0.26|        0.39|        0.37|        0.37|        1.17|        5.96|       16.85|    0.44|
+|oneSide norm err level |        0.30|        0.30|        0.00|        0.00|        0.20|        0.20|        0.00|        0.10|    0.00|
+|oneSide norm err RMSE  |        0.32|        0.32|        0.30|        0.29|        0.34|        1.33|        3.81|       21.12|    0.38|
+|oneSide norm err bias  |       -0.26|       -0.25|        0.19|        0.19|       -0.27|        1.12|        0.66|       -6.87|    0.15|
+|oneSide norm err sd    |        0.18|        0.20|        0.24|        0.24|        0.22|        0.74|        3.96|       21.06|    0.37|
 
 
 Session information
@@ -214,35 +214,31 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.2 (2016-10-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## R version 3.3.1 (2016-06-21)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.12.6 (Sierra)
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] nnet_7.3-12       RItools_0.1-15    SparseM_1.7      
+##  [1] nnet_7.3-12       RItools_0.2-0     SparseM_1.77     
 ##  [4] rdd_0.57          Formula_1.2-1     AER_1.2-4        
-##  [7] survival_2.39-5   car_2.1-3         lmtest_0.9-34    
+##  [7] survival_2.40-1   car_2.1-4         lmtest_0.9-34    
 ## [10] zoo_1.7-13        sandwich_2.3-4    robustbase_0.92-7
-## [13] knitr_1.14        lrd_0.0.0.9000   
+## [13] knitr_1.15.1      lrd_0.0.0.9000   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.7        highr_0.6          compiler_3.3.2    
-##  [4] DEoptimR_1.0-8     nloptr_1.0.4       formatR_1.4       
-##  [7] tools_3.3.2        lme4_1.1-12        evaluate_0.10     
-## [10] nlme_3.1-128       lattice_0.20-34    mgcv_1.8-15       
-## [13] Matrix_1.2-7.1     parallel_3.3.2     stringr_1.0.0     
-## [16] MatrixModels_0.4-1 grid_3.3.2         minqa_1.2.4       
-## [19] magrittr_1.5       MASS_7.3-45        splines_3.3.2     
-## [22] svd_0.4            abind_1.4-3        pbkrtest_0.4-6    
-## [25] xtable_1.8-2       quantreg_5.29      stringi_1.1.1
+##  [1] Rcpp_0.12.8        DEoptimR_1.0-8     nloptr_1.0.4      
+##  [4] highr_0.6          tools_3.3.1        lme4_1.1-12       
+##  [7] evaluate_0.10      nlme_3.1-128       lattice_0.20-33   
+## [10] mgcv_1.8-15        Matrix_1.2-6       parallel_3.3.1    
+## [13] stringr_1.1.0      MatrixModels_0.4-1 grid_3.3.1        
+## [16] minqa_1.2.4        magrittr_1.5       MASS_7.3-45       
+## [19] splines_3.3.1      rsconnect_0.5      svd_0.4           
+## [22] abind_1.4-5        pbkrtest_0.4-6     xtable_1.8-2      
+## [25] quantreg_5.29      stringi_1.1.1
 ```

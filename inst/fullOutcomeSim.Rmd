@@ -71,7 +71,7 @@ for(i in 1:nrow(levTab)){
 }
 cat('\\hline
 \\end{tabular}
-\\caption{Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power.}
+\\caption{Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power with a treatment effect of 0.2.}
 \\label{tab:level}',sep='')
 cat('\\end{table}\n')
 },file="tab-levelSimulation.tex")
