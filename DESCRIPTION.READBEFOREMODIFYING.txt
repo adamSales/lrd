@@ -1,3 +1,2 @@
 - When the lrd version number is bumped in DESCRIPTION, the name of the package tarball
-as referenced in README.md needs to be updated correspondingly.  For submission to JASA,
-the "acc_form.rtf" document needs to be updated also. 
+as referenced in README.md needs to be updated correspondingly.  
