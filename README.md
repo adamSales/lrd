@@ -1,7 +1,8 @@
-# limitlessRD
-explorations of distribution-free large sample inference for regression discontinuity designs
+# Analysis replication materials
 
-Accompanies the paper [Limitless regression discontinuity](http://arxiv.org/abs/1403.5478).
+July 2017
+
+Accompanies the paper "Bounded Influence Robust Regression of Imperfect Regression Discontinuity Designs".
 
 ## Setup
 
@@ -18,17 +19,18 @@ Referring to the directory set up in step 1 as TEMPDIR, install the
 dependency packages using either
 
 ```{r}
-install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"), lib.loc=TEMPDIR)
+install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"), lib=TEMPDIR)
 ```
 or
 ```{r}
 install.packages(c("rdd", "robustbase", "withr", "foreign",  "sandwich"),
-       repo=URL_OF_FAVORITE_CRAN_MIRROR, lib.loc=TEMPDIR)
+       repo=URL_OF_FAVORITE_CRAN_MIRROR, lib=TEMPDIR)
 ```
 according to your preference.  Then install the `lrd` package via
 
 ```{r}
-install.packages("TEMPDIR/TARBALL", repos = NULL, type = "source")
+install.packages("lrd_0.0.2.9000.tar.gz", repos = NULL,
+                          lib=TEMPDIR, type = "source")
 ```
 
 # Replicating computations in paper
@@ -41,36 +43,43 @@ library("lrd", lib.loc=TEMPDIR)
 
 ## Data analysis
 
+Create a subdirectory called `dataResults` in your working directory.
+The script will store analysis artifacts here.
+
 With the lrd package loaded, you can locate our data analysis file using
-`system.file("dataAnalysis.R", package="lrd")`.  Run it via
+`system.file("dataAnalysis.R", package="lrd")`.  Run it via e.g.
 
 ```{r}
-source( system.file("dataAnalysis.R", package="lrd") )
+knitr::knit( system.file("dataAnalysis.Rmd", package="lrd") )
 ```
+
+which requires that you have the knitr package installed. 
 
 ## Power/size simulations
 
+The simulations take a while.  Results from our run are bundled with
+the lrd package -- see "`fullOutcomeSim*.md`" and
+"`fullOutcomeSim*.pdf`" files in the package root directory.
 
 
 The fullOutcomeSim.Rmd script displays and optionally re-runs power and
 size simulations presented in the paper.  With the lrd package loaded, you can locate it using
 `system.file("fullOutcomeSim.Rmd", package="lrd")`.
 
+To run it, first create a subdirectory called `dataResults` in your working directory.
+The script will store simulation artifacts here.
 
-To run it from the command line, do 
+To reproduce the simulation results from the command line, do 
+>   Rscript -e 'nreps={N}; library("lrd", lib.loc=TEMPDIR); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
->   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+after replacing "`{N}`" with the number of simulations you want.  (We used 5000.)  
 
-or
->   Rscript -e 'withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
+Once they've been generated one can do
 
-This will generate an html file with code and results from whatever
-simulations may be saved in "data/simResults.RData".
+>   Rscript -e 'library("lrd", lib.loc=TEMPDIR); knitr::knit(system.file("fullOutcomeSim.Rmd", package="lrd"))'
 
-To not only display the simulation results but also reproduce them, do 
->   Rscript -e 'nreps={N}; withr::with_libpaths(TEMPDIR, library("lrd"),  "prefix"); rmarkdown::render(system.file("fullOutcomeSim.Rmd", package="lrd"))'
-
-after replacing "`{N}`" with the number of simulations you want, e.g 1000.  
+to generate an html file with code and results from whatever
+simulations may be saved in "dataResults/simResults.RData".
 
 
 
