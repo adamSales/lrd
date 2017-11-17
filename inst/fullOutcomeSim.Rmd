@@ -27,8 +27,11 @@ just print results from previously saved simulations.
 In order to re-run the simulations, the `nreps`
 variable should have been set to a positive integer before initiating this script.
 
+`paperdir` is the directory where LaTeX code for simulation results tables
+is saved. If unspecified, the tables are saved in the working directory.
 ```{r  warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
+if (!exists('paperdir')) paperdir <- '.'
 nreps
 if (nreps) {
 library('robustbase')
@@ -39,12 +42,12 @@ library('nnet')
 source("lrd/R/ddsandwich.R")
 set.seed(201609)
 st <- system.time(outcomeSim <- lrd:::totalOutcomeSim(nreps))
-save(outcomeSim, file="dataResults/outcomeSim.RData")
+save(outcomeSim, file=paste0(paperdir,"/dataResults/outcomeSim.RData"))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
-    file='dataResults/fullOutcomeSim-runtime.txt', append=TRUE)
-} else load('dataResults/outcomeSim.RData')
+    file=paste0(paperdir,'/dataResults/fullOutcomeSim-runtime.txt', append=TRUE))
+} else load(paste0(paperdir,'/dataResults/outcomeSim.RData'))
 ```
 
 ```{r}
@@ -54,11 +57,12 @@ capture.output({
 
 cat('
 \\begin{table}
-\\footnotesize
+%\\footnotesize
 \\begin{tabular}{cc|ccccccc}
 \\hline
 
-&&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}\\\\
+&&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}
+ &\\multicolumn{ 2 }{c}{Local OLS}\\\\
 $n$& Error &&', paste(rep('Level&Power',ncol(levTab)),collapse='&'),'\\\\
 \\hline \n')
 for(i in 1:nrow(levTab)){
@@ -67,17 +71,22 @@ for(i in 1:nrow(levTab)){
         cat('\\hline \n')
         cat('\\multirow{2}{*}{',round(as.numeric(spec[2])),'} & $\\mathcal{N}(0,1)$ &&')
     } else cat(' & $t_3$ &&')
-    cat(paste(paste(round(levTab[i,]*100),round(powTab[i,]*100),sep='&'),collapse='&'),'\\\\ \n')
+    cat(paste(paste(round(levTab[i,]*100),round(powTab[i,]*100),sep='&'),
+              collapse='&'),'\\\\ \n')
 }
 cat('\\hline
 \\end{tabular}
-\\caption{Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power with a treatment effect of 0.2.}
+\\caption{Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below 
+$\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. 
+When the treatment effect $\tau$ is zero (left) these are empirical estimates of size; 
+otherwise (right), they are estimates of power with a treatment effect of 0.2.}
 \\label{tab:level}',sep='')
 cat('\\end{table}\n')
-},file="tab-levelSimulation.tex")
+},file=paste0(paperdir,"/tab-levelSimulation.tex"))
 
 kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2)
-kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2)
+kable(powTab,
+      caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2)
 
 ```
 
@@ -98,8 +107,8 @@ source("lrd/R/ddsandwich.R")
 set.seed(201609)
 st2 <- system.time(totalPoly <- lrd:::totalPolySim(nreps))
 st3 <- system.time(ikp <- lrd:::totalPolySimIK(nreps))
-save(totalPoly,file="dataResults/totalPolySim.RData")
-save(ikp,file="dataResults/ikp.RData")
+save(totalPoly,file=paste0(paperdir,"/dataResults/totalPolySim.RData"))
+save(ikp,file=paste0(paperdir,"/dataResults/ikp.RData"))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
@@ -116,7 +125,14 @@ results for normally-distributed errors.
 
 ```{r}
 capture.output(
-lrd:::prntTab(totalPoly,ikp,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
+lrd:::prntTab(totalPoly,ikp,full=FALSE,
+  caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial 
+                 specifications for RDD analysis, using robust regression and OLS, 
+                 using all the data, and local linear regression with a triangular kernel 
+                 and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, 
+                 the error distribution was $t_3$, and there was no treatment effect. 
+                 The data generating models are those depicted in Figure \\ref{fig:dgms}.'),
+  label='tab:poly'),
 file="lrd/inst/tab-polynomialSimulation.tex")
 kable(prntTab(totalPoly,ikp,full=TRUE,md=TRUE),
       caption='Full results for polynomial simulation',digits=2)

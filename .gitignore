@@ -59,3 +59,7 @@ R/oldSimulations.r
 inst/.#dataAnalysis.R
 
 inst/#dataAnalysis.R#
+
+
+*.rda
+*.dta
