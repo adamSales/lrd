@@ -22,5 +22,5 @@ The \code{whereto} parameter should be a character string not ending
 in \sQuote{\code{/}} (the path separator).
 }
 \author{
-Ben B Hansen
+lrd author 2
 }

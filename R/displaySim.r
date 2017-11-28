@@ -1,3 +1,4 @@
+#' @export
 dgms <- function(tp){
 
     ### the DGMs
