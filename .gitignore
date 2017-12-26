@@ -28,13 +28,17 @@ vignettes/*.pdf
 /*_cache/
 /cache/
 
-# Temporary files created by R markdown
+# Temporary files created by R markdown and/or LaTeX
 *.utf8.md
 *.knit.md
 .Rproj.user
 
 *.tex
 *.html
+*.aux
+*.log
+*.out
+
 
 # Backup files created by editors
 *~
