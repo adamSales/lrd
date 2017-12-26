@@ -1,8 +1,8 @@
 # Analysis replication materials
 
-July 2017
+December 2017
 
-Accompanies the paper "Bounded Influence Robust Regression of Imperfect Regression Discontinuity Designs".
+Accompanies the paper "Limitless Regression Discontinuity".
 
 ## Setup
 
