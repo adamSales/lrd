@@ -47,6 +47,11 @@ vignettes/*.pdf
 dataResults
 manuscript
 
+# auto-generated analysis artifacts (to commit, manually 
+# copy these over version of file w/o date stamp in name)
+inst/RDanalysis-*.RData 
+
+
 # Other cruft
 bibliography.bib
 .DS_Store
