@@ -76,10 +76,10 @@ save(baltests,bws,file='inst/lmmBalance.RData')
 
 ### outcome analysis
 ## basically this:
-mod <- lm(nextGPA~gpalscutoff*dist_from_cut+bpl_north_america+lhsgrade_pct+totcredits_year1+male+english+loc_campus1+loc_campus2,data=dat,subset=abs(dist_from_cut)<=0.17)
+summary(mod <- lm(nextGPA~gpalscutoff*dist_from_cut+bpl_north_america+lhsgrade_pct+totcredits_year1+male+english+loc_campus1+loc_campus2,data=dat,subset=abs(dist_from_cut)<=0.17))
 
 dat%>%filter(abs(dist_from_cut)<=.17)%>%group_by(dist_from_cut)%>%summarize(y=mean(nextGPA,na.rm=TRUE),n=n(),Z=dist_from_cut[1]<0)%>%
-    ggplot(aes(dist_from_cut,y,size=n,group=Z,color=Z))+geom_point()+geom_smooth( mapping=aes(x=dist_from_cut,y=nextGPA,group=gpalscutoff,color=gpalscutoff==1),data=subset(dat,abs(dist_from_cut)<=0.17),method='lm',inherit.aes=FALSE)
+    ggplot(aes(dist_from_cut,y,size=n,color=Z))+geom_point()+geom_smooth( mapping=aes(x=dist_from_cut,y=nextGPA,group=gpalscutoff,color=gpalscutoff==1),data=subset(dat,abs(dist_from_cut)<=0.17),method='lm',inherit.aes=FALSE)
 
 ## bayesian style
 outDat <- with(subset(dat,abs(dist_from_cut)<=0.17),
@@ -96,5 +96,11 @@ outDat <- with(subset(dat,abs(dist_from_cut)<=0.17),
                    campus2=loc_campus2))
 outDat$N <- length(outDat$R)
 
-jags.parallel(outDat,parameters=c('b','tau','ate'),model='R/lmmOutcome.bug',n.chains=3)
+outMod <- jags.parallel(outDat,parameters=c('b','tau','ate'),model='R/lmm/lmmOutcome.bug',n.chains=3)
 
+library(rstanarm)
+outModStan <-
+    stan_glm(nextGPA~gpalscutoff*dist_from_cut+I(lhsgrade_pct/sd(lhsgrade_pct))+I(totcredits_year1/sd(totcredits_year1))+male+bpl_north_america+english+loc_campus1+loc_campus2,
+            data=subset(dat,abs(dist_from_cut)<=0.17),prior=normal(0,1),family=gaussian)
+
+outModStan2 <- stan_glm(nextGPA~gpalscutoff,prior=normal(scale=1),data=subset(dat,abs(dist_from_cut)<=0.17),family=gaussian)
