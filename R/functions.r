@@ -264,8 +264,10 @@ ik <- function(dat,BW=NULL,outcome){
 ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
     if(!missing(varb)) dat$Y <- -dat[[varb]]
     if(missing(BW) | is.null(BW))
-        mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,cutpoint=-0.005))
-    else  mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,bw=BW,cutpoint=-0.005))
+        mod <- try(RDestimate(Y~R,#kernel='rectangular',
+                              data=dat,cutpoint=-0.005))
+    else  mod <- try(RDestimate(Y~R,#kernel='rectangular',
+                                data=dat,bw=BW,cutpoint=-0.005))
     if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
     if(justP) return(mod$p[1])
     mod
@@ -290,29 +292,7 @@ ikMultBal <- function(dat,BW,xvars,int=FALSE){
 #############
 
 
-#' Wrapper for Imbens-Kalyanaraman style RDD analysis
-#'
-#' Uses OLS to estimate the RDD Local Average Treatment Effect (LATE) as in
-#' Imbens, G. and Kalyanaraman, K. (2012). Uses a "rectangular" kernal.
-#' Tests balance on a set of pre-treatment covariates using \code{balMult} and either the
-#' provided bandwidth or the bandwidth calculated with the IK procedure.
-#'
-#'
-#' @param dat Data set with columns \code{Z}, \code{R}, and an outcome variable
-#' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be estimated from the
-#' data
-#' @param outcome A string specifying the name of the outcome variable
-#'
-#' @return a list consisting of
-#' \describe{
-#'  \item{p.value} The p-value testing no effect
-#'  \item{CI} a vector of confidence limits and the HL treatment effect
-#'  \item{BW} the RDD bandwidth
-#'  \item{bal.pval} a p-value testing for covariate balance
-#'  \item{n} the number of subjects in the window of analysis
-#'  \item{W} the range of R values in the window of analysis
-#' }
-#' @import rdd
+
 #' @export
 
 cct <- function(dat,BW=NULL,outcome){
@@ -324,24 +304,6 @@ cct <- function(dat,BW=NULL,outcome){
 }
 
 
-#' Imbens-Kalyanaraman style RDD analysis
-#'
-#' Uses OLS to estimate the RDD Local Average Treatment Effect (LATE) as in
-#' Imbens, G. and Kalyanaraman, K. (2012). Uses a "rectangular" kernal.
-#' Tests balance on a set of pre-treatment covariates using \code{balMult} and either the
-#' provided bandwidth or the bandwidth calculated with the IK procedure.
-#'
-#'
-#' @param dat Data set with columns \code{Z}, \code{R}, and an outcome variable
-#' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be
-#' estimated from the data
-#' @param varb A string specifying the name of the outcome or covariate variable
-#' @param rhs Ignored
-#' @param justP if TRUE only returns the p-value
-#'
-#' @return if justP=TRUE, returns the p-value for an effect. if justP=FALSE,
-#' returns the fitted RDD model (an object of class "RD").
-#' @import rdd
 #' @export
 
 cctTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
