@@ -285,8 +285,86 @@ ikMultBal <- function(dat,BW,xvars,int=FALSE){
     linearHypothesis(sur,rest,test='Chisq')$Pr[2]
 }
 
+###############
+### CCT method
+#############
 
 
+#' Wrapper for Imbens-Kalyanaraman style RDD analysis
+#'
+#' Uses OLS to estimate the RDD Local Average Treatment Effect (LATE) as in
+#' Imbens, G. and Kalyanaraman, K. (2012). Uses a "rectangular" kernal.
+#' Tests balance on a set of pre-treatment covariates using \code{balMult} and either the
+#' provided bandwidth or the bandwidth calculated with the IK procedure.
+#'
+#'
+#' @param dat Data set with columns \code{Z}, \code{R}, and an outcome variable
+#' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be estimated from the
+#' data
+#' @param outcome A string specifying the name of the outcome variable
+#'
+#' @return a list consisting of
+#' \describe{
+#'  \item{p.value} The p-value testing no effect
+#'  \item{CI} a vector of confidence limits and the HL treatment effect
+#'  \item{BW} the RDD bandwidth
+#'  \item{bal.pval} a p-value testing for covariate balance
+#'  \item{n} the number of subjects in the window of analysis
+#'  \item{W} the range of R values in the window of analysis
+#' }
+#' @import rdd
+#' @export
+
+cct <- function(dat,BW=NULL,outcome){
+    mod <- cctTest(dat,BW,varb=outcome,justP=FALSE)
+    BW <- mod$bws['h','left']
+    bal.pval=balMult(dat=dat,BW=BW,method='sh',reduced.covars=FALSE)
+    list(p.value=mod$pv['Robust',1],CI=c(mod$ci['Robust',],est=mod$coef['Robust','Coeff']),bal.pval=bal.pval,
+         W=c(min(abs(dat$R)),BW),n=sum(mod$Nh))
+}
+
+
+#' Imbens-Kalyanaraman style RDD analysis
+#'
+#' Uses OLS to estimate the RDD Local Average Treatment Effect (LATE) as in
+#' Imbens, G. and Kalyanaraman, K. (2012). Uses a "rectangular" kernal.
+#' Tests balance on a set of pre-treatment covariates using \code{balMult} and either the
+#' provided bandwidth or the bandwidth calculated with the IK procedure.
+#'
+#'
+#' @param dat Data set with columns \code{Z}, \code{R}, and an outcome variable
+#' @param BW (Optional) A bandwidth \code{b>0}. If not provided it will be
+#' estimated from the data
+#' @param varb A string specifying the name of the outcome or covariate variable
+#' @param rhs Ignored
+#' @param justP if TRUE only returns the p-value
+#'
+#' @return if justP=TRUE, returns the p-value for an effect. if justP=FALSE,
+#' returns the fitted RDD model (an object of class "RD").
+#' @import rdd
+#' @export
+
+cctTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
+    if(!missing(varb)) dat$Y <- -dat[[varb]]
+    if(missing(BW) | is.null(BW))
+        mod <- try(with(dat,rdrobust(Y,R,-0.005,kernel='uniform')))
+    else  mod <- try(with(dat,rdrobust(Y,R,-0.005,kernel='uniform',h=BW)))
+    if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
+    if(justP) return(mod$pv['Robust',1])
+    mod
+}
+
+cctMultBal <- function(dat,BW,xvars,int=FALSE){
+    balPs <- lapply(xvars,function(xx) rdrobust(xx,dat$R,-0.005,h=BW))
+    names(xeq) <- gsub('_','',xvars)
+
+    sur <- systemfit(xeq,data=subset(dat,abs(R)<BW))
+
+    rest <- paste(names(xeq),'Z',sep='_')
+    rest <- paste(rest,'=0')
+
+    linearHypothesis(sur,rest,test='Chisq')$Pr[2]
+}
 
 ################
 ### CFT Method
@@ -475,3 +553,4 @@ frandsen <- function(R,cutoff,BW,k=c(0,0.01,0.02,0.1)){
 
     frandsenTest(N0,Nplus,Nminus,k)
 }
+
