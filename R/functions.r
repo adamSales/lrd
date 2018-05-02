@@ -264,9 +264,9 @@ ik <- function(dat,BW=NULL,outcome){
 ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
     if(!missing(varb)) dat$Y <- -dat[[varb]]
     if(missing(BW) | is.null(BW))
-        mod <- try(RDestimate(Y~R,#kernel='rectangular',
+        mod <- try(RDestimate(Y~R,kernel='rectangular',
                               data=dat,cutpoint=-0.005))
-    else  mod <- try(RDestimate(Y~R,#kernel='rectangular',
+    else  mod <- try(RDestimate(Y~R,kernel='rectangular',
                                 data=dat,bw=BW,cutpoint=-0.005))
     if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
     if(justP) return(mod$p[1])
@@ -501,6 +501,7 @@ frandsenTest <- function(N0,Nplus,Nminus,k){
 #' @param k a vector of possible values of k, a tuning parameter for the test. The function automatically computes the benchmark value Frandsen (2016) suggests based on normal theory, and adds it to this list.
 #'
 #' @return a p-value
+#'
 #' @export
 frandsen <- function(R,cutoff,BW,k=c(0,0.01,0.02,0.1)){
     if(missing(BW)) BW <- max(abs(R),na.rm=TRUE)

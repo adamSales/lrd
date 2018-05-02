@@ -106,8 +106,8 @@ The Frandsen (2016) test for manipulation when the
 running variable is discrete, when the cutoff is the maximum GPA
 receiving probation, or the minimum GPA not receiving probation:
 ```{r}
-(frandsen1 <- frandsen(dat$R,cutoff=-0.01,BW=0.5))
-(frandsen2 <- frandsen(dat$R,cutoff=0,BW=0.5))
+(frandsen1 <- lrd::frandsen(dat$R,cutoff=-0.01,BW=0.5))
+(frandsen2 <- lrd::frandsen(dat$R,cutoff=0,BW=0.5))
 ```
 
 
@@ -168,7 +168,7 @@ print(xtable(resultsTab,align='lrrrl'),
 Results from two alternative methods, creating Table 2:
 ```{r}
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
+IK <- lrd::ik(dat,outcome='nextGPA')
 
 altTab <-
  do.call('rbind',
