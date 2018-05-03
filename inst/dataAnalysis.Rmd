@@ -172,7 +172,7 @@ IK <- lrd::ik(dat,outcome='nextGPA')
 
 altTab <-
  do.call('rbind',
-  lapply(list(`Local OLS`=IK,Limitless=SHitt,`Local Permutation`=CFT),
+  lapply(list(`Local Linear`=IK,Limitless=SHitt,`Local Permutation`=CFT),
    function(res) c(round2(res$CI[3]),
     ciChar(res$CI[1:2]),
     W=Wfunc(res$W),
