@@ -1,7 +1,7 @@
 ---
 title: "LRD paper Appendix C, Data Analysis"
 author: "lrd authors"
-date: "10 November, 2017"
+date: "02 May, 2018"
 output: html_document
 ---
 
@@ -13,9 +13,70 @@ General dependencies.
 #print(getwd())
 library('knitr')
 library(ggplot2)
+```
+
+```
+## Find out what's changed in ggplot2 at
+## http://github.com/tidyverse/ggplot2/releases.
+```
+
+```r
 library(xtable)
 library(robustbase)
 library(rdd)
+```
+
+```
+## Loading required package: sandwich
+```
+
+```
+## Loading required package: lmtest
+```
+
+```
+## Loading required package: zoo
+```
+
+```
+## 
+## Attaching package: 'zoo'
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+```
+
+```
+## Loading required package: AER
+```
+
+```
+## Loading required package: car
+```
+
+```
+## Loading required package: survival
+```
+
+```
+## 
+## Attaching package: 'survival'
+```
+
+```
+## The following object is masked from 'package:robustbase':
+## 
+##     heart
+```
+
+```
+## Loading required package: Formula
+```
+
+```r
 if(!require('lrd')){
  source("lrd/R/functions.r")
  source("lrd/R/simulations.r")
@@ -28,24 +89,24 @@ If the variable `paperdir` is supplied, LaTeX code for the tables is saved there
 
 
 ```r
-if(!exists(paperdir)) paperdir <- '.'
+if(!exists('paperdir')) paperdir <- '.'
 
 logit=function(x) log(x*.01/(1-x*.01))
 
 
 ciChar <- function(ci,est=FALSE){
-    ci <- round(ci,2)
-    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
+    #ci <- round(ci,2)
+    ci.out <- paste('(',round2(ci[1]),', ',round2(ci[2]),')',sep='')
     if(est) ci.out <- c(ci.out,as.character(ci[3]))
     ci.out
 }
 
-round2 <- function(x) round(x,2)
+round2 <- function(x) sprintf('%.2f',x)#round(x,2)
 
 nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
 
 Wfunc <- function(W)
-    paste0('[',round2(W[1]), ',',round2(W[2]),')')
+    paste0('[',round2(W[1]), ', ',round2(W[2]),')')
 ```
 
 
@@ -118,6 +179,36 @@ The McCrary density test failure and recovery described in Section 4.1
 ## [1] 0.154
 ```
 
+The Frandsen (2016) test for manipulation when the
+running variable is discrete, when the cutoff is the maximum GPA
+receiving probation, or the minimum GPA not receiving probation:
+
+```r
+(frandsen1 <- lrd::frandsen(dat$R,cutoff=-0.01,BW=0.5))
+```
+
+```
+##          k        p
+## 1 0.000000 1.00e-13
+## 2 0.000684 1.05e-13
+## 3 0.010000 2.04e-13
+## 4 0.020000 4.13e-13
+## 5 0.100000 1.05e-10
+```
+
+```r
+(frandsen2 <- lrd::frandsen(dat$R,cutoff=0,BW=0.5))
+```
+
+```
+##          k p
+## 1 0.000000 0
+## 2 0.000684 0
+## 3 0.010000 0
+## 4 0.020000 0
+## 5 0.100000 0
+```
+
 
 ## main analysis ##
 
@@ -188,12 +279,12 @@ Create Table 1:
 
 ```r
 resultsTab <-
- do.call('rbind', 
+ do.call('rbind',
   lapply(list(main=SHmain,data_driven=SHdataDriven,cubic=SHcubic,ITT=SHitt),
    function(res) c(round2(res$CI[3]),
                    ciChar(res$CI[1:2]),
                    W=Wfunc(res$W),
-                   n=res$n)))
+                   n=prettyNum(res$n,',',trim=TRUE))))
 
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
@@ -203,17 +294,17 @@ kable(resultsTab)
 
 
 
-|            |Estimate |95\% CI     |$\mathcal{W}$ |n     |
-|:-----------|:--------|:-----------|:-------------|:-----|
-|main        |0.24     |(0.17,0.31) |[0.01,0.5)    |10014 |
-|data_driven |0.21     |(0.17,0.26) |[0.01,1.03)   |21593 |
-|cubic       |0.24     |(0.15,0.34) |[0.01,0.5)    |10014 |
-|ITT         |0.24     |(0.17,0.31) |[0.01,0.5)    |10014 |
+|            |Estimate |95\% CI      |$\mathcal{W}$ |n      |
+|:-----------|:--------|:------------|:-------------|:------|
+|main        |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
+|data_driven |0.21     |(0.17, 0.26) |[0.01, 1.03)  |21,593 |
+|cubic       |0.24     |(0.15, 0.34) |[0.01, 0.50)  |10,014 |
+|ITT         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
 
 ```r
 rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
 
-print(xtable(resultsTab),
+print(xtable(resultsTab,align='lrrrl'),
       file=paste0(paperdir,"/tab-results.tex"), floating=F,
       sanitize.colnames.function=function(x) x,
       sanitize.rownames.function=function(x) x)
@@ -223,15 +314,15 @@ Results from two alternative methods, creating Table 2:
 
 ```r
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
+IK <- lrd::ik(dat,outcome='nextGPA')
 
 altTab <-
- do.call('rbind', 
-  lapply(list(Limitless=SHitt,`Local Permutation`=CFT,`Local OLS`=IK),
+ do.call('rbind',
+  lapply(list(`Local OLS`=IK,Limitless=SHitt,`Local Permutation`=CFT),
    function(res) c(round2(res$CI[3]),
     ciChar(res$CI[1:2]),
     W=Wfunc(res$W),
-    n=res$n)))
+    n=prettyNum(res$n,',',trim=TRUE))))
 
 
 
@@ -242,14 +333,14 @@ kable(altTab)
 
 
 
-|                  |Estimate |95\% CI     |$\mathcal{W}$ |n     |
-|:-----------------|:--------|:-----------|:-------------|:-----|
-|Limitless         |0.24     |(0.17,0.31) |[0.01,0.5)    |10014 |
-|Local Permutation |0.11     |(0.05,0.17) |[0.01,0.18)   |3436  |
-|Local OLS         |0.23     |(0.19,0.28) |[0.01,1.24)   |25841 |
+|                  |Estimate |95\% CI      |$\mathcal{W}$ |n      |
+|:-----------------|:--------|:------------|:-------------|:------|
+|Local OLS         |0.24     |(0.19, 0.28) |[0.00, 1.25)  |26,647 |
+|Limitless         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
+|Local Permutation |0.11     |(0.05, 0.17) |[0.01, 0.18)  |3,436  |
 
 ```r
-print(xtable(altTab),
+print(xtable(altTab,align='rlllr'),
       file=paste0(paperdir,"/tab-alt.tex"), floating=F,
       sanitize.colnames.function=function(x) x)
 ```
@@ -261,7 +352,7 @@ If there are regions of the data of high influence, the robust fitter
 should reject or downweight more frequently in those regions, and we'll see dips
 on the plot of robustness weights vs R.
 
-Here is the plot corresponding to the main analysis presented in the paper. 
+Here is the plot corresponding to the main analysis presented in the paper.
 
 ```r
 lmrob_main <- lmrob(nextGPA~Z+R,
@@ -302,7 +393,12 @@ ggp_main + geom_point(alpha=.1) + stat_smooth()
 ## `geom_smooth()` using method = 'gam'
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png)
+```
+## Warning: Computation failed in `stat_smooth()`:
+## object 'C_crspl' not found
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png)
 
 When we fit without omitting R=0 students, here is
 the best fitting version of the model.
@@ -375,7 +471,12 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 ## `geom_smooth()` using method = 'gam'
 ```
 
-![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13-1.png)
+```
+## Warning: Computation failed in `stat_smooth()`:
+## object 'C_crspl' not found
+```
+
+![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
 
 
 Save results:
@@ -391,38 +492,47 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.1 (2016-06-21)
-## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X 10.12.6 (Sierra)
+## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## 
+## Matrix products: default
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] lrd_0.0.0.9000    rdd_0.57          Formula_1.2-1    
-##  [4] AER_1.2-4         survival_2.40-1   car_2.1-4        
-##  [7] lmtest_0.9-34     zoo_1.7-13        sandwich_2.3-4   
-## [10] robustbase_0.92-7 xtable_1.8-2      ggplot2_2.2.1    
-## [13] knitr_1.15.1     
+##  [1] rdd_0.57          Formula_1.2-1     AER_1.2-4        
+##  [4] survival_2.41-3   car_2.1-3         lmtest_0.9-34    
+##  [7] zoo_1.7-13        sandwich_2.4-0    robustbase_0.93-0
+## [10] xtable_1.8-2      ggplot2_2.2.1     knitr_1.17       
+## [13] lrd_0.0.2.9000   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.8        highr_0.6          nloptr_1.0.4      
-##  [4] DEoptimR_1.0-8     plyr_1.8.4         tools_3.3.1       
-##  [7] digest_0.6.10      lme4_1.1-12        evaluate_0.10     
-## [10] tibble_1.3.4       gtable_0.2.0       nlme_3.1-128      
-## [13] lattice_0.20-33    mgcv_1.8-15        rlang_0.1.2       
-## [16] Matrix_1.2-6       parallel_3.3.1     yaml_2.1.13       
-## [19] SparseM_1.77       stringr_1.1.0      MatrixModels_0.4-1
-## [22] rprojroot_1.2      grid_3.3.1         nnet_7.3-12       
-## [25] foreign_0.8-66     rmarkdown_1.5      minqa_1.2.4       
-## [28] magrittr_1.5       backports_1.1.1    scales_0.4.1      
-## [31] htmltools_0.3.5    MASS_7.3-45        splines_3.3.1     
-## [34] rsconnect_0.5      pbkrtest_0.4-6     colorspace_1.2-6  
-## [37] labeling_0.3       quantreg_5.29      stringi_1.1.1     
-## [40] lazyeval_0.2.0     munsell_0.4.3
+##  [1] splines_3.4.4      lattice_0.20-35    colorspace_1.2-6  
+##  [4] testthat_1.0.2     mgcv_1.8-15        rlang_0.1.2       
+##  [7] pillar_1.1.0       nloptr_1.0.4       foreign_0.8-69    
+## [10] withr_2.1.2        plyr_1.8.4         stringr_1.2.0     
+## [13] MatrixModels_0.4-1 munsell_0.4.3      commonmark_1.2    
+## [16] gtable_0.2.0       devtools_1.12.0    memoise_1.0.0     
+## [19] evaluate_0.10      labeling_0.3       SparseM_1.77      
+## [22] quantreg_5.29      pbkrtest_0.4-6     parallel_3.4.4    
+## [25] highr_0.6          DEoptimR_1.0-8     Rcpp_0.12.13      
+## [28] backports_1.0.5    scales_0.4.1       desc_1.1.0        
+## [31] lme4_1.1-12        digest_0.6.10      stringi_1.1.1     
+## [34] grid_3.4.4         rprojroot_1.2      tools_3.4.4       
+## [37] magrittr_1.5       tibble_1.4.2       lazyeval_0.2.0    
+## [40] crayon_1.3.4       MASS_7.3-49        Matrix_1.2-12     
+## [43] xml2_1.1.1         assertthat_0.1     minqa_1.2.4       
+## [46] roxygen2_6.0.1     R6_2.1.2           nnet_7.3-12       
+## [49] nlme_3.1-131.1     git2r_0.15.0       compiler_3.4.4
 ```
 
 

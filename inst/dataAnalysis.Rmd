@@ -29,24 +29,25 @@ Initialization.
 If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
 
 ```{r load-data,warning=FALSE,message=FALSE}
-if(!exists(paperdir)) paperdir <- '.'
+if(!exists('paperdir')) paperdir <- '.'
 
 logit=function(x) log(x*.01/(1-x*.01))
 
 
 ciChar <- function(ci,est=FALSE){
-    ci <- round(ci,2)
-    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
+    #ci <- round(ci,2)
+    ci.out <- paste('(',round2(ci[1]),', ',round2(ci[2]),')',sep='')
     if(est) ci.out <- c(ci.out,as.character(ci[3]))
     ci.out
 }
 
-round2 <- function(x) round(x,2)
+round2 <- function(x) sprintf('%.2f',x)#round(x,2)
 
 nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
 
 Wfunc <- function(W)
-    paste0('[',round2(W[1]), ',',round2(W[2]),')')
+    paste0('[',round2(W[1]), ', ',round2(W[2]),')')
+
 
 ```
 
@@ -101,6 +102,14 @@ The McCrary density test failure and recovery described in Section 4.1
 ( mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE) )
 ```
 
+The Frandsen (2016) test for manipulation when the
+running variable is discrete, when the cutoff is the maximum GPA
+receiving probation, or the minimum GPA not receiving probation:
+```{r}
+(frandsen1 <- lrd::frandsen(dat$R,cutoff=-0.01,BW=0.5))
+(frandsen2 <- lrd::frandsen(dat$R,cutoff=0,BW=0.5))
+```
+
 
 ## main analysis ##
 
@@ -136,12 +145,12 @@ Create Table 1:
 ```{r}
 
 resultsTab <-
- do.call('rbind', 
+ do.call('rbind',
   lapply(list(main=SHmain,data_driven=SHdataDriven,cubic=SHcubic,ITT=SHitt),
    function(res) c(round2(res$CI[3]),
                    ciChar(res$CI[1:2]),
                    W=Wfunc(res$W),
-                   n=res$n)))
+                   n=prettyNum(res$n,',',trim=TRUE))))
 
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
@@ -150,7 +159,7 @@ kable(resultsTab)
 
 rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
 
-print(xtable(resultsTab),
+print(xtable(resultsTab,align='lrrrl'),
       file=paste0(paperdir,"/tab-results.tex"), floating=F,
       sanitize.colnames.function=function(x) x,
       sanitize.rownames.function=function(x) x)
@@ -159,15 +168,15 @@ print(xtable(resultsTab),
 Results from two alternative methods, creating Table 2:
 ```{r}
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
+IK <- lrd::ik(dat,outcome='nextGPA')
 
 altTab <-
- do.call('rbind', 
-  lapply(list(Limitless=SHitt,`Local Permutation`=CFT,`Local OLS`=IK),
+ do.call('rbind',
+  lapply(list(`Local Linear`=IK,Limitless=SHitt,`Local Permutation`=CFT),
    function(res) c(round2(res$CI[3]),
     ciChar(res$CI[1:2]),
     W=Wfunc(res$W),
-    n=res$n)))
+    n=prettyNum(res$n,',',trim=TRUE))))
 
 
 
@@ -175,7 +184,7 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 kable(altTab)
 
-print(xtable(altTab),
+print(xtable(altTab,align='rlllr'),
       file=paste0(paperdir,"/tab-alt.tex"), floating=F,
       sanitize.colnames.function=function(x) x)
 ```
@@ -187,7 +196,7 @@ If there are regions of the data of high influence, the robust fitter
 should reject or downweight more frequently in those regions, and we'll see dips
 on the plot of robustness weights vs R.
 
-Here is the plot corresponding to the main analysis presented in the paper. 
+Here is the plot corresponding to the main analysis presented in the paper.
 ```{r}
 lmrob_main <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),

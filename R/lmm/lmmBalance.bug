@@ -1,0 +1,61 @@
+model{
+
+ for(i in 1:N){
+  gpa[i]~dnorm(gammaGPA0+Z[i]*gammaGPA1,tauGPA)
+  credits[i]~dnorm(gammacredits0+Z[i]*gammacredits1,taucredits)
+
+  male[i]~dbern(pmale[i])
+  probit(pmale[i]) <- gammaMale0+gammaMale1*Z[i]
+
+  bpl[i]~dbern(pbpl[i])
+  probit(pbpl[i]) <- gammaBpl0+gammaBpl1*Z[i]
+
+  english[i]~dbern(pEnglish[i])
+  probit(pEnglish[i]) <- gammaEnglish0+gammaEnglish1*Z[i]
+
+  campus[i]~dcat(pCampus[i,])
+  pCampus[i,1] <- phi(gammaCampus01+Z[i]*gammaCampus11)
+  pCampus[i,2] <- (1-pCampus[i,1])*phi(gammaCampus02+Z[i]*gammaCampus12)
+  pCampus[i,3] <- 1-pCampus[i,1]-pCampus[i,2]
+ }
+ gammaGPA0~dnorm(mu0,tau0)
+ gammacredits0~dnorm(mu0,tau0)
+ gammaMale0~dnorm(mu0,tau0)
+ gammaBpl0~dnorm(mu0,tau0)
+ gammaEnglish0~dnorm(mu0,tau0)
+ gammaCampus01~dnorm(mu0,tau0)
+ gammaCampus02~dnorm(mu0,tau0)
+
+ balGPA~dbern(pi)
+ balcredits~dbern(pi)
+ balMale~dbern(pi)
+ balBpl~dbern(pi)
+ balEnglish~dbern(pi)
+ balCampus1~dbern(pi)
+ balCampus2~dbern(pi)
+
+ gamStarGPA~dnorm(mu1,tau1)
+ gamStarcredits~dnorm(mu1,tau1)
+ gamStarMale~dnorm(mu1,tau1)
+ gamStarBpl~dnorm(mu1,tau1)
+ gamStarEnglish~dnorm(mu1,tau1)
+ gamStarCampus1~dnorm(mu1,tau1)
+ gamStarCampus2~dnorm(mu1,tau1)
+
+ gammaGPA1 <- ifelse(balGPA==1,0,gamStarGPA)
+ gammacredits1 <- ifelse(balcredits==1,0,gamStarcredits)
+ gammaMale1<- ifelse(balMale==1,0,gamStarMale)
+ gammaBpl1 <- ifelse(balBpl==1,0,gamStarBpl)
+ gammaEnglish1 <- ifelse(balEnglish==1,0,gamStarEnglish)
+ gammaCampus11 <- ifelse(balCampus1==1,0,gamStarCampus1)
+ gammaCampus12 <- ifelse(balCampus2==1,0,gamStarCampus2)
+
+ pi~dbeta(2,2)
+ mu0~dnorm(0,0.0001)
+ mu1~dnorm(0,0.0001)
+
+ tau0~dgamma(0.001,0.001)
+ tau1~dgamma(0.001,0.001)
+ taucredits~dgamma(0.001,0.001)
+ tauGPA~dgamma(0.001,0.001)
+}

@@ -264,8 +264,10 @@ ik <- function(dat,BW=NULL,outcome){
 ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
     if(!missing(varb)) dat$Y <- -dat[[varb]]
     if(missing(BW) | is.null(BW))
-        mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,cutpoint=-0.005))
-    else  mod <- try(RDestimate(Y~R,kernel='rectangular',data=dat,bw=BW,cutpoint=-0.005))
+        mod <- try(RDestimate(Y~R,kernel='rectangular',
+                              data=dat,cutpoint=-0.005))
+    else  mod <- try(RDestimate(Y~R,kernel='rectangular',
+                                data=dat,bw=BW,cutpoint=-0.005))
     if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
     if(justP) return(mod$p[1])
     mod
@@ -285,8 +287,46 @@ ikMultBal <- function(dat,BW,xvars,int=FALSE){
     linearHypothesis(sur,rest,test='Chisq')$Pr[2]
 }
 
+###############
+### CCT method
+#############
 
 
+
+#' @export
+
+cct <- function(dat,BW=NULL,outcome){
+    mod <- cctTest(dat,BW,varb=outcome,justP=FALSE)
+    BW <- mod$bws['h','left']
+    bal.pval=balMult(dat=dat,BW=BW,method='sh',reduced.covars=FALSE)
+    list(p.value=mod$pv['Robust',1],CI=c(mod$ci['Robust',],est=mod$coef['Robust','Coeff']),bal.pval=bal.pval,
+         W=c(min(abs(dat$R)),BW),n=sum(mod$Nh))
+}
+
+
+#' @export
+
+cctTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
+    if(!missing(varb)) dat$Y <- -dat[[varb]]
+    if(missing(BW) | is.null(BW))
+        mod <- try(with(dat,rdrobust(Y,R,-0.005,kernel='uniform')))
+    else  mod <- try(with(dat,rdrobust(Y,R,-0.005,kernel='uniform',h=BW)))
+    if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
+    if(justP) return(mod$pv['Robust',1])
+    mod
+}
+
+cctMultBal <- function(dat,BW,xvars,int=FALSE){
+    balPs <- lapply(xvars,function(xx) rdrobust(xx,dat$R,-0.005,h=BW))
+    names(xeq) <- gsub('_','',xvars)
+
+    sur <- systemfit(xeq,data=subset(dat,abs(R)<BW))
+
+    rest <- paste(names(xeq),'Z',sep='_')
+    rest <- paste(rest,'=0')
+
+    linearHypothesis(sur,rest,test='Chisq')$Pr[2]
+}
 
 ################
 ### CFT Method
@@ -425,5 +465,55 @@ bwMult <- function(dat,alpha=0.15,balMult.control=list(method='sh',reduced.covar
         p <- ifelse(is.numeric(pval)&is.finite(pval),pval,0)
     }
     bws[i]
+}
+
+
+##############################
+### Frandsen Manipulation Test
+############################
+frandsenK <- function(R,BW){
+    if(!missing(BW)) R <- R[abs(R)<BW]
+    rvals <- sort(unique(R))
+    delta <- min(c(rvals,NA)-c(NA,rvals),na.rm=TRUE)
+    delta <- delta/sd(R,na.rm=TRUE)
+
+    delta^3*dnorm(delta/2)/(2*(pnorm(3*delta/2)-pnorm(delta/2)))
+}
+
+frandsenTest <- function(N0,Nplus,Nminus,k){
+    m <- N0+Nplus+Nminus
+    results <- data.frame(k=k,p=NA)
+    for(k in results$k){
+        results$p[results$k==k] <- 2*min(pbinom(N0,m,(1-k)/(3-k)),1-pbinom(N0,m,(1+k)/(3+k)))
+    }
+    results
+}
+
+
+
+#' Frandsen Manipulation Test
+#'
+#'
+#'
+#' @param R a discrete running variable
+#' @param cutoff the value of the running variable at the boundary between treatment and control---in Frandsen (2016), the maximum (minimum) R at which subjects are assigned to treatment; alternatively, the minimum (maximum) R at which subjects are assigned to control.
+#' @param BW an optional bandwidth, helpful for choosing a benchmark for k
+#' @param k a vector of possible values of k, a tuning parameter for the test. The function automatically computes the benchmark value Frandsen (2016) suggests based on normal theory, and adds it to this list.
+#'
+#' @return a p-value
+#'
+#' @export
+frandsen <- function(R,cutoff,BW,k=c(0,0.01,0.02,0.1)){
+    if(missing(BW)) BW <- max(abs(R),na.rm=TRUE)
+    k.bench <- frandsenK(R,BW)
+    k <- sort(c(k,k.bench))
+
+    N0 <- sum(R==cutoff,na.rm=TRUE)
+    rplus <- min(R[R>cutoff],na.rm=TRUE)
+    rminus <- max(R[R<cutoff],na.rm=TRUE)
+    Nplus <- sum(R==rplus,na.rm=TRUE)
+    Nminus <- sum(R==rminus,na.rm=TRUE)
+
+    frandsenTest(N0,Nplus,Nminus,k)
 }
 
