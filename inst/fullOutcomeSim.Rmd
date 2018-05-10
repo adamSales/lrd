@@ -104,7 +104,7 @@ results for normally-distributed errors.
 ```{r}
 tab.paper <- prntTab(totalPoly,full=FALSE,md=FALSE)
 capture.output(
-polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
+polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
     file="tab-polynomialSimulation.tex")
 tab <- prntTab(totalPoly,full=TRUE,md=TRUE)
 rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
