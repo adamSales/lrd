@@ -31,7 +31,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 ## Regression discontinuity designs | (RDDs): Two views
 
 > - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
-> - Potential outcomes view [@lee2008randomized; 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
+> - Potential outcomes view [@lee2008randomized, 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
 >- Our paper [-@lrdauthors:main] explores requirements and implications of potential outcomes+"local randomization." 
 
 # Methods for picking out RCTs within RDDs
@@ -115,7 +115,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change affect estimates? 
 
-This is the problem of _contamination sensitivity_ [@he1991localbreakdown, @yohaiZamar1997locallyrobustMestimates].  It has important implications for RDDs.
+This is the problem of _contamination sensitivity_ [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].  It has important implications for RDDs.
 
 <div class="columns-2">
 <img src="images/figure2.4a.jpg" width="300px" height="300px" />
@@ -135,10 +135,10 @@ This is the problem of _contamination sensitivity_ [@he1991localbreakdown, @yoha
 
 ##Bounded influence robust regression
 
-- E.g., "MM with bisquare psi-function and robust scale",...
 - Asymptotically, only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample.
+- E.g., "MM with bisquare psi-function and robust scale",...
 - As a bonus, "robustness weights" give an additional diagnostic.
-- In R, `robustbase::lmrob`; in Stata, `mmregress`.
+- We use R's `robustbase::lmrob`, with Huber-White $\hat{V}$s.
 - (Our $\mathcal{W}$ + MM estimation w/ bisquare give similar estimates to Lindo et al's: +.23 [.17, .30].)
 
 
