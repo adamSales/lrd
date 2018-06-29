@@ -1,7 +1,7 @@
 ---
 title: "Limitless regression discontinuity"
 author: "Adam Sales & Ben Hansen*"
-date: "Spring '17 SREE Conference"
+date: "ICORS 2018, KU Leuven "
 bibliography: ../../bibliography.bib
 output: 
   ioslides_presentation
@@ -31,8 +31,8 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 ## Regression discontinuity designs | (RDDs): Two views
 
 > - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
-> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
->- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization." 
+> - Potential outcomes view [@lee2008randomized; 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
+>- Our paper [-@lrdauthors:main] explores requirements and implications of potential outcomes+"local randomization." 
 
 # Methods for picking out RCTs within RDDs
 
@@ -149,9 +149,9 @@ $$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, 
 
 ## Sensitivity to removing _groups_ of points {.build}
 
-Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change effect estimates? 
+Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change affect estimates? 
 
-Limiting such changes is an old problem in robust statistics, containing _contamination sensitivity_.  
+This is the problem of _contamination sensitivity_ [@he1991localbreakdown, @yohaiZamar1997locallyrobustMestimates].  It has important implications for RDDs.
 
 <div class="columns-2">
 <img src="images/figure2.4a.jpg" width="300px" height="300px" />
