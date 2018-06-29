@@ -96,45 +96,9 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 > Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
 > A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
-> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used in refining a propensity score match, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.  As in matching, remedies for test failure may involve reducing the sample.
+> Remedies for test failure may involve reducing the sample.  Deciding which observations to get rid of is an inexact science. 
 
-# Working your way around the donut
-
-<!-- TO CONSIDER NEXT TIME YOU'RE PREPPING THIS PRES:
-If I can think of a way to add an image to the transition slide,
-this one would be cute: images/donut-partly-eaten.jpg -->
-
-## Working your way around the donut {.build}
-
->  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
->    A:  That hole in the middle only counts against limit interpretations of RDDs...
-
-<!-- 1 slide: RI -->
-
-## Residual ignorability {.build .smaller}
-
-<!-- ignorability of covariate residuals; outcome residual ignorability -->
-
-**_Notation_**: $e_\theta(\cdot| \cdot)$ denotes a _residual transformation_, typically $e_{(a,b)}(y |r) = y - a -br$.  
-
-(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, then $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; if from fit of $Y=\alpha + \beta R + \tau Z+ \epsilon$, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is a partial residual. Both are OK.)
-
-<!--Postpone more elaborate one until we need it? $e_{(a,b,s)}(y |r) = \mathrm{sign}(y -a -br) \min(|y-a-br|/s, 1.55)$. -->
-
-**_Assumption: Ignorability of covariate residuals_**.  For given $\hat{\theta}_x$, $e_{\theta}(\cdot |\cdot)$, 
-$$e_{\bar{\theta}_x} (X|R) \perp Z | \{R \in \mathcal{W}\},\, \text{where}\, \hat{\theta}_x \stackrel{P}{\rightarrow} \bar{\theta}_x.$$ 
-
-**_Assumption: Ignorability of potential outcome residuals_**. For given $\hat{\theta}_y$, $e_\theta(\cdot |\cdot )$,
-$$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, \hat{\theta}_y \stackrel{P}{\rightarrow} \bar{\theta}_y.$$ 
-
-**_Key advantages_**. Identification of $E[Y - Y_C| Z=1, R\in \mathcal{W}]$. $\mathcal{W}$ doesn't shrink as $n\uparrow \infty$. Donuts allowed.  
-
-## Working our way around the donut
-
->  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
-
-
->  A:  That hole in the middle only counts against limit-based interpretations of RDDs. Residual ignorability supports large-sample inference on differences of potential outcomes, as opposed to differences of limits of curves. 
+<!-- NB: FOR ICORS-18 EXCISED 1-SLIDE SECTION HERE, 6/29/2018; CONSIDER RESTORING FOR LESS TECHNICAL AUDIENCES-->
 
 # Methods for limiting contamination sensitivity
 
@@ -171,10 +135,9 @@ This is the problem of _contamination sensitivity_ [@he1991localbreakdown, @yoha
 
 ##Bounded influence robust regression
 
-- Bounded influence robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, for a carefully chosen $\psi(\cdot)$ and carefully estimated $s$.
 - E.g., "MM with bisquare psi-function and robust scale",...
-- Generates "robustness" weights $\in [0,1]$, an additional diagnostic.
 - Asymptotically, only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample.
+- As a bonus, "robustness weights" give an additional diagnostic.
 - In R, `robustbase::lmrob`; in Stata, `mmregress`.
 - (Our $\mathcal{W}$ + MM estimation w/ bisquare give similar estimates to Lindo et al's: +.23 [.17, .30].)
 
