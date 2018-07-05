@@ -1,5 +1,5 @@
 ---
-title: "Limitless regression discontinuity"
+title: "Robust M-estimation for imperfect regression discontinuity designs"
 author: "Adam Sales & Ben Hansen*"
 date: "ICORS 2018, KU Leuven "
 bibliography: ../../bibliography.bib
@@ -15,9 +15,10 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 
-# Potential outcomes vs structural modeling for RDDs
+# Three perspectives on the regression discontinuity design 
+<!-- Potential outcomes vs structural modeling for RDDs -->
 
-## Acad. probation and later grades | A "running" example (Lindo et al [-@lindo2010ability]) 
+## Academic probation and later grades | Lindo et al [-@lindo2010ability] as a  running example of the RDD  
 
 <div class="centered">
 <!-- <img src="images/apsemaphore.jpg" width=180px height="270px" /> -->
@@ -26,13 +27,25 @@ knitr::opts_chunk$set(echo = FALSE)
 <img src="images/figure2_1.jpg" width="300px" height="300px" />
 </div>
 
-Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equiv \mathcal{I}[R<0]$'s causal effect on $Y$ (subsequent GPA)?
+Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), what's $Z \equiv \mathcal{I}[R<0]$'s effect on $Y$ (year 2 GPA)?  
 
-## Regression discontinuity designs | (RDDs): Two views
+(To be interpreted as a _causal_ effect.) 
 
-> - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
-> - Potential outcomes view [@lee2008randomized, 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
->- Our paper [-@lrdauthors:main] explores requirements and implications of potential outcomes+"local randomization." 
+<div class="notes">
+
+- A study of academic probation within a Canadian university system
+- Assignment to treatment vs control determined by position of "running variable" relative to threshold value.
+- Regression discontinuity designs collect data of this broad structure, look for a discontinuity at threshold...
+- as we appear to see here.  What does it mean to call this the causal effect of AP?
+
+</div>
+
+## Regression discontinuity designs | (RDDs): Three causal interpretations
+
+> - Traditional view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$.  The causal effect is $\tau$. 
+> - Limit-based view [@imbens2008regression, ...]:  Perhaps $E(Y|R, Z)$ is linear, perhaps not; causal effect is $\lim_{r\uparrow 0} E(Y|R=r) - \lim_{r\downarrow 0} E(Y|R=r) =: \tau$.
+> - Potential outcomes view [@lee2008randomized, 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]=:\tau$, whatever the form of $E[Y|R]$; just as these average causal effects are nonparametrically identified in randomized trials, "local randomization" suffices in RDDs. 
+>- Our paper [-@lrdauthors:main] explores requirements and implications of potential outcomes+"local randomization," borrowing from traditional view while eschewing limit-based interpretation.  
 
 # Methods for picking out RCTs within RDDs
 
@@ -40,8 +53,14 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 >  Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
->  A: To separate unwanted chaff from locally randomized wheat, use specification tests....
+>  A: To separate unwanted "chaff" from locally randomized "wheat," use specification tests....
 
+
+<div class="notes">
+- It's one thing to say "there was natural randomization," another to assert that every treatment assignment was random in this way. 
+- To address this challenge, methodologists have proposed preliminary specification tests, and procedures built on specification tests.
+- I'll review 2 of the most common tests and procedures before arguing that they aren't quite up to the task.
+</div>
 
 <!-- (2 slides: balance; McCrary)-->
 
@@ -52,14 +71,13 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 <img src="images/figure2_2.jpg" width="300px" height="300px" />
 </div>
 
-> - Bandwidth selectors don't look at covariates, e.g. high school $G$rades ($y$ axis). 
+> - Local randomization should be reflected in covariates, e.g. high school $G$rades ($y$ axis). 
 > - Due to trend, clear that $E[G | R\leq 0] \neq E[G | R >0 ]$ -- no _balance_ on $G$.
-> - Confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough to make imbalance non-significant? -- Doesn't change underlying trend, gets rid of a lot of data.
+> - Some would confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that tests of balance do not reject. This gets rid of a lot of data, without addressing underlying trend.
 > - Better: first model trend, e.g. $G \approx \alpha_G + \beta_G R$; then test whether balanced on _residual_, $e_{(\alpha_G, \beta_G)}(G|R)$, not $G$ itself; narrow $\mathcal{W}$ as needed to pass this test.
 
 <div class="notes">
 
-- A modern bandwidth selection chose a window too wide for the linear model
 - permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
 - The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
 
@@ -84,10 +102,10 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 <div class="notes">
 
-- The widely used McCrary test checks for equal density of R immediately to eithert side of the cutpoint 
+- The widely used McCrary test checks for equal density of R immediately to either side of the cutpoint 
 - no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
 - Removing that chunk and that chunk only gets us a pass on this test.  
-- thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  
+<!-- - thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  -->
 
 </div>
 
@@ -104,18 +122,18 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 ## Methods for limiting contamination sensitivity {.build}
 
->   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
+>   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a follow-up analysis of sensitivity to potentially remaining contamination?
 
->   A: You can address sensitivity to contamination during the _primary_ analysis...
+>   A:  The contamination issue must be addressed as a part of the _primary_ analysis....
 
 
 <!-- 2 slides: LSO, Krafft points; bounded influence regression-->
 
 ## Sensitivity to removing _groups_ of points {.build}
 
-Suppose a latent subgroup, "savvy," that's overrepresented in $\{i: z_i=0\}$.  We can't locate them, but if we could we'd take them all out. How much could this change affect estimates? 
+Say there are "savvy" students who, when at risk for AP, "manipulate" grades up. (Bribes?)  This latent subgroup is overrepresented in $\{i: z_i=0\}$, but may be elsewhere also --- so removing $\{i: z_i=0\}$ leaves some in. 
 
-This is the problem of _contamination sensitivity_ [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].  It has important implications for RDDs.
+How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if not recognized as such in RDD literature.
 
 <div class="columns-2">
 <img src="images/figure2.4a.jpg" width="300px" height="300px" />
@@ -125,29 +143,41 @@ This is the problem of _contamination sensitivity_ [@he1991localbreakdown; @yoha
 
 <div class="notes">
 
-- A latent subgroup that doesn't belong is only problematic if they don't follow the same pattern as others.
-- If the latent subgroup is both different and large, we ought to be able to find it in tests.
-- Otherwise, we're in the domain of "$\epsilon$ contamination"
-- OLS handles $\epsilon$ contamination poorly. Methods that handle it differently explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
-- An example from molecular design occurs at right.  OLS gets distracted by the points at far right.  Bounded influence regression downweights them to get a very different fit.
-
+- If the latent subgroup is both different and large (relative to $\sqrt{n}$), we ought to be able to find it in tests.  Get rid of some of it & test again.
+- Wind up in a domain of "$\epsilon$ contamination"
+- OLS handles $\epsilon$ contamination poorly. <!-- Methods that handle it differently explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.-->
+- A textbook example from molecular design is plotted at right.  <!-- OLS gets distracted by the points at far right.-->  MM estimation downweights outliers to get a very different fit.
+- I've added lines from an RDD-type analysis to the textbook example so that it shows one way contamination in RDDs could substantially bias $\hat \tau$.
 </div>
 
-##Bounded influence robust regression
+## robust M-estimates
 
-- Asymptotically, only these methods limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample.
-- E.g., "MM with bisquare psi-function and robust scale",...
-- As a bonus, "robustness weights" give an additional diagnostic.
-- We use R's `robustbase::lmrob`, with Huber-White $\hat{V}$s.
-- (Our $\mathcal{W}$ + MM estimation w/ bisquare give similar estimates to Lindo et al's: +.23 [.17, .30].)
+- Even with appropriate data and methods, sample pruning guided by specification tests is expected to leave $O(n^{-1/2})$ of the sample contaminated.
+- For M-estimators minimizing some measure of residual size, bounded $\rho(\cdot)$ and robust $s(\cdot)$ are necessary for $\mathrm{MaxBias}_\epsilon = O(\sqrt{\epsilon})$; otherwise larger.  @yohaiZamar1997locallyrobustMestimates call these "robust M-estimates". 
+- Therefore robust M-estimates limit sensitivity to $O(n^{-1/2})$ sample fractions of lingering contamination, while OLS does not.
+<!-- - As a bonus, "robustness weights" give an additional diagnostic.-->
+<!-- - We use R's `robustbase::lmrob`, with Huber-White $\hat{V}$s.-->
+- (That said, our $\mathcal{W}$ + MM estimation w/ bisquare $\psi(\cdot)$ gives $\hat\tau$ similar to Lindo et al, who did not address McCrary phenomenon & used OLS: +.23 [.17, .30].)
 
 
 ## Methods for limiting contamination sensitivity
 
-> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method addresses this issue?
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a follow-up analysis of sensitivity to potentially remaining contamination?
 
 
-> A: You can address sensitivity to contamination (as opposed to omitted variables) as a part of the primary analysis.  The robust statistics literature finds that only an unusual type of regression limits contamination sensitivity.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.
+> A: The contamination issue must be addressed as a part of the _primary_ analysis.  OLS is hypersensitive to contamination, whereas MM estimates are insensitive enough to prevent $\mathrm{Bias}(\hat\tau)$ from dominating $\mathrm{MSE}(\hat\tau)$. 
+<!-- The robust statistics literature finds that MM estimation limits contamination sensitivity but OLS does not.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.-->
+
+## Discussion {.smaller}
+<!-- These points added for ICORS audience. 
+     For other audiences, cut/adjust as appropriate. -->
+
+- In limit-based literature, main concern is with possibility that bandwidth/$\mathcal{W}$ is too wide.  To be "robust" to overly wide $\mathcal{W}$, prominent limit-based methods use local polynomials --- along w/ unbounded $\rho(\cdot)$, non-robust $s(\cdot)$.
+- In the local randomization camp, recent methods narrow the window until covariates appear to be balanced. Typically there is no allowance for $Y$--$R$ association other than via $Z=\mathcal{I}[R<0]$. 
+- Limit-based and local randomizers both led to reduce $n$.  This makes contamination harder to detect, and limit even robust M-estimates' capacity to compensate.
+- I've discussed fitting of `y ~ r + z`.  Many would use `y ~ r * z` (w/ interaction).  Perhaps that makes contamination more threatening.
+- Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to methods that reduce contamination but may not eliminate it.  
+
 
 
 ## References {.smaller}
