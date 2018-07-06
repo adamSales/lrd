@@ -176,9 +176,16 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 - In the local randomization camp, recent methods narrow the window until covariates appear to be balanced. Typically there is no allowance for $Y$--$R$ association other than via $Z=\mathcal{I}[R<0]$. 
 - Limit-based and local randomizers both led to reduce $n$.  This makes contamination harder to detect, and limit even robust M-estimates' capacity to compensate.
 - I've discussed fitting of `y ~ r + z`.  Many would use `y ~ r * z` (w/ interaction).  Perhaps that makes contamination more threatening.
-- Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to methods that reduce contamination but may not eliminate it.  
+- Under moderate departure from linearity, robust M-estimation markedly improves power & type 1 error rates; see Sec. 5 of manuscript (`arxiv.org/abs/1403.5478`)
+- Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to sample purification via specification tests.
 
+<div class="notes">
 
+-
+- 
+- 
+
+</div>
 
 ## References {.smaller}
 
