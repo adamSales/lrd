@@ -74,11 +74,11 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
   
 >  - If so, then density of $R$ differs on either side of cutpoint.
 >  - A test of "balance" in (log) density
->  - Here we fail, due to students at $Z=0$ who narrowly avoided AP.
+>  - Here we fail, due to students at $R=0$ who narrowly avoided AP.
 
   <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
 
-> - To avoid wrath of McCrary, exclude $\{i: Z_i =0\}$.
+> - To avoid wrath of McCrary, exclude $\{i: R_i =0\}$.
 
 </div>
 
