@@ -81,9 +81,10 @@ balOneSH <- function(dat,BW,varb,rhs=NULL){
                    as.formula(paste0('ytilde',rhs))
 
     if(length(unique(dat$ytilde))>2)
-        mod <- lm(form,dat=dat)
+        mod <- lmrob(form,dat=dat) #lm(form,dat=dat)
     else mod <- glm(form,dat=dat,family=binomial)
-    vcv <- sandwich::sandwich(mod)
+    vcv <- try(sandwich(mod))#sandwich::sandwich(mod)
+    if(inherits(vcv,'try-error')) return(NA)
     Z.pos.c <- pmatch("Z", names(coef(mod)))
     Z.pos.v <- pmatch("Z", colnames(vcv))
     tstat <- coef(mod)[Z.pos.c]/sqrt(vcv[Z.pos.v, Z.pos.v])
@@ -426,6 +427,7 @@ bw <- function(dat,covname='x',method='sh',alphax=0.15,plt=FALSE){
     bws <- seq(0.02,min(max(dat$R),-min(dat$R)),0.01)
     ps <- vapply(bws,short,1)
     if(plt) plot(ps)
+    ps[is.na(ps)] <- -1
     bws[max(which(ps>alphax))]
 }
 
