@@ -81,10 +81,9 @@ balOneSH <- function(dat,BW,varb,rhs=NULL){
                    as.formula(paste0('ytilde',rhs))
 
     if(length(unique(dat$ytilde))>2)
-        mod <- lmrob(form,dat=dat) #lm(form,dat=dat)
+        mod <- lm(form,dat=dat)
     else mod <- glm(form,dat=dat,family=binomial)
-    vcv <- try(sandwich(mod))#sandwich::sandwich(mod)
-    if(inherits(vcv,'try-error')) return(NA)
+    vcv <- sandwich::sandwich(mod)
     Z.pos.c <- pmatch("Z", names(coef(mod)))
     Z.pos.v <- pmatch("Z", colnames(vcv))
     tstat <- coef(mod)[Z.pos.c]/sqrt(vcv[Z.pos.v, Z.pos.v])
@@ -163,7 +162,7 @@ HLsh <- function(dat,BW,outcome='Y',rhs=NULL){
 
     shortFunction <- function(tau)
         testSH(dat=dat,BW=BW,tau=tau,outcome=outcome,return.coef=TRUE,rhs=rhs)
-    out <- try(uniroot(shortFunction,interval=c(-1,1),extendInt='yes')$root)
+    out <- try(uniroot(shortFunction,interval=c(-2,2),extendInt='yes')$root)
     ifelse(inherits(out, 'try-error'),NA,out)
 }
 
@@ -191,12 +190,12 @@ HLsh <- function(dat,BW,outcome='Y',rhs=NULL){
 #' }
 #' @import robustbase
 #' @export
-CIsh <- function(dat,BW,outcome='Y',est,alpha=0.05,rhs=rhs){
+CIsh <- function(dat,BW,outcome='Y',est,alpha=0.05,rhs=NULL){
 
     shortFunction <- function(tau) testSH(dat=dat,BW=BW,tau=tau,outcome=outcome,rhs=rhs)-alpha
-    if(missing(est)) est <- HLsh(dat=dat,BW=BW,method=method,outcome=outcome)
-    CI1 <- uniroot(shortFunction,interval=c(-1,est),extendInt='upX')$root
-    CI2 <- uniroot(shortFunction,interval=c(est,1),extendInt='downX')$root
+    if(missing(est)) est <- HLsh(dat=dat,BW=BW,outcome=outcome)
+    CI1 <- uniroot(shortFunction,interval=c(-2,est),extendInt='upX')$root
+    CI2 <- uniroot(shortFunction,interval=c(est,2),extendInt='downX')$root
     c(CI1=CI1,CI2=CI2,est=est)
 }
 
@@ -262,13 +261,13 @@ ik <- function(dat,BW=NULL,outcome){
 #' @import rdd
 #' @export
 
-ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE){
+ikTest <- function(dat,BW=NULL,varb,rhs=NULL,justP=TRUE,cutpoint=-0.005){
     if(!missing(varb)) dat$Y <- -dat[[varb]]
     if(missing(BW) | is.null(BW))
         mod <- try(RDestimate(Y~R,kernel='rectangular',
-                              data=dat,cutpoint=-0.005))
+                              data=dat,cutpoint=cutpoint))
     else  mod <- try(RDestimate(Y~R,kernel='rectangular',
-                                data=dat,bw=BW,cutpoint=-0.005))
+                                data=dat,bw=BW,cutpoint=cutpoint))
     if(class(mod)=='try-error') return(rep(NA,ifelse(justP,1,5)))
     if(justP) return(mod$p[1])
     mod
@@ -427,7 +426,6 @@ bw <- function(dat,covname='x',method='sh',alphax=0.15,plt=FALSE){
     bws <- seq(0.02,min(max(dat$R),-min(dat$R)),0.01)
     ps <- vapply(bws,short,1)
     if(plt) plot(ps)
-    ps[is.na(ps)] <- -1
     bws[max(which(ps>alphax))]
 }
 
