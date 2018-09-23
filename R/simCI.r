@@ -1,8 +1,8 @@
 library(knitr)
 library(kableExtra)
 
-tryNA <- function(...,num=1){
-    out <- try(...)
+tryNA <- function(expr,num=1){
+    out <- try(expr,silent=TRUE)
     if(inherits(out,'try-error')) return(rep(NA,num))
     out
 }
@@ -211,6 +211,11 @@ cat('\\end{table}\n')
 ###############
 ### polynomial sim
 ###############
+mu3 <- function(x){
+    ifelse(x<0,1.27*x-.5*7.18*x^2+0.7*20.21*x^3+1.1*21.54*x^4+1.5*7.33*x^5,
+    .84*x-0.1*3.00*x^2-0.3*7.99*x^3-0.1*9.01*x^4+3.56*x^5)
+}
+
 makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
     curve <- 3
     R <- runif(n,-1,1)
@@ -222,6 +227,8 @@ makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
         yc <- yc+ ifelse(R> 0.5,3*R+(0.5-3)*0.5,yc)
     if(shape=='sym')
         yc <- ifelse(abs(R)> 0.5,sign(R)*3*R+(sign(R)*0.5-3)*0.5,yc)
+    if(shape=='cct')
+        yc <- mu3(R)
 
     if(plt) plot(R,yc)
 
@@ -239,17 +246,19 @@ makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
 ikPoly <- function(dat,deg){
     mod <- lm(Y~poly(R,deg)*Z,data=dat)
     Z.pos <- which(grepl('Z',names(coef(mod))) & !grepl(':',names(coef(mod))))
-    c(p=summary(mod)$coef[Z.pos,4],est=coef(mod)[Z.pos])
+    setNames(c(p=summary(mod)$coef[Z.pos,4],est=coef(mod)[Z.pos]),
+             paste0(c('ik.p.','ik.est.'),deg))
 }
 
 shPoly <- function(dat,deg){
     rhs <- paste0('~poly(R,',deg,')+Z')
-    c(p=testSH(dat,1,rhs=rhs),est=HLsh(dat,1,rhs=rhs))
+    setNames(c(p=testSH(dat,1,rhs=rhs),est=HLsh(dat,1,rhs=rhs)),
+            paste0(c('sh.p.','sh.est.'),deg))
 }
 
 llPoly <- function(dat){
     mod <- RDestimate(Y~R,data=dat)
-    c(mod$p[1],mod$est[1])
+    setNames(c(mod$p[1],mod$est[1]),c('ll.p','ll.est'))
 }
 
 
@@ -260,7 +269,7 @@ polySim <- function(n,degs=1:5,shape='lin',tdist=TRUE,tau=0){
         c(tryNA(shPoly(dat,deg),2),tryNA(ikPoly(dat,deg),2))
     }
 
-    c(do.call('c',lapply(degs,func)),tryNA(llPoly(dat)))
+    c(do.call('c',lapply(degs,func)),tryNA(llPoly(dat),2))
 }
 
 
@@ -310,3 +319,21 @@ totalPolySim <- function(nreps=5000){
 
 
 
+polySimCCT <- function(nreps=5000,cluster=NULL){
+
+    appFunc <- if(is.null(cluster)) sapply else function(X,FUN) parSapply(cl=cluster,X=X,FUN=FUN)
+
+    res <- list()
+                                        #B=5000
+    n=500
+    tau=0
+    degs <- 1:5
+
+    shape <- 'cct'
+    for(tdist in c(TRUE,FALSE)){
+        res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
+            appFunc(1:nreps,function(i) polySim(n,degs,shape,tdist,tau))
+    }
+
+    res
+}
