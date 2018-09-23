@@ -266,6 +266,8 @@ makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
         yc <- ifelse(abs(R)> 0.5,sign(R)*3*R+(sign(R)*0.5-3)*0.5,yc)
     if(shape=='cct')
         yc <- mu3(R)
+    if(shape=='poly3')
+        yc <- 1.75*R^3
 
     if(plt) plot(R,yc)
 
@@ -356,7 +358,7 @@ totalPolySim <- function(nreps=5000){
 
 
 
-polySimCCT <- function(nreps=5000,cluster=NULL){
+polySimShape <- function(nreps=5000,shape,cluster=NULL){
 
     appFunc <- if(is.null(cluster)) sapply else function(X,FUN) parSapply(cl=cluster,X=X,FUN=FUN)
 
@@ -366,7 +368,6 @@ polySimCCT <- function(nreps=5000,cluster=NULL){
     tau=0
     degs <- 1:5
 
-    shape <- 'cct'
     for(tdist in c(TRUE,FALSE)){
         res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
             appFunc(1:nreps,function(i) polySim(n,degs,shape,tdist,tau))
