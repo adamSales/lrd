@@ -36,6 +36,21 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     data.frame(R=R,yc=yc,Z=Z,Y=Y)
 }
 
+makeData2 <- function(n,tdist=FALSE,contFrac=(sqrt(n))/n){
+    width <- .5+.5*contFrac/(1-contFrac)
+    R <- runif(n,-width,width)
+
+    yc <- .5*R
+    yc <- ifelse(abs(R)>0.5,3*R+sign(R)*(0.5-3)*0.5,yc)
+    yc <- yc+if(tdist) rt(n,3) else rnorm(n)
+
+    Z <- R>0
+
+    Y <- yc
+
+    data.frame(R=R,yc=yc,Z=Z,Y=Y)
+}
+
 
 
 
@@ -104,6 +119,13 @@ totalOutcomeOne <- function(n,tdist,tau){
       cft=tryNA(cftSim(dat,0.5),2))
 }
 
+totalOutcomeOne2 <- function(n,tdist){
+    dat <- makeData2(n=n,tdist=tdist)
+    BW <- max(abs(dat$R))
+    c(sh=tryNA(shbw(dat,BW),2),
+      ik=tryNA(ikSim(dat,BW),2),
+      cft=tryNA(cftSim(dat,BW),2))
+}
 
 #' Run the level/power simulation from Table 3
 #'
@@ -128,6 +150,21 @@ totalOutcomeSim <- function(nreps=5000,cluster=NULL){
                     res[[paste(n,tau,ifelse(tdist,'t','norm'),sep='_')]] <-
                        appFunc(1:nreps,function(i) totalOutcomeOne(n,tdist,tau))
                 }
+            }
+        }
+    res
+}
+
+totalOutcomeSim2 <- function(nreps=5000,cluster=NULL){
+    res <- list()
+    #B <- 5000
+
+    appFunc <- if(is.null(cluster)) sapply else function(X,FUN) parSapply(cl=cluster,X=X,FUN=FUN)
+
+        for(n in c(50,250,2500)){
+            for(tdist in c(TRUE,FALSE)){
+                res[[paste(n,tau,ifelse(tdist,'t','norm'),sep='_')]] <-
+                    appFunc(1:nreps,function(i) totalOutcomeOne2(n,tdist))
             }
         }
     res
