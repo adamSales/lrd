@@ -45,8 +45,8 @@
 #' @import robustbase
 #' @export
 
-sh <- function(dat,BW,outcome,Dvar='probation_year1',alpha=0.05,rhs=NULL){
-    if(missing(BW)) BW <- bwMult(dat)
+sh <- function(dat,BW,outcome,Dvar='probation_year1',alpha=0.05,rhs=NULL,...){
+    if(missing(BW)) BW <- bwMult(dat,...)
     if(!is.null(Dvar)) dat$D <- dat[[Dvar]]
     bal.pval <- balMult(dat,BW,method='sh',reduced.covars=FALSE,rhs=rhs)
     p.value <- testSH(dat=dat,BW=BW,outcome=outcome,rhs=rhs)
