@@ -31,7 +31,6 @@ If the variable `paperdir` is supplied, LaTeX code for the tables is saved there
 ```{r load-data,warning=FALSE,message=FALSE}
 if(!exists('paperdir')) paperdir <- '.'
 
-logit=function(x) log(x*.01/(1-x*.01))
 
 
 ciChar <- function(ci,est=FALSE){
@@ -64,7 +63,7 @@ if(!is.element('dat',ls())){
                                         #dat=subset(dat,left_school!=1)
     dat$dist_from_cut <- round(dat$dist_from_cut,2)
     dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
-    dat$lhsgrade_pct=logit(dat$hsgrade_pct)
+    dat$lhsgrade_pct=plogis(dat$hsgrade_pct)
   #dat$age <- dat$age_at_entry>=19
     dat$R <- dat$dist_from_cut
     dat$Z <- dat$gpalscutoff
