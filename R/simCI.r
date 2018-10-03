@@ -27,7 +27,7 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     R <- runif(n,-0.5,0.5)
 
     yc <- .5*R
-    yc <- yc+if(tdist) rt(n,3) else rnorm(n)
+    yc <- yc+if(tdist) rt(n,3)/sqrt(3)*.8 else rnorm(n,0,.8)
 
     Z <- R>0
 
@@ -36,18 +36,21 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     data.frame(R=R,yc=yc,Z=Z,Y=Y)
 }
 
-makeData2 <- function(n,tdist=FALSE,contFrac=(sqrt(n))/n){
-    width <- .5+.5*contFrac/(1-contFrac)
-    R <- runif(n,-width,width)
-
-    yc <- .5*R
-    yc <- ifelse(abs(R)>0.5,3*R+sign(R)*(0.5-3)*0.5,yc)
-    yc <- yc+if(tdist) rt(n,3) else rnorm(n)
+makeData2 <- function(n,tdist=FALSE,frc=1/sqrt(n),plt=FALSE){
+   ## O(n^-.5) contamination fraction OK -> try 1/sqrt(n) contamination
+    R <- c(runif(n*(1-frc),-.5,.5),runif(ceiling(n*frc/2),-.75,-.5),runif(ceiling(n*frc/2),.5,.75))
+    yc <- .75*R
+    yc <- ifelse(abs(R)>0.5,4.5*R-sign(R)*15/8,yc)
+    if(plt) yhat <- yc
+    yc <- yc+if(tdist) rt(n,3)/sqrt(3)*.75 else rnorm(n,0,.75)
 
     Z <- R>0
 
     Y <- yc
-
+    if(plt){
+        plot(R,Y)
+        lines(sort(R),yhat[order(R)])
+    }
     data.frame(R=R,yc=yc,Z=Z,Y=Y)
 }
 
@@ -163,7 +166,7 @@ totalOutcomeSim2 <- function(nreps=5000,cluster=NULL){
 
         for(n in c(50,250,2500)){
             for(tdist in c(TRUE,FALSE)){
-                res[[paste(n,tau,ifelse(tdist,'t','norm'),sep='_')]] <-
+                res[[paste(n,0,ifelse(tdist,'t','norm'),sep='_')]] <-
                     appFunc(1:nreps,function(i) totalOutcomeOne2(n,tdist))
             }
         }
@@ -315,10 +318,6 @@ polySim <- function(n,degs=1:5,shape='lin',tdist=TRUE,tau=0){
 polyDisp <- function(sim){
     if(nrow(sim)<ncol(sim)) sim <- t(sim)
 
-    colnames(sim) <-
-        paste0(rep(c('p','est'),ncol(sim)/2),
-               rep(seq(ncol(sim)/4),each=4),
-               rep(c('sh','sh','ik','ik'),ncol(sim)/4))
 
     simp <- sim[,grep('p',colnames(sim))]
     simEst <- sim[,grep('est',colnames(sim))]
