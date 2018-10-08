@@ -129,8 +129,8 @@ totalOutcomeOne <- function(n,tdist,tau){
       cft=tryNA(cftSim(dat,0.5),2))
 }
 
-totalOutcomeOne2 <- function(n,tdist){
-    dat <- makeData2(n=n,tdist=tdist)
+totalOutcomeOne2 <- function(n,tdist,frc,tauErr){
+    dat <- makeData2(n=n,tdist=tdist,frc=frc,tauErr=tauErr)
     BW <- max(abs(dat$R))
     c(sh=tryNA(shbw(dat,BW),2),
       ik=tryNA(ikSim(dat,BW),2),
@@ -173,8 +173,10 @@ totalOutcomeSim2 <- function(nreps=5000,cluster=NULL){
 
         for(n in c(50,250,2500)){
             for(tdist in c(TRUE,FALSE)){
-                res[[paste(n,0,ifelse(tdist,'t','norm'),sep='_')]] <-
-                    appFunc(1:nreps,function(i) totalOutcomeOne2(n,tdist))
+                for(tauErr in c('none','t','norm')){
+                res[[paste0(n,'_','err',ifelse(tdist,'t','norm'),'_','tau',tauErr)]] <-
+                    appFunc(1:nreps,function(i) totalOutcomeOne2(n,tdist,frc=0,tauErr=tauErr))
+            }
             }
         }
     res
