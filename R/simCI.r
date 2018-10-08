@@ -39,6 +39,7 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
 makeData2 <- function(n,tdist=FALSE,frc=1/sqrt(n),plt=FALSE){
    ## O(n^-.5) contamination fraction OK -> try 1/sqrt(n) contamination
     R <- c(runif(n*(1-frc),-.5,.5),runif(ceiling(n*frc/2),-.75,-.5),runif(ceiling(n*frc/2),.5,.75))
+    R <- sample(R,n)
     yc <- .75*R
     yc <- ifelse(abs(R)>0.5,4.5*R-sign(R)*15/8,yc)
     if(plt) yhat <- yc
@@ -117,17 +118,17 @@ cftSim <- function(dat,BW=NULL){
 totalOutcomeOne <- function(n,tdist,tau){
     dat <- makeData(n=n,curve=3,tdist=tdist,tau=tau)
 
-    c(sh=tryNA(shbw(dat,0.5),2),
-      ik=tryNA(ikSim(dat,0.5),2),
-      cft=tryNA(cftSim(dat,0.5),2))
+    c(sh=tryNA(shbw(dat,0.5),5),
+      ik=tryNA(ikSim(dat,0.5),5),
+      cft=tryNA(cftSim(dat,0.5),5))
 }
 
 totalOutcomeOne2 <- function(n,tdist){
     dat <- makeData2(n=n,tdist=tdist)
     BW <- max(abs(dat$R))
-    c(sh=tryNA(shbw(dat,BW),2),
-      ik=tryNA(ikSim(dat,BW),2),
-      cft=tryNA(cftSim(dat,BW),2))
+    c(sh=tryNA(shbw(dat,BW),5),
+      ik=tryNA(ikSim(dat,BW),5),
+      cft=tryNA(cftSim(dat,BW),5))
 }
 
 #' Run the level/power simulation from Table 3
@@ -327,6 +328,9 @@ polyDisp <- function(sim){
     print(apply(simEst,2,mean,na.rm=TRUE))
     print('SD of est')
     print(apply(simEst,2,sd,na.rm=TRUE))
+    print('RMSE')
+    print(apply(simEst,2,function(x) mean(x^2,na.rm=TRUE)))
+
 }
 
 

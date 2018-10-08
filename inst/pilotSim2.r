@@ -2,6 +2,12 @@
 library(parallel)
 cl <- makeCluster(10)
 
+library('robustbase')
+library('rdd')
+library('RItools')
+library('sandwich')
+library('nnet')
+source('R/functions.r')
 source('R/simCI.r')
 
 nrep <- 5000
@@ -20,4 +26,3 @@ st <- system.time(outcomeSimCI2 <- totalOutcomeSim2(nrep,cl))
 
 stopCluster(cl)
 
-save(outcomeSimCI2, st, file='outcomeSimCI2.RData')
