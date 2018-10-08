@@ -36,18 +36,24 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     data.frame(R=R,yc=yc,Z=Z,Y=Y)
 }
 
-makeData2 <- function(n,tdist=FALSE,frc=1/sqrt(n),plt=FALSE){
+makeData2 <- function(n,tdist=FALSE,frc=0,tauErr='none',plt=FALSE){
    ## O(n^-.5) contamination fraction OK -> try 1/sqrt(n) contamination
     R <- c(runif(n*(1-frc),-.5,.5),runif(ceiling(n*frc/2),-.75,-.5),runif(ceiling(n*frc/2),.5,.75))
     R <- sample(R,n)
     yc <- .75*R
     yc <- ifelse(abs(R)>0.5,4.5*R-sign(R)*15/8,yc)
     if(plt) yhat <- yc
-    yc <- yc+if(tdist) rt(n,3)/sqrt(3)*.75 else rnorm(n,0,.75)
+    err <- if(tdist) rt(n,3) else rnorm(n,0,.75)
+    if(tdist) err <- err/sd(err)*0.75
+    yc <- yc+err
 
     Z <- R>0
 
-    Y <- yc
+    tau <- if(tauErr=='t') rt(n,3) else if(tauErr=='norm') rnorm(n,0,.75) else 0
+    if(tauErr=='t') tau <- tau/sd(tau)*0.75
+
+    Y <- yc+Z*tau
+
     if(plt){
         plot(R,Y)
         lines(sort(R),yhat[order(R)])
@@ -123,8 +129,8 @@ totalOutcomeOne <- function(n,tdist,tau){
       cft=tryNA(cftSim(dat,0.5),5))
 }
 
-totalOutcomeOne2 <- function(n,tdist){
-    dat <- makeData2(n=n,tdist=tdist)
+totalOutcomeOne2 <- function(n,tdist,frc,tauErr){
+    dat <- makeData2(n=n,tdist=tdist,frc=frc,tauErr=tauErr)
     BW <- max(abs(dat$R))
     c(sh=tryNA(shbw(dat,BW),5),
       ik=tryNA(ikSim(dat,BW),5),
@@ -167,8 +173,10 @@ totalOutcomeSim2 <- function(nreps=5000,cluster=NULL){
 
         for(n in c(50,250,2500)){
             for(tdist in c(TRUE,FALSE)){
-                res[[paste(n,0,ifelse(tdist,'t','norm'),sep='_')]] <-
-                    appFunc(1:nreps,function(i) totalOutcomeOne2(n,tdist))
+                for(tauErr in c('none','t','norm')){
+                res[[paste0(n,'_','err',ifelse(tdist,'t','norm'),'_','tau',tauErr)]] <-
+                    appFunc(1:nreps,function(i) totalOutcomeOne2(n,tdist,frc=0,tauErr=tauErr))
+            }
             }
         }
     res
