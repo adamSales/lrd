@@ -36,17 +36,24 @@ makeData <- function(n,curve,tdist=FALSE,tau=0){
     data.frame(R=R,yc=yc,Z=Z,Y=Y)
 }
 
-makeData2 <- function(n,tdist=FALSE,frc=1/sqrt(n),plt=FALSE){
+makeData2 <- function(n,tdist=FALSE,frc=0,tauErr='none',plt=FALSE){
    ## O(n^-.5) contamination fraction OK -> try 1/sqrt(n) contamination
     R <- c(runif(n*(1-frc),-.5,.5),runif(ceiling(n*frc/2),-.75,-.5),runif(ceiling(n*frc/2),.5,.75))
+    R <- sample(R,n)
     yc <- .75*R
     yc <- ifelse(abs(R)>0.5,4.5*R-sign(R)*15/8,yc)
     if(plt) yhat <- yc
-    yc <- yc+if(tdist) rt(n,3)/sqrt(3)*.75 else rnorm(n,0,.75)
+    err <- if(tdist) rt(n,3) else rnorm(n,0,.75)
+    if(tdist) err <- err/sd(err)*0.75
+    yc <- yc+err
 
     Z <- R>0
 
-    Y <- yc
+    tau <- if(tauErr=='t') rt(n,3) else if(tauErr=='norm') rnorm(n,0,.75) else 0
+    if(tauErr=='t') tau <- tau/sd(tau)*0.75
+
+    Y <- yc+Z*tau
+
     if(plt){
         plot(R,Y)
         lines(sort(R),yhat[order(R)])
