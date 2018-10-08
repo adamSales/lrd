@@ -26,3 +26,4 @@ st <- system.time(outcomeSimCI2 <- totalOutcomeSim2(nrep,cl))
 
 stopCluster(cl)
 
+save(list=ls(), file='outcomeSimCI2hetTrtEff.RData')
