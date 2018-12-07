@@ -68,17 +68,24 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=year,alpha=hurYear))+
 ggsave('maria.pdf',width=6.4,height=3)
 @
 
+
+
+
+
+
+
 Hurricaine Mar\'{i}a struck the island of Puerto Rico on September 20,
 2017.
 In spite of widespread devistation, for nearly a year after the
 hurricaine, the Puerto Rican government officially maintained a
 suprisingly low death toll of 64 based on examinations of individual
 death reports.
-In contrast, several studies by investigative journalists, and academic
-researchers, and others estimated much larger death tolls.
+In contrast, several studies by investigative journalists and academic
+researchers estimated much larger death tolls.
 For example, \citet[][; henceforth SLH]{santos2018use} compared monthly death counts recorded in the
-months after the hurricaine to historical values, and estimated a 1139 excess
-deaths caused by Mar\'{i}a.
+months after the hurricaine to historical values, and estimated that
+Mar\'{i}a caused 1139 excess
+deaths.
 In this section, we will reanalyze this dataset to illustrate some
 of our ideas, not to suggest an alternative estimate of the death
 toll.
@@ -148,7 +155,7 @@ Finally, some years appear to be more hazardous overall than others.
 To accomodate these factors, we regressed 2010-2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
 with knots at Februrary, May, August, and November.
-Influential outliers form an additional threat; for instance, death
+Outliers form an additional threat; for instance, death
 counts in the final three months of 2014---in particular,
 October---were unusually high.\footnote{We do not know why death
   counts were so high in the end of 2014, and are unaware of any
@@ -157,12 +164,11 @@ October---were unusually high.\footnote{We do not know why death
   that the difference in total deaths between 2013 and 2014 was almost
   entirely due to deaths caused by common chronic diseases such as
   cancer, heart disease, and diabetes.}
-These and other outliers threaten to distort the regression model
-fit, espeicially if they are influential.
-Rather than remove possible outliers, we fit the regression model
-using an robust estimator so designed as to possess a bounded influence function
- \citep{yohaiZamar1997locallyrobustMestimates}; this procedure address influence
- in the course of the fitting process.
+Rather than identifying and removing outliers informally, we fit the regression model
+using a robust M-estimation procedure with bounded psi function, which
+down-weights and sometimes rejects outliers that would otherwise be
+influential \citep{maronna2006robust}%not 100% certain next clause is needed at this point (BH)
+, in this way ensuring a bounded influence function \citep{yohaiZamar1997locallyrobustMestimates}.
 This model fit is displayed as a dashed black line in Figure
 \ref{fig:maria}.
 
@@ -192,7 +198,7 @@ This may be summarized in a new ignorabilitly assumption:
 \end{ass}
 The right panel of Figure \ref{fig:maria} shows residualized death counts $\resid$ as a
 function of month order $R$.
-Now, no seasonal pattern is readily apparent; \eqref{eq:ignore2} is
+Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 
 $\resid$-Ignorability decomposes $Y_C$ as the sum of systematic
@@ -222,6 +228,7 @@ and extracting the random component \citep[see, e.g.][]{Nisan1999148}.
   zero.}
 \label{fig:maria}
 \end{figure}
+
 
 
 \subsection{Estimating Effects Under Ignorability}\label{sec:rand}
