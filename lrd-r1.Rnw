@@ -101,6 +101,9 @@ is interpreted as the treatment effect
 \citep[e.g.,][]{berk1983capitalizing,angrist1999using}.%,oreopoulos2006estimating}.
 
 However,
+the GPAs in the academic probation dataset are
+discrete, measured in 1/100s of a grade point.
+Further,  
 re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
 finely manipulated their GPAs to avoid probation.
@@ -110,8 +113,7 @@ excluding subjects immediately on or around the cut-point%,
 %and rendered local randomization---as commonly
 %understood---implausible
 .
-Further, the GPAs in the academic probation dataset are
-discrete, measured in 1/100s of a grade point.  Either circumstance calls
+Either circumstance calls
 into question the appropriateness of limit-based methods.
 
 A number of recent methodological papers base RDD inference on
