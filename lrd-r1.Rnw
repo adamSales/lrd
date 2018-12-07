@@ -93,7 +93,7 @@ In Imbens and Lemieux's telling \citeyearpar{imbens2008regression}, for example,
 the average treatment effect (ATE) in any one region around the cutoff
 but rather the limit of ATEs over concentric ever-shrinking regions, essentially
 an ATE over an infinitesimal interval.
-Following this ``limit'' understanding, it is common to analyze RDDs
+Following this ``limit understanding,'' it is common to analyze RDDs
 using regression. If $Y$ is the outcome of interest, estimate the functional
 relationships of $r$ to $\EE( Y | R=r)$ on either side of the cutoff.  The difference between the
 two regression functions, as evaluated at the cut-point,
@@ -120,18 +120,18 @@ A number of recent methodological papers base RDD inference on
 the model that, in effect, the RDD is a randomized controlled trial
 (RCT), at
 least in sufficiently small neighborhoods of the cut-point
-\citep[e.g.][]{cattaneo2014randomization,matteiMealliObsStud,aronowRDDinterference} ---
-the natural interpretation of
-Lee's local randomization concept. Under this assumption, once
+\citep[e.g.][]{cattaneo2014randomization,matteiMealliObsStud,aronowRDDinterference}.  
+Under this assumption, once
 attention is confined to a such a region, the difference of
 $Y$-means between subjects falling above and below the cut-point estimates the ATE within that region.
-However, this model also implies variables that are causally antecedent to
-the treatment to be independent of $R$.
-The LSO data demonstrate that sustaining such a model may require
-restricting attention to a very small region surrounding the cutoff,
-sacrificing power and external validity.
+Despite being natural as a specification of Lee's local randomization concept,
+this simple RCT model requires variables that are causally antecedent to
+the treatment to be independent of $R$.  In general this requirement
+is implausible and unwelcome.  Indeed, in the case of LSO, preventing the data from
+refuting it empirically requires that attention be restricted to a small region surrounding the cutoff.
+This sacrifices internal and external validity, and reduces power. 
 
-To address these issues, this paper weds parametric and local
+To circumvent limitations of the simple RCT model, and of the limit understanding, this paper weds parametric and local
 randomization ideas into a novel identifying assumption termed ``residual
 ignorability.'' Residual ignorability posits that, within an
 appropriate window of analysis, the \emph{residual}
