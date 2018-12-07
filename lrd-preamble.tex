@@ -1,0 +1,77 @@
+%\arxiv{1403.5478}
+%\usepackage{bm}
+%\usepackage{subfigure} % NB: subfigure package has been depracated
+%in favor of subcaption. But we don't presently seem to need either one.
+% above is workaround for Aquamacs bug, see https://groups.google.com/forum/#!topic/aquamacs-devel/r9iaih8rsAg
+\usepackage{fullpage}
+\usepackage{wrapfig}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{comment}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,amsbsy}
+\usepackage{stmaryrd} %bbm,
+\usepackage{verbatim}
+\usepackage[authoryear]{natbib}
+\usepackage{soul}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{bm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,
+    citecolor=black,
+    urlcolor=cyan}
+\usepackage{xr}
+%\usepackage{mathabx}
+%\usepackage{filecontents}
+%\usepackage{bibentry}
+%\usepackage{hanging}
+%\usepackage{apacite}
+%\pdfminorversion=4
+
+
+
+\newcommand{\maria}{Mar\'{i}a}
+\newcommand{\TildeTheta}{\hat{\theta}}
+\newcommand{\InfPar}[1]{\ensuremath{{#1}_{\infty}}}
+\newcommand{\thetaInf}{\InfPar{\theta}}
+\newcommand{\IC}[3][\hat\theta]{\mathrm{IF}_{#1}(#2, #3)}
+\newcommand{\bty}{\mathbf{y}_H}
+\newcommand{\btY}{\mathbf{Y}_H}
+\newcommand{\tyi}{{y}_{Hi}}
+\newcommand{\tYi}{{Y}_{Hi}}
+\newcommand{\xch}{\check{X}}
+\newcommand{\g}{g}
+\newcommand{\ych}{e}
+\newcommand{\Ych}{\ensuremath{E}}
+\newcommand{\dt}[3][\theta]{\ensuremath{e_{#1}(#2| {#3})}}
+\newcommand{\indicator}[1]{\ensuremath{\mathcal{I}\left[#1 \right]}}
+                                %alternatives:
+                                % {\ensuremath{\llbracket #1 \rrbracket}} % or \mathbbm{1}_{\left\{ {#1} \right\} }
+                                % or maybe \chi_ instead of 1_
+%\newcommand\independent{\protect\mathpalette{\protect\independenT}{\independent}}
+\newcommand{\independent}{\perp}
+\newcommand\hsg{\texttt{hsgrade\_pct}}
+\newcommand{\hyp}{H_{\tau_0}}
+\newcommand{\ychphib}{\boldsymbol{\check{Y}_{\phi_0}}}
+\newcommand{\ychphi}{\check{Y}_{\boldsymbol{\phi_0}i}}
+\newcommand{\PP}{\mathrm{Pr}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\var}{\mathrm{Var}}
+\newcommand{\cov}{\mathrm{Cov}}
+\newcommand{\htO}{H_{\tau_0}}
+\newcommand{\tht}{\tilde{H}_{\tau_0}}
+\newcommand{\resid}{E}
+
+
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\newtheorem{prop}{Proposition}
+\newtheorem{lemma}{Lemma}
+
+\newenvironment{ass}[2][Assumption]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep ({\bfseries #2}).]}{\end{trivlist}}
+
+
+
