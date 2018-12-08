@@ -16,7 +16,7 @@ if(grepl('acs',Sys.info()['login'])){
 }
 @
 
-\title{Limitless Regression Discontinuity}%{Bounded Influence Robust Regression of Imperfect Regression
+\title{Limitless Regression Discontinuity}
 %  Discontinuity Designs}%
 
 % \author{Adam Sales \& Ben B. Hansen\thanks{The authors thank Susan
@@ -137,7 +137,7 @@ ignorability.'' Residual ignorability posits that, within an
 appropriate window of analysis, the \emph{residual}
 of $Y$, following parametric adjustment for $R$, amounts to a randomized
 \emph{component} of each subject's outcome data.
-Our method uses bounded-influence robust regression %\citep[e.g.][]{stefanski1991note}
+Our method uses robust M-estimation %\citep[e.g.][]{stefanski1991note}
 to recover this component, to address uncertainty
 inherent in selection of the analysis window.
 The residual ignorability assumption and corresponding ATE
@@ -162,8 +162,8 @@ performance in two simulation studies.
 
 
 % Although Huber-White standard errors are common in RDD analysis,
-% ``Huberized'' fitting methods are not; they should be.  Bounded
-% influence M-estimation is uniquely suited to the LSO study, because
+% ``Huberized'' fitting methods are not; they should be.  
+% Robust M-estimation is uniquely suited to the LSO study, because
 % manipulation checks suggest that it calls for a form of robustness to
 % sample contamination that only such methods can provide
 % (\S~\ref{sec:discussion}). Even when underlying data deficits
@@ -466,7 +466,7 @@ of detrended covariate residuals when applied with this $\mathcal{W}$
 
 Local linear effect estimation resembles our method,
 in that both require analysts to specify and fit models for $Y_C$ and $\tau$.
-However, whereas ours calls for bounded influence estimation, the local linear method
+However, whereas ours calls for robust M-estimation, the local linear method
 uses a variant of weighted least squares---when the kernel is
 rectangular, as in our example, this reduces to OLS within the chosen window.
 Confidence intervals are of the Wald type---that is, $\hat{\tau} \pm
@@ -696,8 +696,8 @@ AP effect (Table~\ref{tab:alt}).
 %% regression with robust standard errors, as recommended by
 %% \citealp{crouxetal2004robustSEforrobustreg}, are surprisingly uncommon. )
 
-Our analysis effects adjustment for $R$ using bounded influence
-MM-estimation. For analysis of potentially imperfect RDDs, we see this
+Our analysis effects adjustment for $R$ using robust
+M-estimation. For analysis of potentially imperfect RDDs, we see this
 as a necessity.  There is little reason to expect covariate placebo
 testing alone to exclude windows $\mathcal{W}$ that are only
 moderately too wide; this is particularly so in the absence of lagged
@@ -707,12 +707,12 @@ values, then the use of donut-shaped $\mathcal{W}$ can be expected to
 remove some such subjects but not necessarily purify the sample of
 them.  With finite samples, sample pruning guided by specification
 tests is expected to leave an $O(n^{-1/2})$-sized share of the sample
-that perfect information would have counseled removing.  Bounded
-influence MM-estimation retains consistency under
+that perfect information would have counseled removing.  Robust
+M-estimation retains consistency under
 contamination fractions of this order \citep{he1991localbreakdown,yohaiZamar1997locallyrobustMestimates}, whereas OLS does not.
 
-If the contamination fraction exceeds $O(n^{-1/2})$, even bounded influence
-regression can be inconsistent.
+If the contamination fraction exceeds $O(n^{-1/2})$, even robust M-estimates
+can be inconsistent.
 Thus, these methods should be used in addition to, rather than instead of, preparatory specification checks.
 % These
 % methods should be used in addition to, not instead of, preliminary
@@ -774,18 +774,18 @@ Thus, these methods should be used in addition to, rather than instead of, prepa
 % hypotheses, at the expense of more elaborate computation.
 
 In simulated RDDs of moderate size, our
-bounded influence regression-based generalized score tests
+robust regression-based generalized score tests
 achieve nominal levels; as compared to
 the alternative methods considered here, they improve power.
-Furthermore the simulations find bounded influence
-MM-estimation to be compatible with the use of
+Furthermore the simulations find robust
+M-estimation to be compatible with the use of
 non-local cubic and quartic polynomials to
 accommodate nonlinear, imperfectly modeled relationships
 between $R$ and $Y_{C}$, in marked contrast to methods using OLS to adjust for
 trend.
 %%Recent RDD methodology literature addresses
 %%multiple running variables \citep{papay2011extending,
-%%  reardon2012regression}. Residual Ignorability and bounded influence
+%%  reardon2012regression}. Residual Ignorability and robust
 %%regression apply to such cases without modification.
 
 % Other advantages include limitlessness, the estimation not of opposing limits of

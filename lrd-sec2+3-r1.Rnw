@@ -165,10 +165,9 @@ October---were unusually high.\footnote{We do not know why death
   entirely due to deaths caused by common chronic diseases such as
   cancer, heart disease, and diabetes.}
 Rather than identifying and removing outliers informally, we fit the regression model
-using a robust M-estimation procedure with bounded psi function, which
+using a robust redescending M-estimation procedure, which systematically
 down-weights and sometimes rejects outliers that would otherwise be
-influential \citep{maronna2006robust}%not 100% certain next clause is needed at this point (BH)
-, in this way ensuring a bounded influence function \citep{yohaiZamar1997locallyrobustMestimates}.
+influential \citep{maronna2006robust}.
 This model fit is displayed as a dashed black line in Figure
 \ref{fig:maria}.
 
@@ -406,11 +405,10 @@ This section will extend the approach of the \maria\ analysis to the
 more common situation in which both regression model fitting and
 effect estimation use the same dataset.
 Doing so will involve subtle but important modifications of the
-$\resid$-ignoriability assumption and the analysis steps that build on
+$\resid$-ignorability assumption and the analysis steps that build on
 it.
 This analytic strategy requires careful attention to the details of
-the model-fitting process; we will argue for the general applicability
-of robust regression with a bounded influence function.
+the model-fitting process.
 
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
@@ -519,8 +517,9 @@ be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 \label{sec:robust-altern-ordin}
 If moderate sample contamination may be present --- specifically, contamination of
 a $O(n^{-1/2})$-sized
-share of the sample --- consistent estimation of $\thetaInf$ requires a
-bounded influence fitter (\citealp[Thm.~3]{he1991localbreakdown};
+share of the sample --- consistency for $\thetaInf$ requires
+a redescending M-estimator, or
+robust regression with bounded psi function (\citealp[Thm.~3]{he1991localbreakdown};
 \citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
 maximum likelihood.  OLS does not meet this consistency requirement;
 nor do many robust regression methods engineered to meet
@@ -533,7 +532,7 @@ strictly less than 1.  %NB: This is expanded a little in a
                        %now-commented-out passage of Discussion, the
                        %on referencing vdvaart:1998.
 Thus under uncertainty about the
-proper limits of $\mathcal{W}$, MM-estimation (\S~\ref{sec:robust-altern-ordin}) is to be preferred.
+proper limits of $\mathcal{W}$, robust M-estimation (\S~\ref{sec:robust-altern-ordin}) is to be preferred.
 The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
 the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
 
@@ -573,7 +572,7 @@ plots of Cook's distances
  \citeyearpar{cook1982residuals}. An alternate remedy, playing
  an important role in this paper, is to fit the
  specification using a modern MM,  SM, or similar estimator so designed
- as to possess a bounded influence function
+ as to possess a bounded psi function
  \citep{yohaiZamar1997locallyrobustMestimates}; such procedures address influence
  in the course of the fitting process.
  % Diagnostics such as inspection of Cook's distances
