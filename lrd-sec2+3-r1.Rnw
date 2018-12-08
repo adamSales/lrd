@@ -8,7 +8,7 @@ library(ggplot2)
 library(robustbase)
 library(pbs)
 
-dat <- read.csv('death_file_JAMA.csv')
+dat <- read.csv('../death_file_JAMA.csv')
 
 dat$hurYear <- dat$year==2017
 dat$year <- as.factor(dat$year)
@@ -18,14 +18,14 @@ month_lengths  <-
     c(31, 28.25, 31, 30, 31, 30,
       31, 31, 30, 31, 30, 31)
 
-dat$dailyDeath <- dat$deaths_original/month_lengths[dat$month_num]
-dat$adjDeath <- dat$dailyDeath*mean(month_lengths)
+#dat$dailyDeath <- dat$deaths_original/month_lengths[dat$month_num]
+#dat$adjDeath <- dat$dailyDeath*mean(month_lengths)
 
 @
 
 <<modelMariaDeaths,include=FALSE,dependson='loadMariaDat'>>=
 ### model monthly deaths prior to 2017
-mod  <-   lmrob(adjDeath~year+
+mod  <-   lmrob(deaths_original~year+
                      pbs(month_num, knots=seq(2,11,by=3)),
                  data=dat,subset=!hurYear)
 
@@ -42,13 +42,13 @@ dat$yhat <- NA
 dat$yhat[!dat$hurYear] <- predict(mod)
 dat$yhat[dat$hurYear] <- fitCurve(dat$month_num[dat$hurYear],'avg')
 
-dat$resid <- dat$adjDeath-dat$yhat
+dat$resid <- dat$deaths_original-dat$yhat
 
 @
 
 <<mariaFigs,include=FALSE,dependson='modelMariaDeaths'>>=
 pd <- rbind(dat,dat)
-pd$Deaths <- c(dat$adjDeath,dat$resid)
+pd$Deaths <- c(dat$deaths_original,dat$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
   levels=c('Death Counts','Residual Death Counts'))
 
@@ -61,7 +61,7 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=year,alpha=hurYear))+
   facet_wrap(~type,nrow=1,scales='free_y')+
   geom_hline(data=data.frame(yint=0,type='Residual Death Counts'),aes(yintercept=yint),
     size=2,color='black',linetype='dashed')+
-  stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$adjDeath,year='avg',hurYear=TRUE),
+  stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths_original,year='avg',hurYear=TRUE),
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
@@ -74,7 +74,7 @@ ggsave('maria.pdf',width=6.4,height=3)
 
 
 
-Hurricaine Mar\'{i}a struck the island of Puerto Rico on September 20,
+Hurricaine Maria struck the island of Puerto Rico on September 20,
 2017.
 In spite of widespread devistation, for nearly a year after the
 hurricaine, the Puerto Rican government officially maintained a
@@ -84,7 +84,7 @@ In contrast, several studies by investigative journalists and academic
 researchers estimated much larger death tolls.
 For example, \citet[][; henceforth SLH]{santos2018use} compared monthly death counts recorded in the
 months after the hurricaine to historical values, and estimated that
-Mar\'{i}a caused 1139 excess
+Maria caused 1139 excess
 deaths.
 In this section, we will reanalyze this dataset to illustrate some
 of our ideas, not to suggest an alternative estimate of the death
@@ -103,16 +103,16 @@ Months prior to September are in the control condition, $Z_i=0$.
 Following \citet{neyman:1923} and \citet{rubin1974estimating}, we may
 then take each $i$ to have two potential outcomes: $Y_{Ti}$, a potential
 response under the treatment condition (the number of deaths that
-would occur were $i$ to fall after Mar\'{i}a); and $Y_{Ci}$, a potential response to
-control (the death count were $i$ to fall before Mar\'{i}a).
+would occur were $i$ to fall after Maria); and $Y_{Ci}$, a potential response to
+control (the death count were $i$ to fall before Maria).
 For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
-% The treatment effect, the number of deaths Mar\'{i}a would cause, in
+% The treatment effect, the number of deaths Maria would cause, in
 % the $i$th month is $\tau_i=Y_{Ti}-Y_{Ci}$.
 
 One approach to estimating the death toll from
-Mar\'{i}a models $\bm{Y}$ and $\bm{Z}$ as if arising from a randomized
+Maria models $\bm{Y}$ and $\bm{Z}$ as if arising from a randomized
 experiment \citep[see, e.g.][for anlogues in the RDD literature]{cattaneo2015randomization,matteiMealliObsStud}.
 (Here and throughout, boldface indicates the concatenation of
 $n$ realizations of a variable.)
