@@ -165,7 +165,7 @@ October---were unusually high.\footnote{We do not know why death
   entirely due to deaths caused by common chronic diseases such as
   cancer, heart disease, and diabetes.}
 Rather than identifying and removing outliers informally, we fit the regression model
-using a robust redescending M-estimation procedure, which systematically
+using a robust redescending M-estimator, which systematically
 down-weights and sometimes rejects outliers that would otherwise be
 influential \citep{maronna2006robust}.
 This model fit is displayed as a dashed black line in Figure
