@@ -18,14 +18,19 @@ month_lengths  <-
     c(31, 28.25, 31, 30, 31, 30,
       31, 31, 30, 31, 30, 31)
 
-#dat$dailyDeath <- dat$deaths_original/month_lengths[dat$month_num]
-#dat$adjDeath <- dat$dailyDeath*mean(month_lengths)
+dat$dailyDeath <- dat$deaths_original/month_lengths[dat$month_num]
+dat$adjDeath <- dat$dailyDeath*mean(month_lengths)
+
+## are we adjusting deaths for month length??
+## choose one of the following:
+#dat$deaths <- dat$adjDeath
+dat$deaths <- dat$deaths_original
 
 @
 
-<<modelMariaDeaths,include=FALSE,dependson='loadMariaDat'>>=
+<<modelMariaDeaths,include=FALSE>>=
 ### model monthly deaths prior to 2017
-mod  <-   lmrob(deaths_original~year+
+mod  <-   lmrob(deaths~year+
                      pbs(month_num, knots=seq(2,11,by=3)),
                  data=dat,subset=!hurYear)
 
@@ -42,13 +47,22 @@ dat$yhat <- NA
 dat$yhat[!dat$hurYear] <- predict(mod)
 dat$yhat[dat$hurYear] <- fitCurve(dat$month_num[dat$hurYear],'avg')
 
-dat$resid <- dat$deaths_original-dat$yhat
+dat$resid <- dat$deaths-dat$yhat
 
 @
 
-<<mariaFigs,include=FALSE,dependson='modelMariaDeaths'>>=
+<<bandwidth,include=FALSE,eval=TRUE>>=
+## are we limiting the window of analysis?
+## set eval=FALSE if not.
+## modify the following for a different window:
+window <- 6:11
+dat <- subset(dat,month_num%in%window)
+
+@
+
+<<mariaFigs,include=FALSE>>=
 pd <- rbind(dat,dat)
-pd$Deaths <- c(dat$deaths_original,dat$resid)
+pd$Deaths <- c(dat$deaths,dat$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
   levels=c('Death Counts','Residual Death Counts'))
 
@@ -61,7 +75,7 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=year,alpha=hurYear))+
   facet_wrap(~type,nrow=1,scales='free_y')+
   geom_hline(data=data.frame(yint=0,type='Residual Death Counts'),aes(yintercept=yint),
     size=2,color='black',linetype='dashed')+
-  stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths_original,year='avg',hurYear=TRUE),
+  stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths,year='avg',hurYear=TRUE),
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
@@ -108,8 +122,8 @@ control (the death count were $i$ to fall before Maria).
 For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
-% The treatment effect, the number of deaths Maria would cause, in
-% the $i$th month is $\tau_i=Y_{Ti}-Y_{Ci}$.
+The treatment effect, the number of deaths Maria would cause, in
+the $i$th month is $\tau_i=Y_{Ti}-Y_{Ci}$.
 
 One approach to estimating the death toll from
 Maria models $\bm{Y}$ and $\bm{Z}$ as if arising from a randomized
@@ -190,17 +204,19 @@ In short, the hope is that the model fit to monthy death counts from
 2010--2016 adequately captures seasonal month-to-month trends in
 mortality, leaving $\resid$ as as essentially random.
 This may be summarized in a new ignorabilitly assumption:
-\begin{ass}{$\resid$-Ignorability}
+%\begin{ass}{$\resid$-Ignorability}
 \begin{equation}\label{eq:ignore2}
-\resid_{C} \independent Z.
+\resid_{C} \independent Z
 \end{equation}
-\end{ass}
+%\end{ass}\
+which is a simpler form of ``residual ignorability,'' which we define
+more generally below (Section~\ref{sec:model-eey-c-r}).
 The right panel of Figure \ref{fig:maria} shows residualized death counts $\resid$ as a
 function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 
-$\resid$-Ignorability decomposes $Y_C$ as the sum of systematic
+\eqref{eq:ignore2} decomposes $Y_C$ as the sum of systematic
 components---a function of $R$ and disturbances---and relies on the
 nature of the decomposition to ensure
 that, vis a vis one another, the disturbances and $Z$ may
@@ -228,12 +244,67 @@ and extracting the random component \citep[see, e.g.][]{Nisan1999148}.
 \label{fig:maria}
 \end{figure}
 
+\subsection{Testing a Strict Null Hypothesis About the Maria Death Toll}
+Under residual ignorability
+\eqref{eq:ignore2},  as in RCTs, the probability distribution of $Z$ is modeled
+with far greater confidence than that of $\resid$, or of $(\resid_{C},
+\resid_{T})$.
+Continuing in the manner of \citet{fisher:1935},
+we leverage this asymmetry by conditioning on
+$\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{n}$,
+rendering irrelevant what distribution they were drawn from.\footnote{\textit{Design of Experiments} [\citeyear[ch.~1]{fisher:1935}]
+takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: In Little's version,
+%% the flowers are red not purple.  (In case a reviewer says they couldn't locate the
+%% example there...)
+[\citealp[\textit{e.g.},][]{little:1989,upton1992FET}] demonstrates his view that random $N_{0}$ and $N_{1}$
+should be treated as fixed after conditioning upon them.}
+We likewise condition on the realized sizes $N_{1}$
+and $N_{0}$ of the treatment and control group samples, where
+$N_{j} \equiv \sum_{i=1}^{n} \indicator{Z_{i}=j}$.
+Such conditioning is appropriate because the conditioning statistic
+$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0\}$ is appropriately ancillary to, i.e. carries no information
+about, the target of estimation, which is of the form
+$\EE (\resid_{T}-\resid_{C} | \mathcal{E})$, some event $\mathcal{E}$,
+because it does not constrain $\bm{\resid}_T$.
+In contrast, $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
+or $\EE(\resid_{C}| \mathcal{E})$.
+Formally, for a
+statistical model situating $\PP(\resid_{T} - \resid_{C}|
+R)$ in a translation family, $\bm{A}^*$ is S-ancillary
+\citep{cox2006pos,lehmannRomano2006TSH} to the target parameters.
 
+An oddity of conditioning on $\bm{A}^*$
+is that it does not correspond to any simple reduction of observed
+data, since $\resid_{Ci}$ is observed only if $Z_{i}=0$.
+This approach is feasible when testing
+``strict'' null hypotheses, hypotheses that designate a value for each
+$\resid_{Ti} - \resid_{Ci}$ with
+$Z_{i}=1$, not just $\EE(\resid_{T} - \resid_{C} | Z =1)$.
+This includes the hypothesis
+of strictly no effect, $H_{0}: \resid_{T} \equiv \resid_{C}$, under which
+$\bm{\resid}_{T}$ is simply $\bm{\resid}$.
+Then, $\bm{A}^*$ is temporarily assumed equal to $(N_{0}, N_{1}, \bm{\resid})$,
+which is a function of observables and is thus a statistic in the ordinary
+sense.
+Under $H_0$, we may exactly enumerate the sampling distribution of any test statistic conditional on
+$\bm{A}^*$; we estimate exact p-values by comparing a test statistic
+to its conditional distribution thus enumerated.
+
+%%%% unfinished, but gotta stop for now...
+%%% plan: estimate maria p-value here
+
+%, and
+the hypothesis of a constant dose effect $\tau$, under which
+$\bm{y}_{C} = \bm{y} - \tau \bm{d}$.
+Given $H: \tau = \tau_{0} \in (-\infty, \infty)$, define $\resid_{H} = Z(\resid_{T} - \tau_{0}) + (1-Z)\resid_{C}$.
+With such an $H$ under test,
+   The constant dose effect model
+situates $\PP(\resid_{T} - \resid_{C}| D, R)$ within a  translation family,
+making $(N_{0}, N_{1}, \bm{\resid}_{C})$ S-ancillary and justifying the Fisherian conditioning strategy.
 
 \subsection{Estimating Effects Under Ignorability}\label{sec:rand}
 
-\marginpar{I commented out the material about Fisher, which is kinda
-  ancillary (no pun intended)}
+\marginpar{Replace all this with M-estimation?}
 
 <<estimates,include=FALSE>>=
 ebar0 <- with(subset(dat,year==2017&month_num<9),round(mean(resid)))
@@ -247,37 +318,37 @@ ci <- test$conf.int
 ci4 <- ci*4
 @
 
-To continue in the manner of Neyman
-\citeyearpar{neyman:1935}, one conditions on the realized sizes
-$N_{1}$ and $N_{0}$ of the treatment and control group samples, where
- $N_{j} \equiv \sum_{i=1}^{n} \indicator{Z_{i}=j}$, and on vectors of
- potential outcomes $\bm{\resid_C}$ and $\bm{\resid_T}$, thereby modeling
- potential outcomes as non-stochastic.
-In fact, a weaker conditioning set suffices; let
-$\mathbf{A}^{*}=\{N_{1},N_{0},\tilde{\mathbf{\resid}}_{T},\tilde{\mathbf{\resid}}_{C}\}$,
-where  $\tilde{\mathbf{\resid}}_{T} = \mathbf{\resid}_{T} - \bar{\resid}_{T}$ and
-$\tilde{\mathbf{\resid}}_C$ are centered potential outcomes.
-This centering is around study population means,
-$\bar{\resid}_{T} = n^{-1}\sum_{i}\resid_{Ti}$ and
-$\bar{\resid}_{C} = n^{-1}\sum_{i}\resid_{Ci}$, as opposed to within-group means
-$\overline{(\resid_{T})}_{Z=1}$
-and
-$\overline{(\resid_{C})}_{Z=0}$.
-As a result, $\tilde{\mathbf{\resid}}_{T}$ and $\tilde{\mathbf{\resid}}_{C}$ are
-entirely unobserved, in contrast with $\bm{\resid_C}$ and $\bm{\resid_T}$, which
-are at least partially observed.
-However, under null hypotheses of the form $H_\tau$ that specify
-average treatment effects $\tau=\EE Y_T-\EE Y_C$, conditioning
-on $\mathbf{A}^{*}$ allows for randomization- (if not permutation-)
-based inference.
+% To continue in the manner of Neyman
+% \citeyearpar{neyman:1935}, one conditions on the realized sizes
+% $N_{1}$ and $N_{0}$ of the treatment and control group samples, where
+%  $N_{j} \equiv \sum_{i=1}^{n} \indicator{Z_{i}=j}$, and on vectors of
+%  potential outcomes $\bm{\resid_C}$ and $\bm{\resid_T}$, thereby modeling
+%  potential outcomes as non-stochastic.
+% In fact, a weaker conditioning set suffices; let
+% $\bm{A}^{*}=\{N_{1},N_{0},\tilde{\bm{\resid}}_{T},\tilde{\bm{\resid}}_{C}\}$,
+% where  $\tilde{\bm{\resid}}_{T} = \bm{\resid}_{T} - \bar{\resid}_{T}$ and
+% $\tilde{\bm{\resid}}_C$ are centered potential outcomes.
+% This centering is around study population means,
+% $\bar{\resid}_{T} = n^{-1}\sum_{i}\resid_{Ti}$ and
+% $\bar{\resid}_{C} = n^{-1}\sum_{i}\resid_{Ci}$, as opposed to within-group means
+% $\overline{(\resid_{T})}_{Z=1}$
+% and
+% $\overline{(\resid_{C})}_{Z=0}$.
+% As a result, $\tilde{\bm{\resid}}_{T}$ and $\tilde{\bm{\resid}}_{C}$ are
+% entirely unobserved, in contrast with $\bm{\resid_C}$ and $\bm{\resid_T}$, which
+% are at least partially observed.
+% However, under null hypotheses of the form $H_\tau$ that specify
+% average treatment effects $\tau=\EE Y_T-\EE Y_C$, conditioning
+% on $\bm{A}^{*}$ allows for randomization- (if not permutation-)
+% based inference.
 
 Consider the archetypical
 Neyman-type test statistic \citeyearpar{neyman:1923,neyman1934stratifiedsampling}, %is
-  % If $\tilde{\mathbf{y}}_H$ denotes the potential response
-  % $\mathbf{y}_{c}$ that would be entailed by a strong null $H$, in
-  % combination with observations $\mathbf{y}$ and $\mathbf{d}$, then
+  % If $\tilde{\bm{y}}_H$ denotes the potential response
+  % $\bm{y}_{c}$ that would be entailed by a strong null $H$, in
+  % combination with observations $\bm{y}$ and $\bm{d}$, then
 \begin{align} \label{eq:tudef}
-t_{u}({\mathbf{y}},\mathbf{z}) &=
+t_{u}({\bm{y}},\bm{z}) &=
 \frac{\bar{\resid}_{z=1} -
                              \bar{\resid}_{z=0}}{
 \mathrm{SE}_{u} \left\{ \bar{\resid}_{Z=1} -  \bar{\resid}_{Z=0} \right\}
@@ -285,37 +356,37 @@ t_{u}({\mathbf{y}},\mathbf{z}) &=
 \\
 %% where $\overline{v}_{z=j} = n_{j}^{-1} \sum_{i: z_{i} = j}
 %% v_{i}$, $n_{j} = \sum_{i}\indicator{z_{i} =j}$, for $j = 0, 1$, and
-\mathrm{SE}_{u}^2 \left( \bar{\resid}_{Z=1} -  \bar{\resid}_{Z=0} \right) &= \frac{s_{z=1}^{2}({\mathbf{\resid}})}{n_{1}} +
-    \frac{s_{z=0}^{2}({\mathbf{\resid}})}{n_{0}}  \label{eq:sudef}
+\mathrm{SE}_{u}^2 \left( \bar{\resid}_{Z=1} -  \bar{\resid}_{Z=0} \right) &= \frac{s_{z=1}^{2}({\bm{\resid}})}{n_{1}} +
+    \frac{s_{z=0}^{2}({\bm{\resid}})}{n_{0}}  \label{eq:sudef}
 % \\
-%     s_{z=j}^{2}(\mathbf{v}) &= \frac{1}{n_{j}-1}\sum_{i: z_{i} = j}
+%     s_{z=j}^{2}(\bm{v}) &= \frac{1}{n_{j}-1}\sum_{i: z_{i} = j}
 % (v_{i} - \bar{v}_{z=j})^{2} .\nonumber
 % \end{equation}
 \end{align}
 is the ordinary unpooled two-sample variance. With conditioning on
-$\mathbf{A}^{*}$, and assuming \eqref{eq:ignore2}, the expected value
+$\bm{A}^{*}$, and assuming \eqref{eq:ignore2}, the expected value
 of \eqref{eq:sudef} is
-${s^{2}({\mathbf{\resid}_{T}})}/{N_{1}} +
-{s^{2}({\mathbf{\resid}_{C}})}/{N_{0}}$, an upper bound of the variance of
+${s^{2}({\bm{\resid}_{T}})}/{N_{1}} +
+{s^{2}({\bm{\resid}_{C}})}/{N_{0}}$, an upper bound of the variance of
 $\overline{(\resid_{T})}_{Z=1} - \overline{(\resid_{C})}_{Z=0}$, conditional on
-$\mathbf{A}^*$.
+$\bm{A}^*$.
 
 Under this approach, we can construct assymptotic tests of null
 hypotheses that specify average treatment effects.
 For instance, under $H_{0}:\EE Y_C=\EE Y_T$ (or
 equvalently $\EE \resid_C=\EE \resid_T$), and assuming \eqref{eq:ignore2},
-$t_{u}(\mathbf{\resid}, \mathbf{Z})\stackrel{d}{\rightarrow}\mathrm{Normal}(0,v)$,
-some $v\leq 1$, conditional on $\mathbf{A}^{*}$; see
+$t_{u}(\bm{\resid}, \bm{Z})\stackrel{d}{\rightarrow}\mathrm{Normal}(0,v)$,
+some $v\leq 1$, conditional on $\bm{A}^{*}$; see
 Appendix~\ref{apnd:RICLT}.
 More generally, for any $\tau$ we can assess
-$t_{u}(\mathbf{\resid}-\tau\mathbf{Z}, \mathbf{Z})$ against a standard Normal
+$t_{u}(\bm{\resid}-\tau\bm{Z}, \bm{Z})$ against a standard Normal
 or central $t$ distribution to test
 $\bar{H}_{\tau}: \EE Y_T-\EE Y_C=\tau$.
 
 Such tests can serve as foundation for both point and interval
 estimates of average treatment effects.
-The value $\hat{\tau}_{\text{HL}}$ for which $t_{u}(\mathbf{\resid}-\hat{\tau}_{\text{HL}}\mathbf{Z},
-\mathbf{Z})$ is equal to its null expected value of 0 is a Hodges-Lehmann estimate of the true average effect\footnote{The general definition of
+The value $\hat{\tau}_{\text{HL}}$ for which $t_{u}(\bm{\resid}-\hat{\tau}_{\text{HL}}\bm{Z},
+\bm{Z})$ is equal to its null expected value of 0 is a Hodges-Lehmann estimate of the true average effect\footnote{The general definition of
 Hodges-Lehmann estimates is more elaborate, also addressing eventualities
 of there being no such $c$, or of its failing to be unique
 \citep[e.g.,][Sec.~2.7.2]{rosenbaum:2002}}.
@@ -336,7 +407,7 @@ $\bar{\resid}_{Z=1}=$\Sexpr{ebar1}
 deaths, implying an estimated death toll of \Sexpr{est} deaths
 per month, or a total of \Sexpr{tot} deaths.
 Comparing
-$t_{u}(\mathbf{\resid},\mathbf{Z})=$\Sexpr{signif(test[['statistic']],2)}
+$t_{u}(\bm{\resid},\bm{Z})=$\Sexpr{signif(test[['statistic']],2)}
 to a t-distribution with \Sexpr{signif(test[['parameter']],2)} degrees
 of freedom gives a two-sided p-value of \Sexpr{signif(test[['p.value']],2)}
 testing the null hypothesis of no excess deaths
@@ -368,7 +439,7 @@ Our focus of estimation is the
  D_{T}=1)$.
 Then, we test hypotheses of the form
 $H_{\tau}: \EE( Y_{T} - \tau D_{T}) =\EE (Y_{C} - \tau D_{C})$ by
-comparing $t_{u}(\mathbf{\resid}-\tau\mathbf{D}, \mathbf{Z})$ to the
+comparing $t_{u}(\bm{\resid}-\tau\bm{D}, \bm{Z})$ to the
 appropriate sampling distribution.
 Although in the case of full compliance $\bm{D}\equiv\bm{Z}$ the
 Hodges-Lehmann estimator
@@ -419,8 +490,8 @@ $\{({y}_{i},d_{i},r_{i})\}_{i=1}^{n}$ returning
 fitted parameters $\hat{\theta}$ in a sufficiently regular
 fashion, along with a
 family $\{\dt{\cdot}{\cdot}: \theta\}$ of residual or partial
-residual transformations, each mapping data $(\mathbf{y}, \mathbf{r})$ to
-$\{\dt {y_{i}}{\mathbf{r}} \}_{i=1}^{n}$.
+residual transformations, each mapping data $(\bm{y}, \bm{r})$ to
+$\{\dt {y_{i}}{\bm{r}} \}_{i=1}^{n}$.
 Appendix~\ref{sec:large-sample-rand}
 %\citet[\S~\ref{sec:large-sample-rand}]{lrdauthors:supp}
 states the
@@ -434,7 +505,7 @@ randomness in $R$ are then possible under the following assumption.
 \sloppy
 Given a residualizing procedure $(\hat{\theta}, \dt{y}{r})$,
 \begin{equation}\label{ycheck}
-\dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
+\dt[\thetaInf]{Y_{C}}{ R }%\bm{\Ych}_{C}
 \independent {Z},
 \end{equation}
 where $\thetaInf$ is the probability limit of $\hat\theta$.
@@ -455,17 +526,17 @@ a modest strengthening of~\eqref{ycheck}.)
 \sloppy
 Assuming Residual Ignorability, inference about treatment effects is
 made conditionally, on
-$\mathbf{A}= (\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$, $\mathbf{D}_{T})$.
+$\bm{A}= (\dt[\thetaInf]{\bm{Y}_{C}}{ \bm{R}}$, $\bm{D}_{T})$.
 Conditioning on
-$\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$
+$\dt[\thetaInf]{\bm{Y}_{C}}{ \bm{R}}$
 removes little of the entropy
-in $\mathbf{R}$, leaving it available as a basis for inference.
+in $\bm{R}$, leaving it available as a basis for inference.
 Uncoupled to $Y_{T}$s, the detrended  $Y_{C}$s,
-$\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$,
+$\dt[\thetaInf]{\bm{Y}_{C}}{ \bm{R}}$,
 are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
-the variables comprising $\mathbf{A}$ are jointly
-%\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
-S-ancillary, just as $\mathbf{A}^{*}$ was seen to be
+the variables comprising $\bm{A}$ are jointly
+%\marginpar{$\leftarrow \Delta$ to $(\bm{Y}_{C}, N_{0}, N_{1})$?}
+S-ancillary, just as $\bm{A}^{*}$ was seen to be
 in Section~\ref{sec:randProc}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
 inferences.
@@ -484,12 +555,12 @@ linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$.
 
 Separately for each hypothesis $H: \tau=\tau_0$ under
 consideration, one calculates
-$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
+$\bm{y}_{H} = \bm{y} - \bm{d}\tau_{0}$, then
 applies the chosen specification and fitter to
-$(\mathbf{y}_{H}, \mathbf{r})$.
+$(\bm{y}_{H}, \bm{r})$.
 The combination of the data, the
 model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
-$\dt[\hat\theta]{\mathbf{y}_{H}}{\mathbf{r}}$, completing the
+$\dt[\hat\theta]{\bm{y}_{H}}{\bm{r}}$, completing the
 residualizing procedure. Whether $H$ is rejected or sustained is
 determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
 \eqref{eq:tedef}.
@@ -508,8 +579,8 @@ t-statistic with covariance adjustment for $R$, as in \eqref{eq:tedef}: with fit
 this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
 favor, the correspondence is one of large-sample equivalence
 (Appendix~\ref{sec:suppl-s-refs}).
-Iterative testing is facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and $\mathbf{z}$
-with offset variable $\mathbf{d}\tau_{0}$; then only the offset needs to
+Iterative testing is facilitated by regressing $\bm{y}$ on $\bm{r}$ and $\bm{z}$
+with offset variable $\bm{d}\tau_{0}$; then only the offset needs to
 be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 
 
@@ -623,22 +694,22 @@ which optionally provide Huber-White standard errors
 
 Analysis of RCTs and quasiexperiments often hinges on assumptions of
 independence of
- $\mathbf{Z}$ from $(\mathbf{X}, \mathbf{Y}_{C}, \mathbf{Y}_{T})$.
+ $\bm{Z}$ from $(\bm{X}, \bm{Y}_{C}, \bm{Y}_{T})$.
 %% Analogous statements will hold for more complex randomization or
 %% ignorability assumptions as well.
- Although neither $\mathbf{Z} \independent \mathbf{Y}_{C}$ nor
- $\mathbf{Z} \independent \mathbf{Y}_{T}$ can be directly tested,
+ Although neither $\bm{Z} \independent \bm{Y}_{C}$ nor
+ $\bm{Z} \independent \bm{Y}_{T}$ can be directly tested,
  since potential outcomes are only partly observed, assumptions of form
- $\mathbf{Z} \independent \mathbf{X}$ are falsifiable: researchers can
+ $\bm{Z} \independent \bm{X}$ are falsifiable: researchers can
  conduct placebo tests for effects of $Z$ on $X$.
-% Just as $H: \mathbf{y}_{T} - \mathbf{y}_{C} =
-% \mathbf{\tau}$ is tested in the strong randomization inference
+% Just as $H: \bm{y}_{T} - \bm{y}_{C} =
+% \bm{\tau}$ is tested in the strong randomization inference
 % paradigm, the researcher might assess imbalance in a covariate, as measured
 % either by the difference of means,
 % $\bar{x}_{Z=1} - \bar{x}_{Z=0}$, or by the difference of means in a transform of
-% the covariate, $\overline{\dt[\thetaInf]{\mathbf{x}}{\mathbf{r}}}_{Z=1} - \overline{\dt[\thetaInf]{\mathbf{x}}{\mathbf{r}}}_{Z=0}$,
+% the covariate, $\overline{\dt[\thetaInf]{\bm{x}}{\bm{r}}}_{Z=1} - \overline{\dt[\thetaInf]{\bm{x}}{\bm{r}}}_{Z=0}$,
 % to the distribution of the same difference under permutations of
-% $\mathbf{z} $.
+% $\bm{z} $.
 Of course, treatment cannot affect pre-treatment variables; this is
 model-checking (%\citealp{bayarriBerger2000pvalues};
 \citealp[][\S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
@@ -650,18 +721,18 @@ model-checking (%\citealp{bayarriBerger2000pvalues};
 
 
  Writing in the RDD context, \citet{cattaneo2014randomization} test
- for marginal associations of $\mathbf{Z}$ with covariates $\mathbf{X}_{i}$,
+ for marginal associations of $\bm{Z}$ with covariates $\bm{X}_{i}$,
  $i=1, \ldots, k$, using the permutational methods that are applied
  in Fisherian analysis of RCTs.
 % Specifically, they
 %  obtain p-values though \eqref{eq:01}, with test statistics
-%  $t(\mathbf{x}_{i}, \mathbf{z}) = |\overline{(x_{i})}_{z=1} -
+%  $t(\bm{x}_{i}, \bm{z}) = |\overline{(x_{i})}_{z=1} -
 %  \overline{(x_{i})}_{z=0}|$,
-%  $ i \leq k$, after conditioning on $\mathbf{X}$ in addition to
+%  $ i \leq k$, after conditioning on $\bm{X}$ in addition to
 %  $\sum_{i} Z_{i}$.
 Relatedly, \citet{lee2010regression} recommend a
- tests for conditional association, given $R$, of $\mathbf{Z}$ and
- $\mathbf{X}$, by fitting models like those discussed in
+ tests for conditional association, given $R$, of $\bm{Z}$ and
+ $\bm{X}$, by fitting models like those discussed in
  \S~\ref{sec:robust-analys-covar} for impact estimation, but with
  covariates rather than outcomes as independent variables%
 %, they incorporate covariance adjustments for $R$
@@ -687,7 +758,7 @@ principle.  Li et al.'s
 \citeyearpar{liMatteiMealli2015BayesianRD} RDD method wraps
 its specification checking steps into a Bayesian model. % that is also used for effect
 %estimation.
-This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\mathbf{X}$, are not covariance adjusted for $R$.
+This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\bm{X}$, are not covariance adjusted for $R$.
 
 
 McCrary's test for manipulation of treatment assignments
@@ -754,10 +825,10 @@ testing (\S~\ref{sec:specification}).%\marginpar{I replaced $c$ here
 Common RDD specification checks
 can be regarded as testing Residual Ignorability with a multivariate
 ``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
-$\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
+$\bm{Y}_{C}^{*} = (\bm{X}, {Y}_C)$ in place of $Y_{C}$.
 This calls for preliminary residualizing procedures, mechanisms to
 decompose  $X$ into components that are systematic or unpredictable,
-vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
+vis a vis $\bm{R}$, just as ${\bm{Y}_C}$ will later be decomposed.
 Our analysis of the LSO data posits systematic components that are
 linear and logistic-linear in $R$, depending on whether $X$ is
 a measurement or binary variable. %, paralleling its choice of a linear decomposition
