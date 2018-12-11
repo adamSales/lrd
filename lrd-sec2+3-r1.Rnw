@@ -49,6 +49,8 @@ dat$yhat[dat$hurYear] <- fitCurve(dat$month_num[dat$hurYear],'avg')
 
 dat$resid <- dat$deaths-dat$yhat
 
+dat$Z <- dat$month_num>8
+
 @
 
 <<bandwidth,include=FALSE,eval=TRUE>>=
@@ -105,6 +107,12 @@ of our ideas, not to suggest an alternative estimate of the death
 toll.
 (Indeed, this discussion will elide some arguably important
 statistical issues that are not directly related to RDD analysis.)
+In the course of our discussion, we will also review two classical
+approaches to hypothesis testing (based largely on
+\citealt{fisher:1935}) and estimation (based largely on
+\citealt{huber1964robust,huber1967behavior}).
+Though these ideas are old, some aspects of our framing will be
+novel.
 
 The SLR dataset forms a somewhat unusual regression
 discontinuity design, with the months of 2017 as subjects and monthly death
@@ -281,8 +289,12 @@ This approach is feasible when testing
 $\resid_{Ti} - \resid_{Ci}$ with
 $Z_{i}=1$, not just $\EE(\resid_{T} - \resid_{C} | Z =1)$.
 This includes the hypothesis
-of strictly no effect, $H_{0}: \resid_{T} \equiv \resid_{C}$, under which
-$\bm{\resid}_{T}$ is simply $\bm{\resid}$.
+of strictly no effect, $H_{0}: Y_{T} \equiv Y_{C}$, under which
+$\bm{\resid}_{T}$ is simply $\bm{\resid}$
+(recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
+$Y$, which are ultimately of interest,
+are exactly equivalent to null hypotheses about $\resid$, which may be
+more readily tested).
 Then, $\bm{A}^*$ is temporarily assumed equal to $(N_{0}, N_{1}, \bm{\resid})$,
 which is a function of observables and is thus a statistic in the ordinary
 sense.
@@ -290,19 +302,46 @@ Under $H_0$, we may exactly enumerate the sampling distribution of any test stat
 $\bm{A}^*$; we estimate exact p-values by comparing a test statistic
 to its conditional distribution thus enumerated.
 
-%%%% unfinished, but gotta stop for now...
-%%% plan: estimate maria p-value here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% change this if we use a different window of analysis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In the Maria example, the null hypothesis $H_0$ means that hurricane
+Maria caused precisely no change in each month's death count (and
+hence each month's residual $\resid$).
+Under $H_0$, we condition on
+$\bm{A}^*=\{\bm{\resid}_C=\bm{\resid},N_1=3,N_0=3\}$ and calculate the
+distribution of test statistic $\bar{\resid}_{Z=1}$ by calculating its
+value for all $\binom{6}{3}$ possible permutations
+of $\bm{Z}$.
+It turns out that largest value of test statistic
+$\bar{\resid{z=1}=$\Sexpr{with(subset(dat,hurYear&Z),round(mean(resid)))}
+occurs when $\bm{Z}=\bm{z}$, i.e. when September, October, and
+November are the affected months.
+Therefore, the one-sided p-value testing $H_0$ is
+$1/\binom{6}{3}=1/20$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%, and
-the hypothesis of a constant dose effect $\tau$, under which
-$\bm{y}_{C} = \bm{y} - \tau \bm{d}$.
-Given $H: \tau = \tau_{0} \in (-\infty, \infty)$, define $\resid_{H} = Z(\resid_{T} - \tau_{0}) + (1-Z)\resid_{C}$.
-With such an $H$ under test,
-   The constant dose effect model
-situates $\PP(\resid_{T} - \resid_{C}| D, R)$ within a  translation family,
-making $(N_{0}, N_{1}, \bm{\resid}_{C})$ S-ancillary and justifying the Fisherian conditioning strategy.
+$H_0$ is a member of a wider class of strict null hypotheses,
+hypotheses of a constant effect $\tau\in (-\infty, \infty)$,
+$H_{\tau_0}:\;\bm{Y}_T-\bm{Y}_C\equiv\tau_0$, under which
+$\bm{\resid}_{C} = \bm{\resid}_H\equiv\bm{\resid} - \tau_0 \bm{z}$.
+With such an $H_{\tau_0}$ (including $H_0$) under test,
+   The constant effect model
+situates $\PP(\resid_{T} - \resid_{C}| R)$ within a  translation family,
+making $(N_{0}, N_{1}, \bm{\resid}_{C})$ S-ancillary and justifying
+the Fisherian conditioning strategy.
 
-\subsection{Estimating Effects Under Ignorability}\label{sec:rand}
+Fisherian randomization inference goes on to subject each
+$H_{\tau_0}$ to a permutation test.  This confers an
+advantage, of equal legitimacy in small and large samples, alongside
+of a restriction, to the testing of strict null hypotheses.
+% The set \{$\tau_0$:
+% $H_{\tau_0}$ is not rejected at level $\alpha$\}, typically an interval, is a
+% $100(1-\alpha)\%$ confidence set for a constant treatment effect.
+
+
+\subsection{Estimating Effects and Standard Errors}\label{sec:rand}
 
 \marginpar{Replace all this with M-estimation?}
 
