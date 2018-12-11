@@ -7,6 +7,7 @@ library(dplyr)
 library(ggplot2)
 library(robustbase)
 library(pbs)
+library(perm)
 
 dat <- read.csv('../death_file_JAMA.csv')
 
@@ -53,7 +54,7 @@ dat$Z <- dat$month_num>8
 
 @
 
-<<bandwidth,include=FALSE,eval=TRUE>>=
+<<bandwidth,include=FALSE,eval=FALSE>>=
 ## are we limiting the window of analysis?
 ## set eval=FALSE if not.
 ## modify the following for a different window:
@@ -301,24 +302,85 @@ sense.
 Under $H_0$, we may exactly enumerate the sampling distribution of any test statistic conditional on
 $\bm{A}^*$; we estimate exact p-values by comparing a test statistic
 to its conditional distribution thus enumerated.
+(When the number of possible permutations of $\bm{Z}$ is large, the sampling
+distribution may be estimated with Monte Carlo methods.)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% change this if we use a different window of analysis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<<estimates,include=FALSE>>=
+N1 <- sum(dat$hurYear&dat$Z)
+N0 <- sum(dat$hurYear&!dat$Z)
+N <- N1+N0
+cardZ <- choose(N,N1)
+
+## adapted from http://rsnippets.blogspot.com/2012/04/generating-all-subsets-of-set.html
+all.subsets <- function(set,size) {
+  n <- length(set)
+  bin <- expand.grid(plyr::rlply(n, c(F, T)))
+  if(!missing(size)) bin <- bin[rowSums(bin)==size,]
+  bin
+}
+
+subs <- all.subsets(1:N,N1)
+stopifnot(nrow(subs)==cardZ)
+
+rr <- dat$resid[dat$hurYear]
+z <- dat$Z[dat$hurYear]
+
+testStat <- function(Z,RR)
+  sum(RR[Z])
+
+ts0 <- apply(subs,1,testStat,RR=rr)
+stopifnot(length(unique(ts0))==cardZ) ## no Test stat value appears more than once; simplifying
+
+pfun <- function(tau){
+  RR <- rr-z*tau
+  ts <- testStat(z,RR)
+  TS <- apply(subs,1,testStat,RR=RR)
+  nless <- sum(TS<ts)
+  nmore <- cardZ-nless-1
+  pHigh <- (nmore+.5)/cardZ
+  pLow <- (nless+.5)/cardZ
+  c(nless=nless,nmore=nmore,p=2*min(pHigh,pLow))
+}
+
+pval <- pfun(0)
+
+tau <- 0
+rej <- TRUE
+while(rej){
+  tau <- tau+1
+  p <- pfun(tau)
+  rej <- p['p']<0.05
+}
+lb <- tau
+p.lower <- p
+while(!rej){
+  tau <- tau+1
+  rej <- pfun(tau)['p']<0.05
+}
+ub <- tau
+p.upper <- p
+
+
+@
+
 In the Maria example, the null hypothesis $H_0$ means that hurricane
 Maria caused precisely no change in each month's death count (and
 hence each month's residual $\resid$).
 Under $H_0$, we condition on
-$\bm{A}^*=\{\bm{\resid}_C=\bm{\resid},N_1=3,N_0=3\}$ and calculate the
-distribution of test statistic $\bar{\resid}_{Z=1}$ by calculating its
-value for all $\binom{6}{3}$ possible permutations
+$\bm{A}^*=\{\bm{\resid}_C=\bm{\resid},N_1=$\Sexpr{N1}$,N_0=$\Sexpr{N0}$\}$ and calculate the
+sampling distribution of test statistic $\bar{\resid}_{Z=1}$ by calculating its
+value for all $\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
 of $\bm{Z}$.
-It turns out that largest value of test statistic
-$\bar{\resid{z=1}=$\Sexpr{with(subset(dat,hurYear&Z),round(mean(resid)))}
-occurs when $\bm{Z}=\bm{z}$, i.e. when September, October, and
-November are the affected months.
-Therefore, the one-sided p-value testing $H_0$ is
-$1/\binom{6}{3}=1/20$.
+It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
+test statistic values than the realized value
+$\bar{\resid}_{z=1}=$\Sexpr{round(testStat(z,rr))} (which is unique in
+  the distribution).
+This implies a two-sided ``mid'' p-value \citep{agresti2005comment} of
+$2(\Sexpr{pval['nmore']}+0.5)/\Sexpr{cardZ}\approx\Sexpr{round(pval['p'],2)}$
+for testing $H_0$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -336,26 +398,18 @@ Fisherian randomization inference goes on to subject each
 $H_{\tau_0}$ to a permutation test.  This confers an
 advantage, of equal legitimacy in small and large samples, alongside
 of a restriction, to the testing of strict null hypotheses.
-% The set \{$\tau_0$:
-% $H_{\tau_0}$ is not rejected at level $\alpha$\}, typically an interval, is a
-% $100(1-\alpha)\%$ confidence set for a constant treatment effect.
+The set \{$\tau_0$:
+$H_{\tau_0}$ is not rejected at level $\alpha$\}, typically an interval, is a
+$100(1-\alpha)\%$ confidence set for a constant treatment effect.
 
 
 \subsection{Estimating Effects and Standard Errors}\label{sec:rand}
 
+With moderate or large samples, M-estimation (also called
+``generalized estimating equations'' or ``
+
 \marginpar{Replace all this with M-estimation?}
 
-<<estimates,include=FALSE>>=
-ebar0 <- with(subset(dat,year==2017&month_num<9),round(mean(resid)))
-ebar1 <- with(subset(dat,year==2017&month_num>8),round(mean(resid)))
-est <- ebar1-ebar0
-tot <- est*4
-
-test <- t.test(resid~I(month_num<9),data=dat,subset=year==2017)
-pval <- test$p.value
-ci <- test$conf.int
-ci4 <- ci*4
-@
 
 % To continue in the manner of Neyman
 % \citeyearpar{neyman:1935}, one conditions on the realized sizes
