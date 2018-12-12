@@ -1,7 +1,7 @@
 ---
 title: "Robust M-estimation for imperfect regression discontinuity designs"
 author: "Adam Sales & Ben Hansen*"
-date: "ICORS 2018, KU Leuven "
+date: "CMStatistics 2018, U. of Pisa"
 bibliography: ../../bibliography.bib
 output: 
   ioslides_presentation
@@ -10,7 +10,7 @@ output:
   @hansenSales2015cochran-->
   
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
 
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # Three perspectives on the regression discontinuity design 
 <!-- Potential outcomes vs structural modeling for RDDs -->
 
-## Academic probation and later grades | Lindo et al [-@lindo2010ability] as a  running example of the RDD  
+## Academic probation and later grades | Data from 3 Canadian colleges [@lindo2010ability] {.build}
 
 <div class="centered">
 <!-- <img src="images/apsemaphore.jpg" width=180px height="270px" /> -->
@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), what's $Z \equiv \mathcal{I}[R<0]$'s effect on $Y$ (year 2 GPA)?  
 
-(To be interpreted as a _causal_ effect.) 
+(A _regression discontinuity_ estimate of academic probation's impact.) 
 
 <div class="notes">
 
@@ -68,13 +68,15 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 <div class="centered">
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_2.jpg" width="300px" height="300px" />
+<img src="images/figure2_2.jpg" width="300px" height="275px" />
 </div>
 
-> - Local randomization should be reflected in covariates, e.g. high school $G$rades ($y$ axis). 
-> - Due to trend, clear that $E[G | R\leq 0] \neq E[G | R >0 ]$ -- no _balance_ on $G$.
-> - Some would confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that tests of balance do not reject. This gets rid of a lot of data, without addressing underlying trend.
-> - Better: first model trend, e.g. $G \approx \alpha_G + \beta_G R$; then test whether balanced on _residual_, $e_{(\alpha_G, \beta_G)}(G|R)$, not $G$ itself; narrow $\mathcal{W}$ as needed to pass this test.
+> - Local randomization should be reflected in covariates, e.g. prior $G$rades ($y$ axis). 
+> - Due to trend, clear that $G \not\perp \mathcal{I}[R\leq 0]$.
+($G$ is not "balanced" vis a vis $Z$.)<!-- Does the `\not` come thru? -->
+> - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$ is not rejected.
+> - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
+> - $H'$ is sustainable with wider $\mathcal{W}$ than $H$. (Don't throw away good data.)
 
 <div class="notes">
 
@@ -83,22 +85,22 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 </div>
 
-## Testing balance on the density of $R$ | the McCrary [-@mccrary2008manipulation] test
+## Local randomization & the density of $R$ | the McCrary [-@mccrary2008manipulation] test
 
 <div class="columns-2">
 
 
 >  - Purpose of test: expose whether subjects secured or avoided treatment by manipulating their $R$s.
-  
 >  - If so, then density of $R$ differs on either side of cutpoint.
->  - A test of "balance" in (log) density
->  - Here we fail, due to students at $R=0$ who narrowly avoided AP.
+>  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp \mathcal{I}[R\leq 0] | \{R \in \tilde{\mathcal{W}}\}.$ 
 
   <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
 
-> - To avoid wrath of McCrary, exclude $\{i: R_i =0\}$.
 
 </div>
+
+>  - Canadian college data have a clump of narrow avoiders of acad. probation at $R=0$.   
+> - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving "donut.")
 
 <div class="notes">
 
@@ -122,16 +124,16 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 ## Methods for limiting contamination sensitivity {.build}
 
->   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a follow-up analysis of sensitivity to potentially remaining contamination?
+>   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a secondary analysis of sensitivity to this problem?
 
->   A:  The contamination issue must be addressed as a part of the _primary_ analysis....
+>   A:  The contamination issue must be addressed as a part of the _primary_ analysis. It requires us to abandon OLS,...
 
 
 <!-- 2 slides: LSO, Krafft points; bounded influence regression-->
 
 ## Sensitivity to removing _groups_ of points {.build}
 
-Say there are "savvy" students who, when at risk for AP, "manipulate" grades up. (Bribes?)  This latent subgroup is overrepresented in $\{i: z_i=0\}$, but may be elsewhere also --- so removing $\{i: z_i=0\}$ leaves some in. 
+Say there are "savvy" students who, when at risk for AP, "manipulate" grades $\uparrow$. (Bribes?)  This latent subgroup is overrepresented in excised donut hole $\{i: z_i=0\}$, but may be elsewhere also --- as many as $O(n^{1/2})$ "bad" points remain, undercutting estimation of $E(Y_C | R)$. 
 
 How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if not recognized as such in RDD literature.
 
@@ -162,10 +164,10 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 
 ## Methods for limiting contamination sensitivity
 
-> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a follow-up analysis of sensitivity to potentially remaining contamination?
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination. Should we supplement our OLS estimates with a secondary analysis of sensitivity to this problem?
 
-
-> A: The contamination issue must be addressed as a part of the _primary_ analysis.  OLS is hypersensitive to contamination, whereas MM estimates are insensitive enough to prevent $\mathrm{Bias}(\hat\tau)$ from dominating $\mathrm{MSE}(\hat\tau)$. 
+> A:  The contamination issue must be addressed as a part of the _primary_ analysis. 
+It requires us to abandon OLS, which is hypersensitive to contamination. In contrast, robust MM estimates are insensitive enough to prevent $\mathrm{Bias}(\hat\tau)$ from dominating $\mathrm{MSE}(\hat\tau)$. 
 <!-- The robust statistics literature finds that MM estimation limits contamination sensitivity but OLS does not.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.-->
 
 ## Discussion {.smaller}
