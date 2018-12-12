@@ -461,271 +461,232 @@ confidence interval or set induced by~\eqref{eq:tudef} requires a distinct expli
 test for each of a range of $\tau$s
 \citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
 
-
-\subsection{Estimating Effects and Standard Errors}\label{sec:rand}
-
-With moderate or large samples, M-estimation (also called
-``generalized estimating equations'' or ``
-
-\marginpar{Replace all this with M-estimation?}
+\section{Conventional RDD Methods}
 
 
-% To continue in the manner of Neyman
-% \citeyearpar{neyman:1935}, one conditions on the realized sizes
-% $N_{1}$ and $N_{0}$ of the treatment and control group samples, where
-%  $N_{j} \equiv \sum_{i=1}^{n} \indicator{Z_{i}=j}$, and on vectors of
-%  potential outcomes $\bm{\resid_C}$ and $\bm{\resid_T}$, thereby modeling
-%  potential outcomes as non-stochastic.
-% In fact, a weaker conditioning set suffices; let
-% $\bm{A}^{*}=\{N_{1},N_{0},\tilde{\bm{\resid}}_{T},\tilde{\bm{\resid}}_{C}\}$,
-% where  $\tilde{\bm{\resid}}_{T} = \bm{\resid}_{T} - \bar{\resid}_{T}$ and
-% $\tilde{\bm{\resid}}_C$ are centered potential outcomes.
-% This centering is around study population means,
-% $\bar{\resid}_{T} = n^{-1}\sum_{i}\resid_{Ti}$ and
-% $\bar{\resid}_{C} = n^{-1}\sum_{i}\resid_{Ci}$, as opposed to within-group means
-% $\overline{(\resid_{T})}_{Z=1}$
-% and
-% $\overline{(\resid_{C})}_{Z=0}$.
-% As a result, $\tilde{\bm{\resid}}_{T}$ and $\tilde{\bm{\resid}}_{C}$ are
-% entirely unobserved, in contrast with $\bm{\resid_C}$ and $\bm{\resid_T}$, which
-% are at least partially observed.
-% However, under null hypotheses of the form $H_\tau$ that specify
-% average treatment effects $\tau=\EE Y_T-\EE Y_C$, conditioning
-% on $\bm{A}^{*}$ allows for randomization- (if not permutation-)
-% based inference.
+\subsection{The \textsc{Ancova} Model for RDDs}\label{sec:robust-analys-covar}
 
-Consider the archetypical
-Neyman-type test statistic \citeyearpar{neyman:1923,neyman1934stratifiedsampling}, %is
-  % If $\tilde{\bm{y}}_H$ denotes the potential response
-  % $\bm{y}_{c}$ that would be entailed by a strong null $H$, in
-  % combination with observations $\bm{y}$ and $\bm{d}$, then
-\begin{align} \label{eq:tudef}
-t_{u}({\bm{y}},\bm{z}) &=
-\frac{\bar{\resid}_{z=1} -
-                             \bar{\resid}_{z=0}}{
-\mathrm{SE}_{u} \left\{ \bar{\resid}_{Z=1} -  \bar{\resid}_{Z=0} \right\}
-                             },\, \text{where}
-\\
-%% where $\overline{v}_{z=j} = n_{j}^{-1} \sum_{i: z_{i} = j}
-%% v_{i}$, $n_{j} = \sum_{i}\indicator{z_{i} =j}$, for $j = 0, 1$, and
-\mathrm{SE}_{u}^2 \left( \bar{\resid}_{Z=1} -  \bar{\resid}_{Z=0} \right) &= \frac{s_{z=1}^{2}({\bm{\resid}})}{n_{1}} +
-    \frac{s_{z=0}^{2}({\bm{\resid}})}{n_{0}}  \label{eq:sudef}
-% \\
-%     s_{z=j}^{2}(\bm{v}) &= \frac{1}{n_{j}-1}\sum_{i: z_{i} = j}
-% (v_{i} - \bar{v}_{z=j})^{2} .\nonumber
-% \end{equation}
-\end{align}
-is the ordinary unpooled two-sample variance. With conditioning on
-$\bm{A}^{*}$, and assuming \eqref{eq:ignore2}, the expected value
-of \eqref{eq:sudef} is
-${s^{2}({\bm{\resid}_{T}})}/{N_{1}} +
-{s^{2}({\bm{\resid}_{C}})}/{N_{0}}$, an upper bound of the variance of
-$\overline{(\resid_{T})}_{Z=1} - \overline{(\resid_{C})}_{Z=0}$, conditional on
-$\bm{A}^*$.
-
-Under this approach, we can construct assymptotic tests of null
-hypotheses that specify average treatment effects.
-For instance, under $H_{0}:\EE Y_C=\EE Y_T$ (or
-equvalently $\EE \resid_C=\EE \resid_T$), and assuming \eqref{eq:ignore2},
-$t_{u}(\bm{\resid}, \bm{Z})\stackrel{d}{\rightarrow}\mathrm{Normal}(0,v)$,
-some $v\leq 1$, conditional on $\bm{A}^{*}$; see
-Appendix~\ref{apnd:RICLT}.
-More generally, for any $\tau$ we can assess
-$t_{u}(\bm{\resid}-\tau\bm{Z}, \bm{Z})$ against a standard Normal
-or central $t$ distribution to test
-$\bar{H}_{\tau}: \EE Y_T-\EE Y_C=\tau$.
-
-Such tests can serve as foundation for both point and interval
-estimates of average treatment effects.
-The value $\hat{\tau}_{\text{HL}}$ for which $t_{u}(\bm{\resid}-\hat{\tau}_{\text{HL}}\bm{Z},
-\bm{Z})$ is equal to its null expected value of 0 is a Hodges-Lehmann estimate of the true average effect\footnote{The general definition of
-Hodges-Lehmann estimates is more elaborate, also addressing eventualities
-of there being no such $c$, or of its failing to be unique
-\citep[e.g.,][Sec.~2.7.2]{rosenbaum:2002}}.
-In this case, this $\hat{\tau}_{\text{HL}}$ is simply the difference in means between the
-control and treatment groups, $\bar{E}_{Z=1}-\bar{E}_{Z=0}$.
-The set \{$\tau$: $H_{\tau}$ is not rejected at level $\alpha$\}, typically an interval, is a
-$100(1-\alpha)\%$ confidence set for the average treatment effect.
-
-Though this inferential approach is assymptotic, arguments in
-Appendix~\ref{apnd:RICLT} suggest that it is conservative in small
-samples;  in any event, we may use it to estimate the \maria\ death
-toll, if only as an illustration.
-In the first eight months of 2017, the average residual death count
-was roughly
-$\bar{\resid}_{Z=0}=$\Sexpr{ebar0} deaths;
-in the final four months, we have
-$\bar{\resid}_{Z=1}=$\Sexpr{ebar1}
-deaths, implying an estimated death toll of \Sexpr{est} deaths
-per month, or a total of \Sexpr{tot} deaths.
-Comparing
-$t_{u}(\bm{\resid},\bm{Z})=$\Sexpr{signif(test[['statistic']],2)}
-to a t-distribution with \Sexpr{signif(test[['parameter']],2)} degrees
-of freedom gives a two-sided p-value of \Sexpr{signif(test[['p.value']],2)}
-testing the null hypothesis of no excess deaths
-average.
-Inverting the t-test gives a 95\% confidence interval of
-[\Sexpr{ceiling(ci[1])}, \Sexpr{floor(ci[2])}] excess deaths per
-month, or a total death toll of
-[\Sexpr{ceiling(ci4[1])}, \Sexpr{floor(ci4[2])}].
+The classical analysis of covariance (\textsc{ancova}) model says that for
+$i=1,\ldots, k$ and $j=1, \ldots, n_{i}$,
+$Y_{ij} = \alpha_{i} + \beta X_{ij} + \epsilon_{ij}$, where $\epsilon_{ij}
+\sim \mathrm{Normal}(0, \sigma^{2})$ is independent of the continuous
+covariate $X_{ij}$; in the classical development of RDDs, the $k=2$
+\textsc{ancova} is a leading option among statistical models
+\citep{thistlethwaite1960regression}.
+% , a study of effects of public recognition of scholastic
+% achievement on high school students' attitudes toward intellectualism
+% and plans for postgraduate education. This RDD compared finalists
+% of the 1957 National Merit Scholarship competition to other students
+% who had participated but scored just below the qualifying
+% test's cutpoint for advancement to the final round. To isolate effects of recognition
+% from effects of the scholarship,
+% \citet{thistlethwaite1960regression} had excluded
+% from the sample the 13\% of finalists who had gone on to win National
+% Merit scholarships.   Having done this, they also excluded \textsc{ancova},
+% on the basis that such a biased sample was no basis for estimating
+% \textsc{ancova} parameters.
+% % Had the model been appropriate, the difference $\alpha_{1} - \alpha_{0}$
+% % would have represented the treatment effect.
+% They opted instead to customize a linear extrapolation of outcomes
+% from the lower side of their cutpoint to the upper side, arguing that
+% under the circumstances this extrapolation would better simulate
+% competition finalists' outcomes under the hypothetical condition that
+% a random selection of them had had their recognition as finalists
+% withheld, despite having scored above the threshold. This formulation
+% suggests they might have preferred a potential outcomes version of the
+% \textsc{ancova} model:
+A potential outcomes version of the model is
+ $Y_{Ci} = \alpha_{0} + \beta R_{i} + \epsilon_{Ci}$,
+ $\epsilon_{Ci} \sim \mathrm{Normal}(0, \sigma^{2})$; $D_{i} \leq
+ Z_{i} = \indicator{R_{i} \geq 0}$; $Y_{Ti} = \alpha_{0} +
+ (\alpha_{1} - \alpha_{0})D_{Ti} + \beta R_{i} + \epsilon_{Ti}$,
+ $\epsilon_{Ti} \sim \mathrm{Normal}(0, \sigma^{2})$.
+In marked contrast to the model of \S~\ref{sec:randProc}, it does
+not require that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
+$Y_{C}$ and $Y_{T}$ are presumed to associate with $R$, which in turn
+determines $Z$. Nonetheless, under this model the ordinary least squares
+(OLS) contrast $\hat{\alpha}_{1} - \hat{\alpha}_{0}$ is unbiased for
+$\alpha_{1} - \alpha_{0}$ --- the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
+\lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
+limitless estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
 
 
+To relate this to the formulation of \S~\ref{sec:randProc}, write
+$\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
+b\mathbf{r}$.
+Given $H: Y_{T} = Y_{C} + \tau D_{T}$ define ${{Y}_H} = {Y} - \tau {D}$ and
+$\hat\theta = (\hat\alpha, \hat\beta)$, the intercept and $R$-slope
+estimated through regression of ${\mathbf{Y}_H}$ on
+$\mathbf{1}, \mathbf{R}$ and $\mathbf{Z}$. Then
+$\dt[\hat\theta]{ {\mathbf{Y}_H}}{ \mathbf{R}}$ is the partial residual
+ignoring contributions from $Z$. The statistic
+$%t(\mathbf{Y}_H , \mathbf{Z}) =
+\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=1} -
+\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=0}$
+may be used to test $H$.  Because of the structural relationship
+between $R$ and $Z$, the distribution of this statistic as conditioned
+on $(N_{0}, N_{1}, \mathbf{Y}_{C})$ is not amenable to tabulation, even under
+hypotheses $H$ that correctly specify each value of $Y_{T} - Y_{C}$;
+permutation tests
+%of $H$ without need for modeling of the distribution of $(Y_{C},
+%Y_{T})$, as in \eqref{eq:01},
+are not
+tractable.  Under the parametric \textsc{ancova} model, however, with
+conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
+\mathbf{Y}_{C})$ (or \S~\ref{sec:randProc}'s $\mathbf{A}^{*}$), it is straightforwardly Normal. Indeed, it is
+algebraically equivalent to the $Z$-coefficient estimated by
+regression of ${\mathbf{Y}_H}$ on $\mathbf{1}, \mathbf{R}$ and
+$\mathbf{Z}$; under \textsc{ancova} assumptions, that coefficient's
+canonical standard error and p-value apply to
+$\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=1} -
+\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=0}$.
 
-\section{Limitless RDD: The Typical Case} \marginpar{This section
-  needs to be renamed}
-
-Our estimate of the Hurricaine \maria death toll in Puerto Rico relied
-heavily on the availability of seven years of historical monthly death
-counts preceeding 2017.
-That analysis effectively partioned the data into two parts: pre-2017
-data was used to fit a model for $Y_C$ as a function of
-$R$, and 2017 data was used to estimate effects.
-Partioning the data such allowed us to partition the methods:
-specifically, the causal inference in Section~\ref{sec:rand} made no
-reference to the fitting procedure in the historical data, and instead
-treated its outputs as a given.
-This data structure atypical---for instance, the LSO dataset does not include a
-historical component in which no treatment was present.
-Instead, typical RDD analysis uses the same data to both estimate the
-regression of $Y_C$ on $R$ and to estimate treatment effects.
-Then, it is inadvisable to estimate effects without accounting for the
-depencencies induced over the course of model fitting.
-
-This section will extend the approach of the \maria\ analysis to the
-more common situation in which both regression model fitting and
-effect estimation use the same dataset.
-Doing so will involve subtle but important modifications of the
-$\resid$-ignorability assumption and the analysis steps that build on
-it.
-This analytic strategy requires careful attention to the details of
-the model-fitting process.
-
-
-\subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
-
-Suppose the statistician to have selected a \textit{residualizing procedure}: a
-trend fitter, i.e. a function of
-$\{({y}_{i},d_{i},r_{i})\}_{i=1}^{n}$ returning
-fitted parameters $\hat{\theta}$ in a sufficiently regular
-fashion, along with a
-family $\{\dt{\cdot}{\cdot}: \theta\}$ of residual or partial
-residual transformations, each mapping data $(\bm{y}, \bm{r})$ to
-$\{\dt {y_{i}}{\bm{r}} \}_{i=1}^{n}$.
-Appendix~\ref{sec:large-sample-rand}
-%\citet[\S~\ref{sec:large-sample-rand}]{lrdauthors:supp}
-states the
-needed regularity condition, which is ordinarily met by OLS and always
-met with our preferred fitters (Section~\ref{sec:test-hypoth-no}).
-Causal inferences taking
-the perspective that $Z$ is random due to
-randomness in $R$ are then possible under the following assumption.
-
-\begin{ass}{Residual Ignorability}
-\sloppy
-Given a residualizing procedure $(\hat{\theta}, \dt{y}{r})$,
-\begin{equation}\label{ycheck}
-\dt[\thetaInf]{Y_{C}}{ R }%\bm{\Ych}_{C}
-\independent {Z},
+The model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
+may be relaxed.  OLS estimates of $\alpha_{0}$, $\alpha_{1}$ and
+$\beta$ remain unbiased under non-Normality, provided
+the $\epsilon$s have expectation 0 and bounded variances.  The
+ordinary \textsc{ancova} standard error does not require Normality of
+the $( \epsilon_{i}: i )$, either, for use in large samples, although
+it does require that they have a common variance.  To test
+$\EE\{ \dt[\hat\theta]{{Y_H}}{ R} | Z=1\} = \EE\{ \dt[\hat\theta]{{Y_H}}{
+R} | Z=0\}$
+under potential heteroskedasticity, one estimates
+$\var\left\{ \overline{\dt[\hat\theta]{{Y_H}}{ R}}_{Z=1}
+  -\overline{\dt[\hat\theta]{{Y_H}}{ R}}_{Z=0} \right\}$
+using a sandwich or Huber-White estimator,
+$\mathrm{SE}_{s}^{2} \left\{ \overline{e({Y_H}| R)}_{Z=1} -
+  \overline{e({Y_H}| R)}_{Z=0} \right\}$
+\citep{huber1967behavior,mackinnonWhite1985sandwichHC,longErvin2000sandwichHC,
+bellmccaffrey2002sandwichSEs,pustejovskyTipton2017sandwichSEs}, %as opposed to the %$\mathrm{SE}_{p}$; then
+%$\mathrm{SE}_{u} %( \overline{e({Y_H}| R)}_{Z=1} -  \overline{e({Y_H}| R)}_{Z=0} )$
+%of \eqref{eq:tudef}:
+and refers
+\begin{equation} \label{eq:tedef}
+t_{e} (\mathbf{y}_H,\mathbf{r}) =
+\frac{\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=1} -
+                             \overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=0}}%
+                           {\mathrm{SE}_{s}\left\{ \overline{\dt[\hat\theta]{{Y_H}}{ R}}_{Z=1} -
+                             \overline{\dt[\hat\theta]{{Y_H}}{ R}}_{Z=0}
+                           \right\} }
 \end{equation}
-where $\thetaInf$ is the probability limit of $\hat\theta$.
-\end{ass}
-Residual Ignorability states that, though $Y_C$ may not be independent of
-$Z$,  it admits a residual transformation bringing about such
-independence.   With $\dt[\hat\theta]{Y_{C}}{ R}$ a suitable
-partial residual, Residual Ignorability is entailed by the
-\textsc{ancova} model (\S~\ref{sec:robust-analys-covar}), or by the combination of any parametric model
-for $\EE (Y_{C}| R)$ with a strict null $H$ relative to which the
-value of $Y_{C}$ can be reconstructed from the values of $Y$, $D$ and
-$Z$ (\S~\ref{sec:randProc}).
-(In either of these cases $\dt[\thetaInf]{Y_{C}}{ R}$
-is independent not only of $Z$ but also $R$,
-a modest strengthening of~\eqref{ycheck}.)
+to a $t$ or standard Normal reference distribution.
+Sandwich standard errors confer robustness to misspecification of
+$\var(\dt[\hat\theta]{Y_{H}}{R}\mid  R)$, not of $\EE(Y_{H}| R)$ \citep{freedman2006sch}, the latter being the topic of
+Section~\ref{sec:robust-altern-ordin}.
+
+In applying \textsc{ancova} to an RCT, $\mathrm{SE}_{s}$ in
+\eqref{eq:tedef} may be taken as \eqref{eq:sudef}'s
+$\mathrm{SE}_{u}$% \citep{samii2012equivalencies}
+, a more straightforward quantity to compute; unfortunately, in RDDs
+this is not the case
+(Section~\ref{apnd:requ-forpr-eqref}).  On the
+other hand, in \textsc{ancova} as applied to RDDs, if standard
+errors are calculated by the sandwich method then under
+$H: Y_{T} = Y_{C}$, \eqref{eq:tedef} is algebraically equivalent to the
+$t$-statistic of contrast $\hat{\alpha}_{1} -\hat{\alpha}_{0}$.
 
 
-\sloppy
-Assuming Residual Ignorability, inference about treatment effects is
-made conditionally, on
-$\bm{A}= (\dt[\thetaInf]{\bm{Y}_{C}}{ \bm{R}}$, $\bm{D}_{T})$.
-Conditioning on
-$\dt[\thetaInf]{\bm{Y}_{C}}{ \bm{R}}$
-removes little of the entropy
-in $\bm{R}$, leaving it available as a basis for inference.
-Uncoupled to $Y_{T}$s, the detrended  $Y_{C}$s,
-$\dt[\thetaInf]{\bm{Y}_{C}}{ \bm{R}}$,
-are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
-the variables comprising $\bm{A}$ are jointly
-%\marginpar{$\leftarrow \Delta$ to $(\bm{Y}_{C}, N_{0}, N_{1})$?}
-S-ancillary, just as $\bm{A}^{*}$ was seen to be
-in Section~\ref{sec:randProc}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
-unobserved; but this is not an impediment, at least for large-sample
-inferences.
+% \subsection{Restricting the Window of Analysis in
+%   RDDs}\label{sec:window}
 
 
+% %% For instance, \citet{thistlethwaite1960regression} studied the effect
+% %% of receiving a National Merit Scholarship on students' probabilities
+% %% of attending graduate school.
+% %% Presumably, no one is considering awarding merit scholarships to students with particularly
+% %% low PSAT scores.
+% %% For these students, the hypothetical effect of merit scholarships is
+% %% not relevant.
+% %% The graduate school choices of students who who barely qualified, or
+% %% barely missed qualifying, though, could be quite interesting.
+% %% In these cases, both statistical and substantive considerations
+% %% recommend restricting analysis to a window $\mathcal{W}$ around the
+% %% cutoff.
 
-\subsection{Inference About the Treatment Effect}
-\label{sec:test-hypoth-no}
+% Adaptive choice of $\mathcal{W}$ is an open topic of research.
+% \citet{imbens2012optimal} produce regularized, non-parametric
+% estimates of the curvature of $\EE(Y | R=r)$ in the vicinity of the
+% cutpoint, using these to identify bandwidths approximately minimizing
+% the mean-squared error of
+% $\lim_{r\downarrow c} \EE(Y | R=r) - \lim_{r\uparrow c} \EE(Y |
+% R=r)$. %referenced in r1 Reply to AE
+% An alternative approach relies on specification checks, refining
+% $\mathcal{W}$ until it passes a designated test or battery of tests.
+% The initial choice of $\mathcal{W}$ may emerge from substantive
+% motivation; other analysts start with a $\mathcal{W}$ that's likely to
+% be too wide, expecting the specification tests to force them to narrow
+% it.  For example, let $H_b$ denote the hypothesis that the analysis
+% model assumptions hold for $\{i \in \mathcal{S}:R_i\in
+% \mathcal{W}_b\}$, where $\mathcal{W}_{b} =  (c-b,c+b)$.
+% \citet{cattaneo2014randomization} recommend testing $H_{b}$'s implications for covariate
+% balance at a sequence of bandwidths $b$, starting with a very large
+% $b$, $b_{\mathrm{max}}$, and ending with the largest $b$ such that $H_{b}$
+% is not rejected, $b^{*}$; their recommended window of analysis is
+% $\mathcal{W}_{b^*}$.
+% \citet{liMatteiMealli2015BayesianRD} recommend a similar approach
+% based on Bayesian posterior probabilities of covariate balance for
+% subjects within a sequence of possible bandwidths.
 
-For inference about $\tau$ under the model
-$Y_{T} = Y_{C} + \tau D_{T}$, select a specification
-$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$,
-such as the
-linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$.
+% %% Concerns about multiple testing sometimes arise, since any number of
+% %% bandwidths may have been tested en route to determining the largest
+% %% $b$ for which $H_{b}$ is sustained; but it so happens that the
+% %% procedure determining the largest non-rejected bandwidth implicitly
+% %% corrects for multiplicity.  Let $\mathcal{B} \subseteq (0, \infty)$ represent a finite set of
+% %% candidate bandwidths, with an accompanying family $\mathcal{F}$ of
+% %% tests, one for each $H_{b}$. Define a modified family $\mathcal{F}^{*}$
+% %% as follows: for each $b \in \mathcal{B}$, $H_{b}$ is rejected at level
+% %% $\alpha$ if only if at level $\alpha$, $\mathcal{F}$ rejects each of
+% %% $\{ H_{b'}: b'\in\mathcal{B}, b'\geq b\}$. The
+% %% testing in order principle \citep[Proposition~1]{rosenbaum2008testing}
+% %% states that if each test in $\mathcal{F}$ tests its corresponding
+% %% $H_{b}$ with size $\alpha$ then, with probability $1-\alpha$ or more,
+% %% $\mathcal{F}^{*}$ rejects only hypotheses $\{H_{b}: b \in \mathcal{B}\}$
+% %% that happen to be false --- $\mathcal{F}^*$ strongly controls the family-wise error rate at level $\alpha$.
 
-
-Separately for each hypothesis $H: \tau=\tau_0$ under
-consideration, one calculates
-$\bm{y}_{H} = \bm{y} - \bm{d}\tau_{0}$, then
-applies the chosen specification and fitter to
-$(\bm{y}_{H}, \bm{r})$.
-The combination of the data, the
-model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
-$\dt[\hat\theta]{\bm{y}_{H}}{\bm{r}}$, completing the
-residualizing procedure. Whether $H$ is rejected or sustained is
-determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
-\eqref{eq:tedef}.
-
-In practice it is expedient to use a near-equivalent
-test by modifying the residualizing
-procedure.
-When regressing $Y_{H}$ on $R$, include an additive
-contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
-R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
-\beta_{1}R + \gamma Z$. With sandwich estimates of
-$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
-the t-ratio comparing $\hat{\gamma}_{H}$ to
-$\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
-t-statistic with covariance adjustment for $R$, as in \eqref{eq:tedef}: with fitting via OLS,
-this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
-favor, the correspondence is one of large-sample equivalence
-(Appendix~\ref{sec:suppl-s-refs}).
-Iterative testing is facilitated by regressing $\bm{y}$ on $\bm{r}$ and $\bm{z}$
-with offset variable $\bm{d}\tau_{0}$; then only the offset needs to
-be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
+% Given the variety of methods available for bandwidth selection, many
+% methodologists recommend estimating treatment effects with each of a
+% range of plausible bandwidths
+% \citep[e.g.,][p.272]{eggers2015validity}.  It's natural to consider a
+% bandwidth plausible only if covariates are well balanced within the
+% corresponding window.
+% %% When $b^{*}$ is the largest
+% %% non-rejected bandwidth,
+% %% $\mathcal{B}^{*} = \mathcal{B} \cap [0, b^{*}]$ suggests itself as
+% %% such a range; each $H_{b}, b\in \mathcal{B}^{*}$ will have been
+% %% sustained in a testing procedure with family-wise type 1 error of
+% %% $\alpha$ or less.
+% %% An analyst might combine tests $\mathcal{F}^*$ with still others,
+% %% $\mathcal{G}$ say, to further narrow the plausible range
+% %% $\mathcal{B}^*$; if tests in $\mathcal{F}$ maintained size
+% %% $\alpha_\mathcal{F}$, while $\mathcal{G}$ strongly controls the
+% %% family-wise error with size $\alpha_\mathcal{G}$, the overall size of
+% %% the combined procedure is no greater than $\alpha_{\mathcal{F}} +
+% %% \alpha_{\mathcal{G}}$.
+% Such goodness of fit testing is often done with
+% $\alpha$ thresholds other than $.05$; for instance, \citet{cattaneo2014randomization} use
+% $\alpha=.15$.
 
 
 \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
 \label{sec:robust-altern-ordin}
-If moderate sample contamination may be present --- specifically, contamination of
-a $O(n^{-1/2})$-sized
-share of the sample --- consistency for $\thetaInf$ requires
-a redescending M-estimator, or
-robust regression with bounded psi function (\citealp[Thm.~3]{he1991localbreakdown};
-\citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
-maximum likelihood.  OLS does not meet this consistency requirement;
-nor do many robust regression methods engineered to meet
-objectives other than bounding the influence function
-\citep{stefanski1991note}.
-Further, no specification test is powerful enough
-to reliably detect contamination of this size; power to detect anomalies
-affecting only $O(n^{-1/2})$ of the sample can only tend to a number
-strictly less than 1.  %NB: This is expanded a little in a
-                       %now-commented-out passage of Discussion, the
-                       %on referencing vdvaart:1998.
-Thus under uncertainty about the
-proper limits of $\mathcal{W}$, robust M-estimation (\S~\ref{sec:robust-altern-ordin}) is to be preferred.
-The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
-the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
+% Let the running variable be so
+% centered that the threshold lies at $r=0$, as in their application.
+% Under the variant of \textsc{ancova} relaxing
+% $Y_{C} = \alpha_{0} + \beta R + \epsilon$ to
+% $Y_{C} = \alpha_{0} + \beta_{-} \indicator{R<0} R + \beta_{+}
+% \indicator{R\geq 0}R  + \epsilon$,
+% the $Z$-coefficient in an OLS regression of $Y$
+% on the interaction of $Z$ and $R$ remains unbiased for
+% $\lim_{r\downarrow 0} \EE(Y | R=r) - \lim_{r\uparrow 0} \EE(Y |
+% R=r)$, as well as $\EE (Y_{T} - Y_{C} )$.  (It also coincides with $\overline{\dt[\hat\theta]{{Y}}{
+%   {R}}}_{Z=1} - \overline{\dt[\hat\theta]{{Y}}{ {R}}}_{Z=0}$, where
+% $\dt[(a, b_{0}, b_{1})]{ \mathbf{y}}{ \mathrm{r}} = \mathbf{y} - a - (b_{0}
+% \indicator{r < 0} + b_{1} \indicator{r\geq 0})\mathrm{r}$
+% and $\hat\theta = (\hat\alpha, \hat{\beta}_{-}, \hat{\beta}_{+})$ are
+% as estimated under the interaction model.)
 
+% \citet{thistlethwaite1960regression} warned that \textsc{ancova}'s
+% linearity assumptions would occasionally be too strong.
 \sloppy
 Assumptions about the form of $\EE[(Y_{T}, Y_{C}) | R]$ are not
 readily dispensed with;
@@ -762,7 +723,7 @@ plots of Cook's distances
  \citeyearpar{cook1982residuals}. An alternate remedy, playing
  an important role in this paper, is to fit the
  specification using a modern MM,  SM, or similar estimator so designed
- as to possess a bounded psi function
+ as to possess a bounded influence function
  \citep{yohaiZamar1997locallyrobustMestimates}; such procedures address influence
  in the course of the fitting process.
  % Diagnostics such as inspection of Cook's distances
@@ -807,28 +768,26 @@ Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
 which optionally provide Huber-White standard errors
 \citep{verardiCroux2009robust,rousseuwetal2015robustbase}.
 
-\section{Assessing the Plausibility of Residual Ignorability}
-
 \subsection{Specification Tests}\label{sec:specification}
 
 Analysis of RCTs and quasiexperiments often hinges on assumptions of
 independence of
- $\bm{Z}$ from $(\bm{X}, \bm{Y}_{C}, \bm{Y}_{T})$.
+ $\mathbf{Z}$ from $(\mathbf{X}, \mathbf{Y}_{C}, \mathbf{Y}_{T})$.
 %% Analogous statements will hold for more complex randomization or
 %% ignorability assumptions as well.
- Although neither $\bm{Z} \independent \bm{Y}_{C}$ nor
- $\bm{Z} \independent \bm{Y}_{T}$ can be directly tested,
+ Although neither $\mathbf{Z} \independent \mathbf{Y}_{C}$ nor
+ $\mathbf{Z} \independent \mathbf{Y}_{T}$ can be directly tested,
  since potential outcomes are only partly observed, assumptions of form
- $\bm{Z} \independent \bm{X}$ are falsifiable: researchers can
+ $\mathbf{Z} \independent \mathbf{X}$ are falsifiable: researchers can
  conduct placebo tests for effects of $Z$ on $X$.
-% Just as $H: \bm{y}_{T} - \bm{y}_{C} =
-% \bm{\tau}$ is tested in the strong randomization inference
+% Just as $H: \mathbf{y}_{T} - \mathbf{y}_{C} =
+% \mathbf{\tau}$ is tested in the strong randomization inference
 % paradigm, the researcher might assess imbalance in a covariate, as measured
 % either by the difference of means,
 % $\bar{x}_{Z=1} - \bar{x}_{Z=0}$, or by the difference of means in a transform of
-% the covariate, $\overline{\dt[\thetaInf]{\bm{x}}{\bm{r}}}_{Z=1} - \overline{\dt[\thetaInf]{\bm{x}}{\bm{r}}}_{Z=0}$,
+% the covariate, $\overline{\dt[\thetaInf]{\mathbf{x}}{\mathbf{r}}}_{Z=1} - \overline{\dt[\thetaInf]{\mathbf{x}}{\mathbf{r}}}_{Z=0}$,
 % to the distribution of the same difference under permutations of
-% $\bm{z} $.
+% $\mathbf{z} $.
 Of course, treatment cannot affect pre-treatment variables; this is
 model-checking (%\citealp{bayarriBerger2000pvalues};
 \citealp[][\S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
@@ -838,20 +797,50 @@ model-checking (%\citealp{bayarriBerger2000pvalues};
  refinement, not abandonment; refinements typical of RDD analysis remove portions of
  the sample that are suspected of contamination.
 
+%% BELOW APPEARED IN R2
+% With $k>1$ covariates $\mathbf{x}_{1}, \ldots, \mathbf{x}_{k}$, issues
+% of multiplicity come into play: if a test of the hypothesis that $(X_{1}, \ldots, X_{k})$
+% are independent of $Z$ rejects whenever any of the $k$
+% level $\alpha$ tests is rejected, then its type 1 error rate may
+% greatly exceed $\alpha$.  Because the tests are non-independent, with
+% covariances that (except in the differences-of-means case) may be
+% difficult to estimate, we combine them with a simple Bonferroni
+% correction.
+%% BELOW HAD BEEN WRITTEN FOR R2 AND THEN EDITED OUT
+%% One solution is to combine the $p$
+%% test statistics $\overline{(\mathbf{x}_{1})}_{z=1} - \overline{(\mathbf{x}_{1})}_{z=0}$, \ldots, $\overline{(\mathbf{x}_{p})}_{z=1} - \overline{(\mathbf{x}_{p})}_{z=0}$
+%% into one statistic $t(\mathbf{x}, \mathbf{z})$, then conduct a
+%% single test based on it.
+%% %For comparing
+%% %3 or more treatment conditions while controlling the family-wise error rate, a
+%% %common device is to use the ``max-t'' statistic, i.e. test based on $t(\mathbf{x},
+%% %\mathbf{z}) = \max_{k} (t(\mathbf{x}_{\cdot,k}) -
+%% %\EE_{0}T(\mathbf{x}_{\cdot,k}))/\var^{1/2}_{0}(T(\mathbf{x}_{\cdot,k}))
+%% %$ \citep{hothorn2008simultaneous};
+%% %In a discussion of covariate balance specifically,
+%% \citet{hansen:bowers:2008} recommend a combined statistic
+%% along the lines of Hotelling's
+%% \citeyearpar{hotelling1931generalization} $T^2$, $d^{2}(\mathbf{x}, \mathbf{Z})$, that follows a large-sample chi-squared
+%% distribution under the hypothesis that $\mathbf{X} $ is
+%% independent of, and unaffected by, $\mathbf{Z}$.
+%% %% Other solutions
+%% \citep[\textit{e.g.,}][]{rosenbaum2005exact} involve testing with a
+%% statistic $t(\mathbf{x}, \mathbf{z})$ that is not directly related to
+%% the univariate statistics.
 
  Writing in the RDD context, \citet{cattaneo2014randomization} test
- for marginal associations of $\bm{Z}$ with covariates $\bm{X}_{i}$,
+ for marginal associations of $\mathbf{Z}$ with covariates $\mathbf{X}_{i}$,
  $i=1, \ldots, k$, using the permutational methods that are applied
  in Fisherian analysis of RCTs.
 % Specifically, they
 %  obtain p-values though \eqref{eq:01}, with test statistics
-%  $t(\bm{x}_{i}, \bm{z}) = |\overline{(x_{i})}_{z=1} -
+%  $t(\mathbf{x}_{i}, \mathbf{z}) = |\overline{(x_{i})}_{z=1} -
 %  \overline{(x_{i})}_{z=0}|$,
-%  $ i \leq k$, after conditioning on $\bm{X}$ in addition to
+%  $ i \leq k$, after conditioning on $\mathbf{X}$ in addition to
 %  $\sum_{i} Z_{i}$.
 Relatedly, \citet{lee2010regression} recommend a
- tests for conditional association, given $R$, of $\bm{Z}$ and
- $\bm{X}$, by fitting models like those discussed in
+ tests for conditional association, given $R$, of $\mathbf{Z}$ and
+ $\mathbf{X}$, by fitting models like those discussed in
  \S~\ref{sec:robust-analys-covar} for impact estimation, but with
  covariates rather than outcomes as independent variables%
 %, they incorporate covariance adjustments for $R$
@@ -877,7 +866,7 @@ principle.  Li et al.'s
 \citeyearpar{liMatteiMealli2015BayesianRD} RDD method wraps
 its specification checking steps into a Bayesian model. % that is also used for effect
 %estimation.
-This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\bm{X}$, are not covariance adjusted for $R$.
+This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\mathbf{X}$, are not covariance adjusted for $R$.
 
 
 McCrary's test for manipulation of treatment assignments
@@ -928,6 +917,248 @@ the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
 The analyst decides whether this test-and-reduce process
 should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
+% The $\alpha$ level used for these tests may differ from the
+% $.05$ that is conventional in outcome analysis;  \citet{cattaneo2014randomization} use $\alpha=.15$.
+% Whatever the choice of $\alpha$, Berger's sequential intersection
+% union principle \citep{rosenbaum2008testing,hansenSales2015cochran} entails that the sizes of $H_{b*}$, and of each
+% of the $H_{b}$ rejected prior to testing $H_{b^{*}}$, are not inflated
+% by the multiplicity of tests within the family $\{H_{b}: b\}$.
+
+% McCrary's specification test focuses on the center of the RDD window,
+% rather than its boundaries \citep{mccrary2008manipulation}.
+% It is designed to test whether subjects consciously sort around the
+% cutoff by manipulating their $R$ values explicitly.
+% It does so by examining whether an unexpectedly large or small number
+% of subjects find themselves just barely on one side of the cutoff or
+% the other.
+% When the running variable is discrete, for each value $r$ in the support of $R$,
+% let $n_R(r)$ denote the number of subjects $i$
+% with $R_i=r$, i.e.,  $|\{i:r_i=r\}|$; continuous $R$s are binned prior to the
+% test.  Next, $n_{R}$ is used as the outcome of a preliminary RDD
+% analysis, modeled using local linear regression as a function
+% of $r$ on either side of $c$. The test asks whether there is a discontinuity at $c$:
+% a change in $n_{R}$ larger than chance could produce suggests subjects
+% may have manipulated $R$ to control their treatment assignments,
+% perhaps invalidating the analogy to a controlled experiment.
+%% [clipping the below to save a little space; I think it works w/o it.]
+%% A McCrary test failure is neither necessary nor sufficient to show
+%% that subjects sorted around the cutoff; however, it is suspicious.
+
+\section{Randomness and Regression in RDDs}\label{sec:theMethod}
+
+%% RDDs differ from RCTs in an important way:
+%% $Y_C$ typically correlates with $R$, and is therefore not independent
+%% of $Z$; the main assumption of Sections~\ref{sec:rand}
+%% and \ref{sec:covariates} is violated.  Can it be relaxed to an assumption that is
+%% simultaneously plausible in RDDs and compatible with similar methods?
+
+When circumstances call for generating random numbers, such as in
+RCTs or Monte Carlo methods, statisticians often settle instead for
+pseudo-random numbers, deterministic
+outputs of a complex algorithm and an initial seed; a person in
+possession of that seed can exactly predict the pseudo-random draws.
+``True'' random numbers, on the other hand, derive from physical
+processes that are either chaotic \citep[e.g.][]{uchida2008fast} or
+quantum \citep[e.g.][]{stefanov2000optical}, and are not
+predictable.  However, these processes often contain an element
+of predictability; % \citep{raz2005extractors};
+true random
+numbers are obtained only after separating predictable from
+non-predictable components \citep[see, e.g.][]{Nisan1999148}.%,vadhan2012pseudorandomness}.
+
+Similarly, RDD analysis decomposes $Y_{T}$ and $Y_C$ as the sum of systematic
+components, a function of $R$, and disturbances, relying on the nature of the decomposition to ensure
+that, vis a vis one another, the disturbances and $Z$ may
+be regarded as random.
+% There is no need
+% to assume the systematic component to equal or be consistent for
+% $\EE (Y_{C}| R)$, nor to make further distributional assumptions on
+% the disturbances.
+
+\subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
+
+Suppose the statistician to have selected a \textit{detrending procedure}: a
+trend fitter, i.e. a function of
+$\{({y}_{i},d_{i},r_{i})\}_{i=1}^{n}$ returning
+fitted parameters $\hat{\theta}$ in a sufficiently regular
+fashion, along with a
+family $\{\dt{\cdot}{\cdot}: \theta\}$ of residual or partial
+residual transformations, each mapping data $(\mathbf{y}, \mathbf{r})$ to
+$\{\dt {y_{i}}{\mathbf{r}} \}_{i=1}^{n}$.
+Appendix~\ref{sec:large-sample-rand}
+%\citet[\S~\ref{sec:large-sample-rand}]{lrdauthors:supp}
+states the
+needed regularity condition, which is ordinarily met by OLS and always
+met with our preferred fitters (Section~\ref{sec:test-hypoth-no}).
+Causal inferences taking
+the perspective that $Z$ is random due to
+randomness in $R$ are then possible under the following assumption.
+
+\begin{ass}{Residual Ignorability}
+\sloppy
+Given $\mathcal{W}$ with $0< \PP( R \in
+\mathcal{W}, R\leq 0) < 1$ and a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
+\begin{equation}\label{ycheck}
+\dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
+\independent {Z}| \{R \in \mathcal{W}\},
+\end{equation}
+where $\thetaInf$ is the probability limit of $\hat\theta$.
+\end{ass}
+Residual Ignorability states that, though $Y_C$ may not be independent of
+$Z$,  it admits a residual transformation bringing about such
+independence.   With $\dt[\hat\theta]{Y_{C}}{ R}$ a suitable
+partial residual, Residual Ignorability is entailed by the
+\textsc{ancova} model (\S~\ref{sec:robust-analys-covar}), or by the combination of any parametric model
+for $\EE (Y_{C}| R)$ with a strict null $H$ relative to which the
+value of $Y_{C}$ can be reconstructed from the values of $Y$, $D$ and
+$Z$ (\S~\ref{sec:randProc}).
+% or where $H$ asserts $Y_{T} = Y_{C} + \tau D$ for the true CACE  $\tau
+% = \EE(Y_{T}-Y_{C}| D_{T}=1)$,  and in addition
+% $(Y_{T} - Y_{C}) \independent R | D_{T}$ holds.
+(In either of these cases $\dt[\thetaInf]{Y_{C}}{ R}$
+is independent not only of $Z$ but also $R$,
+a modest strengthening of~\eqref{ycheck}.)
+% relaxes
+% this condition, accommodating cases in which
+% $Y_{C} - \EE (Y_{C}|R)$ equals $\dt[\hat\theta]{Y_{C}}{ R}$ only
+% in the on-average sense of conditional expectation given $Z$.
+% Just as an accurate
+% specification of %$\EE (Y | Z, X)$ or
+% $\EE (Y_{C}| X)$ is helpful but
+% not necessary for valid covariate adjustment in an RCT,  it is helpful
+% but not necessary for Residual
+% Ignorability that $\dt[\thetaInf]{Y_{C}}{R}$ be a function of
+% $Y_{C}$'s residual from a consistent estimate of $\EE (Y_{C}| R)$.
+% If it is, then Residual Ignorability holds with $\dt[\thetaInf}]{y}{r} = y-
+% \EE(Y_{C}| R=r)$ and $\hat\theta$ a standard moment- or
+% likelihood-based estimate of the parameters of $Y_{C}$'s regression on
+% $R$.  If not, however, one may
+% still have $\dt[\thetaInf]{Y_{C}}{ R}$ independent of $Z$, or even
+% $\dt[\thetaInf]{Y_{C}}{ R} $ independent of $R$
+% with some
+% other choice of $e_{\theta}(\cdot)$ and $\hat\theta$.   It is neither required nor preferred that model fit be appraised in terms of squared
+% error loss. Taking $\theta = (s, \mathbf{\beta})$ and
+% $\dt[\theta]{y}{r} = \psi\big\{ (y - f(r) \mathbf{\beta} )/{s}\big\} $,
+% with $f(\cdot)$ scalar- or vector-valued and
+% $\psi(\cdot)$ a scoring intended to convey robustness to contamination of the
+% $\EE ( Y_{C}| R)$ model, is quite consistent with \eqref{ycheck}.
+
+% To assume \eqref{ycheck} is in no way to assume
+% %\begin{equation} \label{eq:notycheck}
+% $\dt[\hat\theta]{Y_{C}}{ R} \independent {Z}| \{R \in \mathcal{W}\}$.
+% %\end{equation}
+% The simplification of \eqref{ycheck} replacing its
+% $\thetaInf$ with $\hat\theta$ cannot be expected to hold: unless
+% $\hat\theta -\thetaInf$ has zero variance, it is almost inevitable
+% that it correlate in some way with $Z$, and by extension that $\dt[\hat\theta]{Y_{C}}{ R}$ and
+% $Z$ be non-independent.
+% Rather, Residual Ignorability presumes
+% existence, if not knowledge, of a single $\theta = \thetaInf$ relative
+% to which potential partial residuals
+% %$\dt[\thetaInf]{Y_{T} - \tau D_{T}}{ R}$ and
+% $\dt[\thetaInf]{{Y}_{C}}{ R}$ and treatment assignment $Z$ are
+% mutually independent.
+% In marked contrast with RCTs, in typical RDDs there can be at
+% most one $\theta$ for which this is true. To see this, consider
+% $\dt[\theta]{y}{r} = y - \theta r$.  If $Z$ were jointly independent
+% of $\dt[\theta_{0}]{Y_{C}}{ R}$ and $\dt[\theta_{1}]{Y_{C}}{ R}$, it would also have
+% to be independent of $(\theta_{0} - \theta_{1}) R$. If $\theta_{0}
+% \neq \theta_{1}$ this would entail $Z \independent R$ --- a
+% contradiction, since $Z = \indicator{R<0}$.  Were $R$ a baseline variable
+% in an RCT, $\dt[\theta]{Y_{C}}{ R} \independent Z$ would hold for all $\theta$,
+% and inferences relying on this independence would require neither covariance adjustment
+% nor consistent estimation of covariance parameters --- both of which are essential for RDDs.
+
+\sloppy
+Assuming Residual Ignorability, inference about treatment effects is
+made conditionally, on
+$\mathbf{A}= (\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$, $\mathbf{D}_{T},
+\{(Y_{Ti}, Y_{Ci}, D_{Ti}, R_{i}) \indicator{{R}_{i} \not\in
+  \mathcal{W}}\}_{i=1}^{n})$.
+Conditioning on the full data vector when $R \not\in \mathcal{W}$
+excludes observations for which \eqref{ycheck} is not assumed.
+Conditioning on
+$\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$
+removes little of the entropy
+in $\mathbf{R}$, leaving it available as a basis for inference; in
+contrast, conditioning on Section~\ref{sec:randProc}'s $(N_{0}, N_{1}, \mathbf{Y}_{C})$ would
+severely constrain $\mathbf{R}$.
+Uncoupled to $Y_{T}$s, the detrended  $Y_{C}$s,
+$\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$,
+are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
+the variables comprising $\mathbf{A}$ are jointly
+%\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
+S-ancillary, just as $\mathbf{A}^{*}$ was seen to be
+in Section~\ref{sec:randProc}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
+unobserved; but this is not an impediment, at least for large-sample
+inferences.
+
+
+% Because \eqref{ycheck} can be true for at most one
+% $\thetaInf$, in applications it must be paired with an assumption that
+% one has a estimation routine that consistently estimates $\thetaInf$.  As
+% discussed in Sec.~\ref{sec:robust-analys-covar}, in RDDs the standard error accompanying
+% $\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=1} -
+% \overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=0}$ must
+% reflect the indirect contribution to its sampling variability of errors of estimation of
+% $\thetaInf$, as the $\mathrm{SE}_{s}$ of \eqref{eq:tedef}
+% does but the $\mathrm{SE}_{u}$ of \eqref{eq:tudef} does not.
+
+\begin{comment}
+To see this, consider
+$\dt[{\theta}]{y }{ r} = y - r \theta$.  Up to an $o_{P}(n^{-1/2})$
+error,
+\begin{equation}\label{eq:2}
+    \{ \overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=1} -
+\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=0} \} -
+\{  \overline{\dt[\thetaInf ]{\bty }{ \mathbf{r}}}_{z=1} -
+\overline{\dt[\thetaInf]{\bty }{ \mathbf{r}}}_{z=0} \}   \approx
+\Big[ \EE \big\{ R \big| Z=1 \big\} - \EE
+  \big\{R \big| Z=0 \big\} \Big]  (\hat\theta -
+\thetaInf)^{t}.
+\end{equation}
+In an RCT the term in square brackets at right would be 0, ensuring that even if
+variation in $\hat\theta - \thetaInf$ is positive, its large-sample
+contribution to $\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=1}
+- \overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=0}$  is
+$o_{P}(n^{-1/2})$, and is negligible; but in an RDD it is
+intrinsically nonzero, and \eqref{eq:2} is $O_{P}(n^{-1/2})$.
+ For the same reason, permutation
+tests do not provide exact inference for RDDs: in an RDD, even under
+$H$ conditioning on %$\mathbf{Y}_{C}$'s and  $\mathbf{Z}$'s order statistics
+$(\mathbf{Y}_{C}, N_{0}, N_{1})$
+does not eliminate variability in $\hat\theta$; the differences
+at left of \eqref{eq:2} differ from one another. (In Randles's
+[\citeyear{randles:1982}] %analysis of errors due to estimation of secondary parameters,
+terms, RCTs give rise to ``Case A'' distributions whereas RDDs' are ``Case B.'' Only in the unusual circumstance that $\thetaInf$ is externally
+determined, and is known rather than estimated, can \eqref{ycheck}
+serve as a basis for exact tests.)  Asymptotically
+distribution-free inferences, on the other hand, are straightforwardly
+arranged by estimating
+$\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{Z=1} -
+\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{Z=0}$'s standard error
+with attention to sampling variability in $\hat\theta$,  as
+$\mathrm{SE}_{s}$ does.
+\end{comment}
+
+% If available, a lagged, pre-treatment version of the outcome that's
+% distinct from the running variable may be the basis for particularly
+% informative plots and regression diagnostics
+% \citep{maynard2013strengthening}.
+
+% Such M-estimation conveys robustness to other errors of specification
+% that are quite relevant to RDDs.  In modern robust M-estimation
+% \citep{maronna2006robust}, estimating equations defining the
+% regression coefficients are adjusted so as to bound the influence of
+% any one or small number of observations.  Under uncertainty about
+% width of the analysis window $\mathcal{W}$, it will be safer to fit
+% $\hat\theta$ using such a method, the points of greatest leverage
+% generally being the closest to the edge of $\mathcal{W}$.  Thus
+% robust regression addresses a fundamental incompatibility between RDDs
+% and ordinary least squares, namely that the observations whose
+% suitability for inclusion in the analytic sample is most questionable
+% --- those whose values of the running variable are farthest from the
+% cutpoint --- also exert the greatest leverage in estimation.
 
 
 
@@ -944,13 +1175,32 @@ testing (\S~\ref{sec:specification}).%\marginpar{I replaced $c$ here
 Common RDD specification checks
 can be regarded as testing Residual Ignorability with a multivariate
 ``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
-$\bm{Y}_{C}^{*} = (\bm{X}, {Y}_C)$ in place of $Y_{C}$.
-This calls for preliminary residualizing procedures, mechanisms to
+$\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
+% perhaps with minor adjustment to the forms of $\dt[\theta]{ \cdot }{ r}$
+% and corresponding fitter $\hat{\theta}(\cdot, R)$.
+%
+%In addition to $\mathcal{W}$, researchers must pick $f$, a model for $Y_C$.
+%% If a lagged outcome is not available, the data will not have informed the specification of
+%% $\EE (Y_{C}| R=r) $ on the treatment side of the threshold.  It
+%% should be treated as an approximation, and $\mathcal{W}$
+%% deliberately chosen to be narrow enough to limit influences of errors
+%% of approximation, as distinct from errors of estimation, on statistics
+%% $t({\mathbf{y}_H} - f(\mathbf{r}; \theta(\mathrm{r},
+%% {\mathbf{y}_H}))$.
+%% Covariate placebo tests can be helpful in this regard.
+This calls for preliminary detrending procedures, mechanisms to
 decompose  $X$ into components that are systematic or unpredictable,
-vis a vis $\bm{R}$, just as ${\bm{Y}_C}$ will later be decomposed.
+vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
+%% Since $Z$ cannot have an effect on a pre-treatment
+%% covariate, the preliminary step of reconstructing
+%% $x_{C}$ is not needed.
+%%% [Reorg obviated need for the above, as this passage now precedes
+%%% discussion of reconstructing Y_C]
 Our analysis of the LSO data posits systematic components that are
 linear and logistic-linear in $R$, depending on whether $X$ is
 a measurement or binary variable. %, paralleling its choice of a linear decomposition
+% for the primary outcome, subsequent GPA.  (It is fitting that the $X$- and
+% $Y$-specifications mirror each other in model complexity.)
 The placebo check adds $Z$ to the specification and tests whether its
 coefficient is zero.  We implement these checks as Wald tests with
 heteroskedasticity-robust standard errors, as in
@@ -975,6 +1225,19 @@ sequential intersection union principle
 \citealp{hansenSales2015cochran}). To compensate for conservatism of
 the Bonferroni method, we test with size
 $\alpha_{B}=.15$, not $.05$.
+% Let
+% $\{b_{1}, b_{2}, \ldots\} \subseteq (0, \infty)$ be a descending sequence of
+% candidate bandwidths, with an accompanying family $\mathcal{B}$ of
+% tests, one for each $H_{b}$. Define a modified family $\mathcal{B}^{*}$
+% as follows: for each $b_{i}$, $H_{b_{i}}$ is rejected at level
+% $\alpha$ if only if at level $\alpha$, $\mathcal{B}$ rejects each of
+% $\{ H_{b_{j}}: j \leq i\}$. The
+% sequential intersection union principle \citep[SIUP;][Proposition~1]{rosenbaum2008testing}
+% states that if each test in $\mathcal{B}$ tests its corresponding
+% $H_{b}$ with size $\alpha$ then, with probability $1-\alpha$ or more,
+% $\mathcal{B}^{*}$ rejects only hypotheses $\{H_{b_{i}}:  i\}$
+% that are false --- i.e., $\mathcal{B}^*$ strongly controls the
+% family-wise error rate at level $\alpha$ \citep{hansenSales2015cochran}.
 
 Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
 \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
@@ -986,6 +1249,118 @@ $p_{j} \geq \alpha_{M}$.  By a second application of the SIUP,
 the size of this test sequence is $\alpha_{M}$.  Taken
 together, placebo and McCrary tests restrict the sample to
 $\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
+% Although subsequent
+% diagnosis of outcome regression may in principle indicate suggest
+% further exclusions, the analytic sample is expected to be $\{i: R_{i} \in \mathcal{W}\}$.
+
+% Maximum likelihood estimation is one option for
+% $\hat{\theta}_{x}(\cdot, \cdot)$, but
+% %% \footnote%
+% %% { In the special case that $\mathbf{x} $ is decomposed as the sum of a
+% %%   linear function of $\mathrm{r}$ plus a residual
+% %%   $\mathbf{x}^{\perp}$, with the linear function fitted by ordinary
+% %%   least squares, $d^{2}(\mathbf{x}^{\perp}, \mathbf{z})$ can be
+% %%   expediently calculated as the difference of
+% %%   $d^{2}((\mathbf{x}, \mathrm{r}), \mathbf{z})$ and
+% %%   $d^{2}(\mathrm{r}, \mathrm{z}) $.  }
+% we prefer robust linear and logistic fitters
+% \citep{rousseuwetal2015robustbase}, deeming their lesser contamination
+% sensitivity a relevant advantage. Specifically, if the $\mathcal{W}$ under
+% consideration is somewhat too wide, then a robustly fitted
+% $\hat{\theta}$ still estimates the same $\thetaInf$ that would be
+% estimated for $\mathcal{W}_{0} \subseteq \mathcal{W}$ narrow enough for covariate
+% ignorability to hold. Similarly, to limit the possibility that the
+% fitting routine would obscure differences between residuals above and
+% beneath the threshold, we fit $R$-slopes using a specification allowing for an independent contribution from $Z$, but then set the $Z$-contribution to zero when decomposing the covariate.
+
+
+\subsection{Inference About the Treatment Effect}
+\label{sec:test-hypoth-no}
+
+For inference about $\tau$ under the model
+$Y_{T} = Y_{C} + \tau D_{T}$, select a specification
+$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$, %in the application of
+%Section~\ref{sec:appl-effect-acad}
+such as the
+linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$.
+%Although a maximum likelihood
+%estimate of $\beta$ may be available,
+If moderate sample contamination may be present --- specifically, contamination of
+a $O(n^{-1/2})$-sized
+share of the sample --- consistent estimation of $\thetaInf$ requires a
+bounded influence fitter (\citealp[Thm.~3]{he1991localbreakdown};
+\citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
+maximum likelihood.  OLS does not meet this consistency requirement;
+nor do many robust regression methods engineered to meet
+objectives other than bounding the influence function
+\citep{stefanski1991note}.
+Further, no specification test is powerful enough
+to reliably detect contamination of this size; power to detect anomalies
+affecting only $O(n^{-1/2})$ of the sample can only tend to a number
+strictly less than 1.  %NB: This is expanded a little in a
+                       %now-commented-out passage of Discussion, the
+                       %on referencing vdvaart:1998.
+Thus under uncertainty about the
+proper limits of $\mathcal{W}$, MM-estimation (\S~\ref{sec:robust-altern-ordin}) is to be preferred.
+The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
+the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
+
+Separately for each hypothesis $H: \tau=\tau_0$ under
+consideration, one calculates
+$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
+applies the chosen specification and fitter to
+$(\mathbf{y}_{H}, \mathbf{r})$.
+The combination of the data, the
+model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
+$\dt[\hat\theta]{\mathbf{y}_{H}}{\mathbf{r}}$, completing the
+detrending procedure. Whether $H$ is rejected or sustained is
+determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
+\eqref{eq:tedef}.
+
+In practice it is expedient to use a near-equivalent
+test by modifying the detrending
+procedure%, without need to separately calculate
+%$\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=1} -
+%\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=0}$ or a corresponding standard
+%error
+.
+When regressing $Y_{H}$ on $R$, include an additive
+contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
+R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
+\beta_{1}R + \gamma Z$. With sandwich estimates of
+$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
+% ?state that in case of OLS with sandwich standard errors,
+% taking $e$ to be a partial residual makes \eqref{eq:tedef}
+% equivalent to the t statistic on the regression coefficient
+%
+% <!--the below is a passage that I cut a while back, as opposed to an inline note:-->
+%
+% just as \eqref{eq:sudef}'s $\mathrm{SE}_{u}^2 \left(
+%   \bar{Y}_{Z=1} -  \bar{Y}_{Z=0} \right)$ was seen in
+% Section~\ref{sec:randProc} to estimate $\var(\bar{Y}_{Z=1} -
+% \bar{Y}_{Z=0}| \mathbf{A})$ just as validly as $\var(\bar{Y}_{Z=1} -
+% \bar{Y}_{Z=0}| \mathbf{Z})$, the sandwich estimate is consistent for
+% the variance of $\hat\gamma$ with conditioning as discussed in
+% Section~\ref{sec:model-eey-c-r}
+% \citep[Section~\ref{apnd:requ-forpr-eqref}]{lrdauthors:supp}.
+the t-ratio comparing $\hat{\gamma}_{H}$ to
+$\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
+t-statistic with covariance adjustment for $R$, as in \eqref{eq:tedef}: with fitting via OLS,
+this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
+favor, the correspondence is one of large-sample equivalence
+%\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
+(Appendix~\ref{sec:suppl-s-refs}).
+% Just as in RCTs \eqref{eq:sudef}'s $\mathrm{SE}_{u}\left( \bar{y}_{Z=1} -  \bar{y}_{Z=0} \right)$ is valid either with conditioning on $\mathbf{Z}$
+% that leaves $\mathbf{Y}_{T}$ and $\mathbf{Y}_{C}$ unconstrained, or
+% with conditioning only on $\mathbf{A}$,
+% $\text{SE}_{s}(\hat{\gamma}_{H})$ calculated in this way is consistent for $\var^{1/2}(\hat{\gamma}_{H}\mid A)$.
+% With large samples, comparing
+% $\hat{\gamma}_{H}/\text{SE}_{s}(\hat{\gamma}_{H})$
+% to a central $t$ or standard Normal distribution
+%  gives a randomization-based test of $H$ \citep[Section~\ref{apnd:requ-forpr-eqref}]{lrdauthors:supp}.
+Iterative testing is facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and $\mathbf{z}$
+with offset variable $\mathbf{d}\tau_{0}$; then only the offset needs to
+be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
 Once the Hodges-Lehmann estimate $\hat{\tau}_{\mathrm{HL}}$ has been found, one
@@ -1003,6 +1378,4 @@ robustness weights against residuals may expose opportunities to
 improve the fit of $\mu_{\beta}(R)$, or of the treatment effect model;
 plotting them against $R$ may expose contaminated sub-regions
 of $\mathcal{W}$ that specification testing failed to remove.
-
-
 
