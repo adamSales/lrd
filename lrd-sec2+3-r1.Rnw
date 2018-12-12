@@ -1,5 +1,5 @@
 
-\section{Limitless RDD with Historical Data: The Hurricaine \maria\
+\subsection{Limitless RDD with Historical Data: The Hurricaine \maria\
 Death Toll}\label{sec:maria}
 
 <<loadMariaDat,echo=FALSE, include=FALSE>>=
