@@ -30,7 +30,7 @@ Problem: _net of the running variable_ $R$ (college year 1 GPA), what's $Z \equi
 
 ## Regression discontinuity designs | (RDDs): Two views
 
-> - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@imbens2008regression, ...].  The causal effect is $\tau$. 
+> - Regression-based view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$, at least locally [@hahn2001iae; @imbens2008regression, ...].  The causal effect is $\tau$. 
 > - Potential outcomes view [@lee2008randomized; Cattaneo et al 2014; @liMatteiMealli2015BayesianRD]: causal effects are quantities like $E [Y_T - Y_C]$, whatever the form of $E[Y|R]$; "local randomization" gives them to us via ancova/permutation testing/.... 
 >- Our paper [-@sales2015limitless] explores requirements and implications of potential outcomes+"local randomization." 
 

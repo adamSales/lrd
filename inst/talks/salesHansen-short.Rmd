@@ -43,7 +43,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 ## Regression discontinuity designs | (RDDs): Three causal interpretations
 
 > - Traditional view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$.  The causal effect is $\tau$. 
-> - Limit-based view [@imbens2008regression, ...]:  Perhaps $E(Y|R, Z)$ is linear, perhaps not; causal effect is $\lim_{r\uparrow 0} E(Y|R=r) - \lim_{r\downarrow 0} E(Y|R=r) =: \tau$.
+> - Limit-based view [@hahn2001iae; @imbens2008regression]:  Perhaps $E(Y|R, Z)$ is linear, perhaps not; causal effect is $\lim_{r\uparrow 0} E(Y|R=r) - \lim_{r\downarrow 0} E(Y|R=r) =: \tau$.
 > - Potential outcomes view [@lee2008randomized, 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]=:\tau$, whatever the form of $E[Y|R]$; just as these average causal effects are nonparametrically identified in randomized trials, "local randomization" suffices in RDDs. 
 >- Our paper [-@lrdauthors:main] explores requirements and implications of potential outcomes+"local randomization," borrowing from traditional view while eschewing limit-based interpretation.  
 
