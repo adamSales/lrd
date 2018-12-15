@@ -45,7 +45,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 > - Traditional view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$.  The causal effect is $\tau$. 
 > - Limit-based view [@hahn2001iae; @imbens2008regression]:  Perhaps $E(Y|R, Z)$ is linear, perhaps not; causal effect is $\lim_{r\uparrow 0} E(Y|R=r) - \lim_{r\downarrow 0} E(Y|R=r) =: \tau$.
 > - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization;@matteiMealliObsStud]: causal effects are quantities like $E [Y_T - Y_C]=:\tau$, whatever the form of $E[Y|R]$; just as these average causal effects are nonparametrically identified in randomized trials, "local randomization" suffices in RDDs. 
->- We [-@lrdauthors:main] offer a distinct intepretation of local randomization in terms of potential outcomes. It squares better with the concept of Thistlethwaite & Campbell, and with common patterns in RDD data.
+>- We [@lrdauthors:main] offer a distinct intepretation of local randomization in terms of potential outcomes. It squares better with the concept of Thistlethwaite & Campbell, and with common patterns in RDD data.
 
 
 # Methods for picking out RCTs within RDDs
@@ -77,11 +77,11 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 ($G$ is not "balanced" vis a vis $Z$.)<!-- Does the `\not` come thru? -->
 > - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$ is not rejected.
 > - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
-> - $H'$ is sustainable with wider $\mathcal{W}$ than $H$. (Don't throw away good data.)
 
 <div class="notes">
 
-- permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
+- In general, $H'$ is sustainable with wider $\mathcal{W}$ than $H$. (Don't throw away good data!)
+- In Lindo et al dataset, permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
 - The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
 
 </div>
@@ -93,14 +93,16 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 >  - Purpose of test: expose whether subjects secured or avoided treatment by manipulating their $R$s.
 >  - If so, then density of $R$ differs on either side of cutpoint.
+<!--
 >  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp \mathcal{I}[R\leq 0] | \{R \in \tilde{\mathcal{W}}\}.$ 
+-->
+>  - Canadian college data have a clump at $R=0$. McCrary throws a red flag!  
 
   <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
 
 
 </div>
 
->  - Canadian college data have a clump of narrow avoiders of acad. probation at $R=0$.   
 > - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving "donut.")
 
 <div class="notes">
@@ -178,9 +180,10 @@ It requires us to abandon OLS, which is hypersensitive to contamination. In cont
 - In limit-based literature, main concern is with possibility that bandwidth/$\mathcal{W}$ is too wide.  To be "robust" to overly wide $\mathcal{W}$, prominent limit-based methods use local polynomials --- along w/ unbounded $\rho(\cdot)$, non-robust $s(\cdot)$.
 - In the local randomization camp, recent methods narrow the window until covariates appear to be balanced. Typically there is no allowance for $Y$--$R$ association other than via $Z=\mathcal{I}[R<0]$. 
 - Limit-based and local randomizers both led to reduce $n$.  This makes contamination harder to detect, and limit even robust M-estimates' capacity to compensate.
-- I've discussed fitting of `y ~ r + z`.  Many would use `y ~ r * z` (w/ interaction).  Perhaps that makes contamination more threatening.
 - Under moderate departure from linearity, robust M-estimation markedly improves power & type 1 error rates; see Sec. 5 of manuscript (`arxiv.org/abs/1403.5478`)
+<!--
 - Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to sample purification via specification tests.
+-->
 
 <div class="notes">
 
