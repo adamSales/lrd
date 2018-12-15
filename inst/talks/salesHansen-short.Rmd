@@ -136,7 +136,8 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 ## Sensitivity to removing _groups_ of points {.build}
 
-Say there are "savvy" students who, when at risk for AP, "manipulate" grades $\uparrow$. (Bribes?)  This latent subgroup is overrepresented in excised donut hole $\{i: z_i=0\}$, but may be elsewhere also --- as many as $O(n^{1/2})$ "bad" points remain, undercutting estimation of $E(Y_C | R)$. 
+Say there are "savvy" students who, when at risk for AP, "manipulate" grades $\uparrow$. (Bribes?)   
+This latent subgroup is overrepresented in excised donut hole $\{i: z_i=0\}$, but may be elsewhere too. As many as $O(n^{1/2})$ "bad" points remain, undercutting estimation of $E(Y_C | R)$. 
 
 How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if not recognized as such in RDD literature.
 
