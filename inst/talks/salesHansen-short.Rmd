@@ -6,8 +6,8 @@ bibliography: ../../bibliography.bib
 output: 
   ioslides_presentation
 ---
-<!-- nocite:
-  @hansenSales2015cochran-->
+
+<!--@hansenSales2015cochran-->
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
@@ -18,13 +18,13 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 # Three perspectives on the regression discontinuity design 
 <!-- Potential outcomes vs structural modeling for RDDs -->
 
-## Academic probation and later grades | Data from 3 Canadian colleges [@lindo2010ability] {.build}
+## Academic probation and later grades | Data from 3 Canadian colleges [Lindo et al -@lindo2010ability] {.build}
 
 <div class="centered">
 <!-- <img src="images/apsemaphore.jpg" width=180px height="270px" /> -->
 
 <!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_1.jpg" width="300px" height="300px" />
+<img src="images/figure2_1.jpg" width="300px" height="275px" />
 </div>
 
 Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), what's $Z \equiv \mathcal{I}[R<0]$'s effect on $Y$ (year 2 GPA)?  
@@ -40,12 +40,13 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 </div>
 
-## Regression discontinuity designs | (RDDs): Three causal interpretations
+## Regression discontinuity designs | (RDDs): Three causal interpretations {.smaller}
 
 > - Traditional view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$.  The causal effect is $\tau$. 
 > - Limit-based view [@hahn2001iae; @imbens2008regression]:  Perhaps $E(Y|R, Z)$ is linear, perhaps not; causal effect is $\lim_{r\uparrow 0} E(Y|R=r) - \lim_{r\downarrow 0} E(Y|R=r) =: \tau$.
-> - Potential outcomes view [@lee2008randomized, 2017 obstudies.org discussants]: causal effects are quantities like $E [Y_T - Y_C]=:\tau$, whatever the form of $E[Y|R]$; just as these average causal effects are nonparametrically identified in randomized trials, "local randomization" suffices in RDDs. 
->- Our paper [-@lrdauthors:main] explores requirements and implications of potential outcomes+"local randomization," borrowing from traditional view while eschewing limit-based interpretation.  
+> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization;@matteiMealliObsStud]: causal effects are quantities like $E [Y_T - Y_C]=:\tau$, whatever the form of $E[Y|R]$; just as these average causal effects are nonparametrically identified in randomized trials, "local randomization" suffices in RDDs. 
+>- We [-@lrdauthors:main] offer a distinct intepretation of local randomization in terms of potential outcomes. It squares better with the concept of Thistlethwaite & Campbell, and with common patterns in RDD data.
+
 
 # Methods for picking out RCTs within RDDs
 
