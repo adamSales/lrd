@@ -115,7 +115,7 @@ this one would be cute: images/donut-partly-eaten.jpg -->
 
 **_Notation_**: $e_\theta(\cdot| \cdot)$ denotes a _residual transformation_, typically $e_{(a,b)}(y |r) = y - a -br$.  
 
-(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, then $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; if from fit of $Y=\alpha + \beta R + \tau Z+ \epsilon$, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is a partial residual. Both are OK.)
+(If $(\hat\alpha, \hat\beta)$ come from fitting $Y=\alpha + \beta R + \epsilon$, this $e_{(\hat \alpha, \hat \beta)}(y_i | r_i)$ is a simple residual; but if $Y=\alpha + \beta R + \tau Z+ \epsilon$ was fit, then  $e_{(\hat \alpha,\hat \beta)} (y_i | r_i)$ is the _partial_ residual omitting $Z$s, $y_i-\hat\alpha - \hat\beta r_i$.)
 
 <!--Postpone more elaborate one until we need it? $e_{(a,b,s)}(y |r) = \mathrm{sign}(y -a -br) \min(|y-a-br|/s, 1.55)$. -->
 
@@ -166,7 +166,7 @@ Limiting such changes is an old problem in robust statistics, containing _contam
 
 </div>
 
-##Bounded influence robust regression | a high-level review {.build}
+## Robust MM estimates of regression | a high-level review {.build}
 
 - Robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, some $\psi(\cdot)$, $s(\cdot)$.
 - After much study, robustness literature identified pairs $(\psi, s)$ ensuring boundedness of influence function while retaining parametric rate & efficiency.
