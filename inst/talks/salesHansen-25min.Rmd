@@ -1,5 +1,5 @@
 ---
-title: "Robust M-estimation for imperfect regression discontinuity designs"
+title: "Robust MM-estimation for imperfect regression discontinuity designs"
 author: "Adam Sales & Ben Hansen*"
 date: "CMStatistics 2018, U. of Pisa"
 bibliography: ../../bibliography.bib
@@ -52,7 +52,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 ## Methods for picking out RCTs within RDDs {.build}
 
->  Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+>  Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
 >  A: To separate unwanted "chaff" from locally randomized "wheat," use specification tests....
 
@@ -76,7 +76,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 > - Due to trend, clear that $G \not\perp \mathcal{I}[R\leq 0]$.
 ($G$ is not "balanced" vis a vis $Z$.)<!-- Does the `\not` come thru? -->
 > - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$ is not rejected.
-> - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
+> - We follow limit-based methods in first modeling trend, e.g. $G \approx \alpha_G + \beta_G R$. Then we check balance of $G$'s _residual_, i.e. test $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. 
 
 <div class="notes">
 
@@ -96,14 +96,14 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 <!--
 >  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp \mathcal{I}[R\leq 0] | \{R \in \tilde{\mathcal{W}}\}.$ 
 -->
->  - Canadian college data have a clump at $R=0$. McCrary throws a red flag!  
+>  - Canadian colleges data have a clump at $R=0$. McCrary throws a red flag!  
 
   <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
 
 
 </div>
 
-> - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving "donut.")
+> - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving a "donut.")
 
 <div class="notes">
 
@@ -116,10 +116,10 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 ## Methods for picking out RCTs within RDDs
 
-> Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+> Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
 > A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
-> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used in refining a propensity score match, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.  As in matching, remedies for test failure may involve reducing the sample.
+> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used with propensity scores, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.  As in matching, remedies for test failure may involve reducing the sample.
 
 # Working your way around the donut
 
@@ -128,6 +128,7 @@ If I can think of a way to add an image to the transition slide,
 this one would be cute: images/donut-partly-eaten.jpg -->
 
 ## Working your way around the donut {.build}
+
 
 >  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
 >    A:  That hole in the middle only counts against limit interpretations of RDDs...
@@ -153,6 +154,7 @@ $$e_{\bar{\theta}_y} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}, \, \text{where}\, 
 **_Key advantages_**. Identification of $E[Y - Y_C| Z=1, R\in \mathcal{W}]$. $\mathcal{W}$ doesn't shrink as $n\uparrow \infty$. Donuts allowed.  
 
 ## Working our way around the donut
+
 
 >  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
 
@@ -198,7 +200,7 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 - After much study, robustness literature identified pairs $(\psi, s)$ that handle groups of outliers while retaining $\sqrt{n}$ rates, efficiency.
 - E.g., "MM with bisquare psi-function and robust scale",...
 - In R, `robustbase::lmrob`; in Stata, `mmregress`.
-- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample, OLS won't do. Need robust MM estimation [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
+- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample, OLS won't do. Need robust MM regression [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
 
 
 ## Methods for limiting contamination sensitivity
@@ -206,7 +208,7 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 > Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
 
 
-> A: With RDDs, there's a better option than post hoc sensitivity analysis.  You can address sensitivity to contamination (as opposed to omitted variable sensitivity) as a part of the primary analysis, with the help of robust regression.  While unfamiliar, these methods are efficient, easy to use and readily available in R and Stata.
+> A: With RDDs, there's a better option than post hoc sensitivity analysis.  You can address sensitivity to contamination (as opposed to omitted variable sensitivity) as a part of the primary analysis, with the help of robust MM estimators.  While less familiar in social science, these methods are efficient, easy to use and readily available in R and Stata.
 
 # Are the answers any different?
 
@@ -253,6 +255,20 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 > Q: Does bounded influence regression (following testing and adjustment of $\mathcal{W}$) give answers that are any different than RDD methods already in use?
 
 > A: Sometimes yes, sometimes no. Differences are more likely with heavy tailed errors, which give the robust method a heavy efficiency advantage. When differences occur, diagnostics show you why, and are likely to impugn the other method.
+
+
+
+## Discussion {.smaller}
+<!-- Some of these points were added for ICORS audience. 
+     For other audiences, cut/adjust as appropriate. -->
+
+- In limit-based literature, main concern is with possibility that bandwidth/$\mathcal{W}$ is too wide.  To be "robust" to overly wide $\mathcal{W}$, prominent limit-based methods use local polynomials --- along w/ unbounded $\rho(\cdot)$, non-robust $s(\cdot)$.
+- In the local randomization camp, recent methods narrow the window until covariates appear to be balanced. Typically there is no allowance for $Y$--$R$ association other than via $Z=\mathcal{I}[R<0]$. 
+- Limit-based and local randomizers both led to reduce $n$.  This makes contamination harder to detect, and limits even robust M-estimates' capacity to compensate.
+- Under moderate departure from linearity, robust M-estimation markedly improves power & type 1 error rates; see Sec. 5 of manuscript (`arxiv.org/abs/1403.5478`)
+<!--
+- Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to sample purification via specification tests.
+-->
 
 ## References {.smaller}
 
