@@ -1,5 +1,12 @@
 lrd-sec2+3-r1.tex
 lrd-r1.tex
+*.out
+*.aux
 *.bbl
 *.log
+*.rel
 *-bhnotes.txt
+.#-emacs*
+.Rhistory
+figure
+*~
