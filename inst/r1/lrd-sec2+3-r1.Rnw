@@ -1,5 +1,5 @@
 
-\subsection{Limitless RDD with Historical Data: The Hurricaine \maria\
+\subsection{Limitless RDD with Historical Data: The Hurricane \maria\
 Death Toll}\label{sec:maria}
 
 <<loadMariaDat,echo=FALSE, include=FALSE>>=
@@ -102,38 +102,27 @@ ggsave('maria.pdf',width=6.4,height=3)
 
 
 
-Hurricaine Maria struck the island of Puerto Rico on September 20,
+Hurricane Maria struck the island of Puerto Rico on September 20,
 2017.
 In spite of widespread devistation, for nearly a year after the
-hurricaine, the Puerto Rican government officially maintained a
+hurricane, the Puerto Rican government%
+\marginpar{\& the White House,  I think} officially maintained a
 suprisingly low death toll of 64 based on examinations of individual
 death reports.
-In contrast, several studies by investigative journalists and academic
-researchers estimated much larger death tolls.
+Estimates from investigative journalists and academic
+researchers were higher.
 For example, \citet[][; henceforth SLH]{santos2018use} compared monthly death counts recorded in the
-months after the hurricaine to historical values, and estimated that
+months after the hurricane to historical values, and estimated that
 Maria caused 1139 excess
-deaths.
-In this section, we will reanalyze this dataset to illustrate some
-of our ideas, not to suggest an alternative estimate of the death
-toll.
-(Indeed, this discussion will elide some arguably important
-statistical issues that are not directly related to RDD analysis.)
-In the course of our discussion, we will also review two classical
-approaches to hypothesis testing (based largely on
-\citealt{fisher:1935}) and estimation (based largely on
-\citealt{huber1964robust,huber1967behavior}).
-Though these ideas are old, some aspects of our framing will be
-novel.
+deaths. In this section, we reanalyze these data using 
+limitless regression discontinuity.
 
-The SLR dataset forms a somewhat unusual regression
-discontinuity design, with the months of 2017 as subjects and monthly death
-counts $Y_i$, $i=1,\dots,12$, as an outcome.
+In this example, observations are of months of 2017 and Puerto 
+Rico's monthly death
+counts $Y_i$, $i=1,\dots,12$, constitute the outcome.
 The running variable $R_i=i$ is month order and months are
 ``treated,'' $Z_i=1$,
-if $R\ge 9$, i.e. if the September 20th hurricaine could possibly have
-increased their death counts.
-Months prior to September are in the control condition, $Z_i=0$.
+if and only if $R\ge 9$, Hurricane Maria having occurred on September 20.
 Following \citet{neyman:1923} and \citet{rubin1974estimating}, we may
 then take each $i$ to have two potential outcomes: $Y_{Ti}$, a potential
 response under the treatment condition (the number of deaths that
@@ -142,10 +131,11 @@ control (the death count were $i$ to fall before Maria).
 For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
-The treatment effect, the number of deaths Maria would cause, in
-the $i$th month is $\tau_i=Y_{Ti}-Y_{Ci}$.
+The difference $\tau_i=Y_{Ti}-Y_{Ci}$, for each of months $i=9,
+\ldots, 12$, is the excess mortality caused by Maria.
 
 One approach to estimating the death toll from
+\marginpar{Consider postponing/removing, to maintain focus on our idea.}
 Maria models $\bm{Y}$ and $\bm{Z}$ as if arising from a randomized
 experiment \citep[see, e.g.][for anlogues in the RDD literature]{cattaneo2015randomization,matteiMealliObsStud}.
 (Here and throughout, boldface indicates the concatenation of
@@ -167,10 +157,11 @@ Evidence against \eqref{eq:ignore} may be found in the left panel of Figure
 \ref{fig:maria}, which plots monthly Puerto Rican death counts from
 years 2010--2017.
 Seasonal trends are apparent: death counts tend to be higher in the winter
-months---particularly Decenber and January---than during the rest of
+months---particularly December and January---than during the rest of
 the year.
 
 Dependence between $R$ and $Y_C$---and hence violations of
+\marginpar{Consider postponing/removing this \P also}
 \eqref{eq:ignore}---is common in RDDs, and the typical solution to
 this problem is to model the mean relationship between $Y_C$ and $R$
 (the ``regression'' of ``regression discontinuity'').
@@ -178,26 +169,23 @@ This model is fit using the same data, namely $Y$, $R$, and $Z$, that
 is used to estimate treatment effects, a practice which leads to a
 number of statistical and causal complications.
 In this example, we will side-step those complications by exploiting
-the historical death counts from years 2010--2016 in the SLR dataset.
+the historical death counts from years 2010--2016 in the SLH dataset.
 The remainder of the paper will discuss the typical case in which such
 historical data are not available.
 
-Inspection of Figure \ref{fig:maria} reveals that the relationship
-between death counts and month order is non-linear; the structure of
-the calendar implies that it is periodical.
-Finally, some years appear to be more hazardous overall than others.
+Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals 
+a periodic, non-linear relationship
+between calendar month and death count, with some years appearing to be 
+more hazardous than others.
 To accomodate these factors, we regressed 2010-2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
 with knots at Februrary, May, August, and November.
 Outliers form an additional threat; for instance, death
 counts in the final three months of 2014---in particular,
-October---were unusually high.\footnote{We do not know why death
-  counts were so high in the end of 2014, and are unaware of any
-  major event that may have caused those excess deaths. Official data
-  on cause of death, reported in \citet[][p. 44]{PRsalud} suggests
-  that the difference in total deaths between 2013 and 2014 was almost
-  entirely due to deaths caused by common chronic diseases such as
-  cancer, heart disease, and diabetes.}
+October---were unusually high.\footnote{We are unaware of weather
+  or other events explaining the late 2014 mortality spike. Official 
+  statistics \citep[][p. 44]{PRsalud} attribute 
+  most of 2014's excess deaths to common chronic diseases.}
 Rather than identifying and removing outliers informally, we fit the regression model
 using a robust redescending M-estimator, which systematically
 down-weights and sometimes rejects outliers that would otherwise be
@@ -422,7 +410,7 @@ of there being no such $c$, or of its failing to be unique
 The set \{$\tau_0$:
 $H_{\tau_0}$ is not rejected at level $\alpha$\}, typically an interval, is a
 $100(1-\alpha)\%$ confidence set for a constant treatment effect.
-In the Maria example, this approach estimates an effect of hurricaine
+In the Maria example, this approach estimates an effect of hurricane
 exposure of \Sexpr{hl} per month (95\% CI [\Sexpr{lb},\Sexpr{ub}]), or
 a total of \Sexpr{hl*4} (95\% CI [\Sexpr{lb*4},\Sexpr{ub*4}]) over the
 four affected months in 2017.
@@ -434,7 +422,7 @@ An alternative approach, with roots in Neyman
 \citeyearpar{neyman:1935}, estimates average treatment effects
 $\EE[Y_T]-\EE[Y_C]$, but requires moderate to large samples.
 The Neyman approach can be interpreted through the modern lens of
-M-estimation \citep[][also called ``generalized estimationg
+M-estimation \citep[][also called ``generalized estimating
 equations'' or ``generalized method of
 moments'']{huber1964robust,stefanski2002calculus}.
 

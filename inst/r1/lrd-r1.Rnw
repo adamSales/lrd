@@ -23,7 +23,9 @@ if(grepl('acs',Sys.info()['login'])){
 %     Dynarski, Roc\'{i}o Titiunik, Matias Cattaneo, Guido Imbens, Brian Junker,
 %     Justin McCrary, Walter Mebane, Kerby Shedden, Jeff Smith, the participants in the
 %     University of Michigan Causal Inference in Education Research
-%     Seminar and anonymous reviewers for helpful suggestions. This
+%     Seminar and anonymous reviewers for helpful suggestions. They
+%     also thank Jeffrey Howard and Alexis Santos-Lozada, for sharing
+%     non-public research replication materials.  This
 %     research was supported by the Institute of Education Sciences,
 %     U.S. Department of Education (R305B1000012), the U.S. National
 %     Science Foundation (SES 0753164) and an NICHD center grant (R24 HD041028).
