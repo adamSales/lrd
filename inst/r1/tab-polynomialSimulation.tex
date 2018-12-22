@@ -1,0 +1,31 @@
+
+        \begin{table}[ht]
+\centering
+\begin{tabular}{cr|llll|llll|l }
+  \hline
+&& \multicolumn{4}{c|}{Limitless} &  \multicolumn{4}{c|}{OLS} &\makecell[c]{Local\\Linear}  \\
+ \multicolumn{2}{r|}{Polynomial Degree}&1&2&3&4&1&2&3&4& n/a  \\
+\hline
+\hline
+\multirow{ 2 }{*}{ Linear }& level &0.05&0.05&0.05&0.05&0.05&0.05&0.05&0.05&0.07\\
+& RMSE &0.22&0.22&0.30&0.30&0.31&1.09&4.75&21.85&0.49\\
+\hline
+\hline
+\multirow{ 2 }{*}{ Anti-Sym }& level &0.79&0.79&0.06&0.06&0.54&0.37&0.06&0.07&0.08\\
+& RMSE &0.64&0.64&0.30&0.30&0.70&2.10&5.16&25.45&0.51\\
+\hline
+\hline
+\multirow{ 2 }{*}{ One-Side }& level &0.29&0.30&0.05&0.05&0.19&0.13&0.06&0.05&0.07\\
+& RMSE &0.39&0.39&0.30&0.30&0.45&1.41&4.88&22.49&0.51\\
+
+ \hline
+\end{tabular}
+\caption{Results from 5,000 simulations
+of polynomial specifications for RDD analysis, using
+MM-estimation, OLS, or
+local linear regression. Data generating models were
+as depicted in Figure~\ref{fig:dgms}, with $t_{3}$ errors;
+sample size for all runs was 500, and there was no
+treatment effect.}
+\label{tab:poly}
+\end{table}
