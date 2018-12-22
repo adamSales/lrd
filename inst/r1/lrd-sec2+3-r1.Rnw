@@ -63,7 +63,7 @@ dat <- subset(dat,month_num%in%window)
 
 @
 
-<<mariaFigs,include=FALSE>>=
+<<mariaFigs,eval=FALSE,include=FALSE>>=
 pd <- rbind(dat,dat)
 pd$Deaths <- c(dat$deaths,dat$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
