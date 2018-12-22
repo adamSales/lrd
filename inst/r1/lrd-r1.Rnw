@@ -202,9 +202,9 @@ first-year GPA.
 \centering
 %\mbox{
 %\subfigure[]{
-\includegraphics[width=0.58\textwidth]{figure/rddFig-1.png}%}
+\includegraphics[width=0.58\textwidth]{../figure/rddFig-1.png}%}
 %\quad
-%\subfigure[]{\includegraphics[width=.45\textwidth]{figure/hs_gpaFig-1.png}}
+%\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
 %}
 \caption{%(a)
 LSO's \citeyearpar {lindo2010ability} RDD. %First-year GPAs (x-axis) have been
@@ -347,7 +347,7 @@ show little association with $R$,
 \begin{wrapfigure}{l}{0.6\textwidth}%[htb]
 %\begin{figure}[ht!]
 {\centering
-\includegraphics[width=.58\textwidth]{figure/weightPlot.png}
+\includegraphics[width=.58\textwidth]{../figure/weightPlot.png}
 }
 \caption{Robustness weights from robust MM estimation of the model
   that $\EE(Y_{C} | R)$ is linear in $R$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}_{HL}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
@@ -567,7 +567,7 @@ size scenarios.
 % unwanted warnings in latex file.  To regenerate dgms-1.pdf,
 % set eval to TRUE, comments out the \includegraphics{} and compile;
 % then come back and reset it to FALSE
-\includegraphics[width=\maxwidth]{figure/dgms-1}
+\includegraphics[width=\maxwidth]{../figure/dgms-1}
 <<dgms,fig.height=2,fig.width=6,cache=TRUE,eval=FALSE>>=
 par(mfrow=c(1,3))
 dgms()

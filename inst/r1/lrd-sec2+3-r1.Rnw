@@ -9,7 +9,18 @@ library(robustbase)
 library(pbs)
 library(perm)
 
-dat <- read.csv('../death_file_JAMA.csv')
+if(grepl('acs',Sys.info()['login'])){
+    dataResults_location <- '../jebs/dataResults/' #(I suppose)
+    lrd_package_location <- '~/lrd/'
+} else {
+    dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
+    lrd_package_location <- #modify as needed to fit your setup
+        "~/Documents/workingcopies/adamSales/lrd/"
+}
+
+dat <- read.csv(paste0(lrd_package_location,
+                       'extdata/death_file_JAMA.csv')
+                )
 
 dat$hurYear <- dat$year==2017
 dat$year <- as.factor(dat$year)
