@@ -184,6 +184,476 @@ performance in two simulation studies.
 %% defined groups.
 %%
 
+\subsection{Limitless RDD with Historical Data: The Hurricane \maria\
+Death Toll}\label{sec:maria}
+
+<<loadMariaDat,echo=FALSE, include=FALSE>>=
+library(dplyr)
+library(ggplot2)
+library(robustbase)
+library(pbs)
+library(perm)
+
+if(grepl('acs',Sys.info()['login'])){
+    dataResults_location <- '../jebs/dataResults/' #(I suppose)
+    lrd_package_location <- '~/lrd/'
+} else {
+    dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
+    lrd_package_location <- #modify as needed to fit your setup
+        "~/Dropbox/Documents/wcs/lrd/"
+}
+
+dat <- read.csv(paste0(lrd_package_location,
+                       'extdata/death_file_JAMA.csv')
+                )
+
+dat$hurYear <- dat$year==2017
+dat$year <- as.factor(dat$year)
+rownames(dat) <- paste0(month.abb[dat$month_num],substr(dat$year,3,4))
+
+month_lengths  <-
+    c(31, 28.25, 31, 30, 31, 30,
+      31, 31, 30, 31, 30, 31)
+
+dat$dailyDeath <- dat$deaths_original/month_lengths[dat$month_num]
+dat$adjDeath <- dat$dailyDeath*mean(month_lengths)
+
+## are we adjusting deaths for month length??
+## choose one of the following:
+#dat$deaths <- dat$adjDeath
+dat$deaths <- dat$deaths_original
+
+@
+
+<<modelMariaDeaths,include=FALSE>>=
+### model monthly deaths prior to 2017
+mod  <-   lmrob(deaths~year+
+                     pbs(month_num, knots=seq(2,11,by=3)),
+                 data=dat,subset=!hurYear)
+
+### predict monthly
+fitCurve <- function(x,year='avg'){
+  nd <- data.frame(month_num=x,year=ifelse(year=='avg','2010',year))
+  out <- predict(mod,nd)
+  if(year=='avg') out <- out+sum(coef(mod)[2:7])/8
+  out
+}
+
+
+dat$yhat <- NA
+dat$yhat[!dat$hurYear] <- predict(mod)
+dat$yhat[dat$hurYear] <- fitCurve(dat$month_num[dat$hurYear],'avg')
+
+dat$resid <- dat$deaths-dat$yhat
+
+dat$Z <- dat$month_num>8
+
+@
+
+<<bandwidth,include=FALSE,eval=FALSE>>=
+## are we limiting the window of analysis?
+## set eval=FALSE if not.
+## modify the following for a different window:
+window <- 6:11
+dat <- subset(dat,month_num%in%window)
+
+@
+
+<<mariaFigs,eval=FALSE,include=FALSE>>=
+pd <- rbind(dat,dat)
+pd$Deaths <- c(dat$deaths,dat$resid)
+pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
+  levels=c('Death Counts','Residual Death Counts'))
+
+ggplot(pd,aes(month_num,Deaths,group=year,color=year,alpha=hurYear))+
+  geom_line(aes(size=hurYear))+geom_point(size=3)+
+  scale_x_continuous(NULL,breaks=1:12,labels=month.abb,minor_breaks=NULL)+ylab(NULL)+
+  scale_color_manual(name='Year',values=c(subwayPalette[1:7],'black'))+
+  geom_vline(xintercept=9,linetype='dotted')+
+  scale_size_discrete(range=c(1,2),guide=FALSE)+scale_alpha_discrete(range=c(.5,1),guide=FALSE)+
+  facet_wrap(~type,nrow=1,scales='free_y')+
+  geom_hline(data=data.frame(yint=0,type='Residual Death Counts'),aes(yintercept=yint),
+    size=2,color='black',linetype='dashed')+
+  stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths,year='avg',hurYear=TRUE),
+    aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+ggsave('maria.pdf',width=6.4,height=3)
+@
+
+
+
+
+
+
+
+Hurricane Maria struck the island of Puerto Rico on September 20,
+2017.
+In spite of widespread devistation, for nearly a year after the
+hurricane, the Puerto Rican government%
+\marginpar{\& the White House,  I think} officially maintained a
+suprisingly low death toll of 64 based on examinations of individual
+death reports.
+Estimates from investigative journalists and academic
+researchers were higher.
+For example, \citet[][; henceforth SLH]{santos2018use} compared monthly death counts recorded in the
+months after the hurricane to historical values, and estimated that
+Maria caused 1139 excess
+deaths. In this section, we reanalyze these data using 
+limitless regression discontinuity.
+
+In this example, observations are of months of 2017 and Puerto 
+Rico's monthly death
+counts $Y_i$, $i=1,\dots,12$, constitute the outcome.
+The running variable $R_i=i$ is month order and months are
+``treated,'' $Z_i=1$,
+if and only if $R\ge 9$, Hurricane Maria having occurred on September 20.
+Following \citet{neyman:1923} and \citet{rubin1974estimating}, we may
+then take each $i$ to have two potential outcomes: $Y_{Ti}$, a potential
+response under the treatment condition (the number of deaths that
+would occur were $i$ to fall after Maria); and $Y_{Ci}$, a potential response to
+control (the death count were $i$ to fall before Maria).
+For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
+observed, depending on $Z_i$; observed responses $Y$ coincide with
+$ZY_{T}+(1-Z)Y_{C}$.
+Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
+\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate 
+of total excess mortality for 2017, $\sum_{i} \tau_{i}$, in due
+course; the remainder of this section demonstrates how to test the
+hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
+test --- but without assuming % this phrasing disambiguates 
+the independence property % the symbol $\independent$
+\begin{ass}{Strong Ignorability, \citealp{rosenbaum1983central}}
+\begin{equation}\label{eq:ignore}
+Y_{C} \independent Z.
+\end{equation}
+\end{ass}
+
+Although RCTs validate strong ignorability as a
+matter of course, as applied to the mortality series surrounding
+Maria the assumption is implausibly strong.
+For \eqref{eq:ignore} to hold, $Z$ must be independent
+of monthly death counts that would have been observed in
+the absence of ``exposure'' to \maria.
+The distribution underlying the September through December counts would 
+be no different than that of the year's first eight months.
+Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of 
+Figure~\ref{fig:maria}, shows there is no precedent for such an equivalence.
+Rather, a marked seasonal trend is apparent, with death counts being higher 
+in the winter months than during the rest of
+the year; \eqref{eq:ignore} cannot be sustained.  
+(See \citet{cattaneo2015randomization},
+\citet{aronowRDDinterference} or \citet{matteiMealliObsStud} for RDD
+methodology requiring \eqref{eq:ignore}.)
+
+
+Dependence between $R$ and $Y_C$, violating
+\eqref{eq:ignore}, is common in RDDs; in the tradition of regression
+discontinuity, we address this dependence by modeling conditional 
+mean function of $Y_C$ given $R$.
+%% This model is fit using the same data, namely $Y$, $R$, and $Z$, that
+%% is used to estimate treatment effects, a practice which leads to a
+%% number of statistical and causal complications.
+%% In this example, we will side-step those complications by exploiting
+%% the historical death counts from years 2010--2016 in the SLH dataset.
+%% The remainder of the paper will discuss the typical case in which such
+%% historical data are not available.
+Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals 
+a periodic, non-linear relationship
+between calendar month and death count, with some years appearing to be 
+more hazardous than others.
+To accomodate these factors, we regressed 2010-2016 monthly death counts
+on dummy variables for year and a periodic b-spline for month order,
+with knots at Februrary, May, August, and November.
+Outliers form an additional threat; 
+\marginpar{Postpone? \ldots} % In this context robustness risks distracting
+% from main ideas.  Might be helpful to the reader to save up the robustness
+% ideas (2014 outliers, contamination more broadly) for a later section the 
+% paper. -B
+for instance, death counts in the final three months of 2014---in particular,
+October---were unusually high.\footnote{We are unaware of weather
+  or other events explaining the mortality spike of late 2014. Official 
+  statistics \citep[][p. 44]{PRsalud} attribute 
+  most of 2014's excess deaths to common chronic diseases.}
+Rather than identifying and removing outliers informally, we fit the regression model
+using a robust redescending M-estimator, which systematically
+down-weights and sometimes rejects outliers that would otherwise be
+influential \citep{maronna2006robust}.
+This model fit is displayed as a dashed black line in Figure
+\ref{fig:maria}.
+
+Now let $\hat{Y}_C(R_i)$ be that model's prediction for month $i$ in
+2017, and let $\resid_i=Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
+with potential values $\resid_C=Y_{Ci}-\hat{Y}_C(R_i)$ and $\resid_T=Y_{Ti}-\hat{Y}_C(R_i)$.
+In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
+since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
+Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
+If the model yields unbiased predictions, i.e. $\EE
+\hat{Y}_C(R_i)=Y_{Ci}$, then the mean difference
+$\bar{\resid}_{Z=1}-\bar{\resid}_{Z=0}$, where $\bar{\resid}_{Z=z}$ is the average
+value for $\resid$ of months with $Z=z$, is unbiased for the average number
+of deaths per month caused by \maria.
+The same is true if the model's predictions in 2017 are biased by a constant,
+i.e. $\EE \hat{Y}_C(R_i)=Y_{Ci}+b_0$, for some $b_0\in\mathbb{R}$,
+perhaps because of year-to-year trends that were not adaquately
+captured by the model.
+In short, the hope is that the model fit to monthy death counts from
+2010--2016 adequately captures seasonal month-to-month trends in
+mortality, leaving $\resid$ as as essentially random.
+This may be summarized in a new ignorability assumption:
+%\begin{ass}{$\resid$-Ignorability}
+\begin{equation}\label{eq:ignore2}
+\resid_{C} \independent Z
+\end{equation}
+%\end{ass}\
+which is a simpler form of ``residual ignorability,'' which we define
+more generally below (Section~\ref{sec:model-eey-c-r}).
+The right panel of Figure \ref{fig:maria} shows residualized death counts $\resid$ as a
+function of month order $R$.
+Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
+thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
+
+
+\eqref{eq:ignore2} decomposes $Y_C$ as the sum of systematic
+\marginpar{Rephrase/remove?}
+components---a function of $R$ and disturbances---and relies on the
+nature of the decomposition to ensure
+that, vis a vis one another, the disturbances and $Z$ may
+be regarded as random.
+In so doing, residualization mimics the process of ``true'' (as
+opposed to pseudo-) random number generation, which derive random
+numbers from physical processes that are either chaotic
+\citep[e.g.][]{uchida2008fast} or quantum
+\citep[e.g.][]{stefanov2000optical}.
+When these processes contain an element
+of predictability, % \citep{raz2005extractors};
+true random numbers are obtained by modeling the predictive component,
+and extracting the random component \citep[see, e.g.][]{Nisan1999148}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.95\textwidth]{maria.pdf}
+\caption{Monthly death counts in Puerto Rico from years 2010--2017, before and after
+  residualization. The plot on the left shows monthly death counts,
+  adjusted for month length. A vertical dotted line denotes September,
+  the month \maria\ hit. The fit of the robust model described in the
+  text is shown as a dashed black line. The plot on the right shows
+  the monthly residuals of the model fit, with a dashed line denoting
+  zero.}
+\label{fig:maria}
+\end{figure}
+
+\subsection{Testing a Strict Null Hypothesis About the Maria Death Toll}
+
+In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935}, 
+which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$, 
+our Maria analysis conditions on the potential residual vector
+$\bm{\resid}_C\equiv\{\resid_{Ci}: i\}_{i=1}^{12}$.
+(Here and throughout, boldface indicates the concatenation of
+$n$ variables or constants.)
+An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
+is that it does not correspond to any simple reduction of observed
+data, since neither $\bm{Y}_C$ nor $\resid_{Ci}$ is observed unless $Z_{i}=0$.
+The approach is feasible when testing
+``strict'' null hypotheses, hypotheses that designate a value for each
+$\resid_{Ti} - \resid_{Ci}$ with
+$Z_{i}=1$, not just $\EE(\resid_{T} - \resid_{C} | Z =1)$.
+This includes the hypothesis
+of strictly no effect, $H_{0}: Y_{T} \equiv Y_{C}$, under which
+$\bm{\resid}_{T}$ is simply $\bm{\resid}$
+(recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
+$Y$, which are ultimately of interest,
+are exactly equivalent to null hypotheses about $\resid$, which may be
+more readily tested).
+
+
+For this analysis $Y$, $R$ and $Z$ data for years 2010--2016 are treated as fixed --- formally,
+inference will be made after conditioning not only on $\bm{E}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
+To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
+we likewise condition on the realized sizes $N_{1}$
+and $N_{0}$ of the treatment and control group samples%
+\footnote{\textit{Design of Experiments} [\citeyear[ch.~1]{fisher:1935}]
+takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: In Little's version,
+%% the flowers are red not purple.  (In case a reviewer says they couldn't locate the
+%% example there...)
+[\citealp[\textit{e.g.},][]{little:1989,upton1992FET}] demonstrates his view that random $N_{0}$ and $N_{1}$
+should be treated as fixed after conditioning upon them.}%
+, where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
+Such conditioning is appropriate because the conditioning statistic
+$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$ 
+is ancillary to, i.e. carries no information about, the target of estimation
+$\EE (\resid_{T}-\resid_{C})$, since it does not also constrain $\bm{\resid}_T$.
+In contrast, $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
+or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$,.
+Formally, for a statistical model situating $\PP(\resid_{T} - \resid_{C}|
+R)$ in a translation family, $\bm{A}^*$ is S-ancillary
+\citep{cox2006pos,lehmannRomano2006TSH} to the target parameters.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% change this if we use a different window of analysis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+<<estimates,include=FALSE>>=
+N1 <- sum(dat$hurYear&dat$Z)
+N0 <- sum(dat$hurYear&!dat$Z)
+N <- N1+N0
+cardZ <- choose(N,N1)
+
+## adapted from http://rsnippets.blogspot.com/2012/04/generating-all-subsets-of-set.html
+all.subsets <- function(set,size) {
+  n <- length(set)
+  bin <- expand.grid(plyr::rlply(n, c(F, T)))
+  if(!missing(size)) bin <- bin[rowSums(bin)==size,]
+  bin
+}
+
+subs <- all.subsets(1:N,N1)
+stopifnot(nrow(subs)==cardZ)
+
+rr <- dat$resid[dat$hurYear]
+z <- dat$Z[dat$hurYear]
+
+testStat <- function(Z,RR)
+  sum(RR[Z])
+
+ts0 <- apply(subs,1,testStat,RR=rr)
+stopifnot(length(unique(ts0))==cardZ) ## no Test stat value appears more than once; simplifying
+
+pfun <- function(tau){
+  RR <- rr-z*tau
+  ts <- testStat(z,RR)
+  TS <- apply(subs,1,testStat,RR=RR)
+  nless <- sum(TS<ts)
+  nmore <- cardZ-nless-1
+  pHigh <- (nmore+.5)/cardZ
+  pLow <- (nless+.5)/cardZ
+  c(nless=nless,nmore=nmore,p=2*min(pHigh,pLow),diff=abs(mean(TS)-ts))
+}
+
+pval <- pfun(0)
+
+tau <- 0
+rej <- TRUE
+diff <- NULL
+while(rej){
+  tau <- tau+1
+  p <- pfun(tau)
+  diff <- rbind(diff,c(tau,p['diff']))
+  rej <- p['p']<0.05
+}
+lb <- tau
+p.lower <- p
+while(!rej){
+  tau <- tau+1
+  p <- pfun(tau)
+  diff <- rbind(diff,c(tau,p['diff']))
+  rej <- p['p']<0.05
+}
+ub <- tau
+p.upper <- p
+
+hl <- diff[which.min(diff[,2]),1]
+
+@
+Under $H_0$, we may exactly enumerate the sampling distribution of any
+test statistic $T(\bm{\resid}_C,\bm{Z})=T(\bm{\resid},\bm{Z})$ conditional on
+$\bm{A}^*$; we estimate exact p-values by comparing a test statistic
+to its conditional distribution thus enumerated.
+(When the number of possible permutations of $\bm{Z}$ is large, the sampling
+distribution may be estimated with Monte Carlo methods.)
+In the Maria example, the null hypothesis $H_0$ states that hurricane
+Maria caused precisely no change in each month's death count (and
+hence each month's residual $\resid$).
+Under $H_0$, we condition on
+$\bm{A}^*=\{(Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1}); \bm{\resid}_C=\bm{\resid},N_1=$\Sexpr{N1}$,N_0=$\Sexpr{N0}$\}$ and calculate the
+sampling distribution of test statistic $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$ by calculating its
+value for all $\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
+of $\bm{Z}$.
+It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
+test statistic values than the realized value
+$\bar{\resid}_{z=1}=$\Sexpr{round(testStat(z,rr))} (which is unique in
+  the distribution).
+This implies a two-sided ``mid'' p-value \citep{agresti2005comment} of
+$2(\Sexpr{pval['nmore']}+0.5)/\Sexpr{cardZ}\approx\Sexpr{round(pval['p'],2)}$
+for testing $H_0$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$H_0$ is a member of a wider class of strict null hypotheses,
+\marginpar{Do we need this here?\ldots}
+% My instinct is that we should be focusing here on setting up R.I.
+% + conditional inference; the exact c.i. here smacks of mission creep.
+% Perhaps we could instead indicate to the reader that later developments
+% will demonstrate how to obtain c.i.'s, then later in the paper work our
+% way around to analyzing the Maria example in "main method" style.
+hypotheses of a constant effect $\tau\in (-\infty, \infty)$,
+$H_{\tau_0}:\;\bm{Y}_T-\bm{Y}_C\equiv\tau_0$, under which
+$\bm{\resid}_{C} = \bm{\resid}_{\tau_0}\equiv\bm{\resid} - \tau_0 \bm{z}$.
+With such an $H_{\tau_0}$ (including $H_0$) under test,
+   The constant effect model
+situates $\PP(\resid_{T} - \resid_{C}| R)$ within a  translation family,
+making $(N_{0}, N_{1}, \bm{\resid}_{C})$ S-ancillary and justifying
+the Fisherian conditioning strategy.
+
+Fisherian randomization inference goes on to subject each
+$H_{\tau_0}$ to a permutation test.
+The value $\hat{\tau}_{\text{HL}}$ for which $T(\bm{\resid}_{\tau_0},\bm{z})$ is equal to its null expected value $\EE_Z[T(\bm{\resid}_{\tau_0},\bm{Z})]$ is a Hodges-Lehmann
+estimate of a constant effect\footnote{The general definition of
+Hodges-Lehmann estimates is more elaborate, also addressing eventualities
+of there being no such $c$, or of its failing to be unique
+\citep[e.g.,][Sec.~2.7.2]{rosenbaum:2002}}.
+The set \{$\tau_0$:
+$H_{\tau_0}$ is not rejected at level $\alpha$\}, typically an interval, is a
+$100(1-\alpha)\%$ confidence set for a constant treatment effect.
+In the Maria example, this approach estimates an effect of hurricane
+exposure of \Sexpr{hl} per month (95\% CI [\Sexpr{lb},\Sexpr{ub}]), or
+a total of \Sexpr{hl*4} (95\% CI [\Sexpr{lb*4},\Sexpr{ub*4}]) over the
+four affected months in 2017.
+
+This confers an
+advantage, of equal legitimacy in small and large samples, alongside
+of a restriction, to the testing of strict null hypotheses.
+An alternative approach, with roots in Neyman
+\citeyearpar{neyman:1935}, estimates average treatment effects
+$\EE[Y_T]-\EE[Y_C]$, but requires moderate to large samples.
+The Neyman approach can be interpreted through the modern lens of
+M-estimation \citep[][also called ``generalized estimating
+equations'' or ``generalized method of
+moments'']{huber1964robust,stefanski2002calculus}.
+
+In the \maria\ dataset, there was no distinction between treatment
+assignment and compliance.
+However, in many experiments and in so-called ``fuzzy'' regression
+discontinuity designs, subjects assigned to treatment do not always
+receive it.
+In that case, let $D_{i}$ denote the treatment $i$ actually
+received --- the ``dose.''
+This $D$ is an intermediate outcome, so there are
+corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
++ (1-Z)D_{C}$.
+Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
+will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
+subjects assigned to the treatment who avoid it, but no one gets
+treatment without being assigned to it.
+We shall also posit the exclusion restriction,
+that $Z$ influences $Y$ only by way of its effect on $D$
+\citep{bloom1984ans,Angrist:etal:1996,imbens:rose:2005}.
+Our focus of estimation is the
+ ``treatment-on-treated'' effect (TOTE), $\EE(Y_{T} - Y_{C}|
+ D_{T}=1)$.
+Then, we test hypotheses of the form
+$H_{\tau}: Y_{T} - \tau D_{T} = Y_{C} - \tau D_{C}$ by
+comparing $T(\bm{\resid}-\tau\bm{D}, \bm{z})$ to the
+appropriate sampling distribution.
+Although in the case of full compliance $\bm{D}\equiv\bm{Z}$ the
+Hodges-Lehmann estimator
+$\hat{\tau}_{\text{HL}}$ is equal to the difference in means of
+$\resid$ between the treatment and control groups, the same cannot
+always be said when $\bm{D}\ne \bm{Z}$.
+Similarly, the
+confidence interval or set induced by~\eqref{eq:tudef} requires a distinct explicit
+test for each of a range of $\tau$s
+\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
 
 
 \input{lrd-sec2+3-r1}
