@@ -329,7 +329,7 @@ Y_{C} \independent Z.
 \end{equation}
 \end{ass}
 
-Although RCTs validate strong ignorability as a
+Although RCTs validate \eqref{eq:ignore} as a
 matter of course, as applied to the mortality series surrounding
 Maria the assumption is implausibly strong.
 For \eqref{eq:ignore} to hold, $Z$ must be independent
@@ -344,7 +344,7 @@ in the winter months than during the rest of
 the year; \eqref{eq:ignore} cannot be sustained.  
 (See \citet{cattaneo2015randomization},
 \citet{aronowRDDinterference} or \citet{matteiMealliObsStud} for RDD
-methodology requiring \eqref{eq:ignore}.)
+methodology founded on \eqref{eq:ignore}.)
 
 
 Dependence between $R$ and $Y_C$, violating
@@ -380,41 +380,36 @@ This model fit is displayed as a dashed black line in Figure
 \ref{fig:maria}.
 
 Now let $\hat{Y}_C(R_i)$ be that model's prediction for month $i$ in
-2017, and let $\resid_i=Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
-with potential values $\resid_C=Y_{Ci}-\hat{Y}_C(R_i)$ and $\resid_T=Y_{Ti}-\hat{Y}_C(R_i)$.
+2017, and let $\dt[]{Y_i}{R_i} = Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
+with potential values $\dt[]{Y_{Ci}}{R_i}=Y_{Ci}-\hat{Y}_C(R_i)$ and 
+$\dt[]{Y_{Ti}}{R_i}=Y_{Ti}-\hat{Y}_C(R_i)$.
 Instead of \eqref{eq:ignore}, we assume only that the model we have fit to 
 pre-2017 monthly death counts captured and removed seasonal
-mortality trends, leaving a residual $\resid$ that can be regarded as random, at least
-as for as $Z$ is concerned:
+mortality trends, such that the potential residuals $\{{\resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$ 
+can be regarded as random, at least as far as $Z$ is concerned:
 %\begin{ass}{$\resid$-Ignorability}
 \begin{equation}\label{eq:ignore2}
 \resid_{C} \independent Z .
 \end{equation}
 %\end{ass}
-The right panel of Figure \ref{fig:maria} shows residualized death counts $\resid$ as a
-function of month order $R$.
+In other words, we maintain that our preliminary modeling and 
+residualization mimics the procedures of ``true random number generators.'' 
+These begin with a physical process that is either chaotic
+\citep[e.g.][]{uchida2008fast} or quantum
+\citep[e.g.][]{stefanov2000optical}, yet may contain an element
+of predictability \citep{raz2005extractors}, just as Puerto Rico's mortality 
+series does. The true random numbers are only obtained after the predictable 
+component has, with the help of a model, been isolated and removed 
+\citep[see, e.g.][]{Nisan1999148}.
+
+The right panel of Figure \ref{fig:maria} shows residualized death 
+counts $\resid = \dt[]{Y}{R}$ as a function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 Aside from a technical elaboration that will be necessary to apply our method 
 in the general case (Section~\ref{sec:model-eey-c-r}),  
-assumption \eqref{eq:ignore2} is the basis of our technique.
-
-
-\eqref{eq:ignore2} decomposes $Y_C$ as the sum of systematic
-\marginpar{Rephrase/remove?}
-components---a function of $R$ and disturbances---and relies on the
-nature of the decomposition to ensure
-that, vis a vis one another, the disturbances and $Z$ may
-be regarded as random.
-In so doing, residualization mimics the process of ``true'' (as
-opposed to pseudo-) random number generation, which derive random
-numbers from physical processes that are either chaotic
-\citep[e.g.][]{uchida2008fast} or quantum
-\citep[e.g.][]{stefanov2000optical}.
-When these processes contain an element
-of predictability, % \citep{raz2005extractors};
-true random numbers are obtained by modeling the predictive component,
-and extracting the random component \citep[see, e.g.][]{Nisan1999148}.
+assumption \eqref{eq:ignore2} is Residual Ignorability, this paper's alternative
+to limits and to Strong Ignorability as bases for analysis of RDDs.
 
 \begin{figure}
 \centering
@@ -434,7 +429,7 @@ and extracting the random component \citep[see, e.g.][]{Nisan1999148}.
 In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935}, 
 which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$, 
 our Maria analysis conditions on the potential residual vector
-$\bm{\resid}_C\equiv\{\resid_{Ci}: i\}_{i=1}^{12}$.
+$\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{12}$.
 (Here and throughout, boldface indicates the concatenation of
 $n$ variables or constants.)
 An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
@@ -454,7 +449,7 @@ more readily tested).
 
 
 For this analysis $Y$, $R$ and $Z$ data for years 2010--2016 are treated as fixed --- formally,
-inference will be made after conditioning not only on $\bm{E}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
+inference will be made after conditioning not only on $\bm{\resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
 To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
 we likewise condition on the realized sizes $N_{1}$
 and $N_{0}$ of the treatment and control group samples%
@@ -468,7 +463,7 @@ should be treated as fixed after conditioning upon them.}%
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$ 
 is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\resid_{T}-\resid_{C})$, since it does not also constrain $\bm{\resid}_T$.
+$\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_T$ but none on $\bm{\resid}_T$.)
 In contrast, $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
 or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$,.
 Formally, for a statistical model situating $\PP(\resid_{T} - \resid_{C}|
