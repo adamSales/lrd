@@ -382,9 +382,6 @@ This model fit is displayed as a dashed black line in Figure
 Now let $\hat{Y}_C(R_i)$ be that model's prediction for month $i$ in
 2017, and let $\resid_i=Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
 with potential values $\resid_C=Y_{Ci}-\hat{Y}_C(R_i)$ and $\resid_T=Y_{Ti}-\hat{Y}_C(R_i)$.
-In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
-since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
-Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
 If the model yields unbiased predictions, i.e. $\EE
 \hat{Y}_C(R_i)=Y_{Ci}$, then the mean difference
 $\bar{\resid}_{Z=1}-\bar{\resid}_{Z=0}$, where $\bar{\resid}_{Z=z}$ is the average
@@ -554,18 +551,20 @@ hl <- diff[which.min(diff[,2]),1]
 @
 Under $H_0$, we may exactly enumerate the sampling distribution of any
 test statistic $T(\bm{\resid}_C,\bm{Z})=T(\bm{\resid},\bm{Z})$ conditional on
-$\bm{A}^*$; we estimate exact p-values by comparing a test statistic
+$\bm{A}^*$; we calculate exact p-values by comparing a test statistic
 to its conditional distribution thus enumerated.
 (When the number of possible permutations of $\bm{Z}$ is large, the sampling
 distribution may be estimated with Monte Carlo methods.)
-In the Maria example, the null hypothesis $H_0$ states that hurricane
-Maria caused precisely no change in each month's death count (and
-hence each month's residual $\resid$).
-Under $H_0$, we condition on
-$\bm{A}^*=\{(Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1}); \bm{\resid}_C=\bm{\resid},N_1=$\Sexpr{N1}$,N_0=$\Sexpr{N0}$\}$ and calculate the
-sampling distribution of test statistic $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$ by calculating its
-value for all $\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
-of $\bm{Z}$.
+In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
+since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
+Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
+The null hypothesis $H_0$ states that hurricane
+Maria caused precisely no change to each month's death count, nor to its residual.
+Under $H_0$, we condition on $\bm{A}^*$ and calculate the
+sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
+value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
+of $\bm{Z}$.  The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the 
+mean of a size-4, without-replacement sample from $\{E_1, \ldots, E_{12}\}$.
 It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
 test statistic values than the realized value
 $\bar{\resid}_{z=1}=$\Sexpr{round(testStat(z,rr))} (which is unique in
