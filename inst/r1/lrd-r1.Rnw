@@ -391,6 +391,16 @@ as for as $Z$ is concerned:
 \resid_{C} \independent Z .
 \end{equation}
 %\end{ass}
+In other words, we maintain that our preliminary modeling and 
+residualization mimics the procedures of ``true random number generators." 
+These begin with a physical process that is either chaotic
+\citep[e.g.][]{uchida2008fast} or quantum
+\citep[e.g.][]{stefanov2000optical}, yet may contain an element
+of predictability \citep{raz2005extractors}, as mortality series do.
+The true random numbers are only obtained after the predictable component 
+has, with the help of a model, been isolated and removed 
+\citep[see, e.g.][]{Nisan1999148}.
+
 The right panel of Figure \ref{fig:maria} shows residualized death counts $\resid$ as a
 function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
@@ -398,23 +408,6 @@ thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 Aside from a technical elaboration that will be necessary to apply our method 
 in the general case (Section~\ref{sec:model-eey-c-r}),  
 assumption \eqref{eq:ignore2} is the basis of our technique.
-
-
-\eqref{eq:ignore2} decomposes $Y_C$ as the sum of systematic
-\marginpar{Rephrase/remove?}
-components---a function of $R$ and disturbances---and relies on the
-nature of the decomposition to ensure
-that, vis a vis one another, the disturbances and $Z$ may
-be regarded as random.
-In so doing, residualization mimics the process of ``true'' (as
-opposed to pseudo-) random number generation, which derive random
-numbers from physical processes that are either chaotic
-\citep[e.g.][]{uchida2008fast} or quantum
-\citep[e.g.][]{stefanov2000optical}.
-When these processes contain an element
-of predictability, % \citep{raz2005extractors};
-true random numbers are obtained by modeling the predictive component,
-and extracting the random component \citep[see, e.g.][]{Nisan1999148}.
 
 \begin{figure}
 \centering
