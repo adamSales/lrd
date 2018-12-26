@@ -382,30 +382,22 @@ This model fit is displayed as a dashed black line in Figure
 Now let $\hat{Y}_C(R_i)$ be that model's prediction for month $i$ in
 2017, and let $\resid_i=Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
 with potential values $\resid_C=Y_{Ci}-\hat{Y}_C(R_i)$ and $\resid_T=Y_{Ti}-\hat{Y}_C(R_i)$.
-If the model yields unbiased predictions, i.e. $\EE
-\hat{Y}_C(R_i)=Y_{Ci}$, then the mean difference
-$\bar{\resid}_{Z=1}-\bar{\resid}_{Z=0}$, where $\bar{\resid}_{Z=z}$ is the average
-value for $\resid$ of months with $Z=z$, is unbiased for the average number
-of deaths per month caused by \maria.
-The same is true if the model's predictions in 2017 are biased by a constant,
-i.e. $\EE \hat{Y}_C(R_i)=Y_{Ci}+b_0$, for some $b_0\in\mathbb{R}$,
-perhaps because of year-to-year trends that were not adaquately
-captured by the model.
-In short, the hope is that the model fit to monthy death counts from
-2010--2016 adequately captures seasonal month-to-month trends in
-mortality, leaving $\resid$ as as essentially random.
-This may be summarized in a new ignorability assumption:
+Instead of \eqref{eq:ignore}, we assume only that the model we have fit to 
+pre-2017 monthly death counts captured and removed seasonal
+mortality trends, leaving a residual $\resid$ that can be regarded as random, at least
+as for as $Z$ is concerned:
 %\begin{ass}{$\resid$-Ignorability}
 \begin{equation}\label{eq:ignore2}
-\resid_{C} \independent Z
+\resid_{C} \independent Z .
 \end{equation}
-%\end{ass}\
-which is a simpler form of ``residual ignorability,'' which we define
-more generally below (Section~\ref{sec:model-eey-c-r}).
+%\end{ass}
 The right panel of Figure \ref{fig:maria} shows residualized death counts $\resid$ as a
 function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
+Aside from a technical elaboration that will be necessary to apply our method 
+in the general case (Section~\ref{sec:model-eey-c-r}),  
+assumption \eqref{eq:ignore2} is the basis of our technique.
 
 
 \eqref{eq:ignore2} decomposes $Y_C$ as the sum of systematic
