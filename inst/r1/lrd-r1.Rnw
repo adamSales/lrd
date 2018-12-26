@@ -296,7 +296,7 @@ suprisingly low death toll of 64 based on examinations of individual
 death reports.
 Estimates from investigative journalists and academic
 researchers were higher.
-For example, \citet[][; henceforth SLH]{santos2018use} compared monthly death counts recorded in the
+For example, \citet{santos2018use} compared monthly death counts recorded in the
 months after the hurricane to historical values, and estimated that
 Maria caused 1139 excess
 deaths. In this section, we reanalyze these data using 
@@ -365,16 +365,13 @@ more hazardous than others.
 To accomodate these factors, we regressed 2010-2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
 with knots at Februrary, May, August, and November.
-Outliers form an additional threat; 
-\marginpar{Postpone? \ldots} % In this context robustness risks distracting
-% from main ideas.  Might be helpful to the reader to save up the robustness
-% ideas (2014 outliers, contamination more broadly) for a later section the 
-% paper. -B
-for instance, death counts in the final three months of 2014---in particular,
-October---were unusually high.\footnote{We are unaware of weather
-  or other events explaining the mortality spike of late 2014. Official 
-  statistics \citep[][p. 44]{PRsalud} attribute 
-  most of 2014's excess deaths to common chronic diseases.}
+There are several outlying observations, one of which \citet{santos2018use} remove 
+from the sample prior to analysis. 
+%for instance, death counts in the final three months of 2014---in particular,
+%October---were unusually high.\footnote{We are unaware of weather
+%  or other events explaining the mortality spike of late 2014. Official 
+%  statistics \citep[][p. 44]{PRsalud} attribute 
+%  most of 2014's excess deaths to common chronic diseases.}
 Rather than identifying and removing outliers informally, we fit the regression model
 using a robust redescending M-estimator, which systematically
 down-weights and sometimes rejects outliers that would otherwise be
