@@ -47,6 +47,9 @@ vignettes/*.pdf
 dataResults
 manuscript
 
+# Non-committed data
+extdata/death_file_JAMA.csv
+
 # auto-generated analysis artifacts (to commit, manually 
 # copy these over version of file w/o date stamp in name)
 inst/RDanalysis-*.RData 
