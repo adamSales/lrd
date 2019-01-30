@@ -576,7 +576,11 @@ the transformation $(y,r) \mapsto \dt[]{y}{r}$ must be estimated from the same s
 
 
 In the \maria\ dataset, there was no distinction between treatment
-assignment and compliance. \marginpar{Relocate me!\ldots}% to somewhere later in the paper
+assignment and compliance. \marginpar{Relocate me!\ldots}% ... 
+%% to somewhere later in the paper.  Also, near the start of the mathy appendix
+%% there is a mention of working under monotonicity assumptions, when the RDD
+%% is fuzzy. Update that (if it's still there) with a cross-ref the main paper
+%% section w/ this intro to fuzzy RDD and its assumptions.
 However, in many experiments and in so-called ``fuzzy'' regression
 discontinuity designs, subjects assigned to treatment do not always
 receive it.
@@ -697,7 +701,6 @@ For $\mathcal{W}_{0.5}$  each (Bonferroni-corrected) $p$-value
 exceeds $0.2$; downward adjustment of the bandwidth
 is not indicated.
 
-
 % Unfortunately, there is no lagged measurement of the outcome
 % \citep{maynard2013strengthening}; the data do not speak to the
 % possibility of
@@ -722,7 +725,8 @@ is not indicated.
 %% $\mathcal{W}_{0.5}$, yielded a p-value of $p=$Sexpr{round(balance0.5,2)}, greater
 %% than $\alpha_\mathcal{F}=0.1$.  (This is an approximate, Normal-theory
 %% $p$-value, as computed with software of \citet{bowers2016ritools}.)
-<<echo=FALSE>>=
+
+<<echo=FALSE,include=FALSE>>=
 stopifnot(SHmain[['bal.pval']]>.2)
 stopifnot(mccrary1<.001)
 stopifnot(max(c(frandsen1[,'p'],frandsen2[,'p']))<0.001)
