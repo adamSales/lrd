@@ -385,16 +385,6 @@ can be regarded as random, at least as far as $Z$ is concerned:
 \resid_{C} \independent Z .
 \end{equation}
 %\end{ass}
-In other words, we maintain that our preliminary modeling and 
-residualization mimics the procedures of ``true random number generators.'' 
-These begin with a physical process that is either chaotic
-\citep[e.g.][]{uchida2008fast} or quantum
-\citep[e.g.][]{stefanov2000optical}, yet may contain an element
-of predictability \citep{raz2005extractors}, just as Puerto Rico's mortality 
-series does. The true random numbers are only obtained after the predictable 
-component has, with the help of a model, been isolated and removed 
-\citep[see, e.g.][]{Nisan1999148}.
-
 The right panel of Figure \ref{fig:maria} shows residualized death 
 counts $\resid = \dt[]{Y}{R}$ as a function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
@@ -1045,18 +1035,21 @@ polynomials. It fared better than OLS, but worse than cubic or quartic robust re
 
 \section{Discussion} \label{sec:discussion}
 
-
-Just as generation of true random numbers
-calls for an unpredictable process and a ``randomness extraction''
-procedure separating its random and systematic components (Sec.~\ref{sec:theMethod}), RDD
-analysis calls for a specific ``window'' of estimation
-$\mathcal{W}$ and a specific means of isolating and removing
-association between the outcome and the running variable that does not
-reflect on efficacy of the treatment.
-Methods based on Residual Ignorability (Sec.~\ref{sec:model-eey-c-r}) resemble classical RDD methods, as opposed to
-limit-based or local permutation methods, in seeing these as distinct
-objectives, the one addressed in preliminary testing and the other with
-subsequent fitting of a parametric model for $\EE(Y |R)$.
+RDD analysis calls for a ``window'' of estimation
+$\mathcal{W}$, along with a means with which to isolate and remove
+non-causal association of the running variable with potential outcomes.
+In this it resembles processes of true random number generation, 
+which begin with physical processes that are either chaotic
+\citep%[e.g.][]
+{uchida2008fast} or quantum
+\citep%[e.g.][]
+{stefanov2000optical}, yet typically contain elements
+of predictability \citep{raz2005extractors}.  
+%% --- as do Puerto Rico's mortality series, and the transcripts of college sophomores
+Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable 
+component has, with the help of a model, been isolated and removed 
+\citep%[e.g.][]
+{Nisan1999148}.
 
 The method of Section~\ref{sec:theMethod} targets the TOTE or ATE within
 $\mathcal{W}$, as opposed to a difference of limits.
