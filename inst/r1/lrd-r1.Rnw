@@ -453,9 +453,6 @@ is ancillary to, i.e. carries no information about, the target of estimation
 $\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
 or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
-Formally, for a statistical model situating $\PP(\resid_{T} - \resid_{C}|
-R)$ in a translation family, $\bm{A}^*$ is S-ancillary
-\citep{cox2006pos,lehmannRomano2006TSH} to the target parameters.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -562,45 +559,6 @@ equipped for analyses with small $n$s, this approach is less rigid
 about the form of the treatment effect, and more adaptable to the
 common scenario calling for simultaneous estimation of treatment
 effects and parameters governing residualization.%$(y,r) \mapsto\dt[]{y}{r}$.
-
-
-In the \maria\ dataset, there was no distinction between treatment
-assignment and compliance. \marginpar{Relocate me!\ldots}% ... 
-%% to somewhere later in the paper.  Also, near the start of the mathy appendix
-%% there is a mention of working under monotonicity assumptions, when the RDD
-%% is fuzzy. Update that (if it's still there) with a cross-ref the main paper
-%% section w/ this intro to fuzzy RDD and its assumptions.
-However, in many experiments and in so-called ``fuzzy'' regression
-discontinuity designs, subjects assigned to treatment do not always
-receive it.
-In that case, let $D_{i}$ denote the treatment $i$ actually
-received --- the ``dose.''
-This $D$ is an intermediate outcome, so there are
-corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
-+ (1-Z)D_{C}$.
-Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
-will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
-subjects assigned to the treatment who avoid it, but no one gets
-treatment without being assigned to it.
-We shall also posit the exclusion restriction,
-that $Z$ influences $Y$ only by way of its effect on $D$
-\citep{bloom1984ans,Angrist:etal:1996,imbens:rose:2005}.
-Our focus of estimation is the
- ``treatment-on-treated'' effect (TOTE), $\EE(Y_{T} - Y_{C}|
- D_{T}=1)$.
-Then, we test hypotheses of the form
-$H_{\tau}: Y_{T} - \tau D_{T} = Y_{C} - \tau D_{C}$ by
-comparing $T(\bm{\resid}-\tau\bm{D}, \bm{z})$ to the
-appropriate sampling distribution.
-Although in the case of full compliance $\bm{D}\equiv\bm{Z}$ the
-Hodges-Lehmann estimator
-$\hat{\tau}_{\text{HL}}$ is equal to the difference in means of
-$\resid$ between the treatment and control groups, the same cannot
-always be said when $\bm{D}\ne \bm{Z}$.
-Similarly, the
-confidence interval or set induced by~\eqref{eq:tudef} requires a distinct explicit
-test for each of a range of $\tau$s
-\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
 
 
 \input{lrd-sec2+3-r1}
