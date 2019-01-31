@@ -408,6 +408,7 @@ to Strong Ignorability as a basis for analysis of RDDs.
 \end{figure}
 
 \subsection{Using~\eqref{eq:ignore2} to Test the Hypothesis of Strictly No Effect}
+\label{sec:using-eqref-test}
 
 In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935}, 
 which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$, 
@@ -415,20 +416,20 @@ our Maria analysis conditions on the potential residual vector
 $\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{12}$.
 (Here and throughout, boldface indicates the concatenation of
 $n$ variables or constants.)
-An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
-is that it does not correspond to any simple reduction of observed
-data, since neither $\bm{Y}_C$ nor $\resid_{Ci}$ is observed unless $Z_{i}=0$.
+%An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
+%is that it does not correspond to any simple reduction of observed
+%data, since neither $\bm{Y}_C$ nor $\resid_{Ci}$ is observed unless $Z_{i}=0$.
 The approach is feasible when testing
 ``strict'' null hypotheses, hypotheses that designate a value for each
 $\resid_{Ti} - \resid_{Ci}$ with
 $Z_{i}=1$, not just $\EE(\resid_{T} - \resid_{C} | Z =1)$.
 This includes the hypothesis
 of strictly no effect, $H_{0}: Y_{T} \equiv Y_{C}$, under which
-$\bm{\resid}_{T}$ is simply $\bm{\resid}$
-(recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
-$Y$, which are ultimately of interest,
-are exactly equivalent to null hypotheses about $\resid$, which may be
-more readily tested).
+$\bm{\resid}_{T} \equiv \bm{\resid}_{C}=\bm{\resid}$.
+%Recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
+%$Y$, which are ultimately of interest,
+%are exactly equivalent to null hypotheses about $\resid$, which may be
+%more readily tested.
 
 
 For this analysis $Y$, $R$ and $Z$ data for years 2010--2016 are treated as fixed --- formally,
