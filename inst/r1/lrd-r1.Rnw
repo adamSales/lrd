@@ -449,9 +449,9 @@ see \citet{canayKamat17RDDpermutations}.
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$ 
 is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_T$ but none on $\bm{\resid}_T$.)
-In contrast, $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
-or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$,.
+$\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
+$\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
+or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
 Formally, for a statistical model situating $\PP(\resid_{T} - \resid_{C}|
 R)$ in a translation family, $\bm{A}^*$ is S-ancillary
 \citep{cox2006pos,lehmannRomano2006TSH} to the target parameters.
