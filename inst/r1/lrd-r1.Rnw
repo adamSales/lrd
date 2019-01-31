@@ -66,7 +66,7 @@ if (!exists("analysis_objects")) analysis_objects <- load(paste0(dataResults_loc
 @
 
 \newpage
-\section{Introduction}
+\section{Introduction} \label{sec:introduction}
 
 In a regression discontinuity design
 \citep[RDD;][]{thistlethwaite1960regression}, treatment is allocated to subjects for
@@ -135,31 +135,24 @@ This sacrifices internal and external validity, and reduces power.
 
 To circumvent limitations of the simple RCT model, and of the limit understanding, this paper weds parametric and local
 randomization ideas into a novel identifying assumption termed ``residual
-ignorability.'' Residual ignorability posits that the \emph{residual}
-of $Y$, following parametric adjustment for $R$, amounts to a randomized
-\emph{component} of each subject's outcome data.
-Our method uses robust M-estimation %\citep[e.g.][]{stefanski1991note}
-to recover this component, to address uncertainty
-inherent in selection of the analysis window.
-The residual ignorability assumption and corresponding ATE
+ignorability.'' The residual ignorability assumption and corresponding ATE
 estimates pertain to all subjects in the window of analysis; discrete
 GPAs do not pose a threat. Manipulation of the running variable
-remains a threat, but one that our combination of sample pruning and
-robust estimation is uniquely equipped to protect against.
+remains a threat, but one that Section~\ref{sec:theMethod}'s combination 
+of sample pruning and robust M-estimation is uniquely equipped 
+to address.
 
-Section~\ref{sec:maria} uses a public health example to introduce
-residual ignorability.  Limitless RDD analysis
+The remainder of Section~\ref{sec:introduction} uses a public health 
+example to introduce residual ignorability.  Limitless RDD analysis
 combines ideas from distribution-free analysis of randomized
 controlled trials (RCTs; \S~\ref{sec:randProc}); classical, wholly
 parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}); robust
 estimation (\S~\ref{sec:robust-altern-ordin}); and RDD specification
 tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
-adapts the RDD's identifying conditions to limitless estimation
-targets and sets out an analysis plan anticipating common challenges
+adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
 of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
-with the LSO study, in the process uncovering indications of
-manipulation of the running variable. Section~\ref{sec:simulation}
-explores our method's performance in two simulation studies.
+with the LSO study, Section~\ref{sec:simulation}
+explores the method's performance in simulations and Section~\ref{sec:discussion} takes stock.
 
 
 % Although Huber-White standard errors are common in RDD analysis,
