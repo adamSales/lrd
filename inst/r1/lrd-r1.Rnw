@@ -118,20 +118,19 @@ excluding subjects immediately on or around the cut-point%,
 Either circumstance calls
 into question the appropriateness of limit-based methods.
 
-A number of recent methodological papers base RDD inference on
+
+\citet{cattaneo2014randomization} base RDD inference on
 the model that, in effect, the RDD is a randomized controlled trial
 (RCT), at
-least in sufficiently small neighborhoods of the cut-point
-\citep[e.g.][]{cattaneo2014randomization,matteiMealliObsStud,aronowRDDinterference}.  
+least in sufficiently small neighborhoods of the cut-point.
 Under this assumption, once
 attention is confined to a such a region, the difference of
 $Y$-means between subjects falling above and below the cut-point estimates the ATE within that region.
 Despite being natural as a specification of Lee's local randomization concept,
-this simple RCT model requires variables that are causally antecedent to
-the treatment to be independent of $R$.  In general this requirement
-is implausible and unwelcome.  Indeed, in the case of LSO, preventing the data from
-refuting it empirically requires that attention be restricted to a small region surrounding the cutoff.
-This sacrifices internal and external validity, and reduces power. 
+the RCT model involves an independence condition that is rarely plausible in RDDs.  
+In the LSO example, the data refute this model --- unless one
+rejects all but the small share of the sample contained in a narrow band
+of the cutpoint, sacrificing power and external validity.
 
 To circumvent limitations of the simple RCT model, and of the limit understanding, this paper weds parametric and local
 randomization ideas into a novel identifying assumption termed ``residual
@@ -176,8 +175,7 @@ explores the method's performance in simulations and Section~\ref{sec:discussion
 %% defined groups.
 %%
 
-\subsection{Limitless RDD with Historical Data: The Hurricane \maria\
-Death Toll}\label{sec:maria}
+\subsection{The Death Toll from Hurricane \maria}\label{sec:maria}
 
 <<loadMariaDat,echo=FALSE, include=FALSE>>=
 library(dplyr)
@@ -402,9 +400,9 @@ counts $\resid = \dt[]{Y}{R}$ as a function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 Aside from a technical elaboration that will be necessary to apply our method 
-in the general case (Section~\ref{sec:model-eey-c-r}),  
+in the general case (\S~\ref{sec:model-eey-c-r}),  
 assumption \eqref{eq:ignore2} is Residual Ignorability, this paper's alternative
-to limits and to Strong Ignorability as bases for analysis of RDDs.
+to Strong Ignorability as a basis for analysis of RDDs.
 
 \begin{figure}
 \centering
@@ -419,7 +417,7 @@ to limits and to Strong Ignorability as bases for analysis of RDDs.
 \label{fig:maria}
 \end{figure}
 
-\subsection{Testing a Strict Null Hypothesis About the Maria Death Toll}
+\subsection{Using~\eqref{eq:ignore2} to Test the Hypothesis of Strictly No Effect}
 
 In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935}, 
 which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$, 
