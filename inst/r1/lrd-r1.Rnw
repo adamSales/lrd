@@ -135,8 +135,7 @@ This sacrifices internal and external validity, and reduces power.
 
 To circumvent limitations of the simple RCT model, and of the limit understanding, this paper weds parametric and local
 randomization ideas into a novel identifying assumption termed ``residual
-ignorability.'' Residual ignorability posits that, within an
-appropriate window of analysis, the \emph{residual}
+ignorability.'' Residual ignorability posits that the \emph{residual}
 of $Y$, following parametric adjustment for $R$, amounts to a randomized
 \emph{component} of each subject's outcome data.
 Our method uses robust M-estimation %\citep[e.g.][]{stefanski1991note}
@@ -148,19 +147,19 @@ GPAs do not pose a threat. Manipulation of the running variable
 remains a threat, but one that our combination of sample pruning and
 robust estimation is uniquely equipped to protect against.
 
-Limitless RDD analysis combines ideas from distribution-free analysis
-of randomized controlled trials (RCTs; \S~\ref{sec:randProc});
-classical, wholly parametric methods for RDDs
-(\S~\ref{sec:robust-analys-covar}); robust estimation
-(\S~\ref{sec:robust-altern-ordin}); and RDD specification
-tests (\S~\ref{sec:specification}).
-Section~\ref{sec:theMethod} adapts the RDD's identifying
-conditions to limitless estimation targets and sets out an analysis plan
-anticipating common challenges of RDD analysis.
-Section~\ref{sec:appl-effect-acad} executes the plan with the LSO
-study, in the process uncovering indications of manipulation of the
-running variable. Section~\ref{sec:simulation} explores our method's
-performance in two simulation studies.
+Section~\ref{sec:maria} uses a public health example to introduce
+residual ignorability.  Limitless RDD analysis
+combines ideas from distribution-free analysis of randomized
+controlled trials (RCTs; \S~\ref{sec:randProc}); classical, wholly
+parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}); robust
+estimation (\S~\ref{sec:robust-altern-ordin}); and RDD specification
+tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
+adapts the RDD's identifying conditions to limitless estimation
+targets and sets out an analysis plan anticipating common challenges
+of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
+with the LSO study, in the process uncovering indications of
+manipulation of the running variable. Section~\ref{sec:simulation}
+explores our method's performance in two simulation studies.
 
 
 % Although Huber-White standard errors are common in RDD analysis,
@@ -289,18 +288,21 @@ ggsave('maria.pdf',width=6.4,height=3)
 
 Hurricane Maria struck the island of Puerto Rico on September 20,
 2017.
-In spite of widespread devistation, for nearly a year after the
+In spite of widespread devastation, for nearly a year after the
 hurricane, the Puerto Rican government%
 \marginpar{\& the White House,  I think} officially maintained a
 suprisingly low death toll of 64 based on examinations of individual
 death reports.
 Estimates from investigative journalists and academic
 researchers were higher.
-For example, \citet{santos2018use} compared monthly death counts recorded in the
-months after the hurricane to historical values, and estimated that
-Maria caused 1139 excess
-deaths. In this section, we reanalyze these data using 
-limitless regression discontinuity.
+Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative 
+analysis considered recorded mortality in
+months before and after the hurricane, estimating
+Maria to have caused 1139 excess
+deaths. This section demonstrates residual ignorability, 
+if not the scope and particulars of the method detailed in Sections~\ref{sec:revi-select-meth} and~\ref{sec:theMethod}, 
+in a limited reanalysis of these monthly death counts.
+
 
 In this example, observations are of months of 2017 and Puerto 
 Rico's monthly death
@@ -342,9 +344,9 @@ Figure~\ref{fig:maria}, shows there is no precedent for such an equivalence.
 Rather, a marked seasonal trend is apparent, with death counts being higher 
 in the winter months than during the rest of
 the year; \eqref{eq:ignore} cannot be sustained.  
-(See \citet{cattaneo2015randomization},
-\citet{aronowRDDinterference} or \citet{matteiMealliObsStud} for RDD
-methodology founded on \eqref{eq:ignore}.)
+(For RDD methodology founded on \eqref{eq:ignore}, see 
+\citet{cattaneo2015randomization},
+\citet{aronowRDDinterference} or \citet{matteiMealliObsStud}.)
 
 
 Dependence between $R$ and $Y_C$, violating
