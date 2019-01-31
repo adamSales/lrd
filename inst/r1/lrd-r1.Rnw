@@ -441,7 +441,10 @@ takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: 
 %% the flowers are red not purple.  (In case a reviewer says they couldn't locate the
 %% example there...)
 [\citealp[\textit{e.g.},][]{little:1989,upton1992FET}] demonstrates his view that random $N_{0}$ and $N_{1}$
-should be treated as fixed after conditioning upon them.}%
+should be treated as fixed after conditioning upon them.
+For quite different assumptions supporting permutation tests in RDDs, 
+see \citet{canayKamat17RDDpermutations}.
+}%
 , where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$ 
@@ -521,10 +524,8 @@ hl <- diff[which.min(diff[,2]),1]
 @
 Under $H_0$, we may exactly enumerate the sampling distribution of any
 test statistic $T(\bm{\resid}_C,\bm{Z})=T(\bm{\resid},\bm{Z})$ conditional on
-$\bm{A}^*$; we calculate exact p-values by comparing a test statistic
+$\bm{A}^*$; the permutational p-value is found by comparing a test statistic
 to its conditional distribution thus enumerated.
-(When the number of possible permutations of $\bm{Z}$ is large, the sampling
-distribution may be estimated with Monte Carlo methods.)
 In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
 since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
 Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
@@ -541,21 +542,25 @@ $\bar{\resid}_{z=1}=$\Sexpr{round(testStat(z,rr))} (which is unique in
   the distribution).
 This implies a two-sided ``mid'' p-value \citep{agresti2005comment} of
 $2(\Sexpr{pval['nmore']}+0.5)/\Sexpr{cardZ}\approx\Sexpr{round(pval['p'],2)}$
-for testing $H_0$.
+for $H_0$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This combination of regression and permutation testing applies just as readily
-to test the hypothesis $\resid_T = \resid_C + c$, for any constant $c$, and by 
-extension to produce confidence intervals and treatment effect estimates in the 
-Hodges-Lehmann-type estimates of effect.  Rather that pursuing this line further,
-however, we now turn to developing a residual ignorability-based procedure using 
-M-estimation \citep[][also called ``generalized estimating
-equations'' or ``generalized method of
-moments'']{huber1964robust,stefanski2002calculus}.
-Although less equipped for analyses with small $n$s, this approach
-will be more adaptable to the common scenario in which treatment effects and parameters determining
-the transformation $(y,r) \mapsto \dt[]{y}{r}$ must be estimated from the same sample.
+This combination of regression and permutation testing applies just as
+readily to test the hypothesis $\resid_T = \resid_C + c$, for any
+constant $c$.  In the Maria example, no such hypothesis is sustainable
+at level 0.05 unless $c\geq$ \Sexpr{round(lb,-1)}, corresponding to
+\Sexpr{round(4*lb, -1)} excess deaths due to the hurricane.  Upper
+confidence limits and Hodges-Lehmann-type estimates of the effect can
+also be obtained in this way. Rather that pursuing this approach
+further, we now turn to developing a residual ignorability-based
+procedure using M-estimation \citep[][also called ``generalized
+estimating equations'' or ``generalized method of
+moments'']{huber1964robust,stefanski2002calculus}.  Although less
+equipped for analyses with small $n$s, this approach is less rigid
+about the form of the treatment effect, and more adaptable to the
+common scenario calling for simultaneous estimation of treatment
+effects and parameters governing residualization.%$(y,r) \mapsto\dt[]{y}{r}$.
 
 
 In the \maria\ dataset, there was no distinction between treatment
