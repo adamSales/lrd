@@ -38,10 +38,13 @@ $\EE(Y_{T} - Y_{C}| D_{T}=1)$.
 
 \subsection{Neyman-type inference about the CACE in RCTs}\label{sec:randProc}
 
-With
-moderate or large samples, the approach deriving from Neyman
+With moderate or large samples, the approach deriving from Neyman
 \citeyearpar{neyman:1935} gives randomization- but not
-permutation-based inferences, enabling it to test hypotheses of form $H: \EE(Y_T - Y_C) =c$, as opposed to the stronger hypotheses of form $H: Y_T - Y_C \equiv c$ tested in Section~\ref{sec:using-eqref-test}. 
+permutation-based inferences, enabling it to test ``weak'' null
+hypotheses, for example $H: \EE(Y_T - Y_C) =c$ or
+$\EE(Y_{T} - Y_{C}| D_{T}=1) =c$, as opposed to Fisherian ``strong''
+hypotheses of form $H: Y_T - Y_C \equiv c$, as tested in
+Section~\ref{sec:using-eqref-test}, or $H: Y_T - Y_C \equiv D_{T}c$.
 
 To do this it conditions somewhat differently, on
 centered potential outcomes

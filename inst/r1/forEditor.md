@@ -30,4 +30,19 @@ regression discontinuity designs than those methods' core assumptions.
 In adding it we also took the opportunity to streamline and reduce the
 density of section 2 of our paper, by relocating our discussion of
 Fisherian conditioning in causal inference to these new sections of
-the introduction.
+the introduction. In contrast to our initial submission, in this
+version the material that remains in Section 2 ("Review of selected
+methods") all feeds directly into our development of the limitless
+regression discontinuity method, helping to address your comment that
+"the formal development of randomization inference in Section 2 [was]
+useful but the distinction of the purely background material from the
+development that was [of] specific importance to your innovations was
+not sufficiently clear."  Furthermore the contributions to our
+"limitless" method of the methods under review are made more explicit
+as they are introduced. The current Section 2.1, for example, begins
+by laying out an objective of explaining how Neyman's method enables
+the statistician to test weak rather than strong null hypotheses, a
+benefit largely inherited by our method; this stands in contrast with
+our initial submission's Section 2.1, which began with an admittedly
+pedantic contrast of Neyman's and Fisher's approaches to
+randomization-based inference.
