@@ -312,10 +312,11 @@ $ZY_{T}+(1-Z)Y_{C}$.
 Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
 \ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate
 of total excess mortality for 2017, $\sum_{i} \tau_{i}$, in due
-course; the remainder of this section demonstrates how to test the
+course.
+The remainder of this section demonstrates how to test the
 hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
 test --- but without assuming % this phrasing disambiguates
-the independence property % the symbol $\independent$
+the following independence property: % the symbol $\independent$
 \begin{ass}{Strong Ignorability, \citealp{rosenbaum1983central}}
 \begin{equation}\label{eq:ignore}
 Y_{C} \independent Z.
