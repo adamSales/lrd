@@ -7,7 +7,7 @@
 
 <<echo=FALSE,include=FALSE>>=
 if(grepl('acs',Sys.info()['login'])){
-    dataResults_location <- '../jebs/dataResults/' #(I suppose)
+    dataResults_location <- '~/Dropbox/Sales Hansen/jebs/dataResults/' #(I suppose)
     lrd_package_location <- '~/lrd/'
 } else {
     dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
@@ -105,7 +105,7 @@ is interpreted as the treatment effect
 However,
 the GPAs in the academic probation dataset are
 discrete, measured in 1/100s of a grade point.
-Further,  
+Further,
 re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
 finely manipulated their GPAs to avoid probation.
@@ -127,7 +127,7 @@ Under this assumption, once
 attention is confined to a such a region, the difference of
 $Y$-means between subjects falling above and below the cut-point estimates the ATE within that region.
 Despite being natural as a specification of Lee's local randomization concept,
-the RCT model involves an independence condition that is rarely plausible in RDDs.  
+the RCT model involves an independence condition that is rarely plausible in RDDs.
 In the LSO example, the data refute this model --- unless one
 rejects all but the small share of the sample contained in a narrow band
 of the cutpoint, sacrificing power and external validity.
@@ -137,11 +137,11 @@ randomization ideas into a novel identifying assumption termed ``residual
 ignorability.'' The residual ignorability assumption and corresponding ATE
 estimates pertain to all subjects in the window of analysis; discrete
 GPAs do not pose a threat. Manipulation of the running variable
-remains a threat, but one that Section~\ref{sec:theMethod}'s combination 
-of sample pruning and robust M-estimation is uniquely equipped 
+remains a threat, but one that Section~\ref{sec:theMethod}'s combination
+of sample pruning and robust M-estimation is uniquely equipped
 to address.
 
-The remainder of Section~\ref{sec:introduction} uses a public health 
+The remainder of Section~\ref{sec:introduction} uses a public health
 example to introduce residual ignorability.  Limitless RDD analysis
 combines ideas from distribution-free analysis of randomized
 controlled trials (RCTs; \S~\ref{sec:randProc}); classical, wholly
@@ -155,7 +155,7 @@ explores the method's performance in simulations and Section~\ref{sec:discussion
 
 
 % Although Huber-White standard errors are common in RDD analysis,
-% ``Huberized'' fitting methods are not; they should be.  
+% ``Huberized'' fitting methods are not; they should be.
 % Robust M-estimation is uniquely suited to the LSO study, because
 % manipulation checks suggest that it calls for a form of robustness to
 % sample contamination that only such methods can provide
@@ -185,10 +185,10 @@ library(pbs)
 library(perm)
 
 if(grepl('acs',Sys.info()['login'])){
-    dataResults_location <- '../jebs/dataResults/' #(I suppose)
+    #dataResults_location <- '../jebs/dataResults/' #(I suppose)
     lrd_package_location <- '~/lrd/'
 } else {
-    dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
+    #dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
     lrd_package_location <- #modify as needed to fit your setup
         "~/Dropbox/Documents/wcs/lrd/"
 }
@@ -286,16 +286,16 @@ suprisingly low death toll of 64 based on examinations of individual
 death reports.
 Estimates from investigative journalists and academic
 researchers were higher.
-Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative 
+Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
 analysis considered recorded mortality in
 months before and after the hurricane, estimating
 Maria to have caused 1139 excess
-deaths. This section demonstrates residual ignorability, 
-if not the scope and particulars of the method detailed in Sections~\ref{sec:revi-select-meth} and~\ref{sec:theMethod}, 
+deaths. This section demonstrates residual ignorability,
+if not the scope and particulars of the method detailed in Sections~\ref{sec:revi-select-meth} and~\ref{sec:theMethod},
 in a limited reanalysis of these monthly death counts.
 
 
-In this example, observations are of months of 2017 and Puerto 
+In this example, observations are of months of 2017 and Puerto
 Rico's monthly death
 counts $Y_i$, $i=1,\dots,12$, constitute the outcome.
 The running variable $R_i=i$ is month order and months are
@@ -310,11 +310,11 @@ For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
 Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
-\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate 
+\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate
 of total excess mortality for 2017, $\sum_{i} \tau_{i}$, in due
 course; the remainder of this section demonstrates how to test the
 hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
-test --- but without assuming % this phrasing disambiguates 
+test --- but without assuming % this phrasing disambiguates
 the independence property % the symbol $\independent$
 \begin{ass}{Strong Ignorability, \citealp{rosenbaum1983central}}
 \begin{equation}\label{eq:ignore}
@@ -328,21 +328,21 @@ Maria the assumption is implausibly strong.
 For \eqref{eq:ignore} to hold, $Z$ must be independent
 of monthly death counts that would have been observed in
 the absence of ``exposure'' to \maria.
-The distribution underlying the September through December counts would 
+The distribution underlying the September through December counts would
 be no different than that of the year's first eight months.
-Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of 
+Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of
 Figure~\ref{fig:maria}, shows there is no precedent for such an equivalence.
-Rather, a marked seasonal trend is apparent, with death counts being higher 
+Rather, a marked seasonal trend is apparent, with death counts being higher
 in the winter months than during the rest of
-the year; \eqref{eq:ignore} cannot be sustained.  
-(For RDD methodology founded on \eqref{eq:ignore}, see 
+the year; \eqref{eq:ignore} cannot be sustained.
+(For RDD methodology founded on \eqref{eq:ignore}, see
 \citet{cattaneo2015randomization},
 \citet{aronowRDDinterference} or \citet{matteiMealliObsStud}.)
 
 
 Dependence between $R$ and $Y_C$, violating
 \eqref{eq:ignore}, is common in RDDs; in the tradition of regression
-discontinuity, we address this dependence by modeling conditional 
+discontinuity, we address this dependence by modeling conditional
 mean function of $Y_C$ given $R$.
 %% This model is fit using the same data, namely $Y$, $R$, and $Z$, that
 %% is used to estimate treatment effects, a practice which leads to a
@@ -351,19 +351,19 @@ mean function of $Y_C$ given $R$.
 %% the historical death counts from years 2010--2016 in the SLH dataset.
 %% The remainder of the paper will discuss the typical case in which such
 %% historical data are not available.
-Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals 
+Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals
 a periodic, non-linear relationship
-between calendar month and death count, with some years appearing to be 
+between calendar month and death count, with some years appearing to be
 more hazardous than others.
 To accomodate these factors, we regressed 2010-2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
 with knots at Februrary, May, August, and November.
-There are several outlying observations, one of which \citet{santos2018use} remove 
-from the sample prior to analysis. 
+There are several outlying observations, one of which \citet{santos2018use} remove
+from the sample prior to analysis.
 %for instance, death counts in the final three months of 2014---in particular,
 %October---were unusually high.\footnote{We are unaware of weather
-%  or other events explaining the mortality spike of late 2014. Official 
-%  statistics \citep[][p. 44]{PRsalud} attribute 
+%  or other events explaining the mortality spike of late 2014. Official
+%  statistics \citep[][p. 44]{PRsalud} attribute
 %  most of 2014's excess deaths to common chronic diseases.}
 Rather than identifying and removing outliers informally, we fit the regression model
 using a robust redescending M-estimator, which systematically
@@ -374,23 +374,23 @@ This model fit is displayed as a dashed black line in Figure
 
 Now let $\hat{Y}_C(R_i)$ be that model's prediction for month $i$ in
 2017, and let $\dt[]{Y_i}{R_i} = Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
-with potential values $\dt[]{Y_{Ci}}{R_i}=Y_{Ci}-\hat{Y}_C(R_i)$ and 
+with potential values $\dt[]{Y_{Ci}}{R_i}=Y_{Ci}-\hat{Y}_C(R_i)$ and
 $\dt[]{Y_{Ti}}{R_i}=Y_{Ti}-\hat{Y}_C(R_i)$.
-Instead of \eqref{eq:ignore}, we assume only that the model we have fit to 
+Instead of \eqref{eq:ignore}, we assume only that the model we have fit to
 pre-2017 monthly death counts captured and removed seasonal
-mortality trends, such that the potential residuals $\{{\resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$ 
+mortality trends, such that the potential residuals $\{{\resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$
 can be regarded as random, at least as far as $Z$ is concerned:
 %\begin{ass}{$\resid$-Ignorability}
 \begin{equation}\label{eq:ignore2}
 \resid_{C} \independent Z .
 \end{equation}
 %\end{ass}
-The right panel of Figure \ref{fig:maria} shows residualized death 
+The right panel of Figure \ref{fig:maria} shows residualized death
 counts $\resid = \dt[]{Y}{R}$ as a function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
-Aside from a technical elaboration that will be necessary to apply our method 
-in the general case (\S~\ref{sec:model-eey-c-r}),  
+Aside from a technical elaboration that will be necessary to apply our method
+in the general case (\S~\ref{sec:model-eey-c-r}),
 assumption \eqref{eq:ignore2} is Residual Ignorability, this paper's alternative
 to Strong Ignorability as a basis for analysis of RDDs.
 
@@ -410,8 +410,8 @@ to Strong Ignorability as a basis for analysis of RDDs.
 \subsection{Using~\eqref{eq:ignore2} to Test the Hypothesis of Strictly No Effect}
 \label{sec:using-eqref-test}
 
-In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935}, 
-which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$, 
+In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935},
+which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$,
 our Maria analysis conditions on the potential residual vector
 $\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{12}$.
 (Here and throughout, boldface indicates the concatenation of
@@ -443,12 +443,12 @@ takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: 
 %% example there...)
 [\citealp[\textit{e.g.},][]{little:1989,upton1992FET}] demonstrates his view that random $N_{0}$ and $N_{1}$
 should be treated as fixed after conditioning upon them.
-For quite different assumptions supporting permutation tests in RDDs, 
+For quite different assumptions supporting permutation tests in RDDs,
 see \citet{canayKamat17RDDpermutations}.
 }%
 , where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
-$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$ 
+$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
 is ancillary to, i.e. carries no information about, the target of estimation
 $\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
@@ -532,7 +532,7 @@ Maria caused precisely no change to each month's death count, nor to its residua
 Under $H_0$, we condition on $\bm{A}^*$ and calculate the
 sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
 value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
-of $\bm{Z}$.  The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the 
+of $\bm{Z}$.  The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the
 mean of a size-4, without-replacement sample from $\{E_1, \ldots, E_{12}\}$.
 It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
 test statistic values than the realized value
@@ -1002,16 +1002,16 @@ polynomials. It fared better than OLS, but worse than cubic or quartic robust re
 RDD analysis calls for a ``window'' of estimation
 $\mathcal{W}$, along with a means with which to isolate and remove
 non-causal association of the running variable with potential outcomes.
-In this it resembles processes of true random number generation, 
+In this it resembles processes of true random number generation,
 which begin with physical processes that are either chaotic
 \citep%[e.g.][]
 {uchida2008fast} or quantum
 \citep%[e.g.][]
 {stefanov2000optical}, yet typically contain elements
-of predictability \citep{raz2005extractors}.  
+of predictability \citep{raz2005extractors}.
 %% --- as do Puerto Rico's mortality series, and the transcripts of college sophomores
-Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable 
-component has, with the help of a model, been isolated and removed 
+Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable
+component has, with the help of a model, been isolated and removed
 \citep%[e.g.][]
 {Nisan1999148}.
 
