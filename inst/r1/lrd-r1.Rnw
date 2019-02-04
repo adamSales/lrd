@@ -394,7 +394,7 @@ thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 Aside from a technical elaboration that will be necessary to apply our method
 in the general case (\S~\ref{sec:model-eey-c-r}),
 assumption \eqref{eq:ignore2} is Residual Ignorability, this paper's alternative
-to Strong Ignorability as a basis for analysis of RDDs.
+to Strong Ignorability, as a basis for analysis of RDDs.
 
 \begin{figure}
 \centering
