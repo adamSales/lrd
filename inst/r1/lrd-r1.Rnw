@@ -253,20 +253,21 @@ dat <- subset(dat,month_num%in%window)
 pd <- rbind(dat,dat)
 pd$Deaths <- c(dat$deaths,dat$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
-  levels=c('Death Counts','Residual Death Counts'))
+                  levels=c('Death Counts','Residual Death Counts'))
+pd$hurYear <- factor(ifelse(pd$hurYear,'2017','2010-2016'))
 
-ggplot(pd,aes(month_num,Deaths,group=year,color=year,alpha=hurYear))+
-  geom_line(aes(size=hurYear))+geom_point(size=3)+
+ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYear))+
+  geom_line(size=1)+geom_point()+
   scale_x_continuous(NULL,breaks=1:12,labels=month.abb,minor_breaks=NULL)+ylab(NULL)+
-  scale_color_manual(name='Year',values=c(subwayPalette[1:7],'black'))+
+  scale_color_manual(name='Year',values=c('grey','black'))+
   geom_vline(xintercept=9,linetype='dotted')+
-  scale_size_discrete(range=c(1,2),guide=FALSE)+scale_alpha_discrete(range=c(.5,1),guide=FALSE)+
+  scale_size_discrete(range=c(1,2),guide=FALSE)+scale_alpha_discrete(range=c(.9,1),guide=FALSE)+
   facet_wrap(~type,nrow=1,scales='free_y')+
   geom_hline(data=data.frame(yint=0,type='Residual Death Counts'),aes(yintercept=yint),
     size=2,color='black',linetype='dashed')+
   stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths,year='avg',hurYear=TRUE),
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
 
 ggsave('maria.pdf',width=6.4,height=3)
 @
@@ -324,8 +325,8 @@ Y_{C} \independent Z.
 \end{ass}
 
 Although RCTs validate \eqref{eq:ignore} as a
-matter of course, as applied to the mortality series surrounding
-Maria the assumption is implausibly strong.
+matter of course, it is too strong to plausibly apply to the mortality series surrounding
+Maria.
 For \eqref{eq:ignore} to hold, $Z$ must be independent
 of monthly death counts that would have been observed in
 the absence of ``exposure'' to \maria.
