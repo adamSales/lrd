@@ -386,3 +386,32 @@ polySimShape <- function(nreps=5000,shape,cluster=NULL){
 
     res
 }
+
+
+levTabCI <- function(res,tau){
+    out <- NULL
+    rn <- NULL
+    for(n in c(50,250,2500))
+        for(err in c('t','norm')){
+            rn <- c(rn,paste(err,n))
+            r1 <- t(res[[paste0(n,'_err',err,'_tau',tau)]])
+            out <- rbind(out,c(sh=mean(r1[,'sh.p']<0.05,na.rm=TRUE),ols=mean(r1[,'ik.p']<0.05),cft=mean(r1[,'cft.p']<0.05)))
+        }
+    rownames(out) <- rn
+    out
+}
+
+levTabCI <- function(res,tau){
+    out <- NULL
+    rn <- NULL
+    for(n in c(50,250,2500))
+        for(err in c('t','norm')){
+            rn <- c(rn,paste(err,n))
+            r1 <- t(res[[paste0(n,'_err',err,'_tau',tau)]])
+            out <- rbind(out,c(sh=mean(r1[,'sh.p']<0.05,na.rm=TRUE),ols=mean(r1[,'ik.p']<0.05),cft=mean(r1[,'cft.p']<0.05)))
+        }
+    rownames(out) <- rn
+    out
+}
+
+
