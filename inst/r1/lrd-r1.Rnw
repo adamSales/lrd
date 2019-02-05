@@ -7,7 +7,7 @@
 
 <<echo=FALSE,include=FALSE>>=
 if(grepl('acs',Sys.info()['login'])){
-    dataResults_location <- '../jebs/dataResults/' #(I suppose)
+    dataResults_location <- '~/Dropbox/Sales Hansen/jebs/dataResults/' #(I suppose)
     lrd_package_location <- '~/lrd/'
 } else {
     dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
@@ -66,7 +66,7 @@ if (!exists("analysis_objects")) analysis_objects <- load(paste0(dataResults_loc
 @
 
 \newpage
-\section{Introduction}
+\section{Introduction} \label{sec:introduction}
 
 In a regression discontinuity design
 \citep[RDD;][]{thistlethwaite1960regression}, treatment is allocated to subjects for
@@ -105,7 +105,7 @@ is interpreted as the treatment effect
 However,
 the GPAs in the academic probation dataset are
 discrete, measured in 1/100s of a grade point.
-Further,  
+Further,
 re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
 finely manipulated their GPAs to avoid probation.
@@ -118,53 +118,44 @@ excluding subjects immediately on or around the cut-point%,
 Either circumstance calls
 into question the appropriateness of limit-based methods.
 
-A number of recent methodological papers base RDD inference on
+
+\citet{cattaneo2014randomization} base RDD inference on
 the model that, in effect, the RDD is a randomized controlled trial
 (RCT), at
-least in sufficiently small neighborhoods of the cut-point
-\citep[e.g.][]{cattaneo2014randomization,matteiMealliObsStud,aronowRDDinterference}.  
+least in sufficiently small neighborhoods of the cut-point.
 Under this assumption, once
 attention is confined to a such a region, the difference of
 $Y$-means between subjects falling above and below the cut-point estimates the ATE within that region.
 Despite being natural as a specification of Lee's local randomization concept,
-this simple RCT model requires variables that are causally antecedent to
-the treatment to be independent of $R$.  In general this requirement
-is implausible and unwelcome.  Indeed, in the case of LSO, preventing the data from
-refuting it empirically requires that attention be restricted to a small region surrounding the cutoff.
-This sacrifices internal and external validity, and reduces power. 
+the RCT model involves an independence condition that is rarely plausible in RDDs.
+In the LSO example, the data refute this model --- unless one
+rejects all but the small share of the sample contained in a narrow band
+of the cutpoint, sacrificing power and external validity.
 
 To circumvent limitations of the simple RCT model, and of the limit understanding, this paper weds parametric and local
 randomization ideas into a novel identifying assumption termed ``residual
-ignorability.'' Residual ignorability posits that, within an
-appropriate window of analysis, the \emph{residual}
-of $Y$, following parametric adjustment for $R$, amounts to a randomized
-\emph{component} of each subject's outcome data.
-Our method uses robust M-estimation %\citep[e.g.][]{stefanski1991note}
-to recover this component, to address uncertainty
-inherent in selection of the analysis window.
-The residual ignorability assumption and corresponding ATE
+ignorability.'' The residual ignorability assumption and corresponding ATE
 estimates pertain to all subjects in the window of analysis; discrete
 GPAs do not pose a threat. Manipulation of the running variable
-remains a threat, but one that our combination of sample pruning and
-robust estimation is uniquely equipped to protect against.
+remains a threat, but one that Section~\ref{sec:theMethod}'s combination
+of sample pruning and robust M-estimation is uniquely equipped
+to address.
 
-Limitless RDD analysis combines ideas from distribution-free analysis
-of randomized controlled trials (RCTs; \S~\ref{sec:randProc});
-classical, wholly parametric methods for RDDs
-(\S~\ref{sec:robust-analys-covar}); robust estimation
-(\S~\ref{sec:robust-altern-ordin}); and RDD specification
-tests (\S~\ref{sec:specification}).
-Section~\ref{sec:theMethod} adapts the RDD's identifying
-conditions to limitless estimation targets and sets out an analysis plan
-anticipating common challenges of RDD analysis.
-Section~\ref{sec:appl-effect-acad} executes the plan with the LSO
-study, in the process uncovering indications of manipulation of the
-running variable. Section~\ref{sec:simulation} explores our method's
-performance in two simulation studies.
+The remainder of Section~\ref{sec:introduction} uses a public health
+example to introduce residual ignorability.  Limitless RDD analysis
+combines ideas from distribution-free analysis of randomized
+controlled trials (RCTs; \S~\ref{sec:randProc}); classical, wholly
+parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}); robust
+estimation (\S~\ref{sec:robust-altern-ordin}); and RDD specification
+tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
+adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
+of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
+with the LSO study, Section~\ref{sec:simulation}
+explores the method's performance in simulations and Section~\ref{sec:discussion} takes stock.
 
 
 % Although Huber-White standard errors are common in RDD analysis,
-% ``Huberized'' fitting methods are not; they should be.  
+% ``Huberized'' fitting methods are not; they should be.
 % Robust M-estimation is uniquely suited to the LSO study, because
 % manipulation checks suggest that it calls for a form of robustness to
 % sample contamination that only such methods can provide
@@ -184,8 +175,7 @@ performance in two simulation studies.
 %% defined groups.
 %%
 
-\subsection{Limitless RDD with Historical Data: The Hurricane \maria\
-Death Toll}\label{sec:maria}
+\subsection{The Death Toll from Hurricane \maria}\label{sec:maria}
 
 <<loadMariaDat,echo=FALSE, include=FALSE>>=
 library(dplyr)
@@ -195,10 +185,10 @@ library(pbs)
 library(perm)
 
 if(grepl('acs',Sys.info()['login'])){
-    dataResults_location <- '../jebs/dataResults/' #(I suppose)
+    #dataResults_location <- '../jebs/dataResults/' #(I suppose)
     lrd_package_location <- '~/lrd/'
 } else {
-    dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
+    #dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
     lrd_package_location <- #modify as needed to fit your setup
         "~/Dropbox/Documents/wcs/lrd/"
 }
@@ -263,20 +253,21 @@ dat <- subset(dat,month_num%in%window)
 pd <- rbind(dat,dat)
 pd$Deaths <- c(dat$deaths,dat$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
-  levels=c('Death Counts','Residual Death Counts'))
+                  levels=c('Death Counts','Residual Death Counts'))
+pd$hurYear <- factor(ifelse(pd$hurYear,'2017','2010-2016'))
 
-ggplot(pd,aes(month_num,Deaths,group=year,color=year,alpha=hurYear))+
-  geom_line(aes(size=hurYear))+geom_point(size=3)+
+ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYear))+
+  geom_line(size=1)+geom_point()+
   scale_x_continuous(NULL,breaks=1:12,labels=month.abb,minor_breaks=NULL)+ylab(NULL)+
-  scale_color_manual(name='Year',values=c(subwayPalette[1:7],'black'))+
+  scale_color_manual(name='Year',values=c('grey','black'))+
   geom_vline(xintercept=9,linetype='dotted')+
-  scale_size_discrete(range=c(1,2),guide=FALSE)+scale_alpha_discrete(range=c(.5,1),guide=FALSE)+
+  scale_size_discrete(range=c(1,2),guide=FALSE)+scale_alpha_discrete(range=c(.9,1),guide=FALSE)+
   facet_wrap(~type,nrow=1,scales='free_y')+
   geom_hline(data=data.frame(yint=0,type='Residual Death Counts'),aes(yintercept=yint),
     size=2,color='black',linetype='dashed')+
   stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths,year='avg',hurYear=TRUE),
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
 
 ggsave('maria.pdf',width=6.4,height=3)
 @
@@ -289,20 +280,23 @@ ggsave('maria.pdf',width=6.4,height=3)
 
 Hurricane Maria struck the island of Puerto Rico on September 20,
 2017.
-In spite of widespread devistation, for nearly a year after the
+In spite of widespread devastation, for nearly a year after the
 hurricane, the Puerto Rican government%
 \marginpar{\& the White House,  I think} officially maintained a
 suprisingly low death toll of 64 based on examinations of individual
 death reports.
 Estimates from investigative journalists and academic
 researchers were higher.
-For example, \citet{santos2018use} compared monthly death counts recorded in the
-months after the hurricane to historical values, and estimated that
-Maria caused 1139 excess
-deaths. In this section, we reanalyze these data using 
-limitless regression discontinuity.
+Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
+analysis considered recorded mortality in
+months before and after the hurricane, estimating
+Maria to have caused 1139 excess
+deaths. This section demonstrates residual ignorability,
+if not the scope and particulars of the method detailed in Sections~\ref{sec:revi-select-meth} and~\ref{sec:theMethod},
+in a limited reanalysis of these monthly death counts.
 
-In this example, observations are of months of 2017 and Puerto 
+
+In this example, observations are of months of 2017 and Puerto
 Rico's monthly death
 counts $Y_i$, $i=1,\dots,12$, constitute the outcome.
 The running variable $R_i=i$ is month order and months are
@@ -317,12 +311,13 @@ For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
 Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
-\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate 
+\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate
 of total excess mortality for 2017, $\sum_{i} \tau_{i}$, in due
-course; the remainder of this section demonstrates how to test the
+course.
+The remainder of this section demonstrates how to test the
 hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
-test --- but without assuming % this phrasing disambiguates 
-the independence property % the symbol $\independent$
+test --- but without assuming % this phrasing disambiguates
+the following independence property: % the symbol $\independent$
 \begin{ass}{Strong Ignorability, \citealp{rosenbaum1983central}}
 \begin{equation}\label{eq:ignore}
 Y_{C} \independent Z.
@@ -330,26 +325,26 @@ Y_{C} \independent Z.
 \end{ass}
 
 Although RCTs validate \eqref{eq:ignore} as a
-matter of course, as applied to the mortality series surrounding
-Maria the assumption is implausibly strong.
+matter of course, it is too strong to plausibly apply to the mortality series surrounding
+Maria.
 For \eqref{eq:ignore} to hold, $Z$ must be independent
 of monthly death counts that would have been observed in
 the absence of ``exposure'' to \maria.
-The distribution underlying the September through December counts would 
+The distribution underlying the September through December counts would
 be no different than that of the year's first eight months.
-Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of 
+Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of
 Figure~\ref{fig:maria}, shows there is no precedent for such an equivalence.
-Rather, a marked seasonal trend is apparent, with death counts being higher 
+Rather, a marked seasonal trend is apparent, with death counts being higher
 in the winter months than during the rest of
-the year; \eqref{eq:ignore} cannot be sustained.  
-(See \citet{cattaneo2015randomization},
-\citet{aronowRDDinterference} or \citet{matteiMealliObsStud} for RDD
-methodology founded on \eqref{eq:ignore}.)
+the year; \eqref{eq:ignore} cannot be sustained.
+(For RDD methodology founded on \eqref{eq:ignore}, see
+\citet{cattaneo2015randomization},
+\citet{aronowRDDinterference} or \citet{matteiMealliObsStud}.)
 
 
 Dependence between $R$ and $Y_C$, violating
 \eqref{eq:ignore}, is common in RDDs; in the tradition of regression
-discontinuity, we address this dependence by modeling conditional 
+discontinuity, we address this dependence by modeling conditional
 mean function of $Y_C$ given $R$.
 %% This model is fit using the same data, namely $Y$, $R$, and $Z$, that
 %% is used to estimate treatment effects, a practice which leads to a
@@ -358,19 +353,19 @@ mean function of $Y_C$ given $R$.
 %% the historical death counts from years 2010--2016 in the SLH dataset.
 %% The remainder of the paper will discuss the typical case in which such
 %% historical data are not available.
-Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals 
+Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals
 a periodic, non-linear relationship
-between calendar month and death count, with some years appearing to be 
+between calendar month and death count, with some years appearing to be
 more hazardous than others.
 To accomodate these factors, we regressed 2010-2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
 with knots at Februrary, May, August, and November.
-There are several outlying observations, one of which \citet{santos2018use} remove 
-from the sample prior to analysis. 
+There are several outlying observations, one of which \citet{santos2018use} remove
+from the sample prior to analysis.
 %for instance, death counts in the final three months of 2014---in particular,
 %October---were unusually high.\footnote{We are unaware of weather
-%  or other events explaining the mortality spike of late 2014. Official 
-%  statistics \citep[][p. 44]{PRsalud} attribute 
+%  or other events explaining the mortality spike of late 2014. Official
+%  statistics \citep[][p. 44]{PRsalud} attribute
 %  most of 2014's excess deaths to common chronic diseases.}
 Rather than identifying and removing outliers informally, we fit the regression model
 using a robust redescending M-estimator, which systematically
@@ -381,35 +376,25 @@ This model fit is displayed as a dashed black line in Figure
 
 Now let $\hat{Y}_C(R_i)$ be that model's prediction for month $i$ in
 2017, and let $\dt[]{Y_i}{R_i} = Y_i-\hat{Y}_C(R_i)$ be the prediction residual,
-with potential values $\dt[]{Y_{Ci}}{R_i}=Y_{Ci}-\hat{Y}_C(R_i)$ and 
+with potential values $\dt[]{Y_{Ci}}{R_i}=Y_{Ci}-\hat{Y}_C(R_i)$ and
 $\dt[]{Y_{Ti}}{R_i}=Y_{Ti}-\hat{Y}_C(R_i)$.
-Instead of \eqref{eq:ignore}, we assume only that the model we have fit to 
+Instead of \eqref{eq:ignore}, we assume only that the model we have fit to
 pre-2017 monthly death counts captured and removed seasonal
-mortality trends, such that the potential residuals $\{{\resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$ 
+mortality trends, such that the potential residuals $\{{\resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$
 can be regarded as random, at least as far as $Z$ is concerned:
 %\begin{ass}{$\resid$-Ignorability}
 \begin{equation}\label{eq:ignore2}
 \resid_{C} \independent Z .
 \end{equation}
 %\end{ass}
-In other words, we maintain that our preliminary modeling and 
-residualization mimics the procedures of ``true random number generators.'' 
-These begin with a physical process that is either chaotic
-\citep[e.g.][]{uchida2008fast} or quantum
-\citep[e.g.][]{stefanov2000optical}, yet may contain an element
-of predictability \citep{raz2005extractors}, just as Puerto Rico's mortality 
-series does. The true random numbers are only obtained after the predictable 
-component has, with the help of a model, been isolated and removed 
-\citep[see, e.g.][]{Nisan1999148}.
-
-The right panel of Figure \ref{fig:maria} shows residualized death 
+The right panel of Figure \ref{fig:maria} shows residualized death
 counts $\resid = \dt[]{Y}{R}$ as a function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
-Aside from a technical elaboration that will be necessary to apply our method 
-in the general case (Section~\ref{sec:model-eey-c-r}),  
+Aside from a technical elaboration that will be necessary to apply our method
+in the general case (\S~\ref{sec:model-eey-c-r}),
 assumption \eqref{eq:ignore2} is Residual Ignorability, this paper's alternative
-to limits and to Strong Ignorability as bases for analysis of RDDs.
+to Strong Ignorability, as a basis for analysis of RDDs.
 
 \begin{figure}
 \centering
@@ -424,28 +409,29 @@ to limits and to Strong Ignorability as bases for analysis of RDDs.
 \label{fig:maria}
 \end{figure}
 
-\subsection{Testing a Strict Null Hypothesis About the Maria Death Toll}
+\subsection{Using~\eqref{eq:ignore2} to Test the Hypothesis of Strictly No Effect}
+\label{sec:using-eqref-test}
 
-In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935}, 
-which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$, 
+In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935},
+which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$,
 our Maria analysis conditions on the potential residual vector
 $\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{12}$.
 (Here and throughout, boldface indicates the concatenation of
 $n$ variables or constants.)
-An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
-is that it does not correspond to any simple reduction of observed
-data, since neither $\bm{Y}_C$ nor $\resid_{Ci}$ is observed unless $Z_{i}=0$.
+%An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
+%is that it does not correspond to any simple reduction of observed
+%data, since neither $\bm{Y}_C$ nor $\resid_{Ci}$ is observed unless $Z_{i}=0$.
 The approach is feasible when testing
 ``strict'' null hypotheses, hypotheses that designate a value for each
 $\resid_{Ti} - \resid_{Ci}$ with
 $Z_{i}=1$, not just $\EE(\resid_{T} - \resid_{C} | Z =1)$.
 This includes the hypothesis
 of strictly no effect, $H_{0}: Y_{T} \equiv Y_{C}$, under which
-$\bm{\resid}_{T}$ is simply $\bm{\resid}$
-(recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
-$Y$, which are ultimately of interest,
-are exactly equivalent to null hypotheses about $\resid$, which may be
-more readily tested).
+$\bm{\resid}_{T} \equiv \bm{\resid}_{C}=\bm{\resid}$.
+%Recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
+%$Y$, which are ultimately of interest,
+%are exactly equivalent to null hypotheses about $\resid$, which may be
+%more readily tested.
 
 
 For this analysis $Y$, $R$ and $Z$ data for years 2010--2016 are treated as fixed --- formally,
@@ -458,17 +444,17 @@ takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: 
 %% the flowers are red not purple.  (In case a reviewer says they couldn't locate the
 %% example there...)
 [\citealp[\textit{e.g.},][]{little:1989,upton1992FET}] demonstrates his view that random $N_{0}$ and $N_{1}$
-should be treated as fixed after conditioning upon them.}%
+should be treated as fixed after conditioning upon them.
+For quite different assumptions supporting permutation tests in RDDs,
+see \citet{canayKamat17RDDpermutations}.
+}%
 , where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
-$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$ 
+$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
 is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_T$ but none on $\bm{\resid}_T$.)
-In contrast, $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
-or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$,.
-Formally, for a statistical model situating $\PP(\resid_{T} - \resid_{C}|
-R)$ in a translation family, $\bm{A}^*$ is S-ancillary
-\citep{cox2006pos,lehmannRomano2006TSH} to the target parameters.
+$\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
+$\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
+or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -538,10 +524,8 @@ hl <- diff[which.min(diff[,2]),1]
 @
 Under $H_0$, we may exactly enumerate the sampling distribution of any
 test statistic $T(\bm{\resid}_C,\bm{Z})=T(\bm{\resid},\bm{Z})$ conditional on
-$\bm{A}^*$; we calculate exact p-values by comparing a test statistic
+$\bm{A}^*$; the permutational p-value is found by comparing a test statistic
 to its conditional distribution thus enumerated.
-(When the number of possible permutations of $\bm{Z}$ is large, the sampling
-distribution may be estimated with Monte Carlo methods.)
 In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
 since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
 Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
@@ -550,7 +534,7 @@ Maria caused precisely no change to each month's death count, nor to its residua
 Under $H_0$, we condition on $\bm{A}^*$ and calculate the
 sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
 value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
-of $\bm{Z}$.  The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the 
+of $\bm{Z}$.  The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the
 mean of a size-4, without-replacement sample from $\{E_1, \ldots, E_{12}\}$.
 It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
 test statistic values than the realized value
@@ -558,56 +542,25 @@ $\bar{\resid}_{z=1}=$\Sexpr{round(testStat(z,rr))} (which is unique in
   the distribution).
 This implies a two-sided ``mid'' p-value \citep{agresti2005comment} of
 $2(\Sexpr{pval['nmore']}+0.5)/\Sexpr{cardZ}\approx\Sexpr{round(pval['p'],2)}$
-for testing $H_0$.
+for $H_0$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This combination of regression and permutation testing applies just as readily
-to test the hypothesis $\resid_T = \resid_C + c$, for any constant $c$, and by 
-extension to produce confidence intervals and treatment effect estimates in the 
-Hodges-Lehmann-type estimates of effect.  Rather that pursuing this line further,
-however, we now turn to developing a residual ignorability-based procedure using 
-M-estimation \citep[][also called ``generalized estimating
-equations'' or ``generalized method of
-moments'']{huber1964robust,stefanski2002calculus}.
-Although less equipped for analyses with small $n$s, this approach
-will be more adaptable to the common scenario in which treatment effects and parameters determining
-the transformation $(y,r) \mapsto \dt[]{y}{r}$ must be estimated from the same sample.
-
-
-In the \maria\ dataset, there was no distinction between treatment
-assignment and compliance. \marginpar{Relocate me!\ldots}% to somewhere later in the paper
-However, in many experiments and in so-called ``fuzzy'' regression
-discontinuity designs, subjects assigned to treatment do not always
-receive it.
-In that case, let $D_{i}$ denote the treatment $i$ actually
-received --- the ``dose.''
-This $D$ is an intermediate outcome, so there are
-corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
-+ (1-Z)D_{C}$.
-Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
-will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
-subjects assigned to the treatment who avoid it, but no one gets
-treatment without being assigned to it.
-We shall also posit the exclusion restriction,
-that $Z$ influences $Y$ only by way of its effect on $D$
-\citep{bloom1984ans,Angrist:etal:1996,imbens:rose:2005}.
-Our focus of estimation is the
- ``treatment-on-treated'' effect (TOTE), $\EE(Y_{T} - Y_{C}|
- D_{T}=1)$.
-Then, we test hypotheses of the form
-$H_{\tau}: Y_{T} - \tau D_{T} = Y_{C} - \tau D_{C}$ by
-comparing $T(\bm{\resid}-\tau\bm{D}, \bm{z})$ to the
-appropriate sampling distribution.
-Although in the case of full compliance $\bm{D}\equiv\bm{Z}$ the
-Hodges-Lehmann estimator
-$\hat{\tau}_{\text{HL}}$ is equal to the difference in means of
-$\resid$ between the treatment and control groups, the same cannot
-always be said when $\bm{D}\ne \bm{Z}$.
-Similarly, the
-confidence interval or set induced by~\eqref{eq:tudef} requires a distinct explicit
-test for each of a range of $\tau$s
-\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
+This combination of regression and permutation testing applies just as
+readily to test the hypothesis $\resid_T = \resid_C + c$, for any
+constant $c$.  In the Maria example, no such hypothesis is sustainable
+at level 0.05 unless $c\geq$ \Sexpr{round(lb,-1)}, corresponding to
+\Sexpr{round(4*lb, -1)} excess deaths due to the hurricane.  Upper
+confidence limits and Hodges-Lehmann-type estimates of the effect can
+also be obtained in this way. Rather that pursuing this approach
+further, we now turn to developing a residual ignorability-based
+procedure using M-estimation \citep[][also called ``generalized
+estimating equations'' or ``generalized method of
+moments'']{huber1964robust,stefanski2002calculus}.  Although less
+equipped for analyses with small $n$s, this approach is less rigid
+about the form of the treatment effect, and more adaptable to the
+common scenario calling for simultaneous estimation of treatment
+effects and parameters governing residualization.%$(y,r) \mapsto\dt[]{y}{r}$.
 
 
 \input{lrd-sec2+3-r1}
@@ -697,7 +650,6 @@ For $\mathcal{W}_{0.5}$  each (Bonferroni-corrected) $p$-value
 exceeds $0.2$; downward adjustment of the bandwidth
 is not indicated.
 
-
 % Unfortunately, there is no lagged measurement of the outcome
 % \citep{maynard2013strengthening}; the data do not speak to the
 % possibility of
@@ -722,7 +674,8 @@ is not indicated.
 %% $\mathcal{W}_{0.5}$, yielded a p-value of $p=$Sexpr{round(balance0.5,2)}, greater
 %% than $\alpha_\mathcal{F}=0.1$.  (This is an approximate, Normal-theory
 %% $p$-value, as computed with software of \citet{bowers2016ritools}.)
-<<echo=FALSE>>=
+
+<<echo=FALSE,include=FALSE>>=
 stopifnot(SHmain[['bal.pval']]>.2)
 stopifnot(mccrary1<.001)
 stopifnot(max(c(frandsen1[,'p'],frandsen2[,'p']))<0.001)
@@ -1048,18 +1001,21 @@ polynomials. It fared better than OLS, but worse than cubic or quartic robust re
 
 \section{Discussion} \label{sec:discussion}
 
-
-Just as generation of true random numbers
-calls for an unpredictable process and a ``randomness extraction''
-procedure separating its random and systematic components (Sec.~\ref{sec:theMethod}), RDD
-analysis calls for a specific ``window'' of estimation
-$\mathcal{W}$ and a specific means of isolating and removing
-association between the outcome and the running variable that does not
-reflect on efficacy of the treatment.
-Methods based on Residual Ignorability (Sec.~\ref{sec:model-eey-c-r}) resemble classical RDD methods, as opposed to
-limit-based or local permutation methods, in seeing these as distinct
-objectives, the one addressed in preliminary testing and the other with
-subsequent fitting of a parametric model for $\EE(Y |R)$.
+RDD analysis calls for a ``window'' of estimation
+$\mathcal{W}$, along with a means with which to isolate and remove
+non-causal association of the running variable with potential outcomes.
+In this it resembles processes of true random number generation,
+which begin with physical processes that are either chaotic
+\citep%[e.g.][]
+{uchida2008fast} or quantum
+\citep%[e.g.][]
+{stefanov2000optical}, yet typically contain elements
+of predictability \citep{raz2005extractors}.
+%% --- as do Puerto Rico's mortality series, and the transcripts of college sophomores
+Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable
+component has, with the help of a model, been isolated and removed
+\citep%[e.g.][]
+{Nisan1999148}.
 
 The method of Section~\ref{sec:theMethod} targets the TOTE or ATE within
 $\mathcal{W}$, as opposed to a difference of limits.

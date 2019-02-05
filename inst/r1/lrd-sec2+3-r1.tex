@@ -1,6 +1,152 @@
 
 
-\section{Conventional RDD Methods}
+\section{Review of selected methods}\label{sec:revi-select-meth}
+Capturing the local randomization essence of the RDD calls for
+a merger of RDD methods with concepts developed for RCTs. This
+section selectively reviews relevant literatures.
+
+Let $Z \in \{0,1\}$ indicate assigment to treatment ($Z=1$) as opposed to control
+($Z=0$).  For an RDD one defines $Z \equiv \indicator{R< 0}$,
+$\indicator{R \leq 0}$, $\indicator{R\geq 0}$ or $\indicator{R > 0}$,
+depending on how intervention eligibility relates to the threshold,
+where $\indicator{x}=1$ if $x$ is true and $0$ otherwise.
+Let $Y$ represent the outcome of interest.  
+For simplicity assume non-interference, the model that
+a subject's response may depend on his but not also on other subjects'
+treatment assignments \citep{cox:1958,rubin:1978}.  Thus we may take each $i$
+to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is observed, depending on whether $z_i=1$ or $0$, respectively; 
+ observed
+responses $Y$ coincide with $ZY_{T}+(1-Z)Y_{C}$.
+
+In the case of imperfect compliance, let $D$ indicate whether treatment was actually
+received.
+This $D$ is an intermediate outcome, so there are
+corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
++ (1-Z)D_{C}$.
+Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
+will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
+subjects assigned to the treatment who avoid it, but no one gets
+treatment without being assigned to it.
+We shall also posit the exclusion restriction,
+that $Z$ influences $Y$ only by way of its effect on $D$
+\citep{bloom1984ans,Angrist:etal:1996,imbens:rose:2005}.
+Our focus of estimation is the
+ ``treatment-on-treated'' effect (TOTE),
+%complier
+%average causal effect (CACE),
+$\EE(Y_{T} - Y_{C}| D_{T}=1)$.
+
+\subsection{Neyman-type inference about the CACE in RCTs}\label{sec:randProc}
+
+With moderate or large samples, the approach deriving from Neyman
+\citeyearpar{neyman:1935} gives randomization- but not
+permutation-based inferences, enabling it to test ``weak'' null
+hypotheses, for example $H: \EE(Y_T - Y_C) =c$ or
+$\EE(Y_{T} - Y_{C}| D_{T}=1) =c$, as opposed to Fisherian ``strong''
+hypotheses of form $H: Y_T - Y_C \equiv c$, as tested in
+Section~\ref{sec:using-eqref-test}, or $H: Y_T - Y_C \equiv D_{T}c$.
+
+To do this it conditions somewhat differently, on
+centered potential outcomes
+$\tilde{\mathbf{Y}}_{T} = \mathbf{Y}_{T} - \bar{Y}_{T}$ and
+$\tilde{\mathbf{Y}}_C$, as opposed to the uncentered
+and $\mathbf{Y}_{C}$.
+This centering is around study population means,
+$\bar{Y}_{T} = n^{-1}\sum_{i}Y_{Ti}$ and
+$\bar{Y}_{C} = n^{-1}\sum_{i}Y_{Ci}$, as opposed to within-group means
+$\overline{(Y_{T})}_{Z=1} = N_{1}^{-1}\sum_{i}
+Y_{Ti}\indicator{Z_{i}=1}$
+and
+$\overline{(Y_{C})}_{Z=0} = N_{0}^{-1}\sum_{i}
+Y_{Ci}\indicator{Z_{i}=0}$.
+As a result, the Neyman-type conditioning variables $\tilde{\mathbf{Y}}_{T}$ and
+$\tilde{\mathbf{Y}}_{C}$ are entirely unobserved, in contrast to the
+Fisherian conditioning variable $\mathbf{Y}_{C}$, which was at least
+partly observed.  But by the same token, for inference about the parameter
+$\EE(Y_{T} - Y_{C})$ under a
+location-scale family model of $\PP[(Y_{C}, Y_{T})]$,
+ %, or $\EE(Y_{T} - Y_{C} | D_{T}=1)$,
+the variable
+$(\tilde{\mathbf{Y}}_{C}, \tilde{\mathbf{Y}}_{T})$ is uninformative. 
+Formally, it is S-ancillary \citep{cox2006pos,lehmannRomano2006TSH}
+to $\EE(Y_{T} - Y_{C})$. Similarly,  under a location-scale model for $\PP[ (Y_{C}, Y_{T}) |
+D_{T}=1]$, $(\tilde{\mathbf{Y}}_{C}, \tilde{\mathbf{Y}}_{T}, \mathbf{D}_{T})$ is S-ancillary for
+inference about the TOTE, as is
+%$(\tilde{\mathbf{Y}}_{C}, \tilde{\mathbf{Y}}_{T}, \mathbf{D}_{T}, \mathbf{D}_{C})$ and
+$(\tilde{\mathbf{Y}}_{C},
+\tilde{\mathbf{Y}}_{T}, \mathbf{D}_{T}, \mathbf{D}_{C}, N_{1},
+N_{0})$.  The latter is denoted ``$\mathbf{A}^{\dagger}$'' (the symbol ``$\mathbf{A}^{*}$'' having been used in \S~\ref{sec:using-eqref-test} and ``$\mathbf{A}$'' being reserved for a statistic to be
+introduced in \S~\ref{sec:model-eey-c-r}).
+
+The archetypical
+Neyman-type test statistic \citeyearpar{neyman:1923,neyman1934stratifiedsampling} is
+  % If $\tilde{\mathbf{y}}_H$ denotes the potential response
+  % $\mathbf{y}_{c}$ that would be entailed by a strong null $H$, in
+  % combination with observations $\mathbf{y}$ and $\mathbf{d}$, then
+\begin{align} \label{eq:tudef}
+t_{u}({\mathbf{y}},\mathbf{z}) &=
+\frac{\bar{{y}}_{z=1} -
+                             \bar{{y}}_{z=0}}{
+\mathrm{SE}_{u} \left\{ \bar{{y}}_{Z=1} -  \bar{y}_{Z=0} \right\}
+                             },\, \text{where}
+\\
+%% where $\overline{v}_{z=j} = n_{j}^{-1} \sum_{i: z_{i} = j}
+%% v_{i}$, $n_{j} = \sum_{i}\indicator{z_{i} =j}$, for $j = 0, 1$, and
+\mathrm{SE}_{u}^2 \left( \bar{y}_{Z=1} -  \bar{y}_{Z=0} \right) &= \frac{s_{z=1}^{2}({\mathbf{y}})}{n_{1}} +
+    \frac{s_{z=0}^{2}({\mathbf{y}})}{n_{0}}  \label{eq:sudef}
+% \\
+%     s_{z=j}^{2}(\mathbf{v}) &= \frac{1}{n_{j}-1}\sum_{i: z_{i} = j}
+% (v_{i} - \bar{v}_{z=j})^{2} .\nonumber
+% \end{equation}
+\end{align}
+is the ordinary unpooled two-sample variance. With conditioning on $\mathbf{A}^{\dagger}$ --- as opposed to the
+conditioning on $\mathbf{Z}$, and $\mathbf{Z}$ only, relative to which
+two-sample $t$-statistics like~\eqref{eq:tudef} are more commonly
+understood --- \eqref{eq:sudef} equals the sum of a zero-mean
+disturbance and
+${s^{2}({\mathbf{Y}_{T}})}/{N_{1}} +
+{s^{2}({\mathbf{Y}_{C}})}/{N_{0}}$, an upper bound of the variance, as
+conditioned on $\mathbf{A}^{\dagger}$, of
+$\overline{(Y_{T})}_{Z=1} - \overline{(Y_{C})}_{Z=0}$.  In consequence,
+if $H_{0}: \EE Y_{T} =\EE Y_{C}$ is true then
+$t_{u}(\mathbf{Y}, \mathbf{Z})\stackrel{d}{\rightarrow}\mathrm{Normal}(0,v)$,
+some $v\leq 1$, conditional on $\mathbf{A}^{\dagger}$; see Appendix~\ref{apnd:RICLT}.%\citep[Section~\ref{apnd:RICLT}]{lrdauthors:supp}.
+
+% Although $t_{u}$ can also be used in \eqref{eq:01} for permutation
+% tests of the sharp null $Y_{T} \equiv Y_{C}$
+% \citep[e.g.,][]{chung2013exact}, more commonly it is paired with
+% the large-sample approximation, to test the weak null $\EE(Y_{T} -
+% Y_{C}) =0$.
+
+More generally, for any $c$ we can assess
+$t_{u}(\mathbf{Y}-c\mathbf{D}, \mathbf{Z})$ against a standard Normal
+or central $t$ distribution to test
+$H_{c}: \EE( Y_{T} - cD_{T}) =\EE (Y_{C} - cD_{C})$. 
+The set \{$c$:
+$H_{c}$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
+$100(1-\alpha)\%$ confidence set for the TOTE; the $c$ solving 
+$t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to be unique, is a 
+corresponding point estimate. 
+Under full compliance, the two-sided 95\% confidence interval induced in this
+manner is the familiar
+$\bar{y}_{z=1} -\bar{y}_{z=0} \pm 1.96\, \mathrm{SE}_{u}(\bar{y}_{Z=1}
+-\bar{y}_{Z=0})$.  If compliance is incomplete, then determining the
+confidence interval or set induced by~\eqref{eq:tudef} requires a distinct explicit
+test for each of a range of $c$s: by~\eqref{eq:sudef}, if $\mathbf{d}
+\neq \mathbf{z}$ then the value
+of $\mathrm{SE}_{u}(\overline{(y-c d)}_{Z=1}
+-\overline{(y - c d)}_{Z=0})$ depends on $c$.  As compared to Wald-type
+confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
+\mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
+hypothesis independent quantity, under partial compliance this iterative method
+% of separate evaluation of $\mathrm{SE}_{u} \left\{
+%   \overline{({y}_{H_{\tau}})}_{Z=1} -
+%   \overline{({y}_{H_{\tau}})}_{Z=0} \right\}$ for each $H_{\tau}$,
+improves correspondence of nominal and actual confidence levels
+% , particularly if the ``instrument,'' $Z$, is ``weak,''
+% i.e. $\PP(D_{T} =1) \approx \PP(D_{C} =1)$
+\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
+
 
 
 \subsection{The \textsc{Ancova} Model for RDDs}\label{sec:robust-analys-covar}
@@ -72,7 +218,7 @@ permutation tests
 are not
 tractable.  Under the parametric \textsc{ancova} model, however, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
-\mathbf{Y}_{C})$ (or \S~\ref{sec:randProc}'s $\mathbf{A}^{*}$), it is straightforwardly Normal. Indeed, it is
+\mathbf{Y}_{C})$ (or \S~\ref{sec:randProc}'s $\mathbf{A}^{\dagger}$), it is straightforwardly Normal. Indeed, it is
 algebraically equivalent to the $Z$-coefficient estimated by
 regression of ${\mathbf{Y}_H}$ on $\mathbf{1}, \mathbf{R}$ and
 $\mathbf{Z}$; under \textsc{ancova} assumptions, that coefficient's
@@ -487,8 +633,8 @@ should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
 %% RDDs differ from RCTs in an important way:
 %% $Y_C$ typically correlates with $R$, and is therefore not independent
-%% of $Z$; the main assumption of Sections~\ref{sec:rand}
-%% and \ref{sec:covariates} is violated.  Can it be relaxed to an assumption that is
+%% of $Z$; Strong Ignorability \eqref{eq:ignore} is violated. 
+%% Can it be relaxed to an assumption that is
 %% simultaneously plausible in RDDs and compatible with similar methods?
 
 When circumstances call for generating random numbers, such as in
@@ -627,7 +773,7 @@ $\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$,
 are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
 the variables comprising $\mathbf{A}$ are jointly
 %\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
-S-ancillary, just as $\mathbf{A}^{*}$ was seen to be
+S-ancillary, just as $\mathbf{A}^{\dagger}$ was seen to be
 in Section~\ref{sec:randProc}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
 inferences.
