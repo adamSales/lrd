@@ -16,23 +16,6 @@ to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is o
  observed
 responses $Y$ coincide with $ZY_{T}+(1-Z)Y_{C}$.
 
-In the case of imperfect compliance, let $D$ indicate whether treatment was actually
-received.
-This $D$ is an intermediate outcome, so there are
-corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
-+ (1-Z)D_{C}$.
-Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
-will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
-subjects assigned to the treatment who avoid it, but no one gets
-treatment without being assigned to it.
-We shall also posit the exclusion restriction,
-that $Z$ influences $Y$ only by way of its effect on $D$
-\citep{bloom1984ans,Angrist:etal:1996,imbens:rose:2005}.
-Our focus of estimation is the
- ``treatment-on-treated'' effect (TOTE),
-%complier
-%average causal effect (CACE),
-$\EE(Y_{T} - Y_{C}| D_{T}=1)$.
 
 \subsection{The \textsc{Ancova} Model for RDDs}\label{sec:robust-analys-covar}
 
@@ -48,24 +31,26 @@ models
 \citep{thistlethwaite1960regression}.
 A potential outcomes version of the model is
  $Y_{Ci} = \alpha_{0} + \beta R_{i} + \epsilon_{Ci}$ and
-$Y_{Ti} = \alpha_{0} +
- (\alpha_{1} - \alpha_{0})D_{Ti} + \beta R_{i} + \epsilon_{Ti}$, with
+$Y_{Ti} = \alpha_{1}  + \beta R_{i} + \epsilon_{Ti}$, with
  $\epsilon_{Ci} \sim \mathrm{Normal}(0, \sigma^{2})$ and
  $\epsilon_{Ti} \sim \mathrm{Normal}(0, \sigma^{2})$.
 In marked contrast to RCTs, it does
 not require that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
 $Y_{C}$ and $Y_{T}$ are presumed to associate with $R$, which in turn
-determines $Z$. Nonetheless, under this model the ordinary least squares
-(OLS) contrast $\hat{\alpha}_{1} - \hat{\alpha}_{0}$ is unbiased for
-$\alpha_{1} - \alpha_{0}$ --- the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
+determines $Z$. 
+Nonetheless, under this model the ordinary least squares
+(OLS) contrast $\hat{\alpha}_{1} - \hat{\alpha}_{0}$---estimated by
+regressing $Y$ on an intercept term, $R$ and an indicator that $R>c$---is unbiased for
+$\alpha_{1} - \alpha_{0}$. 
+This estimand is the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
 limitless estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
 
 Though starting from a different place, this model is closely related
 to the model we used to analyze mortality due to Hurricane Maria
 (\S~\ref{sec:using-eqref-test}).
-Consider the hypothesis $H: Y_{T} = Y_{C} + \tau D_{T}$.
-Then define ${{Y}_H} = {Y} - \tau {D}$ (so that under $H$, $Y_H=Y_C$)
+Consider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
+Then define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
 b\mathbf{r}$.
 If we estimate $(\alpha,\beta)$ as  $\hat\theta = (\hat\alpha, \hat\beta)$, the intercept and $R$-slope
@@ -1049,3 +1034,5 @@ improves correspondence of nominal and actual confidence levels
 % , particularly if the ``instrument,'' $Z$, is ``weak,''
 % i.e. $\PP(D_{T} =1) \approx \PP(D_{C} =1)$
 \citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
+
+\subsection{Fuzzy RD}
