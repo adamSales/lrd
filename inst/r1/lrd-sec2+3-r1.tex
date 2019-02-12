@@ -79,21 +79,20 @@ The HL estimate for $\tau$ corresponding to these statistical tests is
 algebraically equal to the $Z$-coefficient from an OLS estimate of
 \eqref{eq:classicOLS}.  
 
-The model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
-may be relaxed.  OLS estimates of $\alpha_{0}$, $\alpha_{1}$ and
+The \textsc{ancova} model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
+may be relaxed.  OLS estimates of $\alpha_1-\alpha_{0}$ and
 $\beta$ remain unbiased under non-Normality, provided
 the $\epsilon$s have expectation 0 and bounded variances.  The
 ordinary \textsc{ancova} standard error does not require Normality of
 the $( \epsilon_{i}: i )$, either, for use in large samples, although
-it does require that they have a common variance.  To test
+it does require that they have a common variance.  
+To test
 $\EE\{ \dt[\hat\theta]{{Y_H}}{ R} | Z=1\} = \EE\{ \dt[\hat\theta]{{Y_H}}{
 R} | Z=0\}$
 under potential heteroskedasticity, one estimates
-$\var\left\{ \overline{\dt[\hat\theta]{{Y_H}}{ R}}_{Z=1}
-  -\overline{\dt[\hat\theta]{{Y_H}}{ R}}_{Z=0} \right\}$
+$\var\left\{t(\mathbf{Y}_H , \mathbf{Z})\right\}$
 using a sandwich or Huber-White estimator,
-$\mathrm{SE}_{s}^{2} \left\{ \overline{e({Y_H}| R)}_{Z=1} -
-  \overline{e({Y_H}| R)}_{Z=0} \right\}$
+$\mathrm{SE}_{s}^{2} \left\{ t(\mathbf{Y}_H , \mathbf{Z}) \right\}$
 \citep{huber1967behavior,mackinnonWhite1985sandwichHC,longErvin2000sandwichHC,
 bellmccaffrey2002sandwichSEs,pustejovskyTipton2017sandwichSEs}, %as opposed to the %$\mathrm{SE}_{p}$; then
 %$\mathrm{SE}_{u} %( \overline{e({Y_H}| R)}_{Z=1} -  \overline{e({Y_H}| R)}_{Z=0} )$
@@ -123,86 +122,119 @@ errors are calculated by the sandwich method then under
 $H: Y_{T} = Y_{C}$, \eqref{eq:tedef} is algebraically equivalent to the
 $t$-statistic of contrast $\hat{\alpha}_{1} -\hat{\alpha}_{0}$.
 
+\subsection{Specification Tests}\label{sec:specification}
 
-% \subsection{Restricting the Window of Analysis in
-%   RDDs}\label{sec:window}
+Analysis of RCTs and quasiexperiments often hinges on assumptions of
+independence of
+ $\mathbf{Z}$ from $(\mathbf{X}, \mathbf{Y}_{C}, \mathbf{Y}_{T})$.
+%% Analogous statements will hold for more complex randomization or
+%% ignorability assumptions as well.
+ Although neither $\mathbf{Z} \independent \mathbf{Y}_{C}$ nor
+ $\mathbf{Z} \independent \mathbf{Y}_{T}$ can be directly tested,
+ since potential outcomes are only partly observed, assumptions of form
+ $\mathbf{Z} \independent \mathbf{X}$ are falsifiable: researchers can
+ conduct placebo tests for effects of $Z$ on $X$.
+
+Of course, treatment cannot affect pre-treatment variables; this is
+model-checking (%\citealp{bayarriBerger2000pvalues};
+\citealp[][\S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
+%\citealp[][Ch.~14]{lehmannRomano2006TSH}
+).  Here as
+ elsewhere \citep{box1980sab}, checks finding fault with a model prompt
+ refinement, not abandonment; refinements typical of RDD analysis remove portions of
+ the sample that are suspected of contamination.
 
 
-% %% For instance, \citet{thistlethwaite1960regression} studied the effect
-% %% of receiving a National Merit Scholarship on students' probabilities
-% %% of attending graduate school.
-% %% Presumably, no one is considering awarding merit scholarships to students with particularly
-% %% low PSAT scores.
-% %% For these students, the hypothetical effect of merit scholarships is
-% %% not relevant.
-% %% The graduate school choices of students who who barely qualified, or
-% %% barely missed qualifying, though, could be quite interesting.
-% %% In these cases, both statistical and substantive considerations
-% %% recommend restricting analysis to a window $\mathcal{W}$ around the
-% %% cutoff.
+ Writing in the RDD context, \citet{cattaneo2014randomization} test
+ for marginal associations of $\mathbf{Z}$ with covariates $\mathbf{X}_{i}$,
+ $i=1, \ldots, k$, using the permutational methods that are applied
+ in Fisherian analysis of RCTs.
+% Specifically, they
+%  obtain p-values though \eqref{eq:01}, with test statistics
+%  $t(\mathbf{x}_{i}, \mathbf{z}) = |\overline{(x_{i})}_{z=1} -
+%  \overline{(x_{i})}_{z=0}|$,
+%  $ i \leq k$, after conditioning on $\mathbf{X}$ in addition to
+%  $\sum_{i} Z_{i}$.
+Relatedly, \citet{lee2010regression} recommend a
+ tests for conditional association, given $R$, of $\mathbf{Z}$ and
+ $\mathbf{X}$, by fitting models like those discussed in
+ \S~\ref{sec:robust-analys-covar} for impact estimation, but with
+ covariates rather than outcomes as independent variables%
+%, they incorporate covariance adjustments for $R$
+. %, testing
+ %whether these regressions' $z$ coefficients are plausibly
+ %0.
+Viewing the $R$-slopes and intercepts as simultaneously estimated
+ nuisance parameters, these are balance tests applied to
+ the covariates' residuals, %net of linear association with $R$,
+rather than to the covariates themselves.
 
-% Adaptive choice of $\mathcal{W}$ is an open topic of research.
-% \citet{imbens2012optimal} produce regularized, non-parametric
-% estimates of the curvature of $\EE(Y | R=r)$ in the vicinity of the
-% cutpoint, using these to identify bandwidths approximately minimizing
-% the mean-squared error of
-% $\lim_{r\downarrow c} \EE(Y | R=r) - \lim_{r\uparrow c} \EE(Y |
-% R=r)$. %referenced in r1 Reply to AE
-% An alternative approach relies on specification checks, refining
-% $\mathcal{W}$ until it passes a designated test or battery of tests.
-% The initial choice of $\mathcal{W}$ may emerge from substantive
-% motivation; other analysts start with a $\mathcal{W}$ that's likely to
-% be too wide, expecting the specification tests to force them to narrow
-% it.  For example, let $H_b$ denote the hypothesis that the analysis
-% model assumptions hold for $\{i \in \mathcal{S}:R_i\in
-% \mathcal{W}_b\}$, where $\mathcal{W}_{b} =  (c-b,c+b)$.
-% \citet{cattaneo2014randomization} recommend testing $H_{b}$'s implications for covariate
-% balance at a sequence of bandwidths $b$, starting with a very large
-% $b$, $b_{\mathrm{max}}$, and ending with the largest $b$ such that $H_{b}$
-% is not rejected, $b^{*}$; their recommended window of analysis is
-% $\mathcal{W}_{b^*}$.
-% \citet{liMatteiMealli2015BayesianRD} recommend a similar approach
-% based on Bayesian posterior probabilities of covariate balance for
-% subjects within a sequence of possible bandwidths.
+%Whether covariates or covariate residuals are assessed for lack of
+%correlation with $Z$,
+If there are multiple
+covariates there will be several such tests. To summarize their
+findings with a single p-value, the
+regressions themselves may be fused within a
+``seemingly unrelated regressions'' model, followed by a test of the
+intersection hypothesis that each regression's $z$-coefficient is 0
+\citep{lee2010regression}, or the
+separate tests' p-values could simply be combined using the Bonferroni
+principle.  Li et al.'s
+\citeyearpar{liMatteiMealli2015BayesianRD} RDD method wraps
+its specification checking steps into a Bayesian model. % that is also used for effect
+%estimation.
+This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\mathbf{X}$, are not covariance adjusted for $R$.
 
-% %% Concerns about multiple testing sometimes arise, since any number of
-% %% bandwidths may have been tested en route to determining the largest
-% %% $b$ for which $H_{b}$ is sustained; but it so happens that the
-% %% procedure determining the largest non-rejected bandwidth implicitly
-% %% corrects for multiplicity.  Let $\mathcal{B} \subseteq (0, \infty)$ represent a finite set of
-% %% candidate bandwidths, with an accompanying family $\mathcal{F}$ of
-% %% tests, one for each $H_{b}$. Define a modified family $\mathcal{F}^{*}$
-% %% as follows: for each $b \in \mathcal{B}$, $H_{b}$ is rejected at level
-% %% $\alpha$ if only if at level $\alpha$, $\mathcal{F}$ rejects each of
-% %% $\{ H_{b'}: b'\in\mathcal{B}, b'\geq b\}$. The
-% %% testing in order principle \citep[Proposition~1]{rosenbaum2008testing}
-% %% states that if each test in $\mathcal{F}$ tests its corresponding
-% %% $H_{b}$ with size $\alpha$ then, with probability $1-\alpha$ or more,
-% %% $\mathcal{F}^{*}$ rejects only hypotheses $\{H_{b}: b \in \mathcal{B}\}$
-% %% that happen to be false --- $\mathcal{F}^*$ strongly controls the family-wise error rate at level $\alpha$.
 
-% Given the variety of methods available for bandwidth selection, many
-% methodologists recommend estimating treatment effects with each of a
-% range of plausible bandwidths
-% \citep[e.g.,][p.272]{eggers2015validity}.  It's natural to consider a
-% bandwidth plausible only if covariates are well balanced within the
-% corresponding window.
-% %% When $b^{*}$ is the largest
-% %% non-rejected bandwidth,
-% %% $\mathcal{B}^{*} = \mathcal{B} \cap [0, b^{*}]$ suggests itself as
-% %% such a range; each $H_{b}, b\in \mathcal{B}^{*}$ will have been
-% %% sustained in a testing procedure with family-wise type 1 error of
-% %% $\alpha$ or less.
-% %% An analyst might combine tests $\mathcal{F}^*$ with still others,
-% %% $\mathcal{G}$ say, to further narrow the plausible range
-% %% $\mathcal{B}^*$; if tests in $\mathcal{F}$ maintained size
-% %% $\alpha_\mathcal{F}$, while $\mathcal{G}$ strongly controls the
-% %% family-wise error with size $\alpha_\mathcal{G}$, the overall size of
-% %% the combined procedure is no greater than $\alpha_{\mathcal{F}} +
-% %% \alpha_{\mathcal{G}}$.
-% Such goodness of fit testing is often done with
-% $\alpha$ thresholds other than $.05$; for instance, \citet{cattaneo2014randomization} use
-% $\alpha=.15$.
+McCrary's test for manipulation of treatment assignments
+\citeyearpar{mccrary2008manipulation} can be understood as a %lack of
+%association test applied over an $\{|R| < b\}$ window.
+placebo test with the density of $R$ as the independent variable.
+The test's
+purpose is to expose the circumstance of subjects finely manipulating their
+$R$ values in order to secure or avoid assignment to treatment.  Absent
+such a circumstance, if $R$ has a density then it should appear to be
+roughly the same just below and above the cutpoint.  McCrary's
+\citeyearpar{mccrary2008manipulation} test statistic is the difference
+in logs of two estimates of $R$'s density at 0, based on observations
+with $R<0$ and $R>0$ respectively.
+% Inspection of the form of these
+% estimates reveals that, but for the presence of the logarithms, the
+% statistic also is a difference of means over observations with
+% $Z_{i}=0$ or $1$, in both cases with $|R|$ as the quantity being
+% averaged.  (The two means are calculated with weighting, with weights
+% %set to 0 for $|R|>b$ and otherwise
+% determined by the combination of a
+% chosen kernel and bandwidth and simultaneously estimated nuisance parameters; see
+% McCrary's [\citeyear{mccrary2008manipulation}] equation 4.)
+Manipulation is expected to generate a clump just beside the cut
+point, on one side of it but not the other, and this in turn engenders
+imbalance in terms of distance from the cut-point.
+
+
+In practice, specification test failures inform sample exclusions.
+%: failed density tests lead to exclusions around the cut
+%point; failed placebo tests lead to narrower widths of analytic
+%windows.
+Failures of the density test are addressed by restricting
+estimation to observations with $|R|>a$, some $a \geq 0$
+\citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}.
+When balance tests fail,
+\citet{lee2010regression} would select a window
+$\mathcal{W} \subseteq [-b, b]$, $b>0$, % using
+% a method that anticipates possible non-linearity in $\EE (X | R=r)$
+% outside a neighborhood of 0,
+and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$. Similarly,
+\citet{cattaneo2014randomization} recommend testing hypotheses
+$H_{b_{i}}: {X} \independent {Z}| \{|R| < b_{i}\}$, $b_1 > b_2 > \cdots >0$, in sequence,
+proceeding until identifying  $b = \max \{ b_i: H_{b_{i}}$ is not rejected$\}$;
+the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
+%This method's tests of each $H_{b_{i}}$ are neither covariance
+%adjusted nor multiplicity corrected.
+The analyst decides whether this test-and-reduce process
+should begin in the middle of $\mathcal{W}$ or at its boundaries.
+
+
 
 
 \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
@@ -306,181 +338,6 @@ Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
 which optionally provide Huber-White standard errors
 \citep{verardiCroux2009robust,rousseuwetal2015robustbase}.
 
-\subsection{Specification Tests}\label{sec:specification}
-
-Analysis of RCTs and quasiexperiments often hinges on assumptions of
-independence of
- $\mathbf{Z}$ from $(\mathbf{X}, \mathbf{Y}_{C}, \mathbf{Y}_{T})$.
-%% Analogous statements will hold for more complex randomization or
-%% ignorability assumptions as well.
- Although neither $\mathbf{Z} \independent \mathbf{Y}_{C}$ nor
- $\mathbf{Z} \independent \mathbf{Y}_{T}$ can be directly tested,
- since potential outcomes are only partly observed, assumptions of form
- $\mathbf{Z} \independent \mathbf{X}$ are falsifiable: researchers can
- conduct placebo tests for effects of $Z$ on $X$.
-% Just as $H: \mathbf{y}_{T} - \mathbf{y}_{C} =
-% \mathbf{\tau}$ is tested in the strong randomization inference
-% paradigm, the researcher might assess imbalance in a covariate, as measured
-% either by the difference of means,
-% $\bar{x}_{Z=1} - \bar{x}_{Z=0}$, or by the difference of means in a transform of
-% the covariate, $\overline{\dt[\thetaInf]{\mathbf{x}}{\mathbf{r}}}_{Z=1} - \overline{\dt[\thetaInf]{\mathbf{x}}{\mathbf{r}}}_{Z=0}$,
-% to the distribution of the same difference under permutations of
-% $\mathbf{z} $.
-Of course, treatment cannot affect pre-treatment variables; this is
-model-checking (%\citealp{bayarriBerger2000pvalues};
-\citealp[][\S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
-%\citealp[][Ch.~14]{lehmannRomano2006TSH}
-).  Here as
- elsewhere \citep{box1980sab}, checks finding fault with a model prompt
- refinement, not abandonment; refinements typical of RDD analysis remove portions of
- the sample that are suspected of contamination.
-
-%% BELOW APPEARED IN R2
-% With $k>1$ covariates $\mathbf{x}_{1}, \ldots, \mathbf{x}_{k}$, issues
-% of multiplicity come into play: if a test of the hypothesis that $(X_{1}, \ldots, X_{k})$
-% are independent of $Z$ rejects whenever any of the $k$
-% level $\alpha$ tests is rejected, then its type 1 error rate may
-% greatly exceed $\alpha$.  Because the tests are non-independent, with
-% covariances that (except in the differences-of-means case) may be
-% difficult to estimate, we combine them with a simple Bonferroni
-% correction.
-%% BELOW HAD BEEN WRITTEN FOR R2 AND THEN EDITED OUT
-%% One solution is to combine the $p$
-%% test statistics $\overline{(\mathbf{x}_{1})}_{z=1} - \overline{(\mathbf{x}_{1})}_{z=0}$, \ldots, $\overline{(\mathbf{x}_{p})}_{z=1} - \overline{(\mathbf{x}_{p})}_{z=0}$
-%% into one statistic $t(\mathbf{x}, \mathbf{z})$, then conduct a
-%% single test based on it.
-%% %For comparing
-%% %3 or more treatment conditions while controlling the family-wise error rate, a
-%% %common device is to use the ``max-t'' statistic, i.e. test based on $t(\mathbf{x},
-%% %\mathbf{z}) = \max_{k} (t(\mathbf{x}_{\cdot,k}) -
-%% %\EE_{0}T(\mathbf{x}_{\cdot,k}))/\var^{1/2}_{0}(T(\mathbf{x}_{\cdot,k}))
-%% %$ \citep{hothorn2008simultaneous};
-%% %In a discussion of covariate balance specifically,
-%% \citet{hansen:bowers:2008} recommend a combined statistic
-%% along the lines of Hotelling's
-%% \citeyearpar{hotelling1931generalization} $T^2$, $d^{2}(\mathbf{x}, \mathbf{Z})$, that follows a large-sample chi-squared
-%% distribution under the hypothesis that $\mathbf{X} $ is
-%% independent of, and unaffected by, $\mathbf{Z}$.
-%% %% Other solutions
-%% \citep[\textit{e.g.,}][]{rosenbaum2005exact} involve testing with a
-%% statistic $t(\mathbf{x}, \mathbf{z})$ that is not directly related to
-%% the univariate statistics.
-
- Writing in the RDD context, \citet{cattaneo2014randomization} test
- for marginal associations of $\mathbf{Z}$ with covariates $\mathbf{X}_{i}$,
- $i=1, \ldots, k$, using the permutational methods that are applied
- in Fisherian analysis of RCTs.
-% Specifically, they
-%  obtain p-values though \eqref{eq:01}, with test statistics
-%  $t(\mathbf{x}_{i}, \mathbf{z}) = |\overline{(x_{i})}_{z=1} -
-%  \overline{(x_{i})}_{z=0}|$,
-%  $ i \leq k$, after conditioning on $\mathbf{X}$ in addition to
-%  $\sum_{i} Z_{i}$.
-Relatedly, \citet{lee2010regression} recommend a
- tests for conditional association, given $R$, of $\mathbf{Z}$ and
- $\mathbf{X}$, by fitting models like those discussed in
- \S~\ref{sec:robust-analys-covar} for impact estimation, but with
- covariates rather than outcomes as independent variables%
-%, they incorporate covariance adjustments for $R$
-. %, testing
- %whether these regressions' $z$ coefficients are plausibly
- %0.
-Viewing the $R$-slopes and intercepts as simultaneously estimated
- nuisance parameters, these are balance tests applied to
- the covariates' residuals, %net of linear association with $R$,
-rather than to the covariates themselves.
-
-%Whether covariates or covariate residuals are assessed for lack of
-%correlation with $Z$,
-If there are multiple
-covariates there will be several such tests. To summarize their
-findings with a single p-value, the
-regressions themselves may be fused within a
-``seemingly unrelated regressions'' model, followed by a test of the
-intersection hypothesis that each regression's $z$-coefficient is 0
-\citep{lee2010regression}, or the
-separate tests' p-values could simply be combined using the Bonferroni
-principle.  Li et al.'s
-\citeyearpar{liMatteiMealli2015BayesianRD} RDD method wraps
-its specification checking steps into a Bayesian model. % that is also used for effect
-%estimation.
-This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\mathbf{X}$, are not covariance adjusted for $R$.
-
-
-McCrary's test for manipulation of treatment assignments
-\citeyearpar{mccrary2008manipulation} can be understood as a %lack of
-%association test applied over an $\{|R| < b\}$ window.
-placebo test with the density of $R$ as the independent variable.
-The test's
-purpose is to expose the circumstance of subjects finely manipulating their
-$R$ values in order to secure or avoid assignment to treatment.  Absent
-such a circumstance, if $R$ has a density then it should appear to be
-roughly the same just below and above the cutpoint.  McCrary's
-\citeyearpar{mccrary2008manipulation} test statistic is the difference
-in logs of two estimates of $R$'s density at 0, based on observations
-with $R<0$ and $R>0$ respectively.
-% Inspection of the form of these
-% estimates reveals that, but for the presence of the logarithms, the
-% statistic also is a difference of means over observations with
-% $Z_{i}=0$ or $1$, in both cases with $|R|$ as the quantity being
-% averaged.  (The two means are calculated with weighting, with weights
-% %set to 0 for $|R|>b$ and otherwise
-% determined by the combination of a
-% chosen kernel and bandwidth and simultaneously estimated nuisance parameters; see
-% McCrary's [\citeyear{mccrary2008manipulation}] equation 4.)
-Manipulation is expected to generate a clump just beside the cut
-point, on one side of it but not the other, and this in turn engenders
-imbalance in terms of distance from the cut-point.
-
-
-In practice, specification test failures inform sample exclusions.
-%: failed density tests lead to exclusions around the cut
-%point; failed placebo tests lead to narrower widths of analytic
-%windows.
-Failures of the density test are addressed by restricting
-estimation to observations with $|R|>a$, some $a \geq 0$
-\citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}.
-When balance tests fail,
-\citet{lee2010regression} would select a window
-$\mathcal{W} \subseteq [-b, b]$, $b>0$, % using
-% a method that anticipates possible non-linearity in $\EE (X | R=r)$
-% outside a neighborhood of 0,
-and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$. Similarly,
-\citet{cattaneo2014randomization} recommend testing hypotheses
-$H_{b_{i}}: {X} \independent {Z}| \{|R| < b_{i}\}$, $b_1 > b_2 > \cdots >0$, in sequence,
-proceeding until identifying  $b = \max \{ b_i: H_{b_{i}}$ is not rejected$\}$;
-the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
-%This method's tests of each $H_{b_{i}}$ are neither covariance
-%adjusted nor multiplicity corrected.
-The analyst decides whether this test-and-reduce process
-should begin in the middle of $\mathcal{W}$ or at its boundaries.
-
-% The $\alpha$ level used for these tests may differ from the
-% $.05$ that is conventional in outcome analysis;  \citet{cattaneo2014randomization} use $\alpha=.15$.
-% Whatever the choice of $\alpha$, Berger's sequential intersection
-% union principle \citep{rosenbaum2008testing,hansenSales2015cochran} entails that the sizes of $H_{b*}$, and of each
-% of the $H_{b}$ rejected prior to testing $H_{b^{*}}$, are not inflated
-% by the multiplicity of tests within the family $\{H_{b}: b\}$.
-
-% McCrary's specification test focuses on the center of the RDD window,
-% rather than its boundaries \citep{mccrary2008manipulation}.
-% It is designed to test whether subjects consciously sort around the
-% cutoff by manipulating their $R$ values explicitly.
-% It does so by examining whether an unexpectedly large or small number
-% of subjects find themselves just barely on one side of the cutoff or
-% the other.
-% When the running variable is discrete, for each value $r$ in the support of $R$,
-% let $n_R(r)$ denote the number of subjects $i$
-% with $R_i=r$, i.e.,  $|\{i:r_i=r\}|$; continuous $R$s are binned prior to the
-% test.  Next, $n_{R}$ is used as the outcome of a preliminary RDD
-% analysis, modeled using local linear regression as a function
-% of $r$ on either side of $c$. The test asks whether there is a discontinuity at $c$:
-% a change in $n_{R}$ larger than chance could produce suggests subjects
-% may have manipulated $R$ to control their treatment assignments,
-% perhaps invalidating the analogy to a controlled experiment.
-%% [clipping the below to save a little space; I think it works w/o it.]
-%% A McCrary test failure is neither necessary nor sufficient to show
-%% that subjects sorted around the cutoff; however, it is suspicious.
 
 \section{Randomness and Regression in RDDs}\label{sec:theMethod}
 
