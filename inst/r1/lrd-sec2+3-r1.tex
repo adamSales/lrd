@@ -46,34 +46,38 @@ This estimand is the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
 limitless estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
 
-Though starting from a different place, this model is closely related
-to the model we used to analyze mortality due to Hurricane Maria
-(\S~\ref{sec:using-eqref-test}).
-Consider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
-Then define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
+To restate this estimator in the manner of
+\S~\ref{sec:using-eqref-test}---testing hypotheses with a test
+statistic that contrasts treated and untreated subjects, after
+adjusting for $R$---
+onsider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
+Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
 b\mathbf{r}$.
-If we estimate $(\alpha,\beta)$ as  $\hat\theta = (\hat\alpha, \hat\beta)$, the intercept and $R$-slope
-estimated through regression of ${\mathbf{Y}_H}$ on
-$\mathbf{1}, \mathbf{R}$ and $\mathbf{Z}$,then
-the statistic
+Finally, test $H$ with statistic
 $t(\mathbf{Y}_H , \mathbf{Z}) =
-\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=1} -
-\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=0}$
-may be used to test $H$.
+\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
+\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}$,
+where $\hat{\alpha}$ and $\hat{\beta}$ are the standard OLS estimates.
+Because of the structural relationship
+between $R$ and $Z$, such permutation tests based on this statistic
+are not tractable. 
+However, under the parametric \textsc{ancova} model, with
+conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
+\mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
+$t(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
+variance equal to the classical OLS variance of the coefficient on
+$Z$. 
+The HL estimate for $\tau$ corresponding to these statistical tests is
+algebraically equal to that OLS coefficient. 
+
 In the Hurricane Maria analysis, regression parameters giving rise to
 residuals $\resid$ were estimated from pre-2017 data, whereas $Y_H$
 was constructed using data from 2017.
 This clean separation allowed us to tabulate the distribution of the
 test statistic, conditional on $\bm{\resid},N_1, and N_0$.
-In contrast, because of the structural relationship
-between $R$ and $Z$ and the fact that the same dataset is used to
-estimate $\alpha$ and $\beta$ as to calculate
-$t(\mathbf{Y}_H,\mathbf{Z})$, such permutation tests are not tractable.
-Under the parametric \textsc{ancova} model, however, with
-conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
-\mathbf{Y}_{C})$ % (or \S~\ref{sec:randProc}'s $\mathbf{A}^{\dagger}$), 
-it is straightforwardly Normal. Indeed, it is
+In contrast, 
+ Indeed, it is
 algebraically equivalent to the $Z$-coefficient estimated by
 regression of ${\mathbf{Y}_H}$ on $\mathbf{1}, \mathbf{R}$ and
 $\mathbf{Z}$; under \textsc{ancova} assumptions, that coefficient's
