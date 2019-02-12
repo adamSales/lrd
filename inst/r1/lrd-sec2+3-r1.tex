@@ -38,9 +38,12 @@ In marked contrast to RCTs, it does
 not require that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
 $Y_{C}$ and $Y_{T}$ are presumed to associate with $R$, which in turn
 determines $Z$. 
-Nonetheless, under this model the ordinary least squares
-(OLS) contrast $\hat{\alpha}_{1} - \hat{\alpha}_{0}$---estimated by
-regressing $Y$ on an intercept term, $R$ and an indicator that $R>c$---is unbiased for
+Nonetheless, under this model the estimated $Z$ coefficient from the
+model
+\begin{equation}\label{eq:classicOLS}
+Y_i=\alpha+\beta R_i+\tau Z_i+\epsilon_i
+\end{equation}
+fit using ordinary least squares (OLS), is unbiased for
 $\alpha_{1} - \alpha_{0}$. 
 This estimand is the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
@@ -55,13 +58,17 @@ Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
 b\mathbf{r}$.
 Finally, test $H$ with statistic
-$t(\mathbf{Y}_H , \mathbf{Z}) =
+\begin{equation*}
+t(\mathbf{Y}_H , \mathbf{Z}) =
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
-\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}$,
+\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0},
+\end{equation*}
 where $\hat{\alpha}$ and $\hat{\beta}$ are the standard OLS estimates.
 Because of the structural relationship
-between $R$ and $Z$, such permutation tests based on this statistic
-are not tractable. 
+between $R$ and $Z$, (and, unlike in
+\S~\ref{sec:using-eqref-test}, regression parameters were not estimated
+with a separate dataset) 
+permutation tests based on this statistic are not tractable. 
 However, under the parametric \textsc{ancova} model, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
 \mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
@@ -69,21 +76,8 @@ $t(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
 variance equal to the classical OLS variance of the coefficient on
 $Z$. 
 The HL estimate for $\tau$ corresponding to these statistical tests is
-algebraically equal to that OLS coefficient. 
-
-In the Hurricane Maria analysis, regression parameters giving rise to
-residuals $\resid$ were estimated from pre-2017 data, whereas $Y_H$
-was constructed using data from 2017.
-This clean separation allowed us to tabulate the distribution of the
-test statistic, conditional on $\bm{\resid},N_1, and N_0$.
-In contrast, 
- Indeed, it is
-algebraically equivalent to the $Z$-coefficient estimated by
-regression of ${\mathbf{Y}_H}$ on $\mathbf{1}, \mathbf{R}$ and
-$\mathbf{Z}$; under \textsc{ancova} assumptions, that coefficient's
-canonical standard error and p-value apply to
-$\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=1} -
-\overline{\dt[\hat\theta]{{{Y}_H}}{ {R}}}_{Z=0}$.
+algebraically equal to the $Z$-coefficient from an OLS estimate of
+\eqref{eq:classicOLS}.  
 
 The model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
 may be relaxed.  OLS estimates of $\alpha_{0}$, $\alpha_{1}$ and
