@@ -78,6 +78,7 @@ The HL estimate for $\tau$ corresponding to these statistical tests is
 algebraically equal to the $Z$-coefficient from an OLS estimate of
 \eqref{eq:classicOLS}.  
 
+\subsubsection{Robust Standard Error Estimation}
 The \textsc{ancova} model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
 may be relaxed.  OLS estimates of $\alpha_1-\alpha_{0}$ and
 $\beta$ remain unbiased under non-Normality, provided
@@ -120,6 +121,27 @@ other hand, in \textsc{ancova} as applied to RDDs, if standard
 errors are calculated by the sandwich method then under
 $H: Y_{T} = Y_{C}$, \eqref{eq:tedef} is algebraically equivalent to the
 $t$-statistic of contrast $\hat{\alpha}_{1} -\hat{\alpha}_{0}$.
+
+\subsubsection{Fuzzy RD}
+In the case of imperfect compliance, let $D$ indicate whether treatment was actually
+received.
+This $D$ is an intermediate outcome, so there are
+corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
++ (1-Z)D_{C}$.
+Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
+will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
+subjects assigned to the treatment who avoid it, but no one gets
+treatment without being assigned to it.
+We shall also posit the exclusion restriction,
+that $Z$ influences $Y$ only by way of its effect on $D$
+\citep{bloom1984ans,Angrist:etal:1996,imbens:rose:2005}.
+Our focus of estimation is the
+ ``treatment-on-treated'' effect (TOTE),
+%complier
+%average causal effect (CACE),
+$\EE(Y_{T} - Y_{C}| D_{T}=1)$.
+
+
 
 \subsection{Specification Tests}\label{sec:specification}
 
