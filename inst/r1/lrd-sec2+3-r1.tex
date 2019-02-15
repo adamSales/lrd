@@ -16,7 +16,6 @@ to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is o
  observed
 responses $Y$ coincide with $ZY_{T}+(1-Z)Y_{C}$.
 
-
 \subsection{The \textsc{Ancova} Model for RDDs}\label{sec:robust-analys-covar}
 
 The classical analysis of covariance (\textsc{ancova}) model for
@@ -37,11 +36,11 @@ $Y_{Ti} = \alpha_{1}  + \beta R_{i} + \epsilon_{Ti}$, with
 In marked contrast to RCTs, it does
 not require that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
 $Y_{C}$ and $Y_{T}$ are presumed to associate with $R$, which in turn
-determines $Z$. 
+determines $Z$.
 Nonetheless, under this model the ordinary least squares
 (OLS) contrast $\hat{\alpha}_{1} - \hat{\alpha}_{0}$---estimated by
 regressing $Y$ on an intercept term, $R$ and an indicator that $R>c$---is unbiased for
-$\alpha_{1} - \alpha_{0}$. 
+$\alpha_{1} - \alpha_{0}$.
 This estimand is the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
 limitless estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
@@ -72,7 +71,7 @@ estimate $\alpha$ and $\beta$ as to calculate
 $t(\mathbf{Y}_H,\mathbf{Z})$, such permutation tests are not tractable.
 Under the parametric \textsc{ancova} model, however, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
-\mathbf{Y}_{C})$ % (or \S~\ref{sec:randProc}'s $\mathbf{A}^{\dagger}$), 
+\mathbf{Y}_{C})$ % (or \S~\ref{sec:randProc}'s $\mathbf{A}^{\dagger}$),
 it is straightforwardly Normal. Indeed, it is
 algebraically equivalent to the $Z$-coefficient estimated by
 regression of ${\mathbf{Y}_H}$ on $\mathbf{1}, \mathbf{R}$ and
