@@ -36,23 +36,25 @@ $Y_{Ti} = \alpha_{1}  + \beta R_{i} + \epsilon_{Ti}$, with
 In marked contrast to RCTs, it does
 not require that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
 $Y_{C}$ and $Y_{T}$ are presumed to associate with $R$, which in turn
-determines $Z$. 
+determines $Z$.
 Nonetheless, under this model the estimated $Z$ coefficient from the
 model
 \begin{equation}\label{eq:classicOLS}
 Y_i=\alpha+\beta R_i+\tau Z_i+\epsilon_i
 \end{equation}
 fit using ordinary least squares (OLS), is unbiased for
-$\alpha_{1} - \alpha_{0}$. 
+$\alpha_{1} - \alpha_{0}$.
 This estimand is the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
 limitless estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
 
-To restate this estimator in the manner of
-\S~\ref{sec:using-eqref-test}---testing hypotheses with a test
-statistic that contrasts treated and untreated subjects, after
-adjusting for $R$---
-onsider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
+The OLS approach estimates $\tau$ as a parameter in regression model
+\eqref{eq:classicOLS}. In contrast, the approach in
+\S~\ref{sec:using-eqref-test} took place in two separate steps:
+first adjusting outcomes for $R$ and then testing hypotheses using a test
+statistic that contrasts treated and untreated subjects.
+However, the OLS estimator may be restated in the manner of \S~\ref{sec:using-eqref-test}.
+Consider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
 Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
 b\mathbf{r}$.
@@ -66,17 +68,51 @@ where $\hat{\alpha}$ and $\hat{\beta}$ are the standard OLS estimates.
 Because of the structural relationship
 between $R$ and $Z$, (and, unlike in
 \S~\ref{sec:using-eqref-test}, regression parameters were not estimated
-with a separate dataset) 
-permutation tests based on this statistic are not tractable. 
+with a separate dataset)
+permutation tests based on this statistic are not tractable.
 However, under the parametric \textsc{ancova} model, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
 \mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
 $t(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
 variance equal to the classical OLS variance of the coefficient on
-$Z$. 
-The HL estimate for $\tau$ corresponding to these statistical tests is
+$Z$.
+
+\S~\ref{sec:using-eqref-test}.
+Consider the hypothesis $H_\tau: Y_{T} = Y_{C} + \tau$.
+Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H_\tau$, $Y_H=Y_C$)
+and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
+b\mathbf{r}$.
+Finally, test $H_\tau$ with statistic
+\begin{equation*}
+t(\mathbf{Y}_H , \mathbf{Z}) =
+\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
+\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0},
+\end{equation*}
+where $\hat{\alpha}$ and $\hat{\beta}$ are the standard OLS estimates.
+Because of the structural relationship
+between $R$ and $Z$, (and, unlike in
+\S~\ref{sec:using-eqref-test}, regression parameters were not estimated
+with a separate dataset)
+permutation tests based on this statistic are not tractable.
+However, under the parametric \textsc{ancova} model, with
+conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
+\mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
+$t(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
+variance equal to the classical OLS variance of the coefficient on
+$Z$.
+
+In general, the set \{$c$:
+$H_{c}$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
+$100(1-\alpha)\%$ confidence set for $\tau$; the $c$ solving
+$t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to be unique, is a
+corresponding point estimate.
+In fact, estimate for $\tau$ corresponding to these statistical tests is
 algebraically equal to the $Z$-coefficient from an OLS estimate of
-\eqref{eq:classicOLS}.  
+\eqref{eq:classicOLS}, and the two-sided 95\% confidence interval induced in this
+manner is the familiar
+$\hat{\tau} \pm 1.96\, \mathrm{SE}(\tau)$.
+These equivalences, however, do not necessarily extend to estimation
+strategies outside of OLS.
 
 \subsubsection{Robust Standard Error Estimation}
 The \textsc{ancova} model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
@@ -85,7 +121,7 @@ $\beta$ remain unbiased under non-Normality, provided
 the $\epsilon$s have expectation 0 and bounded variances.  The
 ordinary \textsc{ancova} standard error does not require Normality of
 the $( \epsilon_{i}: i )$, either, for use in large samples, although
-it does require that they have a common variance.  
+it does require that they have a common variance.
 To test
 $\EE\{ \dt[\hat\theta]{{Y_H}}{ R} | Z=1\} = \EE\{ \dt[\hat\theta]{{Y_H}}{
 R} | Z=0\}$
@@ -123,7 +159,9 @@ $H: Y_{T} = Y_{C}$, \eqref{eq:tedef} is algebraically equivalent to the
 $t$-statistic of contrast $\hat{\alpha}_{1} -\hat{\alpha}_{0}$.
 
 \subsubsection{Fuzzy RD}
-In the case of imperfect compliance, let $D$ indicate whether treatment was actually
+So-called ``Fuzzy'' RD describes non-compliance---when subjects' actual
+treatment differed from $Z$.
+In those cases, let $D$ indicate whether treatment was actually
 received.
 This $D$ is an intermediate outcome, so there are
 corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
@@ -141,10 +179,73 @@ Our focus of estimation is the
 %average causal effect (CACE),
 $\EE(Y_{T} - Y_{C}| D_{T}=1)$.
 
+Statistical hypotheses about the TOTE take the form
+$H_\tau:Y_T=Y_C+D\tau$.
+To test $H_\tau$ under non-compliance, let $Y_H=Y-\tau D$,
+construct test statistic $t_{e} (\mathbf{y}_H,\mathbf{r})$ as in
+\eqref{eq:tedef}, and compare its value to a standard normal
+distribution.
+That is, the only difference between ``strict'' RD analysis, in which
+compliance is perfect, and fuzzy RD, is in the formulation of
+hypothesis $H$, and the construction of $Y_H$---the rest of the
+process remains unchanged \citep{rosenbaum:1996:onAIR}.
+
+As compared to Wald-type
+confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
+\mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
+hypothesis independent quantity, under partial compliance this iterative method
+% of separate evaluation of $\mathrm{SE}_{u} \left\{
+%   \overline{({y}_{H_{\tau}})}_{Z=1} -
+%   \overline{({y}_{H_{\tau}})}_{Z=0} \right\}$ for each $H_{\tau}$,
+improves correspondence of nominal and actual confidence levels
+% , particularly if the ``instrument,'' $Z$, is ``weak,''
+% i.e. $\PP(D_{T} =1) \approx \PP(D_{C} =1)$
+\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
+
+\subsection{Model Misspecification, Sample Contamination, and Specification Tests}\label{sec:specification}
+
+The \textsc{Ancova} model for RDDs encodes additional assumptions,
+beyond normality and homoskedasticity of regression errors and full
+compliance with treatment assignment, which are not so easily
+dispensed with.
 
 
-\subsection{Specification Tests}\label{sec:specification}
 
+
+
+\sloppy
+First, the form of $\EE[(Y_{T}, Y_{C}) | R]$ may be misspecified.
+% Statistic (\ref{eq:tedef}) is often computed using a portion of the
+% available data, a subset $\mathcal{W} \ni c$ of the support of $R$
+% \citep[e.g.][]{imbens2008regression}.
+even nonparametric RDD models
+%take $R$ to follow a continuous distribution, and
+place continuity and smoothness restrictions on $\EE(Y_{C}| R=r)$ \citep[\S~5]{lee2008regression, kolesarRothe17}.
+On the other hand, methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
+apply if $\EE (Y_{C}| R) = \alpha + R\beta$ is relaxed to
+$\EE (Y_{C}| R) = \alpha + \vec{f}(R)\beta$, for
+$\vec{f}(\cdot)$ a $1 \times k$ vector valued function.
+Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
+side-effect of undercutting the robustness of the analysis.  The
+reasons have to do with mechanics of regression fitting.
+
+Polynomial specifications
+$\EE(Y | R=r) = \sum_{j=0}^{J} r^{j} \beta_{j}$ are common but often
+problematic; in combination with ordinary least squares fitting, they
+implicitly assign case weights that can vary widely and
+counterintuitively \citep{gelman2016high}.
+This liability is already
+in evidence with $J=1$, the linear specification, where leverage
+increases with the square of $r -\bar{r}$.  With an analysis sample
+of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
+$\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
+sample is contaminated near its outer boundaries, precisely
+where leverage is at its highest.
+
+In order to identify leverage points that are also influential,
+OLS fitting is sometimes combined with specialized diagnostics such as
+plots of Cook's distances
+ \citeyearpar{cook1982residuals}.
 
 
 Analysis of RCTs and quasiexperiments often hinges on assumptions of
@@ -279,41 +380,7 @@ should begin in the middle of $\mathcal{W}$ or at its boundaries.
 % as estimated under the interaction model.)
 
 % \citet{thistlethwaite1960regression} warned that \textsc{ancova}'s
-% linearity assumptions would occasionally be too strong.
-\sloppy
-Assumptions about the form of $\EE[(Y_{T}, Y_{C}) | R]$ are not
-readily dispensed with;
-% Statistic (\ref{eq:tedef}) is often computed using a portion of the
-% available data, a subset $\mathcal{W} \ni c$ of the support of $R$
-% \citep[e.g.][]{imbens2008regression}.
-even nonparametric RDD models
-%take $R$ to follow a continuous distribution, and
-place continuity and smoothness restrictions on $\EE(Y_{C}| R=r)$ \citep[\S~5]{lee2008regression, kolesarRothe17}.
-On the other hand, methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
-apply if $\EE (Y_{C}| R) = \alpha + R\beta$ is relaxed to
-$\EE (Y_{C}| R) = \alpha + \vec{f}(R)\beta$, for
-$\vec{f}(\cdot)$ a $1 \times k$ vector valued function.
-Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
-side-effect of undercutting the robustness of the analysis.  The
-reasons have to do with mechanics of regression fitting.
-
-Polynomial specifications
-$\EE(Y | R=r) = \sum_{j=0}^{J} r^{j} \beta_{j}$ are common but often
-problematic; in combination with ordinary least squares fitting, they
-implicitly assign case weights that can vary widely and
-counterintuitively \citep{gelman2016high}.
-This liability is already
-in evidence with $J=1$, the linear specification, where leverage
-increases with the square of $r -\bar{r}$.  With an analysis sample
-of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
-$\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
-sample is contaminated near its outer boundaries, precisely
-where leverage is at its highest.
-
-In order to identify leverage points that are also influential,
-OLS fitting is sometimes combined with specialized diagnostics such as
-plots of Cook's distances
- \citeyearpar{cook1982residuals}. An alternate remedy, playing
+ An alternate remedy, playing
  an important role in this paper, is to fit the
  specification using a modern MM,  SM, or similar estimator so designed
  as to possess a bounded influence function
