@@ -3,7 +3,7 @@ Capturing the local randomization essence of the RDD calls for
 a merger of RDD methods with concepts developed for RCTs. This
 section selectively reviews relevant literatures.
 
-Let $Z \in \{0,1\}$ indicate assigment to treatment ($Z=1$) as opposed to control
+Let $Z \in \{0,1\}$ indicate assignment to treatment ($Z=1$) as opposed to control
 ($Z=0$).  For an RDD one defines $Z \equiv \indicator{R< 0}$,
 $\indicator{R \leq 0}$, $\indicator{R\geq 0}$ or $\indicator{R > 0}$,
 depending on how intervention eligibility relates to the threshold,
@@ -208,46 +208,15 @@ The \textsc{Ancova} model for RDDs encodes additional assumptions,
 beyond normality and homoskedasticity of regression errors and full
 compliance with treatment assignment, which are not so easily
 dispensed with.
+Perhaps most worryingly, the form of $\EE[(Y_{T}, Y_{C}) | R]$ may be
+misspecified, and the integrity of the RDD could be compromised by
+subjects who finely manipulate their values of $R$ around the cutoff
+in order to achieve or avoid a treatment assignment. 
+The RDD literature, in general, has responded with specification tests
+to detect these threats, or with flexible or robust estimators that
+seek to avoid them. 
 
-
-
-
-
-\sloppy
-First, the form of $\EE[(Y_{T}, Y_{C}) | R]$ may be misspecified.
-% Statistic (\ref{eq:tedef}) is often computed using a portion of the
-% available data, a subset $\mathcal{W} \ni c$ of the support of $R$
-% \citep[e.g.][]{imbens2008regression}.
-even nonparametric RDD models
-%take $R$ to follow a continuous distribution, and
-place continuity and smoothness restrictions on $\EE(Y_{C}| R=r)$ \citep[\S~5]{lee2008regression, kolesarRothe17}.
-On the other hand, methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
-apply if $\EE (Y_{C}| R) = \alpha + R\beta$ is relaxed to
-$\EE (Y_{C}| R) = \alpha + \vec{f}(R)\beta$, for
-$\vec{f}(\cdot)$ a $1 \times k$ vector valued function.
-Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
-side-effect of undercutting the robustness of the analysis.  The
-reasons have to do with mechanics of regression fitting.
-
-Polynomial specifications
-$\EE(Y | R=r) = \sum_{j=0}^{J} r^{j} \beta_{j}$ are common but often
-problematic; in combination with ordinary least squares fitting, they
-implicitly assign case weights that can vary widely and
-counterintuitively \citep{gelman2016high}.
-This liability is already
-in evidence with $J=1$, the linear specification, where leverage
-increases with the square of $r -\bar{r}$.  With an analysis sample
-of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
-$\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
-sample is contaminated near its outer boundaries, precisely
-where leverage is at its highest.
-
-In order to identify leverage points that are also influential,
-OLS fitting is sometimes combined with specialized diagnostics such as
-plots of Cook's distances
- \citeyearpar{cook1982residuals}.
-
-
+\subsubsection{Covariate Balance Tests}
 Analysis of RCTs and quasiexperiments often hinges on assumptions of
 independence of
  $\mathbf{Z}$ from $(\mathbf{X}, \mathbf{Y}_{C}, \mathbf{Y}_{T})$.
@@ -268,7 +237,6 @@ model-checking (%\citealp{bayarriBerger2000pvalues};
  refinement, not abandonment; refinements typical of RDD analysis remove portions of
  the sample that are suspected of contamination.
 
-
  Writing in the RDD context, \citet{cattaneo2014randomization} test
  for marginal associations of $\mathbf{Z}$ with covariates $\mathbf{X}_{i}$,
  $i=1, \ldots, k$, using the permutational methods that are applied
@@ -284,17 +252,11 @@ Relatedly, \citet{lee2010regression} recommend a
  $\mathbf{X}$, by fitting models like those discussed in
  \S~\ref{sec:robust-analys-covar} for impact estimation, but with
  covariates rather than outcomes as independent variables%
-%, they incorporate covariance adjustments for $R$
-. %, testing
- %whether these regressions' $z$ coefficients are plausibly
- %0.
 Viewing the $R$-slopes and intercepts as simultaneously estimated
  nuisance parameters, these are balance tests applied to
  the covariates' residuals, %net of linear association with $R$,
 rather than to the covariates themselves.
 
-%Whether covariates or covariate residuals are assessed for lack of
-%correlation with $Z$,
 If there are multiple
 covariates there will be several such tests. To summarize their
 findings with a single p-value, the
@@ -309,7 +271,7 @@ its specification checking steps into a Bayesian model. % that is also used for 
 %estimation.
 This approach addresses multiplicity of placebo tests as a matter of course; as with the method of \citet{cattaneo2014randomization}, however, its implied placebo tests, of whether $Z$ ``affects'' $\mathbf{X}$, are not covariance adjusted for $R$.
 
-
+\subsubsection{The McCrary Density Test}
 McCrary's test for manipulation of treatment assignments
 \citeyearpar{mccrary2008manipulation} can be understood as a %lack of
 %association test applied over an $\{|R| < b\}$ window.
@@ -322,32 +284,18 @@ roughly the same just below and above the cutpoint.  McCrary's
 \citeyearpar{mccrary2008manipulation} test statistic is the difference
 in logs of two estimates of $R$'s density at 0, based on observations
 with $R<0$ and $R>0$ respectively.
-% Inspection of the form of these
-% estimates reveals that, but for the presence of the logarithms, the
-% statistic also is a difference of means over observations with
-% $Z_{i}=0$ or $1$, in both cases with $|R|$ as the quantity being
-% averaged.  (The two means are calculated with weighting, with weights
-% %set to 0 for $|R|>b$ and otherwise
-% determined by the combination of a
-% chosen kernel and bandwidth and simultaneously estimated nuisance parameters; see
-% McCrary's [\citeyear{mccrary2008manipulation}] equation 4.)
 Manipulation is expected to generate a clump just beside the cut
 point, on one side of it but not the other, and this in turn engenders
 imbalance in terms of distance from the cut-point.
 
-
+\subsubsection{RDD Bandwidth}
 In practice, specification test failures inform sample exclusions.
-%: failed density tests lead to exclusions around the cut
-%point; failed placebo tests lead to narrower widths of analytic
-%windows.
 Failures of the density test are addressed by restricting
 estimation to observations with $|R|>a$, some $a \geq 0$
 \citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}.
 When balance tests fail,
 \citet{lee2010regression} would select a window
 $\mathcal{W} \subseteq [-b, b]$, $b>0$, % using
-% a method that anticipates possible non-linearity in $\EE (X | R=r)$
-% outside a neighborhood of 0,
 and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$. Similarly,
 \citet{cattaneo2014randomization} recommend testing hypotheses
 $H_{b_{i}}: {X} \independent {Z}| \{|R| < b_{i}\}$, $b_1 > b_2 > \cdots >0$, in sequence,
@@ -358,8 +306,42 @@ the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
 The analyst decides whether this test-and-reduce process
 should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
+With finite samples, specification tests may be under-powered, and
+fail to detect some small violations of RDD assumptions or (more
+troublingly) large violations of the assumptions among relatively
+small subsets of the analysis sample. 
+Indeed, sample pruning guided by specification tests is expected to
+leave an $O(n^{-1/2})$-sized share of the sample that perfect
+information would have counseled removing. 
+Depending on the outcome and running variable values of members of
+these problematic subsets, their inclusion in the RDD analysis sample
+may have undue influence on the treatment effect estimate. 
 
+\subsubsection{Non-linear Models for Y as a function of R}
+% \citep[\S~5]{lee2008regression, kolesarRothe17}.
+%On the other hand, 
+The methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
+apply if $\EE (Y_{C}| R) = \alpha + R\beta$ is relaxed to
+$\EE (Y_{C}| R) = \alpha + \vec{f}(R)\beta$, for
+$\vec{f}(\cdot)$ a $1 \times k$ vector valued function.
+Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
+side-effect of undercutting the robustness of the analysis.  The
+reasons have to do with mechanics of regression fitting.
 
+Polynomial specifications
+$\EE(Y | R=r) = \sum_{j=0}^{J} r^{j} \beta_{j}$ are common but often
+problematic; in combination with ordinary least squares fitting, they
+implicitly assign case weights that can vary widely and
+counterintuitively \citep{gelman2016high}.
+This liability is already
+in evidence with $J=1$, the linear specification, where leverage
+increases with the square of $r -\bar{r}$.  With an analysis sample
+of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
+$\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
+sample is contaminated near its outer boundaries, precisely
+where leverage is at its highest.
+
+%
 
 \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
 \label{sec:robust-altern-ordin}
@@ -379,23 +361,17 @@ should begin in the middle of $\mathcal{W}$ or at its boundaries.
 % and $\hat\theta = (\hat\alpha, \hat{\beta}_{-}, \hat{\beta}_{+})$ are
 % as estimated under the interaction model.)
 
-% \citet{thistlethwaite1960regression} warned that \textsc{ancova}'s
- An alternate remedy, playing
- an important role in this paper, is to fit the
+Individual outlying observations and sample subsets that do not meet
+RDD assumptions can undercut the validity of an RDD analysis, provided
+that they are influential.
+These threats suggest the use of robust modeling in RDDs---in
+particular, to fit the
  specification using a modern MM,  SM, or similar estimator so designed
  as to possess a bounded influence function
- \citep{yohaiZamar1997locallyrobustMestimates}; such procedures address influence
+ \citep{yohaiZamar1997locallyrobustMestimates}.
+Such procedures address influence
  in the course of the fitting process.
- % Diagnostics such as inspection of Cook's distances
- % \citeyearpar{cook1982residuals} can identify leverage points that are
- % also influential.  In regression problem other than RDDs, a natural
- % remedy is to select $\vec{f}(\cdot)$ as a spline basis, thus fitting
- % a piecewise rather than a global polynomial
- % \citep{ruppert2003semiparametric}.  For the purpose of estimating
- % $Z$'s contribution to $\EE (Y|R,Z)$, this is similar in its effects
- % to retaining the global polynomial specification while narrowing $\mathcal{W}$
- % until it does not straddle knots of the chosen spline basis.
-In MM-estimation as in OLS,
+ In MM-estimation as in OLS,
 coefficients $\beta$ of a linear specification solve estimating equations
 $\sum_{i} \psi\left\{ ({y}_{i} -
 \vec{x}_{i}\beta)/s \right\} \vec{x}_{i} =0$, where $s>0$ and
@@ -405,13 +381,6 @@ estimates of residual scale, and OLS's $\psi(t) = t$ with a continuous $\psi$
 that satisfies $\int_{0}^{\infty}\psi(t)dt < \infty$. This limits
 the loss incurred by the fitter for failing to adapt itself to a small
 portion of aberrant observations;
-% e.g. Huber's $t \mapsto \mathrm{sign}(t) * \min(|t|, 1.345)$
-% \citeyearpar{huber1964robust}.  Capping the influence of any one observation
-% requires that $\psi$ be not only bounded but
-% \textit{redescending}. A redescending $\psi(t)$
-% increases smoothly from 0 as $t$ increases from 0, but for
-% sufficiently large $t$ it levels out and redescends, reaching 0 at
-% some $t_{r} < \infty$; $\psi(t) = 0$ for all $t>t_{r}$.
 it is permitted to instead systematically down-weight them. When
 present, such aberrancies present large residuals, that are easier to
 see in ordinary diagnostic plots, and small
@@ -431,34 +400,49 @@ which optionally provide Huber-White standard errors
 
 \section{Randomness and Regression in RDDs}\label{sec:theMethod}
 
-%% RDDs differ from RCTs in an important way:
-%% $Y_C$ typically correlates with $R$, and is therefore not independent
-%% of $Z$; Strong Ignorability \eqref{eq:ignore} is violated.
-%% Can it be relaxed to an assumption that is
-%% simultaneously plausible in RDDs and compatible with similar methods?
+% %% RDDs differ from RCTs in an important way:
+% %% $Y_C$ typically correlates with $R$, and is therefore not independent
+% %% of $Z$; Strong Ignorability \eqref{eq:ignore} is violated.
+% %% Can it be relaxed to an assumption that is
+% %% simultaneously plausible in RDDs and compatible with similar methods?
 
-When circumstances call for generating random numbers, such as in
-RCTs or Monte Carlo methods, statisticians often settle instead for
-pseudo-random numbers, deterministic
-outputs of a complex algorithm and an initial seed; a person in
-possession of that seed can exactly predict the pseudo-random draws.
-``True'' random numbers, on the other hand, derive from physical
-processes that are either chaotic \citep[e.g.][]{uchida2008fast} or
-quantum \citep[e.g.][]{stefanov2000optical}, and are not
-predictable.  However, these processes often contain an element
-of predictability; % \citep{raz2005extractors};
-true random
-numbers are obtained only after separating predictable from
-non-predictable components \citep[see, e.g.][]{Nisan1999148}.%,vadhan2012pseudorandomness}.
+% When circumstances call for generating random numbers, such as in
+% RCTs or Monte Carlo methods, statisticians often settle instead for
+% pseudo-random numbers, deterministic
+% outputs of a complex algorithm and an initial seed; a person in
+% possession of that seed can exactly predict the pseudo-random draws.
+% ``True'' random numbers, on the other hand, derive from physical
+% processes that are either chaotic \citep[e.g.][]{uchida2008fast} or
+% quantum \citep[e.g.][]{stefanov2000optical}, and are not
+% predictable.  However, these processes often contain an element
+% of predictability; % \citep{raz2005extractors};
+% true random
+% numbers are obtained only after separating predictable from
+% non-predictable components \citep[see, e.g.][]{Nisan1999148}.%,vadhan2012pseudorandomness}.
 
-Similarly, RDD analysis decomposes $Y_{T}$ and $Y_C$ as the sum of systematic
-components, a function of $R$, and disturbances, relying on the nature of the decomposition to ensure
-that, vis a vis one another, the disturbances and $Z$ may
-be regarded as random.
-% There is no need
-% to assume the systematic component to equal or be consistent for
-% $\EE (Y_{C}| R)$, nor to make further distributional assumptions on
-% the disturbances.
+% Similarly, RDD analysis decomposes $Y_{T}$ and $Y_C$ as the sum of systematic
+% components, a function of $R$, and disturbances, relying on the nature of the decomposition to ensure
+% that, vis a vis one another, the disturbances and $Z$ may
+% be regarded as random.
+% % There is no need
+% % to assume the systematic component to equal or be consistent for
+% % $\EE (Y_{C}| R)$, nor to make further distributional assumptions on
+% % the disturbances.
+
+The analysis of Hurricane Maria's death toll in \S~\ref{sec:maria}
+treated an RDD as analogous to a randomized experiment by following a
+two-step procedure: first, modeling the non-random component of
+outcomes $Y$, and then treating the residuals as ignorable, \emph{vis
+  a vis} treatment assignment $Z$.
+In \S~\ref{sec:maria}, these two steps used two different
+datasets---we regressed $Y$ on $R$ using data from years prior to
+2017, when Maria hit, and used 2017 data to estimate effects.
+This luxury is unavailable in the typical RDD, in which both steps
+must use the same data, as in \S~\ref{sec:robust-analys-covar}. 
+This section will describe a generalization of the method in
+\S~\ref{sec:maria} to the typical case, while incorporating
+specification tests described in \S~\ref{sec:specification} and robust
+modeling strategies described in \S~\ref{sec:robust-altern-ordin}. 
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
 
@@ -866,119 +850,3 @@ of $\mathcal{W}$ that specification testing failed to remove.
 
 
 
-
-\section{Review of selected methods}\label{sec:revi-select-meth}
-
-
-\subsection{Neyman-type inference about the CACE in RCTs}\label{sec:randProc}
-
-With moderate or large samples, the approach deriving from Neyman
-\citeyearpar{neyman:1935} gives randomization- but not
-permutation-based inferences, enabling it to test ``weak'' null
-hypotheses, for example $H: \EE(Y_T - Y_C) =c$ or
-$\EE(Y_{T} - Y_{C}| D_{T}=1) =c$, as opposed to Fisherian ``strong''
-hypotheses of form $H: Y_T - Y_C \equiv c$, as tested in
-Section~\ref{sec:using-eqref-test}, or $H: Y_T - Y_C \equiv D_{T}c$.
-
-To do this it conditions somewhat differently, on
-centered potential outcomes
-$\tilde{\mathbf{Y}}_{T} = \mathbf{Y}_{T} - \bar{Y}_{T}$ and
-$\tilde{\mathbf{Y}}_C$, as opposed to the uncentered
-and $\mathbf{Y}_{C}$.
-This centering is around study population means,
-$\bar{Y}_{T} = n^{-1}\sum_{i}Y_{Ti}$ and
-$\bar{Y}_{C} = n^{-1}\sum_{i}Y_{Ci}$, as opposed to within-group means
-$\overline{(Y_{T})}_{Z=1} = N_{1}^{-1}\sum_{i}
-Y_{Ti}\indicator{Z_{i}=1}$
-and
-$\overline{(Y_{C})}_{Z=0} = N_{0}^{-1}\sum_{i}
-Y_{Ci}\indicator{Z_{i}=0}$.
-As a result, the Neyman-type conditioning variables $\tilde{\mathbf{Y}}_{T}$ and
-$\tilde{\mathbf{Y}}_{C}$ are entirely unobserved, in contrast to the
-Fisherian conditioning variable $\mathbf{Y}_{C}$, which was at least
-partly observed.  But by the same token, for inference about the parameter
-$\EE(Y_{T} - Y_{C})$ under a
-location-scale family model of $\PP[(Y_{C}, Y_{T})]$,
- %, or $\EE(Y_{T} - Y_{C} | D_{T}=1)$,
-the variable
-$(\tilde{\mathbf{Y}}_{C}, \tilde{\mathbf{Y}}_{T})$ is uninformative.
-Formally, it is S-ancillary \citep{cox2006pos,lehmannRomano2006TSH}
-to $\EE(Y_{T} - Y_{C})$. Similarly,  under a location-scale model for $\PP[ (Y_{C}, Y_{T}) |
-D_{T}=1]$, $(\tilde{\mathbf{Y}}_{C}, \tilde{\mathbf{Y}}_{T}, \mathbf{D}_{T})$ is S-ancillary for
-inference about the TOTE, as is
-%$(\tilde{\mathbf{Y}}_{C}, \tilde{\mathbf{Y}}_{T}, \mathbf{D}_{T}, \mathbf{D}_{C})$ and
-$(\tilde{\mathbf{Y}}_{C},
-\tilde{\mathbf{Y}}_{T}, \mathbf{D}_{T}, \mathbf{D}_{C}, N_{1},
-N_{0})$.  The latter is denoted ``$\mathbf{A}^{\dagger}$'' (the symbol ``$\mathbf{A}^{*}$'' having been used in \S~\ref{sec:using-eqref-test} and ``$\mathbf{A}$'' being reserved for a statistic to be
-introduced in \S~\ref{sec:model-eey-c-r}).
-
-The archetypical
-Neyman-type test statistic \citeyearpar{neyman:1923,neyman1934stratifiedsampling} is
-  % If $\tilde{\mathbf{y}}_H$ denotes the potential response
-  % $\mathbf{y}_{c}$ that would be entailed by a strong null $H$, in
-  % combination with observations $\mathbf{y}$ and $\mathbf{d}$, then
-\begin{align} \label{eq:tudef}
-t_{u}({\mathbf{y}},\mathbf{z}) &=
-\frac{\bar{{y}}_{z=1} -
-                             \bar{{y}}_{z=0}}{
-\mathrm{SE}_{u} \left\{ \bar{{y}}_{Z=1} -  \bar{y}_{Z=0} \right\}
-                             },\, \text{where}
-\\
-%% where $\overline{v}_{z=j} = n_{j}^{-1} \sum_{i: z_{i} = j}
-%% v_{i}$, $n_{j} = \sum_{i}\indicator{z_{i} =j}$, for $j = 0, 1$, and
-\mathrm{SE}_{u}^2 \left( \bar{y}_{Z=1} -  \bar{y}_{Z=0} \right) &= \frac{s_{z=1}^{2}({\mathbf{y}})}{n_{1}} +
-    \frac{s_{z=0}^{2}({\mathbf{y}})}{n_{0}}  \label{eq:sudef}
-% \\
-%     s_{z=j}^{2}(\mathbf{v}) &= \frac{1}{n_{j}-1}\sum_{i: z_{i} = j}
-% (v_{i} - \bar{v}_{z=j})^{2} .\nonumber
-% \end{equation}
-\end{align}
-is the ordinary unpooled two-sample variance. With conditioning on $\mathbf{A}^{\dagger}$ --- as opposed to the
-conditioning on $\mathbf{Z}$, and $\mathbf{Z}$ only, relative to which
-two-sample $t$-statistics like~\eqref{eq:tudef} are more commonly
-understood --- \eqref{eq:sudef} equals the sum of a zero-mean
-disturbance and
-${s^{2}({\mathbf{Y}_{T}})}/{N_{1}} +
-{s^{2}({\mathbf{Y}_{C}})}/{N_{0}}$, an upper bound of the variance, as
-conditioned on $\mathbf{A}^{\dagger}$, of
-$\overline{(Y_{T})}_{Z=1} - \overline{(Y_{C})}_{Z=0}$.  In consequence,
-if $H_{0}: \EE Y_{T} =\EE Y_{C}$ is true then
-$t_{u}(\mathbf{Y}, \mathbf{Z})\stackrel{d}{\rightarrow}\mathrm{Normal}(0,v)$,
-some $v\leq 1$, conditional on $\mathbf{A}^{\dagger}$; see Appendix~\ref{apnd:RICLT}.%\citep[Section~\ref{apnd:RICLT}]{lrdauthors:supp}.
-
-% Although $t_{u}$ can also be used in \eqref{eq:01} for permutation
-% tests of the sharp null $Y_{T} \equiv Y_{C}$
-% \citep[e.g.,][]{chung2013exact}, more commonly it is paired with
-% the large-sample approximation, to test the weak null $\EE(Y_{T} -
-% Y_{C}) =0$.
-
-More generally, for any $c$ we can assess
-$t_{u}(\mathbf{Y}-c\mathbf{D}, \mathbf{Z})$ against a standard Normal
-or central $t$ distribution to test
-$H_{c}: \EE( Y_{T} - cD_{T}) =\EE (Y_{C} - cD_{C})$.
-The set \{$c$:
-$H_{c}$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
-$100(1-\alpha)\%$ confidence set for the TOTE; the $c$ solving
-$t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to be unique, is a
-corresponding point estimate.
-Under full compliance, the two-sided 95\% confidence interval induced in this
-manner is the familiar
-$\bar{y}_{z=1} -\bar{y}_{z=0} \pm 1.96\, \mathrm{SE}_{u}(\bar{y}_{Z=1}
--\bar{y}_{Z=0})$.  If compliance is incomplete, then determining the
-confidence interval or set induced by~\eqref{eq:tudef} requires a distinct explicit
-test for each of a range of $c$s: by~\eqref{eq:sudef}, if $\mathbf{d}
-\neq \mathbf{z}$ then the value
-of $\mathrm{SE}_{u}(\overline{(y-c d)}_{Z=1}
--\overline{(y - c d)}_{Z=0})$ depends on $c$.  As compared to Wald-type
-confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
-\mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
-hypothesis independent quantity, under partial compliance this iterative method
-% of separate evaluation of $\mathrm{SE}_{u} \left\{
-%   \overline{({y}_{H_{\tau}})}_{Z=1} -
-%   \overline{({y}_{H_{\tau}})}_{Z=0} \right\}$ for each $H_{\tau}$,
-improves correspondence of nominal and actual confidence levels
-% , particularly if the ``instrument,'' $Z$, is ``weak,''
-% i.e. $\PP(D_{T} =1) \approx \PP(D_{C} =1)$
-\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
-
-\subsection{Fuzzy RD}
