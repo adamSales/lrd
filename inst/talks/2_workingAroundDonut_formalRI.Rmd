@@ -4,7 +4,7 @@
 
 <div class="columns-2">
 
-  <img src="images/donut-partly-eaten.jpg" width="300px" height="300px" />
+  <img src="images/donut_choco_glazed.jpg" width="300px" height="300px" />
 
 
 >  Q: Getting rid of the sketchy part of my sample left me with a donut hole in the middle, right around the cutpoint.  How does that help me to estimate the regression line's limits as it approaches the cutpoint from above and from below?    
