@@ -78,7 +78,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 >  - Purpose of test: expose whether subjects secured or avoided treatment by manipulating their $R$s.
 >  - If so, then density of $R$ differs on either side of cutpoint.
 <!--
->  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp \mathcal{I}[R\leq 0] | \{R \in \tilde{\mathcal{W}}\}.$ 
+>  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp Z | \{R \in \tilde{\mathcal{W}}\}.$
 -->
 >  - Canadian colleges data have a clump at $R=0$. McCrary throws a red flag!  
 

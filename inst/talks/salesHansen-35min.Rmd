@@ -4,7 +4,8 @@ author: "Adam Sales & Ben Hansen*"
 date: "Center for Social Data Analytics, Penn State (Feb. '19)"
 bibliography: ../r1/causalinference.bib
 output: 
-  ioslides_presentation
+  ioslides_presentation:
+     widescreen: false
 ---
 <!-- nocite:
   @hansenSales2015cochran-->
@@ -40,6 +41,12 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 ## References {.smaller}
 
+<style>
+slides > slide { overflow: scroll; }
+slides > slide:not(.nobackground):after {
+  content: '';
+}
+</style>
 
 
 
