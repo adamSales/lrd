@@ -1,7 +1,7 @@
 ---
-title: "Robust MM-estimation for imperfect regression discontinuity designs"
+title: "Limitless Regression Discontinuity"
 author: "Adam Sales & Ben Hansen*"
-date: "CMStatistics 2018, U. of Pisa"
+date: "Center for Social Data Analytics, Penn State (Feb. '19)"
 bibliography: ../r1/causalinference.bib
 output: 
   ioslides_presentation
