@@ -2,7 +2,7 @@
 title: "Robust M-estimation for imperfect regression discontinuity designs"
 author: "Adam Sales & Ben Hansen*"
 date: "CMStatistics 2018, U. of Pisa"
-bibliography: ../../bibliography.bib
+bibliography: ../r1/causalinference.bib
 output: 
   ioslides_presentation
 ---
@@ -13,165 +13,21 @@ output:
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
+```{r child="1_threePerspectives+methodsForPickingOutRDDs.Rmd"}
+```
 
+<!-- NB: THIS VERSION SAVES TIME BY LEAVING OUT
+     	 2_workingAroundDonut_formalRI.Rmd .
+	 CONSIDER RESTORING FOR LESS TECHNICAL AUDIENCES.
+	 -->
 
-# Three perspectives on the regression discontinuity design 
-<!-- Potential outcomes vs structural modeling for RDDs -->
+```{r child="3_methodsForLimitingContamSens.Rmd"}
+```
 
-## Academic probation and later grades | Data from 3 Canadian colleges [Lindo et al -@lindo2010ability] {.build}
-
-<div class="centered">
-<!-- <img src="images/apsemaphore.jpg" width=180px height="270px" /> -->
-
-<!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_1.jpg" width="300px" height="275px" />
-</div>
-
-Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), what's $Z \equiv \mathcal{I}[R<0]$'s effect on $Y$ (year 2 GPA)?  
-
-(A _regression discontinuity_ estimate of academic probation's impact.) 
-
-<div class="notes">
-
-- A study of academic probation within a Canadian university system
-- Assignment to treatment vs control determined by position of "running variable" relative to threshold value.
-- Regression discontinuity designs collect data of this broad structure, look for a discontinuity at threshold...
-- as we appear to see here.  What does it mean to call this the causal effect of AP?
-
-</div>
-
-## Regression discontinuity designs | (RDDs): Three causal interpretations {.smaller}
-
-> - Traditional view [@thistlethwaite1960regression]: Assume $Y = \alpha + \tau Z + \beta R + \epsilon$, $\epsilon \perp R$.  The causal effect is $\tau$. 
-> - Limit-based view [@hahn2001iae; @imbens2008regression]:  Perhaps $E(Y|R, Z)$ is linear, perhaps not; causal effect is $\lim_{r\uparrow 0} E(Y|R=r) - \lim_{r\downarrow 0} E(Y|R=r) =: \tau$.
-> - Potential outcomes view [@lee2008randomized; @cattaneo2014randomization;@matteiMealliObsStud]: causal effects are quantities like $E [Y_T - Y_C]=:\tau$, whatever the form of $E[Y|R]$; just as these average causal effects are nonparametrically identified in randomized trials, "local randomization" suffices in RDDs. 
->- We [@lrdauthors:main] offer a distinct intepretation of local randomization in terms of potential outcomes. It squares better with the concept of Thistlethwaite & Campbell, and with common patterns in RDD data.
-
-
-# Methods for picking out RCTs within RDDs
-
-## Methods for picking out RCTs within RDDs {.build}
-
->  Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
-
->  A: To separate unwanted "chaff" from locally randomized "wheat," use specification tests....
-
-
-<div class="notes">
-- It's one thing to say "there was natural randomization," another to assert that every treatment assignment was random in this way. 
-- To address this challenge, methodologists have proposed preliminary specification tests, and procedures built on specification tests.
-- I'll review 2 of the most common tests and procedures before arguing that they aren't quite up to the task.
-</div>
-
-<!-- (2 slides: balance; McCrary)-->
-
-## $X$es should look "locally randomized" {.smaller}
-
-<div class="centered">
-<!--![](images/figure2_1.jpg) maybe I want something wider & shorter-->
-<img src="images/figure2_2.jpg" width="300px" height="275px" />
-</div>
-
-> - Local randomization should be reflected in covariates, e.g. prior $G$rades ($y$ axis). 
-> - Due to trend, clear that $G \not\perp \mathcal{I}[R\leq 0]$.
-($G$ is not "balanced" vis a vis $Z$.)<!-- Does the `\not` come thru? -->
-> - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$ is not rejected.
-> - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
-
-<div class="notes">
-
-- In general, $H'$ is sustainable with wider $\mathcal{W}$ than $H$. (Don't throw away good data!)
-- In Lindo et al dataset, permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
-- The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
-
-</div>
-
-## Local randomization & the density of $R$ | the McCrary [-@mccrary2008manipulation] test
-
-<div class="columns-2">
-
-
->  - Purpose of test: expose whether subjects secured or avoided treatment by manipulating their $R$s.
->  - If so, then density of $R$ differs on either side of cutpoint.
-<!--
->  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp \mathcal{I}[R\leq 0] | \{R \in \tilde{\mathcal{W}}\}.$ 
--->
->  - Canadian colleges data have a clump at $R=0$. McCrary throws a red flag!  
-
-  <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
-
-
-</div>
-
-> - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving a "donut.")
-
-<div class="notes">
-
-- The widely used McCrary test checks for equal density of R immediately to either side of the cutpoint 
-- no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
-- Removing that chunk and that chunk only gets us a pass on this test.  
-<!-- - thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  -->
-
-</div>
-
-## Methods for picking out RCTs within RDDs
-
-> Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
-
-> A: To separate unwanted chaff from locally randomized wheat, use specification tests. These tests probe "ignorability" of covariate residuals --- not covariates themselves --- and of the density of the running variable.
-> Remedies for test failure may involve reducing the sample.  Deciding which observations to get rid of is an inexact science. 
-
-<!-- NB: FOR ICORS-18 EXCISED 1-SLIDE SECTION HERE, 6/29/2018; CONSIDER RESTORING FOR LESS TECHNICAL AUDIENCES-->
-
-# Methods for limiting contamination sensitivity
-
-## Methods for limiting contamination sensitivity {.build}
-
->   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a secondary analysis of sensitivity to this problem?
-
->   A:  The contamination issue must be addressed as a part of the _primary_ analysis. It requires us to abandon OLS,...
-
-
-<!-- 2 slides: LSO, Krafft points; robust MM regression-->
-
-## Sensitivity to removing _groups_ of points {.build}
-
-Say there are "savvy" students who, when at risk for AP, "manipulate" grades $\uparrow$. (Bribes?)   
-This latent subgroup is overrepresented in excised donut hole $\{i: z_i=0\}$, but may be elsewhere too. As many as $O(n^{1/2})$ "bad" points remain, undercutting estimation of $E(Y_C | R)$. 
-
-How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if not recognized as such in RDD literature.
-
-<div class="columns-2">
-<img src="images/figure2.4a.jpg" width="300px" height="300px" />
-
-<img src="images/Krafft_points.jpg" width="300px" height="300px" />
-</div>
-
-<div class="notes">
-
-- At right, molecular design example discussed in _Robust Statistics_ text.  Not an RDD, but the lines that I've added treat it as though it were, with threshold right in the middle of the plot.
-- Think of rightmost 3 points as a contaminating latent subgroup.  Large effect on OLS, less on robust method.
-- If the latent subgroup is both different and large, we ought to be able to find it in tests.
-- Otherwise, we're in the domain of "$\epsilon$ contamination"
-- OLS handles $\epsilon$ contamination poorly. Methods that handle it better explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
-
-</div>
-
-## Robust MM estimates of regression | a high-level review {.build}
-
-- Robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, some $\psi(\cdot)$, $s(\cdot)$.
-- After much study, robustness literature identified pairs $(\psi, s)$ that handle groups of outliers while retaining $\sqrt{n}$ rates, efficiency.
-- E.g., "MM with bisquare psi-function and robust scale",...
-- In R, `robustbase::lmrob`; in Stata, `mmregress`.
-- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample, OLS won't do. Need robust MM regression [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
-
-
-## Methods for limiting contamination sensitivity
-
-> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
-
-
-> A: With RDDs, there's a better option than post hoc sensitivity analysis.  You can address sensitivity to contamination (as opposed to omitted variable sensitivity) as a part of the primary analysis, with the help of robust MM estimators.  While less familiar in social science, these methods are efficient, easy to use and readily available in R and Stata.
+<!-- NB: MORE TIME SAVED BY LEAVING OUT
+         4_areAnswersAnyDifferent.Rmd .
+	 THIS PRESENTS SIMULATION STUDY RESULTS.
+	 -->
 
 ## Discussion {.smaller}
 <!-- Some of these points were added for ICORS audience. 

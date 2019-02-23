@@ -1,0 +1,50 @@
+
+# Methods for limiting contamination sensitivity
+
+## Methods for limiting contamination sensitivity {.build}
+
+>   Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Should we supplement our OLS estimates with a secondary analysis of sensitivity to this problem?
+
+>   A:  The contamination issue must be addressed as a part of the _primary_ analysis. It requires us to abandon OLS,...
+
+
+<!-- 2 slides: LSO, Krafft points; robust MM regression-->
+
+## Sensitivity to removing _groups_ of points {.build}
+
+Say there are "savvy" students who, when at risk for AP, "manipulate" grades $\uparrow$. (Bribes?)   
+This latent subgroup is overrepresented in excised donut hole $\{i: z_i=0\}$, but may be elsewhere too. As many as $O(n^{1/2})$ "bad" points remain, undercutting estimation of $E(Y_C | R)$. 
+
+How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if not recognized as such in RDD literature.
+
+<div class="columns-2">
+<img src="images/figure2.4a.jpg" width="300px" height="300px" />
+
+<img src="images/Krafft_points.jpg" width="300px" height="300px" />
+</div>
+
+<div class="notes">
+
+- At right, molecular design example discussed in _Robust Statistics_ text.  Not an RDD, but the lines that I've added treat it as though it were, with threshold right in the middle of the plot.
+- Think of rightmost 3 points as a contaminating latent subgroup.  Large effect on OLS, less on robust method.
+- If the latent subgroup is both different and large, we ought to be able to find it in tests.
+- Otherwise, we're in the domain of "$\epsilon$ contamination"
+- OLS handles $\epsilon$ contamination poorly. Methods that handle it better explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
+
+</div>
+
+## Robust MM estimates of regression | a high-level review {.build}
+
+- Robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, some $\psi(\cdot)$, $s(\cdot)$.
+- After much study, robustness literature identified pairs $(\psi, s)$ that handle groups of outliers while retaining $\sqrt{n}$ rates, efficiency.
+- E.g., "MM with bisquare psi-function and robust scale",...
+- In R, `robustbase::lmrob`; in Stata, `mmregress`.
+- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample, OLS won't do. Need robust MM regression [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
+
+
+## Methods for limiting contamination sensitivity
+
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
+
+
+> A: With RDDs, there's a better option than post hoc sensitivity analysis.  You can address sensitivity to contamination (as opposed to omitted variable sensitivity) as a part of the primary analysis, with the help of robust MM estimators.  While less familiar in social science, these methods are efficient, easy to use and readily available in R and Stata.
