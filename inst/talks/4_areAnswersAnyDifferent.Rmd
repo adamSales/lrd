@@ -24,12 +24,20 @@
  
 |                  |Estimate |95\% CI     |$\mathcal{W}$ |n     |
 |:-----------------|:--------|:-----------|:-------------|-----:|
-|Limitless         |0.24     |(0.17,0.31) |[0.01,0.50)  | 10000|
+|Limitless         |0.24     |(0.17,0.31) |[0.01,0.50)   | 10000|
 |Local Permutation |0.11     |(0.05,0.17) |[0.01,0.18)   |  3400|
 |Local OLS         |0.23     |(0.19,0.28) |[0.01,1.24)   | 26000| 
 
- 
- 
+<div class="notes"> 
+
+- "Local OLS" method targets a difference of limits.  That, other diff's
+  from our method didn't change much in this case. (The McCrary test
+  finding says contamination could have occurred, not that it did.)
+-  "Local Permutation" fails to adjust for the running variable, explaining both:
+its very narrow $\mathcal{W}$, and consequent loss of power; its discrepant estimate, as a result of residual bias from the running variable.
+    
+</div>
+
 ## The robustness weights diagnostic {.build}
 
 - Robust regression fitting generates "robustness" weights $\in [0,1]$, showing which observations the fitter deemed to be anomalous.

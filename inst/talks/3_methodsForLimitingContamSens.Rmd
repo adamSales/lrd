@@ -27,8 +27,7 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 
 - At right, molecular design example discussed in _Robust Statistics_ text.  Not an RDD, but the lines that I've added treat it as though it were, with threshold right in the middle of the plot.
 - Think of rightmost 3 points as a contaminating latent subgroup.  Large effect on OLS, less on robust method.
-- If the latent subgroup is both different and large, we ought to be able to find it in tests.
-- Otherwise, we're in the domain of "$\epsilon$ contamination"
+- If the latent subgroup is both different and large, we ought to be able to find it in tests. OW we're in domain of "$\epsilon$ contamination"...
 - OLS handles $\epsilon$ contamination poorly. Methods that handle it better explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
 
 </div>
