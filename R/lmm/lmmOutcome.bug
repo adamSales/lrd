@@ -1,0 +1,16 @@
+model{
+ for(i in 1:N){
+  nextGPA[i]~dnorm(mu[i],tau)
+  mu[i] <- b[1]+b[2]*Z[i]+b[3]*R[i]+b[4]*Z[i]*R[i]+xb[i]
+  xb[i] <- b[5]*bpl[i]+b[6]*gpa[i]+b[7]*credits[i]+b[8]*male[i]+b[9]*english[i]+b[10]*campus1[i]+b[11]*campus2[i]
+
+
+  y1[i] <- b[1]+b[2]+(b[3]+b[4])*R[i]+xb[i]
+  y0[i] <- b[1]+b[3]*R[i]+xb[i]
+ }
+ tau~dgamma(0.001,0.001)
+ for(p in 1:11){
+  b[p]~dnorm(0,1)
+ }
+ ate <- mean(y1)-mean(y0)
+}

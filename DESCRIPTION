@@ -1,6 +1,6 @@
 Package: lrd
 Title: Computations accompanying the paper Limitless Regression Discontinuity
-Version: 0.0.0.9000
+Version: 0.0.2.9000
 Authors@R: c(
    person("First", "Last", email = "first.last@example.com", role = c("aut", "cre")),
       person("First", "Last", email = "first.last@example.com", role = "aut") )

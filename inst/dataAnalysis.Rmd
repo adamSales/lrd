@@ -1,5 +1,5 @@
 ---
-title: "Data Analysis for LRD paper"
+title: "LRD paper Appendix C, Data Analysis"
 author: "lrd authors"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = '.')
+options(scipen=1, digits=3)
 ```
 
 General dependencies.
@@ -26,23 +26,27 @@ if(!require('lrd')){
 ```
 
 Initialization.
+If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
+
 ```{r load-data,warning=FALSE,message=FALSE}
-logit=function(x) log(x*.01/(1-x*.01))
+if(!exists('paperdir')) paperdir <- '.'
+
 
 
 ciChar <- function(ci,est=FALSE){
-    ci <- round(ci,2)
-    ci.out <- paste('(',round(ci[1],2),',',round(ci[2],2),')',sep='')
+    #ci <- round(ci,2)
+    ci.out <- paste('(',round2(ci[1]),', ',round2(ci[2]),')',sep='')
     if(est) ci.out <- c(ci.out,as.character(ci[3]))
     ci.out
 }
 
-round2 <- function(x) round(x,2)
+round2 <- function(x) sprintf('%.2f',x)#round(x,2)
 
 nfunc <- function(bw) sum(abs(dat$R)<bw,na.rm=TRUE)
 
 Wfunc <- function(W)
-    paste0('[',round2(W[1]), ',',round2(W[2]),')')
+    paste0('[',round2(W[1]), ', ',round2(W[2]),')')
+
 
 ```
 
@@ -59,7 +63,7 @@ if(!is.element('dat',ls())){
                                         #dat=subset(dat,left_school!=1)
     dat$dist_from_cut <- round(dat$dist_from_cut,2)
     dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
-    dat$lhsgrade_pct=logit(dat$hsgrade_pct)
+    dat$lhsgrade_pct=plogis(dat$hsgrade_pct)
   #dat$age <- dat$age_at_entry>=19
     dat$R <- dat$dist_from_cut
     dat$Z <- dat$gpalscutoff
@@ -77,32 +81,43 @@ ntot <- nrow(dat)
 Create plots for Figure 1. First of the outcome (subsequent GPA):
 ```{r rddFig}
 
-figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),FUN=mean,na.rm=TRUE)
+figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),
+                    FUN=mean,na.rm=TRUE)
 figDat$n <- as.vector(table(dat$R))
 figDat <- within(figDat,n <- 2*n/max(n))
 
-with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg Subsequent GPA'))
+with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
+                 ylab='Avg Subsequent GPA'))
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
-with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',ylab='Avg logit(hsgrade_pct)'))
+with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
+                 ylab='Avg logit(hsgrade_pct)'))
 ```
 
 The McCrary density test failure and recovery described in Section 4.1
 ```{r}
-mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE)
-mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE)
+(mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE) )
+( mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE) )
+```
+
+The Frandsen (2016) test for manipulation when the
+running variable is discrete, when the cutoff is the maximum GPA
+receiving probation, or the minimum GPA not receiving probation:
+```{r}
+(frandsen1 <- lrd::frandsen(dat$R,cutoff=-0.01,BW=0.5))
+(frandsen2 <- lrd::frandsen(dat$R,cutoff=0,BW=0.5))
 ```
 
 
-#' ## main analysis ##
+## main analysis ##
 
-#' The sh method uses `lmrob`, which in turn requires a random
-#' seed.  For confidence interval and estimation routines it's
-#' helpful to use the same seed throughout, as this means the
-#' S-estimation initializers will always be sampling the same
-#' subsets of the sample.
-#'
+The sh method uses `lmrob`, which in turn requires a random
+seed.  For confidence interval and estimation routines it's
+helpful to use the same seed throughout, as this means the
+S-estimation initializers will always be sampling the same
+subsets of the sample.
+
 
 ```{r}
 set.seed(201705)
@@ -110,46 +125,57 @@ lmrob_seed <- .Random.seed
 
 
 SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
+unlist(SHmain)
 
-## No-donut variant (not reported)##
+# No-donut variant (not discussed in text)
 SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
 SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
+unlist(SHdataDriven)
 
 SHcubic <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
+unlist(SHcubic)
 
 SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
+unlist(SHitt)
 ```
 
 Create Table 1:
 ```{r}
 
 resultsTab <-
-    do.call('rbind', lapply(list(main=SHmain,data_driven=SHdataDriven,cubic=SHcubic,ITT=SHitt),
-                            function(res) c(round2(res$CI[3]),
-                                            ciChar(res$CI[1:2]),
-                                            W=Wfunc(res$W),
-                                            n=res$n)))
+ do.call('rbind',
+  lapply(list(main=SHmain,data_driven=SHdataDriven,cubic=SHcubic,ITT=SHitt),
+   function(res) c(round2(res$CI[3]),
+                   ciChar(res$CI[1:2]),
+                   W=Wfunc(res$W),
+                   n=prettyNum(res$n,',',trim=TRUE))))
 
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
+
 kable(resultsTab)
 
-print(xtable(resultsTab),
-      file="tab-results.tex", floating=F,sanitize.colnames.function=function(x) x)
+rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
+
+print(xtable(resultsTab,align='lrrrl'),
+      file=paste0(paperdir,"/tab-results.tex"), floating=F,
+      sanitize.colnames.function=function(x) x,
+      sanitize.rownames.function=function(x) x)
 ```
 
 Results from two alternative methods, creating Table 2:
 ```{r}
 CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- lrd::ik(subset(dat,R!=0),outcome='nextGPA')
+IK <- lrd::ik(dat,outcome='nextGPA')
 
 altTab <-
-    do.call('rbind', lapply(list(Limitless=SHitt,`Local Permutation`=CFT,`Local OLS`=IK),
-                            function(res) c(round2(res$CI[3]),
-                                            ciChar(res$CI[1:2]),
-                                            W=Wfunc(res$W),
-                                            n=res$n)))
+ do.call('rbind',
+  lapply(list(`Local Linear`=IK,Limitless=SHitt,`Local Permutation`=CFT),
+   function(res) c(round2(res$CI[3]),
+    ciChar(res$CI[1:2]),
+    W=Wfunc(res$W),
+    n=prettyNum(res$n,',',trim=TRUE))))
 
 
 
@@ -157,14 +183,20 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 kable(altTab)
 
-print(xtable(altTab),
-      file="tab-alt.tex", floating=F,sanitize.colnames.function=function(x) x)
+print(xtable(altTab,align='rlllr'),
+      file=paste0(paperdir,"/tab-alt.tex"), floating=F,
+      sanitize.colnames.function=function(x) x)
 ```
 
 
+## Examine robustness weights
 
+If there are regions of the data of high influence, the robust fitter
+should reject or downweight more frequently in those regions, and we'll see dips
+on the plot of robustness weights vs R.
+
+Here is the plot corresponding to the main analysis presented in the paper.
 ```{r}
-#' To do: compare robustness weights plots for the next 2 models
 lmrob_main <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),
               data=dat,subset=(R!=0 & abs(R)<.5),
@@ -172,27 +204,30 @@ lmrob_main <- lmrob(nextGPA~Z+R,
               control=lmrob.control(seed=lmrob_seed,
                             k.max=500, maxit.scale=500)
               )
+```
 
-#' Robustness weights are mostly near 1, never below .25.
+Robustness weights are mostly near 1, never below .25.
+```{r}
 robwts_main <- weights(lmrob_main, type="robustness")
 summary(robwts_main)
+```
 
-#' Not too much pattern to the robustness weights --
-#' although the lowest values do occur at slightly above
-#' the cutpoint, where we'd see savvy students whose
-#' rose above the cut due to savvyness.
+Not too much pattern to the robustness weights --
+although the lowest values do occur at slightly above
+the cutpoint, where we'd see savvy students whose
+rose above the cut due to savvyness.
+
+```{r}
 ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                               robweights=robwts_main),
                    aes(x=R,y=robweights))
 ggp_main + geom_point(alpha=.1) + stat_smooth()
+```
 
-#' What were the R values for the lowest-weight points?
+When we fit without omitting R=0 students, here is
+the best fitting version of the model.
 
-subset(ggp_main$data, robweights<.3)
-
-
-#' When we fit without omitting R=0 students, here is
-#' the best fitting version of the model.
+```{r}
 lmrob_nodo <- lmrob(nextGPA~Z+R,
               offset=(SHnodo$CI[3]*probation_year1),
               data=dat,subset=(abs(R)<.5),
@@ -202,34 +237,34 @@ lmrob_nodo <- lmrob(nextGPA~Z+R,
       )
 
 robwts_nodo <- weights(lmrob_nodo, type="robustness")
+```
 
-#' Do we the observations at R=0 stand out?
-#' With no donut, robustness weights have a slight tendency
-#' to be lower among observations at R=0.
+Do the observations at R=0 stand out?
+With no donut, robustness weights have a slight tendency
+to be lower among observations at R=0.
+
+```{r}
 by(robwts_nodo,
    lmrob_nodo$model$R==0, summary)
 t.test(wt~atcut, data.frame(wt=robwts_nodo,
                             atcut=(lmrob_nodo$model$R==0)),
        var.equal=F, alternative="g")
+```
 
-
-#' The plot is similar to that of the main analysis,
-#' with some low robustness weight observations as R=0
-#' but also plenty of ordinary weight observations there.
+The plot is similar to that of the main analysis,
+with some low robustness weight observations as R=0
+but also plenty of ordinary weight observations there.
+```{r}
 ggp_nodo <- ggplot(data.frame(R=lmrob_nodo$model$R,
                               robweights=robwts_nodo),
                    aes(x=R,y=robweights))
 ggp_nodo + geom_point(alpha=.1) + stat_smooth()
-
-#' What were the R values for the lowest-weight points?
-
-subset(ggp_nodo$data, robweights<.3)
 ```
 
 
 Save results:
 ```{r}
-save(list=ls(),file=paste0('dataResults/RDanalysis-',format(Sys.time(),"%m%d%H%M"),'.RData'))
+save(list=ls(),file=paste0('RDanalysis-',format(Sys.time(),"%m%d%H%M"),'.RData'))
 ```
 
 Session information

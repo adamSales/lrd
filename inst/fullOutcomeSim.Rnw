@@ -1,0 +1,130 @@
+%\documentclass[12pt]{article} %ordinary compilation
+\documentclass[aap]{imsart} % to approximate no pages via AOAS template
+%\usepackage{setspace}  %comment out if using imsart
+\input{rd-aoas-preamble.tex}
+\externaldocument{rd-aoas}
+
+%\title{Limitless Regression Discontinuity:\\ additional technical material}
+%\author{lrd authors}
+
+
+\begin{document}
+
+<<>>=
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '.')
+@
+
+General dependencies.
+<<>>=
+library('knitr')
+library('lrd')
+library('kableExtra')
+@
+
+
+
+Initialization. Note that `nreps=0` corresponds to no simulations,
+just print results from previously saved simulations.
+In order to re-run the simulations, the `nreps`
+variable should have been set to a positive integer before initiating this script.
+
+##Level/Power Simulation
+The following code (optionally, if `nreps>0`) runs the simulation
+reported in Table 3 of "Limitless Regression Discontinuity"
+
+<<>>=
+warning=FALSE, message=FALSE}
+if (!exists('nreps') ) nreps <- 0
+nreps
+if (nreps) {
+library('robustbase')
+library('rdd')
+library('RItools')
+library('sandwich')
+library('nnet')
+
+set.seed(201609)
+st <- system.time(outcomeSim <- totalOutcomeSim(nreps))
+save(outcomeSim, file="dataResults/outcomeSim.RData")
+cat(paste0(date(), ', nreps=', nreps, '\n'),
+    paste(c(names(st),'\n', collapse=T)),
+    st,
+    file='dataResults/fullOutcomeSim-runtime.txt', append=TRUE)
+} else load('dataResults/outcomeSim.RData')
+@
+
+This code creates Table 3:
+<<>>=
+levTab <- simlevels(outcomeSim)
+powTab <-simpower(outcomeSim)
+capture.output({
+ prntOutcomeSim(levTab=levTab,powTab=powTab,
+                caption= paste('Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power with a treatment effect of 0.2.'),
+                label='tab:level')
+},file="tab-levelSimulation.tex")
+@
+Here are the results, first for the empirical size of $\alpha=0.05$
+hypothesis tests:
+<<>>=
+rownames(levTab) <- rep(c('N(0,1) error','$t_3$ error'),3)
+colnames(levTab) <- c('Permutation','Limitless','Local OLS')
+kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2,format='html')%>%
+    kable_styling(full_width=FALSE)%>%
+    group_rows("n=50",1,2)%>%group_rows("n=250",3,4)%>%group_rows("n=2500",5,6)
+@
+
+Here are the results for power, when the treatment effect is 0.2:
+<<>>=
+rownames(powTab) <- rep(c('N(0,1) error','$t_3$ error'),3)
+colnames(powTab) <- c('Permutation','Limitless','Local OLS')
+kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2,format='html')%>%
+    kable_styling(full_width=FALSE)%>%
+    group_rows("n=50",1,2)%>%group_rows("n=250",3,4)%>%group_rows("n=2500",5,6)
+@
+
+##Polynomial Simulation
+
+<<  warning=FALSE, message=FALSE>>=
+if (!exists('nreps') ) nreps <- 0
+nreps
+if (nreps) {
+
+
+set.seed(201609)
+st2 <- system.time(totalPoly <- totalPolySim(nreps))
+save(totalPoly,file="dataResults/totalPolySim.RData")
+cat(paste0(date(), ', nreps=', nreps, '\n'),
+    paste(c(names(st),'\n', collapse=T)),
+    st,
+    file='dataResults/totalPolySim-runtime.txt', append=TRUE)
+} else{
+    load('dataResults/totalPolySim.RData')
+}
+@
+
+The following gives the results in Table 4 of the paper, in addition
+to the break-down of RMSE into bias and variance, and analogous
+results for normally-distributed errors.
+
+<<>>=
+tab.paper <- prntTab(totalPoly,full=FALSE,md=FALSE)
+capture.output(
+polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
+    file="tab-polynomialSimulation.tex")
+tab <- prntTab(totalPoly,full=TRUE,md=TRUE)
+rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
+colnames(tab) <- c(rep(paste0('deg=',1:4),2),'')
+kable(tab,format='html',caption='Full results for polynomial simulation',digits=2)%>%
+    kable_styling()%>% column_spec( 5,border_right=TRUE)%>%column_spec(9,border_right=TRUE)%>%
+        add_header_above(c(" " = 1, "Limitless" = 4, "OLS" = 4, "Loc. Lin." = 1))%>%
+            group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
+            group_rows("linear",1,4)%>%group_rows('antiSym',5,8)%>%group_rows('oneSide',9,12)%>%
+                group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
+@
+
+
+Session information
+<<>>=
+sessionInfo()
+@

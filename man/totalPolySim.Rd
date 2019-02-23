@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulations.r
 \name{totalPolySim}
 \alias{totalPolySim}
-\title{Run the polynomial simulation from Table 4 (LRD & OLS, not Local Linear)}
+\title{Run the polynomial simulation from Table 4}
 \usage{
 totalPolySim(nreps = 5000)
 }
@@ -13,5 +13,5 @@ totalPolySim(nreps = 5000)
 list of output for each simulation run
 }
 \description{
-Run the polynomial simulation from Table 4 (LRD & OLS, not Local Linear)
+Run the polynomial simulation from Table 4
 }

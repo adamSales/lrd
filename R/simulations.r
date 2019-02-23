@@ -92,9 +92,9 @@ cftSim <- function(dat,BW=NULL){
 totalOutcomeOne <- function(n,tdist,tau){
     dat <- makeData(n=n,curve=3,tdist=tdist,tau=tau)
 
-    c(sh25=tryNA(shbw(dat,0.25),2),sh5=tryNA(shbw(dat,0.5),2),
-      ik25=tryNA(ikSim(dat,0.25),2),ik5=tryNA(ikSim(dat,0.5),2),
-      cft25=tryNA(cftSim(dat,0.25),2),cft5=tryNA(cftSim(dat,0.5),2))
+    c(sh=tryNA(shbw(dat,0.5),2),
+      ik=tryNA(ikSim(dat,0.5),2),
+      cft=tryNA(cftSim(dat,0.5),2))
 }
 
 
@@ -166,6 +166,12 @@ shPoly <- function(dat,deg){
     c(p=testSH(dat,1,rhs=rhs),est=HLsh(dat,1,rhs=rhs))
 }
 
+llPoly <- function(dat){
+    mod <- RDestimate(Y~R,data=dat)
+    c(mod$p[1],mod$est[1])
+}
+
+
 polySim <- function(n,degs=1:5,shape='lin',tdist=TRUE,tau=0){
     dat <- makeDataShapes( n=n,shape=shape,tdist=tdist,tau=tau)
 
@@ -173,7 +179,7 @@ polySim <- function(n,degs=1:5,shape='lin',tdist=TRUE,tau=0){
         c(tryNA(shPoly(dat,deg),2),tryNA(ikPoly(dat,deg),2))
     }
 
-    do.call('c',lapply(degs,func))
+    c(do.call('c',lapply(degs,func)),tryNA(llPoly(dat)))
 }
 
 
@@ -196,7 +202,7 @@ polyDisp <- function(sim){
 }
 
 
-#' Run the polynomial simulation from Table 4 (LRD & OLS, not Local Linear)
+#' Run the polynomial simulation from Table 4
 #'
 #' @import robustbase
 #'
@@ -221,36 +227,5 @@ totalPolySim <- function(nreps=5000){
     res
 }
 
-polyIKone <- function(n,shape,tdist,tau){
-    dat <- makeDataShapes(n=n,shape=shape,tdist=tdist,tau=tau)
-    mod <- RDestimate(Y~R,data=dat)
-    c(mod$p[1],mod$est[1])
-}
 
 
-#' Run the polynomial simulation from Table 4 (just Local Linear)
-#'
-#' @import rdd
-#'
-#' @param nreps Number of simulation replications
-#'
-#' @return list of output for each simulation run
-#' @export
-#'
-totalPolySimIK <- function(nreps=5000){
-    res <- list()
-    #B=5000
-    n=500
-    tau=0
-    degs <- 1:5
-
-    for(shape in c('lin','antiSym','oneSide')){
-        for(tdist in c(TRUE,FALSE)){
-            cat(shape,' ',tdist,'\n')
-            print(Sys.time())
-            res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
-                sapply(1:nreps,function(i) polyIKone(n,shape,tdist,tau))
-        }
-    }
-    res
-}
