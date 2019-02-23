@@ -57,10 +57,10 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 </div>
 
 > - Local randomization should be reflected in covariates, e.g. prior $G$rades ($y$ axis). 
-> - Due to trend, clear that $G \not\perp \mathcal{I}[R\leq 0]$.
+> - Due to trend, clear that $G \not\perp Z (\equiv \mathcal{I}[R\leq 0])$.
 ($G$ is not "balanced" vis a vis $Z$.)<!-- Does the `\not` come thru? -->
-> - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$ is not rejected.
-> - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
+> - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp Z \vert \{R \in \mathcal{W}\}$ is not rejected.
+> - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp Z \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
 
 <div class="notes">
 
