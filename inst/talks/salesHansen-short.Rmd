@@ -6,8 +6,8 @@ bibliography: ../../bibliography.bib
 output: 
   ioslides_presentation
 ---
-
-<!--@hansenSales2015cochran-->
+<!-- nocite:
+  @hansenSales2015cochran-->
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
@@ -52,7 +52,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 ## Methods for picking out RCTs within RDDs {.build}
 
->  Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+>  Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
 >  A: To separate unwanted "chaff" from locally randomized "wheat," use specification tests....
 
@@ -96,14 +96,14 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 <!--
 >  - Pick narrow $\tilde{\mathcal{W}} \subseteq \mathcal{W}$, test $\tilde{H}: \log \big[\frac{d}{dt} \mathrm{Pr}(R \leq t)\big]_{t=R} \perp \mathcal{I}[R\leq 0] | \{R \in \tilde{\mathcal{W}}\}.$ 
 -->
->  - Canadian college data have a clump at $R=0$. McCrary throws a red flag!  
+>  - Canadian colleges data have a clump at $R=0$. McCrary throws a red flag!  
 
   <img src="images/forcing-discrete.jpg" width="300px" height="300px" />
 
 
 </div>
 
-> - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving "donut.")
+> - To avoid rejecting $\tilde{H}$, $\mathcal{W} \mapsto \mathcal{W}\setminus \{0\}$ and $\tilde{\mathcal{W}} \mapsto \tilde{\mathcal{W}}\setminus \{0\}$. (Carve hole in middle, leaving a "donut.")
 
 <div class="notes">
 
@@ -116,9 +116,9 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 ## Methods for picking out RCTs within RDDs
 
-> Q: I think I'm seeing naturally occurring random assignment in the vicinity of a regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
+> Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
-> A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
+> A: To separate unwanted chaff from locally randomized wheat, use specification tests. These tests probe "ignorability" of covariate residuals --- not covariates themselves --- and of the density of the running variable.
 > Remedies for test failure may involve reducing the sample.  Deciding which observations to get rid of is an inexact science. 
 
 <!-- NB: FOR ICORS-18 EXCISED 1-SLIDE SECTION HERE, 6/29/2018; CONSIDER RESTORING FOR LESS TECHNICAL AUDIENCES-->
@@ -132,7 +132,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 >   A:  The contamination issue must be addressed as a part of the _primary_ analysis. It requires us to abandon OLS,...
 
 
-<!-- 2 slides: LSO, Krafft points; bounded influence regression-->
+<!-- 2 slides: LSO, Krafft points; robust MM regression-->
 
 ## Sensitivity to removing _groups_ of points {.build}
 
@@ -149,30 +149,29 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 
 <div class="notes">
 
-- If the latent subgroup is both different and large (relative to $\sqrt{n}$), we ought to be able to find it in tests.  Get rid of some of it & test again.
-- Wind up in a domain of "$\epsilon$ contamination"
-- OLS handles $\epsilon$ contamination poorly. <!-- Methods that handle it differently explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.-->
-- A textbook example from molecular design is plotted at right.  <!-- OLS gets distracted by the points at far right.-->  MM estimation downweights outliers to get a very different fit.
-- I've added lines from an RDD-type analysis to the textbook example so that it shows one way contamination in RDDs could substantially bias $\hat \tau$.
+- At right, molecular design example discussed in _Robust Statistics_ text.  Not an RDD, but the lines that I've added treat it as though it were, with threshold right in the middle of the plot.
+- Think of rightmost 3 points as a contaminating latent subgroup.  Large effect on OLS, less on robust method.
+- If the latent subgroup is both different and large, we ought to be able to find it in tests.
+- Otherwise, we're in the domain of "$\epsilon$ contamination"
+- OLS handles $\epsilon$ contamination poorly. Methods that handle it better explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
+
 </div>
 
-## robust M-estimates
+## Robust MM estimates of regression | a high-level review {.build}
 
-- Even with appropriate data and methods, sample pruning guided by specification tests is expected to leave $O(n^{-1/2})$ of the sample contaminated.
-- For M-estimators minimizing some measure of residual size, bounded $\rho(\cdot)$ and robust $s(\cdot)$ are necessary for $\mathrm{MaxBias}_\epsilon = O(\sqrt{\epsilon})$; otherwise larger.  @yohaiZamar1997locallyrobustMestimates call these "robust M-estimates". 
-- Therefore robust M-estimates limit sensitivity to $O(n^{-1/2})$ sample fractions of lingering contamination, while OLS does not.
-<!-- - As a bonus, "robustness weights" give an additional diagnostic.-->
-<!-- - We use R's `robustbase::lmrob`, with Huber-White $\hat{V}$s.-->
-- (That said, our $\mathcal{W}$ + MM estimation w/ bisquare $\psi(\cdot)$ gives $\hat\tau$ similar to Lindo et al, who did not address McCrary phenomenon & used OLS: +.23 [.17, .30].)
+- Robust regression substitutes out OLS' $e_{(a,b)}(y|r) = y-a-br$ with $e_{(a,b,s)}(y|r) = \psi\{(y - a -br)/s\}$, some $\psi(\cdot)$, $s(\cdot)$.
+- After much study, robustness literature identified pairs $(\psi, s)$ that handle groups of outliers while retaining $\sqrt{n}$ rates, efficiency.
+- E.g., "MM with bisquare psi-function and robust scale",...
+- In R, `robustbase::lmrob`; in Stata, `mmregress`.
+- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample, OLS won't do. Need robust MM regression [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
 
 
 ## Methods for limiting contamination sensitivity
 
-> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination. Should we supplement our OLS estimates with a secondary analysis of sensitivity to this problem?
+> Q: Tests and adjustments may have gotten rid of the better part of the sample that didn't belong, but maybe they didn't remove every last bit of contamination.  Is there a sensitivity analysis method that addresses this issue?
 
-> A:  The contamination issue must be addressed as a part of the _primary_ analysis. 
-It requires us to abandon OLS, which is hypersensitive to contamination. In contrast, robust MM estimates are insensitive enough to prevent $\mathrm{Bias}(\hat\tau)$ from dominating $\mathrm{MSE}(\hat\tau)$. 
-<!-- The robust statistics literature finds that MM estimation limits contamination sensitivity but OLS does not.  While unfamiliar, the methods are efficient, easy to use and readily available in R and Stata.-->
+
+> A: With RDDs, there's a better option than post hoc sensitivity analysis.  You can address sensitivity to contamination (as opposed to omitted variable sensitivity) as a part of the primary analysis, with the help of robust MM estimators.  While less familiar in social science, these methods are efficient, easy to use and readily available in R and Stata.
 
 ## Discussion {.smaller}
 <!-- Some of these points were added for ICORS audience. 

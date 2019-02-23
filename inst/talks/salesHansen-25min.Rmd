@@ -76,7 +76,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 > - Due to trend, clear that $G \not\perp \mathcal{I}[R\leq 0]$.
 ($G$ is not "balanced" vis a vis $Z$.)<!-- Does the `\not` come thru? -->
 > - Recent "local randomization" proposals confine attention to $\{R \in \mathcal{W}\}$, $\mathcal{W}$ narrow enough that $H: G \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$ is not rejected.
-> - We follow limit-based methods in first modeling trend, e.g. $G \approx \alpha_G + \beta_G R$. Then we check balance of $G$'s _residual_, i.e. test $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. 
+> - Our loc. rand. proposal first models trend, e.g. $G \approx \alpha_G + \beta_G R$, then tests $H': e_{(\alpha_G, \beta_G)}(G|R) \perp \mathcal{I}[R\leq 0] \vert \{R \in \mathcal{W}\}$. ($G$'s _residual_ is balanced.)
 
 <div class="notes">
 
@@ -110,7 +110,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 - The widely used McCrary test checks for equal density of R immediately to either side of the cutpoint 
 - no-manipulation hypothesis is rejected, due to chunk of students avoiding AP by falling exactly on top of the cutpoint
 - Removing that chunk and that chunk only gets us a pass on this test.  
-- thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  
+<!-- - thinking of this block of students as analogous to attriters in an RCT, this is differential attrition.  -->
 
 </div>
 
@@ -118,14 +118,10 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 > Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
-> A: To separate unwanted chaff from locally randomized wheat, use specification tests. 
-> Seen in this light, common regression discontinuity design (RDD) specification tests come to resemble covariate balance checks used with propensity scores, but with an important difference: they test "ignorability" of covariate residuals, not covariates themselves.  As in matching, remedies for test failure may involve reducing the sample.
+> A: To separate unwanted chaff from locally randomized wheat, use specification tests. These tests probe "ignorability" of covariate residuals --- not covariates themselves --- and of the density of the running variable.
+> Remedies for test failure may involve reducing the sample.  Deciding which observations to get rid of is an inexact science. 
 
 # Working your way around the donut
-
-<!-- TO CONSIDER NEXT TIME YOU'RE PREPPING THIS PRES:
-If I can think of a way to add an image to the transition slide,
-this one would be cute: images/donut-partly-eaten.jpg -->
 
 ## Working your way around the donut {.build}
 
@@ -198,7 +194,8 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 
 <div class="notes">
 
-- At right, molecular design example discussed in _Robust Statistics_ text.  Think of rightmost 3 points as latent subgroup.  Large effect on OLS, less on robust method.
+- At right, molecular design example discussed in _Robust Statistics_ text.  Not an RDD, but the lines that I've added treat it as though it were, with threshold right in the middle of the plot.
+- Think of rightmost 3 points as a contaminating latent subgroup.  Large effect on OLS, less on robust method.
 - If the latent subgroup is both different and large, we ought to be able to find it in tests.
 - Otherwise, we're in the domain of "$\epsilon$ contamination"
 - OLS handles $\epsilon$ contamination poorly. Methods that handle it better explore the sample systematically to find small subsets of points the exclusion of which changes the answer, then downweight these, sometimes 0.
