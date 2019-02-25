@@ -114,7 +114,7 @@ $\hat{\tau} \pm 1.96\, \mathrm{SE}(\tau)$.
 These equivalences, however, do not necessarily extend to estimation
 strategies outside of OLS.
 
-\subsubsection{Robust Standard Error Estimation}\label{sec:sandwhich}
+\subsubsection{Robust Standard Error Estimation}\label{sec:sandwich}
 The \textsc{ancova} model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
 may be relaxed.  OLS estimates of $\alpha_1-\alpha_{0}$ and
 $\beta$ remain unbiased under non-Normality, provided
@@ -133,7 +133,7 @@ $\mathrm{SE}_{s}^{2} \left\{ t(\mathbf{Y}_H , \mathbf{Z}) \right\}$
 bellmccaffrey2002sandwichSEs,pustejovskyTipton2017sandwichSEs}, %as opposed to the %$\mathrm{SE}_{p}$; then
 %$\mathrm{SE}_{u} %( \overline{e({Y_H}| R)}_{Z=1} -  \overline{e({Y_H}| R)}_{Z=0} )$
 %of \eqref{eq:tudef}:
-and refers $t(\mathbf{Y}_H,\mathbf{Z})/\mathrm{SE}_{s}$ 
+and refers $t(\mathbf{Y}_H,\mathbf{Z})/\mathrm{SE}_{s}$
 % \begin{equation} \label{eq:tedef}
 % t_{e} (\mathbf{y}_H,\mathbf{r}) =
 % \frac{\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=1} -
@@ -211,10 +211,10 @@ dispensed with.
 % Perhaps most worryingly, the form of $\EE[(Y_{T}, Y_{C}) | R]$ may be
 % misspecified, and the integrity of the RDD could be compromised by
 % subjects who finely manipulate their values of $R$ around the cutoff
-% in order to achieve or avoid a treatment assignment. 
+% in order to achieve or avoid a treatment assignment.
 Methodological RDD literature has responded with specification tests
 to detect these threats, or with flexible or robust estimators that
-seek to avoid them. 
+seek to avoid them.
 
 \subsubsection{Covariate Balance Tests}
 Analysis of RCTs and quasiexperiments often hinges on assumptions of
@@ -261,10 +261,10 @@ covariates there will be several such tests. To summarize their
 findings with a single p-value, the
 regressions themselves may be fused within a
 ``seemingly unrelated regressions'' model \citep{lee2010regression} or
-hierarchical Bayesian model 
+hierarchical Bayesian model
 \citep{liMatteiMealli2015BayesianRD}, or the
 separate tests' p-values could simply be combined using the Bonferroni
-principle. 
+principle.
 
 \subsubsection{The McCrary Density Test}
 McCrary's test for manipulation of treatment assignments
@@ -304,17 +304,17 @@ should begin in the middle of $\mathcal{W}$ or at its boundaries.
 With finite samples, specification tests may be under-powered, and
 fail to detect some small violations of RDD assumptions or (more
 troublingly) large violations of the assumptions among relatively
-small subsets of the analysis sample. 
+small subsets of the analysis sample.
 Indeed, sample pruning guided by specification tests is expected to
 leave an $O(n^{-1/2})$-sized share of the sample that perfect
-information would have counseled removing. 
+information would have counseled removing.
 Depending on the outcome and running variable values of members of
 these problematic subsets, their inclusion in the RDD analysis sample
-may have undue influence on the treatment effect estimate. 
+may have undue influence on the treatment effect estimate.
 
 \subsubsection{Non-linear Models for Y as a function of R}
 % \citep[\S~5]{lee2008regression, kolesarRothe17}.
-%On the other hand, 
+%On the other hand,
 The methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
 apply if $\EE (Y_{C}| R) = \alpha + R\beta$ is relaxed to
 $\EE (Y_{C}| R) = \alpha + \vec{f}(R)\beta$, for
@@ -338,8 +338,8 @@ $\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
 sample is contaminated near its outer boundaries, precisely
 where leverage is at its highest.
 This problem is only partially counteracted by local linear or polynomial regression
-\citep[e.g.][]{imbens2012optimal,cct}, 
-which downweights observations as $|R-c|$ increases linearly. 
+\citep[e.g.][]{imbens2012optimal,cct},
+which downweights observations as $|R-c|$ increases linearly.
 
 
 \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
@@ -437,11 +437,11 @@ In \S~\ref{sec:maria}, these two steps used two different
 datasets---we regressed $Y$ on $R$ using data from years prior to
 2017, when Maria hit, and used 2017 data to estimate effects.
 This luxury is unavailable in the typical RDD, in which both steps
-must use the same data, as in \S~\ref{sec:robust-analys-covar}. 
+must use the same data, as in \S~\ref{sec:robust-analys-covar}.
 This section will describe a generalization of the method in
 \S~\ref{sec:maria} to the typical case, while incorporating
 specification tests described in \S~\ref{sec:specification} and robust
-modeling strategies described in \S~\ref{sec:robust-altern-ordin}. 
+modeling strategies described in \S~\ref{sec:robust-altern-ordin}.
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
 
@@ -479,7 +479,7 @@ partial residual, Residual Ignorability is entailed by the
 \textsc{ancova} model (\S~\ref{sec:robust-analys-covar}), or by the combination of any parametric model
 for $\EE (Y_{C}| R)$ with a strict null $H$ relative to which the
 value of $Y_{C}$ can be reconstructed from the values of $Y$, $D$ and
-$Z$ (\S~\ref{sec:randProc}).
+$Z$ (\S~\ref{sec:using-eqref-test}).
 % or where $H$ asserts $Y_{T} = Y_{C} + \tau D$ for the true CACE  $\tau
 % = \EE(Y_{T}-Y_{C}| D_{T}=1)$,  and in addition
 % $(Y_{T} - Y_{C}) \independent R | D_{T}$ holds.
@@ -557,7 +557,7 @@ are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
 the variables comprising $\mathbf{A}$ are jointly
 %\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
 S-ancillary, just as $\mathbf{A}^{\dagger}$ was seen to be
-in Section~\ref{sec:randProc}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
+in Section~\ref{sec:using-eqref-test}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
 inferences.
 

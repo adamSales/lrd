@@ -142,9 +142,9 @@ of sample pruning and robust M-estimation is uniquely equipped
 to address.
 
 The remainder of Section~\ref{sec:introduction} uses a public health
-example to introduce residual ignorability.  Limitless RDD analysis
-combines ideas from distribution-free analysis of randomized
-controlled trials (RCTs; \S~\ref{sec:randProc}); classical, wholly
+example to introduce residual ignorability, and review distribution-free analysis of randomized
+controlled trials (RCTs).  Limitless RDD analysis
+combines these ideas with classical, wholly
 parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}); robust
 estimation (\S~\ref{sec:robust-altern-ordin}); and RDD specification
 tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
@@ -292,7 +292,7 @@ analysis considered recorded mortality in
 months before and after the hurricane, estimating
 Maria to have caused 1139 excess
 deaths. This section demonstrates residual ignorability,
-if not the scope and particulars of the method detailed in Sections~\ref{sec:revi-select-meth} and~\ref{sec:theMethod},
+if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
 in a limited reanalysis of these monthly death counts.
 
 
