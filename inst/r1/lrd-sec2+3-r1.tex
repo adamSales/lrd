@@ -485,62 +485,10 @@ partial residual, Residual Ignorability is entailed by the
 for $\EE (Y_{C}| R)$ with a strict null $H$ relative to which the
 value of $Y_{C}$ can be reconstructed from the values of $Y$, $D$ and
 $Z$ (\S~\ref{sec:using-eqref-test}).
-% or where $H$ asserts $Y_{T} = Y_{C} + \tau D$ for the true CACE  $\tau
-% = \EE(Y_{T}-Y_{C}| D_{T}=1)$,  and in addition
-% $(Y_{T} - Y_{C}) \independent R | D_{T}$ holds.
 (In either of these cases $\dt[\thetaInf]{Y_{C}}{ R}$
 is independent not only of $Z$ but also $R$,
 a modest strengthening of~\eqref{ycheck}.)
-% relaxes
-% this condition, accommodating cases in which
-% $Y_{C} - \EE (Y_{C}|R)$ equals $\dt[\hat\theta]{Y_{C}}{ R}$ only
-% in the on-average sense of conditional expectation given $Z$.
-% Just as an accurate
-% specification of %$\EE (Y | Z, X)$ or
-% $\EE (Y_{C}| X)$ is helpful but
-% not necessary for valid covariate adjustment in an RCT,  it is helpful
-% but not necessary for Residual
-% Ignorability that $\dt[\thetaInf]{Y_{C}}{R}$ be a function of
-% $Y_{C}$'s residual from a consistent estimate of $\EE (Y_{C}| R)$.
-% If it is, then Residual Ignorability holds with $\dt[\thetaInf}]{y}{r} = y-
-% \EE(Y_{C}| R=r)$ and $\hat\theta$ a standard moment- or
-% likelihood-based estimate of the parameters of $Y_{C}$'s regression on
-% $R$.  If not, however, one may
-% still have $\dt[\thetaInf]{Y_{C}}{ R}$ independent of $Z$, or even
-% $\dt[\thetaInf]{Y_{C}}{ R} $ independent of $R$
-% with some
-% other choice of $e_{\theta}(\cdot)$ and $\hat\theta$.   It is neither required nor preferred that model fit be appraised in terms of squared
-% error loss. Taking $\theta = (s, \mathbf{\beta})$ and
-% $\dt[\theta]{y}{r} = \psi\big\{ (y - f(r) \mathbf{\beta} )/{s}\big\} $,
-% with $f(\cdot)$ scalar- or vector-valued and
-% $\psi(\cdot)$ a scoring intended to convey robustness to contamination of the
-% $\EE ( Y_{C}| R)$ model, is quite consistent with \eqref{ycheck}.
 
-% To assume \eqref{ycheck} is in no way to assume
-% %\begin{equation} \label{eq:notycheck}
-% $\dt[\hat\theta]{Y_{C}}{ R} \independent {Z}| \{R \in \mathcal{W}\}$.
-% %\end{equation}
-% The simplification of \eqref{ycheck} replacing its
-% $\thetaInf$ with $\hat\theta$ cannot be expected to hold: unless
-% $\hat\theta -\thetaInf$ has zero variance, it is almost inevitable
-% that it correlate in some way with $Z$, and by extension that $\dt[\hat\theta]{Y_{C}}{ R}$ and
-% $Z$ be non-independent.
-% Rather, Residual Ignorability presumes
-% existence, if not knowledge, of a single $\theta = \thetaInf$ relative
-% to which potential partial residuals
-% %$\dt[\thetaInf]{Y_{T} - \tau D_{T}}{ R}$ and
-% $\dt[\thetaInf]{{Y}_{C}}{ R}$ and treatment assignment $Z$ are
-% mutually independent.
-% In marked contrast with RCTs, in typical RDDs there can be at
-% most one $\theta$ for which this is true. To see this, consider
-% $\dt[\theta]{y}{r} = y - \theta r$.  If $Z$ were jointly independent
-% of $\dt[\theta_{0}]{Y_{C}}{ R}$ and $\dt[\theta_{1}]{Y_{C}}{ R}$, it would also have
-% to be independent of $(\theta_{0} - \theta_{1}) R$. If $\theta_{0}
-% \neq \theta_{1}$ this would entail $Z \independent R$ --- a
-% contradiction, since $Z = \indicator{R<0}$.  Were $R$ a baseline variable
-% in an RCT, $\dt[\theta]{Y_{C}}{ R} \independent Z$ would hold for all $\theta$,
-% and inferences relying on this independence would require neither covariance adjustment
-% nor consistent estimation of covariance parameters --- both of which are essential for RDDs.
 
 \sloppy
 Assuming Residual Ignorability, inference about treatment effects is
@@ -564,76 +512,12 @@ are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
 the variables comprising $\mathbf{A}$ are jointly
 %\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
 S-ancillary, just as $\mathbf{A}^{\dagger}$ was seen to be
-in Section~\ref{sec:using-eqref-test}.  As in Neyman-style randomization inference for RCTs, some conditioning variables are
+in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
-inferences.
+inferences. \marginpar{I changed ``Neyman'' to ``Fisher''
+  here. AS}
 
 
-% Because \eqref{ycheck} can be true for at most one
-% $\thetaInf$, in applications it must be paired with an assumption that
-% one has a estimation routine that consistently estimates $\thetaInf$.  As
-% discussed in Sec.~\ref{sec:robust-analys-covar}, in RDDs the standard error accompanying
-% $\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=1} -
-% \overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=0}$ must
-% reflect the indirect contribution to its sampling variability of errors of estimation of
-% $\thetaInf$, as the $\mathrm{SE}_{s}$ of \eqref{eq:tedef}
-% does but the $\mathrm{SE}_{u}$ of \eqref{eq:tudef} does not.
-
-\begin{comment}
-To see this, consider
-$\dt[{\theta}]{y }{ r} = y - r \theta$.  Up to an $o_{P}(n^{-1/2})$
-error,
-\begin{equation}\label{eq:2}
-    \{ \overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=1} -
-\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=0} \} -
-\{  \overline{\dt[\thetaInf ]{\bty }{ \mathbf{r}}}_{z=1} -
-\overline{\dt[\thetaInf]{\bty }{ \mathbf{r}}}_{z=0} \}   \approx
-\Big[ \EE \big\{ R \big| Z=1 \big\} - \EE
-  \big\{R \big| Z=0 \big\} \Big]  (\hat\theta -
-\thetaInf)^{t}.
-\end{equation}
-In an RCT the term in square brackets at right would be 0, ensuring that even if
-variation in $\hat\theta - \thetaInf$ is positive, its large-sample
-contribution to $\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=1}
-- \overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{z=0}$  is
-$o_{P}(n^{-1/2})$, and is negligible; but in an RDD it is
-intrinsically nonzero, and \eqref{eq:2} is $O_{P}(n^{-1/2})$.
- For the same reason, permutation
-tests do not provide exact inference for RDDs: in an RDD, even under
-$H$ conditioning on %$\mathbf{Y}_{C}$'s and  $\mathbf{Z}$'s order statistics
-$(\mathbf{Y}_{C}, N_{0}, N_{1})$
-does not eliminate variability in $\hat\theta$; the differences
-at left of \eqref{eq:2} differ from one another. (In Randles's
-[\citeyear{randles:1982}] %analysis of errors due to estimation of secondary parameters,
-terms, RCTs give rise to ``Case A'' distributions whereas RDDs' are ``Case B.'' Only in the unusual circumstance that $\thetaInf$ is externally
-determined, and is known rather than estimated, can \eqref{ycheck}
-serve as a basis for exact tests.)  Asymptotically
-distribution-free inferences, on the other hand, are straightforwardly
-arranged by estimating
-$\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{Z=1} -
-\overline{\dt[\hat{\theta}]{\bty }{ \mathbf{r}}}_{Z=0}$'s standard error
-with attention to sampling variability in $\hat\theta$,  as
-$\mathrm{SE}_{s}$ does.
-\end{comment}
-
-% If available, a lagged, pre-treatment version of the outcome that's
-% distinct from the running variable may be the basis for particularly
-% informative plots and regression diagnostics
-% \citep{maynard2013strengthening}.
-
-% Such M-estimation conveys robustness to other errors of specification
-% that are quite relevant to RDDs.  In modern robust M-estimation
-% \citep{maronna2006robust}, estimating equations defining the
-% regression coefficients are adjusted so as to bound the influence of
-% any one or small number of observations.  Under uncertainty about
-% width of the analysis window $\mathcal{W}$, it will be safer to fit
-% $\hat\theta$ using such a method, the points of greatest leverage
-% generally being the closest to the edge of $\mathcal{W}$.  Thus
-% robust regression addresses a fundamental incompatibility between RDDs
-% and ordinary least squares, namely that the observations whose
-% suitability for inclusion in the analytic sample is most questionable
-% --- those whose values of the running variable are farthest from the
-% cutpoint --- also exert the greatest leverage in estimation.
 
 
 
@@ -700,19 +584,6 @@ sequential intersection union principle
 \citealp{hansenSales2015cochran}). To compensate for conservatism of
 the Bonferroni method, we test with size
 $\alpha_{B}=.15$, not $.05$.
-% Let
-% $\{b_{1}, b_{2}, \ldots\} \subseteq (0, \infty)$ be a descending sequence of
-% candidate bandwidths, with an accompanying family $\mathcal{B}$ of
-% tests, one for each $H_{b}$. Define a modified family $\mathcal{B}^{*}$
-% as follows: for each $b_{i}$, $H_{b_{i}}$ is rejected at level
-% $\alpha$ if only if at level $\alpha$, $\mathcal{B}$ rejects each of
-% $\{ H_{b_{j}}: j \leq i\}$. The
-% sequential intersection union principle \citep[SIUP;][Proposition~1]{rosenbaum2008testing}
-% states that if each test in $\mathcal{B}$ tests its corresponding
-% $H_{b}$ with size $\alpha$ then, with probability $1-\alpha$ or more,
-% $\mathcal{B}^{*}$ rejects only hypotheses $\{H_{b_{i}}:  i\}$
-% that are false --- i.e., $\mathcal{B}^*$ strongly controls the
-% family-wise error rate at level $\alpha$ \citep{hansenSales2015cochran}.
 
 Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
 \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
@@ -724,29 +595,6 @@ $p_{j} \geq \alpha_{M}$.  By a second application of the SIUP,
 the size of this test sequence is $\alpha_{M}$.  Taken
 together, placebo and McCrary tests restrict the sample to
 $\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
-% Although subsequent
-% diagnosis of outcome regression may in principle indicate suggest
-% further exclusions, the analytic sample is expected to be $\{i: R_{i} \in \mathcal{W}\}$.
-
-% Maximum likelihood estimation is one option for
-% $\hat{\theta}_{x}(\cdot, \cdot)$, but
-% %% \footnote%
-% %% { In the special case that $\mathbf{x} $ is decomposed as the sum of a
-% %%   linear function of $\mathrm{r}$ plus a residual
-% %%   $\mathbf{x}^{\perp}$, with the linear function fitted by ordinary
-% %%   least squares, $d^{2}(\mathbf{x}^{\perp}, \mathbf{z})$ can be
-% %%   expediently calculated as the difference of
-% %%   $d^{2}((\mathbf{x}, \mathrm{r}), \mathbf{z})$ and
-% %%   $d^{2}(\mathrm{r}, \mathrm{z}) $.  }
-% we prefer robust linear and logistic fitters
-% \citep{rousseuwetal2015robustbase}, deeming their lesser contamination
-% sensitivity a relevant advantage. Specifically, if the $\mathcal{W}$ under
-% consideration is somewhat too wide, then a robustly fitted
-% $\hat{\theta}$ still estimates the same $\thetaInf$ that would be
-% estimated for $\mathcal{W}_{0} \subseteq \mathcal{W}$ narrow enough for covariate
-% ignorability to hold. Similarly, to limit the possibility that the
-% fitting routine would obscure differences between residuals above and
-% beneath the threshold, we fit $R$-slopes using a specification allowing for an independent contribution from $Z$, but then set the $Z$-contribution to zero when decomposing the covariate.
 
 
 \subsection{Inference About the Treatment Effect}
