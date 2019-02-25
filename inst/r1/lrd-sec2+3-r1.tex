@@ -192,8 +192,10 @@ and refers $t(\mathbf{Y}_H,\mathbf{Z})/\mathrm{SE}_{s}$
 % \end{equation}
 to a $t$ or standard Normal reference distribution.
 Sandwich standard errors confer robustness to misspecification of
-$\var(\dt[\hat\theta]{Y_{H}}{R}\mid  R)$, not of $\EE(Y_{H}| R)$ \citep{freedman2006sch}, the latter being the topic of
-Section~\ref{sec:robust-altern-ordin}.
+$\var(\dt[\hat\theta]{Y_{H}}{R}\mid  R)$, not of $\EE(Y_{H}| R)$
+\citep{freedman2006sch}, the latter being the topic of
+the following section.
+%Section~\ref{sec:robust-altern-ordin}.
 
 % In applying \textsc{ancova} to an RCT, $\mathrm{SE}_{s}$ in
 % \eqref{eq:tedef} may be taken as \eqref{eq:sudef}'s
@@ -255,7 +257,7 @@ Relatedly, \citet{lee2010regression} recommend a
  tests for conditional association, given $R$, of $\mathbf{Z}$ and
  $\mathbf{X}$, by fitting models like those discussed in
  \S~\ref{sec:robust-analys-covar} for impact estimation, but with
- covariates rather than outcomes as independent variables. 
+ covariates rather than outcomes as independent variables.
 Viewing the $R$-slopes and intercepts as simultaneously estimated
  nuisance parameters, these are balance tests applied to
  the covariates' residuals, %net of linear association with $R$,
@@ -292,8 +294,8 @@ imbalance in terms of distance from the cut-point.
 In practice, specification test failures inform sample exclusions.
 When balance tests fail,
 \citet{lee2010regression} would select a bandwidth $b>0$, restrict
-analysis to observations with $R\in \mathcal{W} \subseteq [-b, b]$, 
-and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$. 
+analysis to observations with $R\in \mathcal{W} \subseteq [-b, b]$,
+and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$.
 If that test fails, the process may be repeated with a new bandwidth
 $b'<b$, and perhaps repeated again until arriving at suitble bandwith.
 This may seem to call for a further layer of multiplicity correction,
@@ -323,7 +325,7 @@ If this test rejects, we repeat it, terminating the process at the first $j$ for
 $p_{j} \geq \alpha_{M}$.
 By a second application of the SIUP,
 the size of this test sequence is equal to the size of each individual
-density test.  
+density test.
 Taken together, placebo and McCrary tests restrict the sample to
 $\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
 
@@ -354,7 +356,7 @@ sample is contaminated near its outer boundaries, precisely
 where leverage is at its highest.
 In order to identify leverage points that are also influential,
 OLS fitting is sometimes combined with specialized diagnostics such as
-plots of Cook's distances \citeyearpar{cook1982residuals}. 
+plots of Cook's distances \citeyearpar{cook1982residuals}.
 The following section will discuss an alternate remedy.
 
 % \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
@@ -421,7 +423,8 @@ must use the same data, as in \S~\ref{sec:robust-analys-covar}.
 This section will describe a generalization of the method in
 \S~\ref{sec:maria} to the typical case, while incorporating
 specification tests described in \S~\ref{sec:specification} and robust
-modeling strategies described in \S~\ref{sec:robust-altern-ordin}.
+modeling strategies %described in
+\S~\ref{sec:robustFitters}.
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
 
@@ -479,7 +482,7 @@ removes little of the randomness %entropy
 in $\mathbf{R}$, leaving it available as a basis for inference; in
 contrast, conditioning on unadjusted $\mathbf{Y}_C$
 %Section~\ref{sec:randProc}'s $(N_{0},
-                          %N_{1}, \mathbf{Y}_{C})$ 
+                          %N_{1}, \mathbf{Y}_{C})$
 would severely constrain $\mathbf{R}$.
 Uncoupled to $Y_{T}$s, the detrended  $Y_{C}$s,
 $\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$,
@@ -533,9 +536,9 @@ be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 
 The results of these hypothesis tests imply point and interval
 estimates for $\tau$, as described in
-\S~ref{sec:robust-analys-covar}. 
+\S~ref{sec:robust-analys-covar}.
 
-\subsection{Robust Fitters}
+\subsection{Robust Fitters}\label{sec:robustFitters}
 Subsets of the analysis sample that do not satisfy Residual Ignorability
  can undercut the validity of an RDD analysis, provided
 that these subsets include are influential observations.
@@ -548,11 +551,11 @@ objectives other than bounding the influence function
 Further, no specification test is powerful enough
 to reliably detect contamination of this size; power to detect anomalies
 affecting only $O(n^{-1/2})$ of the sample can only tend to a number
-strictly less than 1. 
+strictly less than 1.
 Hence, the
 proper limits of $\mathcal{W}$ will be uncertain (c.f. \S~\ref{sec:bandwidth},
 \S~\ref{sec:bandwidthChoice}, below), and some sample contamination
-may be present. 
+may be present.
 
 Instead, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
  as to possess a bounded influence function (\citealp[Thm.~3]{he1991localbreakdown};
@@ -569,7 +572,7 @@ estimates of residual scale, and OLS's $\psi(t) = t$ with a continuous $\psi$
 that satisfies $\int_{0}^{\infty}\psi(t)dt < \infty$. This limits
 the loss incurred by the fitter for failing to adapt itself to a small
 portion of aberrant observations;
-it is permitted to instead systematically down-weight them. 
+it is permitted to instead systematically down-weight them.
 The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
 the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
 We are not aware of prior work addressing
@@ -584,7 +587,7 @@ Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
 which optionally provide Huber-White standard errors
 \citep{verardiCroux2009robust,rousseuwetal2015robustbase}.
 
- 
+
 
 % : with fitting via OLS,
 % this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
@@ -647,7 +650,7 @@ refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
 % \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
 % manipulation test to $(-b,b)$.   within windows
 % $\{ i: |R_{i}| \in (a_{j}, b)\}$, $0 = a_{0} < a_{1}< \cdots < b$,
-  
+
 
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}

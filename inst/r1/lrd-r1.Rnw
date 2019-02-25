@@ -145,8 +145,9 @@ The remainder of Section~\ref{sec:introduction} uses a public health
 example to introduce residual ignorability, and review distribution-free analysis of randomized
 controlled trials (RCTs).  Limitless RDD analysis
 combines these ideas with classical, wholly
-parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}); robust
-estimation (\S~\ref{sec:robust-altern-ordin}); and RDD specification
+parametric methods for RDDs (\S~\ref{sec:robust-analys-covar});
+%robust estimation (\S~\ref{sec:robust-altern-ordin});
+and RDD specification
 tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
 adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
 of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
