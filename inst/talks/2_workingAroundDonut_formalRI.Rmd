@@ -17,9 +17,30 @@
 
 </div>
 
-<!-- 1 slide: RI -->
+<!-- ?? slides: RI -->
 
-## Residual ignorability {.build .smaller}
+## Residual ignorability in a special case {.build}
+
+
+**_Notation_**: $m_\theta$ represents a working model for $\mathrm{E}(Y_C|R)$: $\hat{\mathrm{E}}(Y_C|R=r) = m_{\hat\theta}(r)$.   The corresponding _residual transformation_ is denoted $e_\theta(\cdot| \cdot)$: $e_{\theta}(y |r) = y - m_{\theta}(r)$.  
+
+In the special case that $\hat\theta$ is estimated using an external sample,  _residual ignorability_ (RI) is the assumption that
+
+$$e_{\hat{\theta}} (Y_C|R) \perp Z | \{R \in \mathcal{W}\}.$$ 
+
+**_Example_**: On 20 Sept. 2017, Hurricane Maria hit Puerto Rico. Santos-Lozada \& Howard (2018, _JAMA_) predicted counter-to-fact Sep.--Dec. '17 mortality from pre-2017 figures.  With these data we fit $m_{\hat\theta}(\cdot)$.
+
+## Hurricane Maria mortality as an RDD {.smaller}
+
+Even if Maria had no effect, mortality expected to increase in Q4, by seasonality.  
+
+OTOH, if there is no effect, $Y\equiv Y_C$, and Residual Ignorability says $e_{\hat\theta}(y|r)$ should look the same before September vs later.  Do they?
+
+![](images/mortPR.png)
+
+(Key point: RI does _not_ say $y_C$s are similar pre- and post-Maria, only $e_{\hat\theta}(y|r)$s.)
+
+## Residual ignorability: general case {.build .smaller}
 
 <!-- ignorability of covariate residuals; outcome residual ignorability -->
 
