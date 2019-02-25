@@ -290,13 +290,22 @@ imbalance in terms of distance from the cut-point.
 
 \subsubsection{Reducing the Bandwidth}\label{sec:bandwidth}
 In practice, specification test failures inform sample exclusions.
-Failures of the density test are addressed by restricting
-estimation to observations with $|R|>a$, some $a \geq 0$
-\citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}.
 When balance tests fail,
-\citet{lee2010regression} would select a window
-$\mathcal{W} \subseteq [-b, b]$, $b>0$, % using
-and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$. Similarly,
+\citet{lee2010regression} would select a bandwidth $b>0$, restrict
+analysis to observations with $R\in \mathcal{W} \subseteq [-b, b]$, 
+and repeat the test on $\{i : r_{i} \in \mathcal{W}\}$. 
+If that test fails, the process may be repeated with a new bandwidth
+$b'<b$, and perhaps repeated again until arriving at suitble bandwith.
+This may seem to call for a further layer of multiplicity correction,
+since any number of
+bandwidths may have been tested before identifying a
+$b$ for which $H_{b}$ is sustained; but it so happens that this form
+of sequential testing implicitly corrects for multiplicity, according to the
+sequential intersection union principle
+(\citealp[SIUP;][Proposition~1]{rosenbaum2008testing};
+\citealp{hansenSales2015cochran}).
+
+Alternatively,
 \citet{cattaneo2014randomization} recommend testing hypotheses
 $H_{b_{i}}: {X} \independent {Z}| \{|R| < b_{i}\}$, $b_1 > b_2 > \cdots >0$, in sequence,
 proceeding until identifying  $b = \max \{ b_i: H_{b_{i}}$ is not rejected$\}$;
@@ -306,6 +315,17 @@ the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
 The analyst decides whether this test-and-reduce process
 should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
+Similarly, failures of the density test are addressed by restricting
+estimation to observations with $|R|>a$, some $a \geq 0$
+\citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}, and
+repeat the test.
+If this test rejects, we repeat it, terminating the process at the first $j$ for which
+$p_{j} \geq \alpha_{M}$.
+By a second application of the SIUP,
+the size of this test sequence is equal to the size of each individual
+density test.  
+Taken together, placebo and McCrary tests restrict the sample to
+$\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
 
 \subsubsection{Non-linear Models for Y as a function of R}
 % \citep[\S~5]{lee2008regression, kolesarRothe17}.
@@ -572,32 +592,20 @@ which optionally provide Huber-White standard errors
 % %\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
 % (Appendix~\ref{sec:suppl-s-refs}).
 
-\subsection{Pre-Fitting Diagnostics and Refining the Window ($\mathcal{W}$)}
+\subsection{Pre-Fitting Diagnostics and Bandwidth Choice}
 \label{sec:bandwidthChoice}
 
 If subject matter knowledge suggests that chance variability intrinsic
 to $R$ is typically of magnitude $b$, then RDD modeling focused on
 distilling local randomization might set $\mathcal{W}$ to $[-b,b]$. But it
 is also sensible to subject such an initial choice to specification
-testing (\S~\ref{sec:specification}).%\marginpar{I replaced $c$ here
-%  with $b$ since $c$ is the cutoff-AS\\ ---Good catch thnx! -B}
+testing (\S~\ref{sec:specification}).
 
 Common RDD specification checks
 can be regarded as testing Residual Ignorability with a multivariate
 ``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
 $\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
-% perhaps with minor adjustment to the forms of $\dt[\theta]{ \cdot }{ r}$
-% and corresponding fitter $\hat{\theta}(\cdot, R)$.
-%
-%In addition to $\mathcal{W}$, researchers must pick $f$, a model for $Y_C$.
-%% If a lagged outcome is not available, the data will not have informed the specification of
-%% $\EE (Y_{C}| R=r) $ on the treatment side of the threshold.  It
-%% should be treated as an approximation, and $\mathcal{W}$
-%% deliberately chosen to be narrow enough to limit influences of errors
-%% of approximation, as distinct from errors of estimation, on statistics
-%% $t({\mathbf{y}_H} - f(\mathbf{r}; \theta(\mathrm{r},
-%% {\mathbf{y}_H}))$.
-%% Covariate placebo tests can be helpful in this regard.
+
 This calls for preliminary detrending procedures, mechanisms to
 decompose  $X$ into components that are systematic or unpredictable,
 vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
@@ -616,37 +624,30 @@ coefficient is zero.  We implement these checks as Wald tests with
 heteroskedasticity-robust standard errors, as in
 \S~\ref{sec:robust-analys-covar}, using the Bonferroni method to
 combine placebo checks across covariates.
+To compensate for conservatism of
+the Bonferroni method, we test with size
+$\alpha_{B}=.15$, not $.05$.
+
+We use sequential balance tests to adjust the bandwidth $b$ and, alongside McCrary density tests, to
+refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
 % yielding a test of the
 % hypothesis that all of the covariates' residuals are jointly ignorable within the
 % given $\mathcal{W}$.
 
-If the first window tested has form $\mathcal{W} = (-b, b)$,
-write $H_{b}$ for the corresponding joint ignorability hypothesis.
-If the $R$-adjusted covariate placebo tests reject $H_{b}$ then the process is repeated for
-$\mathcal{W}' = (-b', b')$, some
-$b' < b$, and perhaps repeated again if $H_{b'}$ also is rejected.
-This may seem to call for a further layer of multiplicity correction,
-since any number of
-bandwidths may have been tested before identifying a
-$b$ for which $H_{b}$ is sustained; but it so happens that this form
-of sequential testing implicitly corrects for multiplicity, according to the
-sequential intersection union principle
-(\citealp[SIUP;][Proposition~1]{rosenbaum2008testing};
-\citealp{hansenSales2015cochran}). To compensate for conservatism of
-the Bonferroni method, we test with size
-$\alpha_{B}=.15$, not $.05$.
+% If the first window tested has form $\mathcal{W} = (-b, b)$,
+% write $H_{b}$ for the corresponding joint ignorability hypothesis.
+% If the $R$-adjusted covariate placebo tests reject $H_{b}$ then the process is repeated for
+% $\mathcal{W}' = (-b', b')$, some
+% $b' < b$, and perhaps repeated again if $H_{b'}$ also is rejected.
+%  To compensate for conservatism of
+% the Bonferroni method, we test with size
+% $\alpha_{B}=.15$, not $.05$.
 
-Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
-\{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
-manipulation test to $(-b,b)$.  If this returns a $p$-value
-$p_{0} < \alpha_{M}=.05$, we repeat it within windows
-$\{ i: |R_{i}| \in (a_{j}, b)\}$, $0 = a_{0} < a_{1}< \cdots < b$,
-terminating the process at the first $j$ for which
-$p_{j} \geq \alpha_{M}$.  By a second application of the SIUP,
-the size of this test sequence is $\alpha_{M}$.  Taken
-together, placebo and McCrary tests restrict the sample to
-$\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
-
+% Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
+% \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
+% manipulation test to $(-b,b)$.   within windows
+% $\{ i: |R_{i}| \in (a_{j}, b)\}$, $0 = a_{0} < a_{1}< \cdots < b$,
+  
 
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
