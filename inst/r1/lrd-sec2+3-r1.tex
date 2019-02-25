@@ -288,7 +288,7 @@ Manipulation is expected to generate a clump just beside the cut
 point, on one side of it but not the other, and this in turn engenders
 imbalance in terms of distance from the cut-point.
 
-\subsubsection{Reducing the Bandwidth}
+\subsubsection{Reducing the Bandwidth}\label{sec:bandwidth}
 In practice, specification test failures inform sample exclusions.
 Failures of the density test are addressed by restricting
 estimation to observations with $|R|>a$, some $a \geq 0$
@@ -306,16 +306,6 @@ the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
 The analyst decides whether this test-and-reduce process
 should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
-With finite samples, specification tests may be under-powered, and
-fail to detect some small violations of RDD assumptions or (more
-troublingly) large violations of the assumptions among relatively
-small subsets of the analysis sample.
-Indeed, sample pruning guided by specification tests is expected to
-leave an $O(n^{-1/2})$-sized share of the sample that perfect
-information would have counseled removing.
-Depending on the outcome and running variable values of members of
-these problematic subsets, their inclusion in the RDD analysis sample
-may have undue influence on the treatment effect estimate.
 
 \subsubsection{Non-linear Models for Y as a function of R}
 % \citep[\S~5]{lee2008regression, kolesarRothe17}.
@@ -347,8 +337,8 @@ OLS fitting is sometimes combined with specialized diagnostics such as
 plots of Cook's distances \citeyearpar{cook1982residuals}. 
 The following section will discuss an alternate remedy.
 
-\subsection{Robust Estimation of $\EE (Y_{C}| R)$}
-\label{sec:robust-altern-ordin}
+% \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
+% \label{sec:robust-altern-ordin}
 % Let the running variable be so
 % centered that the threshold lies at $r=0$, as in their application.
 % Under the variant of \textsc{ancova} relaxing
@@ -365,41 +355,6 @@ The following section will discuss an alternate remedy.
 % and $\hat\theta = (\hat\alpha, \hat{\beta}_{-}, \hat{\beta}_{+})$ are
 % as estimated under the interaction model.)
 
-Individual outlying observations and sample subsets that do not meet
-RDD assumptions can undercut the validity of an RDD analysis, provided
-that they are influential.
-These threats suggest the use of robust modeling in RDDs---in
-particular, to fit the
- specification using a modern MM,  SM, or similar estimator so designed
- as to possess a bounded influence function
- \citep{yohaiZamar1997locallyrobustMestimates}.
-Such procedures address influence
- in the course of the fitting process.
- In MM-estimation as in OLS,
-coefficients $\beta$ of a linear specification solve estimating equations
-$\sum_{i} \psi\left\{ ({y}_{i} -
-\vec{x}_{i}\beta)/s \right\} \vec{x}_{i} =0$, where $s>0$ and
-$\psi(\cdot)$ is an odd function satisfying $\psi(0)=0$,
-$\psi'(0)=1$ and $t\psi(t)\geq 0$; bounded influence fitters replace OLS's $s\equiv 1$ with resistant preliminary
-estimates of residual scale, and OLS's $\psi(t) = t$ with a continuous $\psi$
-that satisfies $\int_{0}^{\infty}\psi(t)dt < \infty$. This limits
-the loss incurred by the fitter for failing to adapt itself to a small
-portion of aberrant observations;
-it is permitted to instead systematically down-weight them. When
-present, such aberrancies present large residuals, that are easier to
-see in ordinary diagnostic plots, and small
-``robustness weights,'' an additional diagnostic not available for OLS fitting
-\citep{maronna2006robust}.  We are not aware of prior work addressing
-potential contamination of an RDD sample with the assistance of
-bounded influence MM-estimation.
-
-Surprisingly, given their common origins in %the work of
-Huber \citeyearpar{huber1964robust}, MM estimation is not routinely
-paired with sandwich estimates of variance, as in \S~\ref{sec:sandwich} and
-the surrounding discussion of \S~\ref{sec:robust-analys-covar}.
-Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
-which optionally provide Huber-White standard errors
-\citep{verardiCroux2009robust,rousseuwetal2015robustbase}.
 
 
 \section{Randomness and Regression in RDDs}\label{sec:theMethod}
@@ -518,10 +473,106 @@ inferences. \marginpar{I changed ``Neyman'' to ``Fisher''
   here. AS}
 
 
+\subsection{Inference About the Treatment Effect}
+\label{sec:test-hypoth-no}
 
+For inference about $\tau$ under the model
+$Y_{T} = Y_{C} + \tau D_{T}$, select a specification
+$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$, %in the application of
+%Section~\ref{sec:appl-effect-acad}
+such as the
+linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, and a fitter,
+such as OLS.
 
+Separately for each hypothesis $H: \tau=\tau_0$ under
+consideration, one calculates
+$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
+applies the chosen specification and fitter to
+$(\mathbf{y}_{H}, \mathbf{r})$.
+The combination of the data, the
+model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
+$\dt[\hat\theta]{\mathbf{y}_{H}}{\mathbf{r}}$, completing the
+detrending procedure. Whether $H$ is rejected or sustained is
+determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
+in \S~\ref{sec:sandwich}.
 
-\subsection{Checking and Refining the Window ($\mathcal{W}$)}
+In practice it is expedient to use a near-equivalent
+test by modifying the detrending
+procedure.
+When regressing $Y_{H}$ on $R$, include an additive
+contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
+R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
+\beta_{1}R + \gamma Z$. With sandwich estimates of
+$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
+the t-ratio comparing $\hat{\gamma}_{H}$ to
+$\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
+t-statistic with covariance adjustment for $R$, as in \S~\ref{sec:sandwich}.
+Iterative testing is facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and $\mathbf{z}$
+with offset variable $\mathbf{d}\tau_{0}$; then only the offset needs to
+be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
+
+The results of these hypothesis tests imply point and interval
+estimates for $\tau$, as described in
+\S~ref{sec:robust-analys-covar}. 
+
+\subsection{Robust Fitters}
+Subsets of the analysis sample that do not satisfy Residual Ignorability
+ can undercut the validity of an RDD analysis, provided
+that these subsets include are influential observations.
+If such moderate sample contamination may be present --- specifically, contamination of
+a $O(n^{-1/2})$-sized
+share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
+nor will many robust regression methods engineered to meet
+objectives other than bounding the influence function
+\citep{stefanski1991note}.
+Further, no specification test is powerful enough
+to reliably detect contamination of this size; power to detect anomalies
+affecting only $O(n^{-1/2})$ of the sample can only tend to a number
+strictly less than 1. 
+Hence, the
+proper limits of $\mathcal{W}$ will be uncertain (c.f. \S~\ref{sec:bandwidth},
+\S~\ref{sec:bandwidthChoice}, below), and some sample contamination
+may be present. 
+
+Instead, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
+ as to possess a bounded influence function (\citealp[Thm.~3]{he1991localbreakdown};
+\citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
+maximum likelihood.
+Such procedures address influence in the course of the fitting process.
+ In MM-estimation as in OLS,
+coefficients $\beta$ of a linear specification solve estimating equations
+$\sum_{i} \psi\left\{ ({y}_{i} -
+\vec{x}_{i}\beta)/s \right\} \vec{x}_{i} =0$, where $s>0$ and
+$\psi(\cdot)$ is an odd function satisfying $\psi(0)=0$,
+$\psi'(0)=1$ and $t\psi(t)\geq 0$; bounded influence fitters replace OLS's $s\equiv 1$ with resistant preliminary
+estimates of residual scale, and OLS's $\psi(t) = t$ with a continuous $\psi$
+that satisfies $\int_{0}^{\infty}\psi(t)dt < \infty$. This limits
+the loss incurred by the fitter for failing to adapt itself to a small
+portion of aberrant observations;
+it is permitted to instead systematically down-weight them. 
+The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
+the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
+We are not aware of prior work addressing
+potential contamination of an RDD sample with the assistance of
+bounded influence MM-estimation.
+
+Surprisingly, given their common origins in %the work of
+Huber \citeyearpar{huber1964robust}, MM estimation is not routinely
+paired with sandwich estimates of variance, as in \S~\ref{sec:sandwich} and
+the surrounding discussion of \S~\ref{sec:robust-analys-covar}.
+Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
+which optionally provide Huber-White standard errors
+\citep{verardiCroux2009robust,rousseuwetal2015robustbase}.
+
+ 
+
+% : with fitting via OLS,
+% this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
+% favor, the correspondence is one of large-sample equivalence
+% %\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
+% (Appendix~\ref{sec:suppl-s-refs}).
+
+\subsection{Pre-Fitting Diagnostics and Refining the Window ($\mathcal{W}$)}
 \label{sec:bandwidthChoice}
 
 If subject matter knowledge suggests that chance variability intrinsic
@@ -597,93 +648,6 @@ together, placebo and McCrary tests restrict the sample to
 $\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
 
 
-\subsection{Inference About the Treatment Effect}
-\label{sec:test-hypoth-no}
-
-For inference about $\tau$ under the model
-$Y_{T} = Y_{C} + \tau D_{T}$, select a specification
-$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$, %in the application of
-%Section~\ref{sec:appl-effect-acad}
-such as the
-linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$.
-%Although a maximum likelihood
-%estimate of $\beta$ may be available,
-If moderate sample contamination may be present --- specifically, contamination of
-a $O(n^{-1/2})$-sized
-share of the sample --- consistent estimation of $\thetaInf$ requires a
-bounded influence fitter (\citealp[Thm.~3]{he1991localbreakdown};
-\citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
-maximum likelihood.  OLS does not meet this consistency requirement;
-nor do many robust regression methods engineered to meet
-objectives other than bounding the influence function
-\citep{stefanski1991note}.
-Further, no specification test is powerful enough
-to reliably detect contamination of this size; power to detect anomalies
-affecting only $O(n^{-1/2})$ of the sample can only tend to a number
-strictly less than 1.  %NB: This is expanded a little in a
-                       %now-commented-out passage of Discussion, the
-                       %on referencing vdvaart:1998.
-Thus under uncertainty about the
-proper limits of $\mathcal{W}$, MM-estimation (\S~\ref{sec:robust-altern-ordin}) is to be preferred.
-The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
-the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
-
-Separately for each hypothesis $H: \tau=\tau_0$ under
-consideration, one calculates
-$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
-applies the chosen specification and fitter to
-$(\mathbf{y}_{H}, \mathbf{r})$.
-The combination of the data, the
-model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
-$\dt[\hat\theta]{\mathbf{y}_{H}}{\mathbf{r}}$, completing the
-detrending procedure. Whether $H$ is rejected or sustained is
-determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
-in \S~\ref{sec:sandwich}.
-
-In practice it is expedient to use a near-equivalent
-test by modifying the detrending
-procedure%, without need to separately calculate
-%$\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=1} -
-%\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=0}$ or a corresponding standard
-%error
-.
-When regressing $Y_{H}$ on $R$, include an additive
-contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
-R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
-\beta_{1}R + \gamma Z$. With sandwich estimates of
-$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
-% ?state that in case of OLS with sandwich standard errors,
-% taking $e$ to be a partial residual makes \eqref{eq:tedef}
-% equivalent to the t statistic on the regression coefficient
-%
-% <!--the below is a passage that I cut a while back, as opposed to an inline note:-->
-%
-% just as \eqref{eq:sudef}'s $\mathrm{SE}_{u}^2 \left(
-%   \bar{Y}_{Z=1} -  \bar{Y}_{Z=0} \right)$ was seen in
-% Section~\ref{sec:randProc} to estimate $\var(\bar{Y}_{Z=1} -
-% \bar{Y}_{Z=0}| \mathbf{A})$ just as validly as $\var(\bar{Y}_{Z=1} -
-% \bar{Y}_{Z=0}| \mathbf{Z})$, the sandwich estimate is consistent for
-% the variance of $\hat\gamma$ with conditioning as discussed in
-% Section~\ref{sec:model-eey-c-r}
-% \citep[Section~\ref{apnd:requ-forpr-eqref}]{lrdauthors:supp}.
-the t-ratio comparing $\hat{\gamma}_{H}$ to
-$\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
-t-statistic with covariance adjustment for $R$, as in \S~\ref{sec:sandwich}: with fitting via OLS,
-this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
-favor, the correspondence is one of large-sample equivalence
-%\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
-(Appendix~\ref{sec:suppl-s-refs}).
-% Just as in RCTs \eqref{eq:sudef}'s $\mathrm{SE}_{u}\left( \bar{y}_{Z=1} -  \bar{y}_{Z=0} \right)$ is valid either with conditioning on $\mathbf{Z}$
-% that leaves $\mathbf{Y}_{T}$ and $\mathbf{Y}_{C}$ unconstrained, or
-% with conditioning only on $\mathbf{A}$,
-% $\text{SE}_{s}(\hat{\gamma}_{H})$ calculated in this way is consistent for $\var^{1/2}(\hat{\gamma}_{H}\mid A)$.
-% With large samples, comparing
-% $\hat{\gamma}_{H}/\text{SE}_{s}(\hat{\gamma}_{H})$
-% to a central $t$ or standard Normal distribution
-%  gives a randomization-based test of $H$ \citep[Section~\ref{apnd:requ-forpr-eqref}]{lrdauthors:supp}.
-Iterative testing is facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and $\mathbf{z}$
-with offset variable $\mathbf{d}\tau_{0}$; then only the offset needs to
-be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
 Once the Hodges-Lehmann estimate $\hat{\tau}_{\mathrm{HL}}$ has been found, one
@@ -692,7 +656,7 @@ Bounded influence regression is helpful here.  Besides making
 influential points easier to see in residual plots, this limits
 effects of data contamination, as non-conforming influence points are
 down-weighted as a result of the fitting process. This down-weighting
-is reflected in robustness weights, ranging from 1, for non-discounted
+is reflected in ``robustness weights,'', ranging from 1, for non-discounted
 observations, down to 0, for the most anomalous observations.
 Plotting % As
 % an indicator of robustness to non-constant effects.
@@ -700,7 +664,5 @@ Plotting % As
 robustness weights against residuals may expose opportunities to
 improve the fit of $\mu_{\beta}(R)$, or of the treatment effect model;
 plotting them against $R$ may expose contaminated sub-regions
-of $\mathcal{W}$ that specification testing failed to remove.
-
-
-
+of $\mathcal{W}$ that specification testing failed to remove
+\citep{maronna2006robust}.
