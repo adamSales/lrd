@@ -103,10 +103,12 @@ $Z$.
 
 In general, the set \{$c$:
 $H_{c}$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
-$100(1-\alpha)\%$ confidence set for $\tau$; the $c$ solving
-$t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to be unique, is a
-corresponding point estimate.
-In fact, estimate for $\tau$ corresponding to these statistical tests is
+$100(1-\alpha)\%$ confidence interval for $\tau$ of the Rao score type
+\citep{agresti2011scoreintervals}; the $c$ solving
+$t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to
+be unique, is an M-estimate of $\tau$ under both the classical
+\textsc{ancova} model and various of its generalizations.
+In fact, the estimate for $\tau$ corresponding to these statistical tests is
 algebraically equal to the $Z$-coefficient from an OLS estimate of
 \eqref{eq:classicOLS}, and the two-sided 95\% confidence interval induced in this
 manner is the familiar
@@ -250,7 +252,7 @@ Relatedly, \citet{lee2010regression} recommend a
  tests for conditional association, given $R$, of $\mathbf{Z}$ and
  $\mathbf{X}$, by fitting models like those discussed in
  \S~\ref{sec:robust-analys-covar} for impact estimation, but with
- covariates rather than outcomes as independent variables%
+ covariates rather than outcomes as independent variables. 
 Viewing the $R$-slopes and intercepts as simultaneously estimated
  nuisance parameters, these are balance tests applied to
  the covariates' residuals, %net of linear association with $R$,
