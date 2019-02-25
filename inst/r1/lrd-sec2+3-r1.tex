@@ -342,10 +342,10 @@ of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
 $\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
 sample is contaminated near its outer boundaries, precisely
 where leverage is at its highest.
-This problem is only partially counteracted by local linear or polynomial regression
-\citep[e.g.][]{imbens2012optimal,cct},
-which downweights observations as $|R-c|$ increases linearly.
-
+In order to identify leverage points that are also influential,
+OLS fitting is sometimes combined with specialized diagnostics such as
+plots of Cook's distances \citeyearpar{cook1982residuals}. 
+The following section will discuss an alternate remedy.
 
 \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
 \label{sec:robust-altern-ordin}
