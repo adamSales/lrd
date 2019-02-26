@@ -90,7 +90,7 @@ Here are the results, for all cases run:
 ```{r}
 allRes <- dispAllSimp(outcomeSim)
 rownames(allRes) <- NULL
-save(allRes,file=paste0('inst/outcomeSimResults',Sys.Date(),'.RData'))
+save(allRes,file=paste0('inst/levelSimResults',Sys.Date(),'.RData'))
 ```
 
 ###Full Results: Bias

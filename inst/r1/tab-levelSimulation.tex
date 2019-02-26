@@ -1,26 +1,26 @@
 
 \begin{table}
-\centering
 \footnotesize
-\begin{tabular}{cc|ccccccc}
+\begin{tabular}{ccc|ccc|ccc|ccc}
 \hline
 
-&&& \multicolumn{ 2 }{c}{Permutation}&\multicolumn{ 2 }{c}{``Limitless''}&\multicolumn{ 2 }{c}{Local OLS}\\
-$n$& Error && Level&Power&Level&Power&Level&Power \\
-\hline
-\hline
-\multirow{2}{*}{ 50 } & $\mathcal{N}(0,1)$ &&14&32&7&8&7&8 \\
- & $t_3$ &&10&22&7&8&6&7 \\
-\hline
-\multirow{2}{*}{ 250 } & $\mathcal{N}(0,1)$ &&48&93&5&12&5&12 \\
- & $t_3$ &&34&79&5&10&5&8 \\
-\hline
-\multirow{2}{*}{ 2,500 } & $\mathcal{N}(0,1)$ &&100&100&5&67&5&66 \\
- & $t_3$ &&100&100&5&50&5&29 \\
+&&& \multicolumn{ 3 }{c}{Permutation}&\multicolumn{ 3 }{c}{``Limitless''}&\multicolumn{ 3 }{c}{Local OLS}\\
+$n$& Effect& Error & Bias&Coverage&Width&Bias&Coverage&Width&Bias&Coverage&Width \\
+\hline 
+\hline 
+\multirow{3}{*}{ 50 } &0& $\mathcal{N}(0,1)$ &0.37&0.64&0.91&0&0.93&1.75&0&0.93&1.69 \\ 
+ &  0 & $t_3$ &0.37&0.5&0.74&0.01&0.94&1.41&0&0.94&1.66 \\ 
+ &  $t_3$ & $t_3$ &0.37&0.65&0.95&0.01&0.93&1.8&0.01&0.93&2.04 \\ 
+\hline 
+\multirow{3}{*}{ 250 } &0& $\mathcal{N}(0,1)$ &0.37&0.03&0.39&0&0.95&0.77&0&0.95&0.75 \\ 
+ &  0 & $t_3$ &0.37&0&0.29&0&0.95&0.57&0&0.95&0.74 \\ 
+ &  $t_3$ & $t_3$ &0.37&0.03&0.38&0&0.95&0.73&0&0.95&0.91 \\ 
+\hline 
+\multirow{3}{*}{ 2500 } &0& $\mathcal{N}(0,1)$ &0.38&0&0.12&0&0.95&0.24&0&0.95&0.24 \\ 
+ &  0 & $t_3$ &0.37&0&0.09&0&0.96&0.17&0&0.95&0.23 \\ 
+ &  $t_3$ & $t_3$ &0.37&0&0.11&0&0.94&0.22&0&0.95&0.29 \\ 
 \hline
 \end{tabular}
-\caption{Proportion of  5,000  simulations resulting in a p-value below $\alpha=0.05$
-using either permutation tests, limitless or local OLS methods. When the
-treatment effect $\tau$ is zero (left) these are empirical estimates of size;
-otherwise (right), they are estimates of power with a treatment effect of 0.2.}
-\label{tab:level}\end{table}
+  \caption{Empirical bias and 95\% confidence interval coverage and width for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.}
+  \label{tab:level}
+\end{table}

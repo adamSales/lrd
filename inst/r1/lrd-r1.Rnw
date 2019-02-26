@@ -7,7 +7,7 @@
 
 <<echo=FALSE,include=FALSE>>=
 if(grepl('acs',Sys.info()['login'])){
-    dataResults_location <- '~/Dropbox/Sales Hansen/jebs/dataResults/' #(I suppose)
+    dataResults_location <- '~/lrd/inst/' #(I suppose)
     lrd_package_location <- '~/lrd/'
 } else {
     dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
@@ -900,40 +900,47 @@ source(paste0(lrd_package_location, 'R/displaySim.r'))
 ## NOT RUN:
 ## outcomeSim <- totalOutcomeSim()
 ## save(outcomeSim,file='dataResults/outcomeSim.RData')
-load(paste0(dataResults_location, 'outcomeSim.RData'))
+sims <- sort(grep('outcomeSim',list.files(dataResults_location),value=TRUE),decreasing=TRUE)
+load(paste0(dataResults_location, sims[1]))
 @
-We ran a simulation study to compare the true level %(when the
-%treatment effect is zero)
-and power (with an effect of 0.2) of $\alpha=0.05$
-hypothesis tests under our ``limitless'' method, local-OLS and
-local-permutation methods.
+We ran a simulation study to compare bias and confidence interval
+covarage and width
+ under our ``limitless'' method, local-OLS, and
+local-permutation methods, varying sample size, regression error
+distribution, and treatment effect distribution.
 We generated the running variable $R$ as
 $\mathrm{Uniform}(-0.5,0.5)$, with cutoff $c=0$, and control potential
-outcomes as $Y_C=0.5R+\epsilon$, with $\epsilon$
-distributed as either standard Normal or Student's $t$ with 3 d.f.
+outcomes as $Y_C=0.75R+\epsilon$, with $\epsilon$
+distributed as either Normal or Student's $t$ with 3 d.f., and with a
+standard deviation of 0.75.
+The values for slope and residual standard error were approximately equal to
+those estimated from the LSO data.
+In all simulation runs, the ATE was 0; in six runs the effect was
+exactly zero and in three they were equal in distribution to the
+regression errors, i.e. $t_3$ with a standard deviation of 0.75.
 Each simulation scenario was run
 \Sexpr{format(ncol(outcomeSim[[1]]),big.mark=',')}
 times.
 
+
 \input{tab-levelSimulation}
 
-The results when no treatment effect was present are displayed in the
-columns of Table~\ref{tab:level} labeled ``Level.''
-Type 1 error rates for the local permutation approach exceed the
-nominal $\alpha=0.05$, presumeably due to overly-wide $\mathcal{W}$,
-and increased rapidly with sample size.
-Type 1 error rates were more favorable for the limitless and local OLS
-methods, despite slight over-rejection in small samples.
+The results are displayed in Table~\ref{tab:level}.
+Bias for the local permutation approach was approximately equal across
+simulation scenarios---roughly the product of the bandwidth (0.5) and the
+slope (0.75), as will generally be the case with linear data
+generating processes and symmetric windows---with confidence interval
+coverage decreasing with sample size.
+Bias and coverage were more favorable for the limitless and local OLS
+methods, despite slight under-coverage in small samples.
+Noteably, random treatment effect heterogeneity did not affect bias or
+coverage.
 
-Setting the treatment effect to 0.2 yielded the results in the
-columns of Table~\ref{tab:level} labeled ``Power.''
-Across the board, the local permutation method rejected most often;
-however type-I error rates were
-similarly inflated. % for most simulation runs.
-Our limitless RD method tended to have equal or slightly higher power than the
-local OLS approach, with greater advantage under $t_3$- as opposed to
-$\mathcal{N}(0,1)$-distributed disturbances, and under larger sample
-size scenarios.
+Across the board, the local permutation method gave the smallest
+confidence intervals; however this came at the expense of coverage.
+Our limitless RD method tended to have equal or slightly narrower
+interval widths than the local OLS approach, with greater advantage
+under $t_3$- as opposed to $\mathcal{N}(0,1)$-distributed disturbances.
 
 \subsection{Polynomial Regression}
 
