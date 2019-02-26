@@ -84,3 +84,10 @@ simulations may be saved in "dataResults/simResults.RData".
 
 
 
+# miscellaneous notes
+
+## soft links to material outside this repo
+
+- Directory for data we're not confident we're allowed to repackage: `dataResults/`
+- bibtex bibliography file: `bibliography.bib`  (points to drafts`/causalinference.bib`
+  in AS/BH shared dropbox folder. )

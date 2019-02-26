@@ -28,50 +28,8 @@ vignettes/*.pdf
 /*_cache/
 /cache/
 
-# Temporary files created by R markdown and/or LaTeX
+# Temporary files created by R markdown
 *.utf8.md
 *.knit.md
 .Rproj.user
 
-*.tex
-*.html
-*.aux
-*.log
-*.out
-
-
-# Backup files created by editors
-*~
-
-# directories for storing non-committed artifacts
-dataResults
-manuscript
-
-# Non-committed data
-extdata/death_file_JAMA.csv
-
-# auto-generated analysis artifacts (to commit, manually 
-# copy these over version of file w/o date stamp in name)
-inst/RDanalysis-*.RData 
-
-
-# Other cruft
-bibliography.bib
-.DS_Store
-
-inst/totalPolySim.RData
-
-R/.#functions.r
-
-R/#functions.r#
-
-
-R/oldSimulations.r
-
-inst/.#dataAnalysis.R
-
-inst/#dataAnalysis.R#
-
-
-*.rda
-*.dta

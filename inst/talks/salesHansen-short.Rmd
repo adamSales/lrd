@@ -1,0 +1,60 @@
+---
+title: "Robust M-estimation for imperfect regression discontinuity designs"
+author: "Adam Sales & Ben Hansen*"
+date: "CMStatistics 2018, U. of Pisa"
+bibliography: ../r1/causalinference.bib
+output: 
+  ioslides_presentation:
+     widescreen: false
+---
+<!-- nocite:
+  @hansenSales2015cochran-->
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+```{r child="1_threePerspectives+methodsForPickingOutRDDs.Rmd"}
+```
+
+<!-- NB: THIS VERSION SAVES TIME BY LEAVING OUT
+     	 2_workingAroundDonut_formalRI.Rmd .
+	 CONSIDER RESTORING FOR LESS TECHNICAL AUDIENCES.
+	 -->
+
+```{r child="3_methodsForLimitingContamSens.Rmd"}
+```
+
+<!-- NB: MORE TIME SAVED BY LEAVING OUT
+         4_areAnswersAnyDifferent.Rmd .
+	 THIS PRESENTS SIMULATION STUDY RESULTS.
+	 -->
+
+## Discussion {.smaller}
+<!-- Some of these points were added for ICORS audience. 
+     For other audiences, cut/adjust as appropriate. -->
+
+- In limit-based literature, main concern is with possibility that bandwidth/$\mathcal{W}$ is too wide.  To be "robust" to overly wide $\mathcal{W}$, prominent limit-based methods use local polynomials --- along w/ unbounded $\rho(\cdot)$, non-robust $s(\cdot)$.
+- In the local randomization camp, recent methods narrow the window until covariates appear to be balanced. Typically there is no allowance for $Y$--$R$ association other than via $Z=\mathcal{I}[R<0]$. 
+- Limit-based and local randomizers both led to reduce $n$.  This makes contamination harder to detect, and limits even robust M-estimates' capacity to compensate.
+- Under moderate departure from linearity, robust M-estimation markedly improves power & type 1 error rates; see Sec. 5 of manuscript (`arxiv.org/abs/1403.5478`)
+<!--
+- Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to sample purification via specification tests.
+-->
+
+<div class="notes">
+
+-
+- 
+- 
+
+</div>
+
+## References {.smaller}
+
+<style>
+slides > slide { overflow: scroll; }
+slides > slide:not(.nobackground):after {
+  content: '';
+}
+</style>
