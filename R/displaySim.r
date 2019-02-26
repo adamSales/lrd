@@ -6,7 +6,8 @@ dgms <- function(tp){
     abline(v=0,lty=2)
     curve(ifelse(abs(x)>0.5, 3*x+sign(x)*(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='Anti-Symmetric')
     abline(v=0,lty=2)
-    curve(ifelse(x>0.5,3*x+(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
+  #curve(ifelse(x>0.5,3*x+(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
+  curve(mu4,from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
     abline(v=0,lty=2)
 }
 
@@ -39,6 +40,18 @@ resTab <- function(run,full=FALSE){
          tabLLR=tabFun(rbind(llr[1,]),rbind(llr[2,]),full=full))
 }
 
+
+resTab <- function(run,full=FALSE){
+  run <- run[,apply(run,2,function(x) !any(is.na(x)))]
+  tabFun <- function(ests)
+      rbind(
+        bias=rowMeans(rbind(ests)),
+        RMSE=sqrt(rowMeans(rbind(ests^2))))
+
+  sapply(c('sh','ik','ll'),function(mm) tabFun(run[grep(paste0(mm,'.est'),rownames(run)),]),
+    simplify=FALSE)
+}
+
 #' @export
 prntTab <- function(totalPoly,maxDeg=4,full=TRUE,md=FALSE){
     tab <- NULL
@@ -53,11 +66,11 @@ prntTab <- function(totalPoly,maxDeg=4,full=TRUE,md=FALSE){
         run <- totalPoly[[runname]]
         res <- resTab(run,full=full)
 
-        cbind(res[['tabSH']][,1:maxDeg],
-              res[['tabIK']][,1:maxDeg],
-              res[['tabLLR']])
+        cbind(res[['sh']][,1:maxDeg],
+              res[['ik']][,1:maxDeg],
+              res[['ll']])
     }
-    for(dgm in c('lin','antiSym','oneSide')){
+    for(dgm in c('lin','antiSym','wass')){
         tab <- rbind(tab,ctab(paste0(dgm,'_t'),full))
         if(full) tab <- rbind(tab,ctab(paste0(dgm,'_norm'),full))
     }

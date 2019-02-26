@@ -303,6 +303,10 @@ mu3 <- function(x){
     .84*x-0.1*3.00*x^2-0.3*7.99*x^3-0.1*9.01*x^4+3.56*x^5)
 }
 
+### from Wasserman "all of nonparametric stats" p.99
+mu4 <- function(x)
+  sin(3*x)
+
 makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
     curve <- 3
     R <- runif(n,-1,1)
@@ -317,7 +321,9 @@ makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
     if(shape=='cct')
         yc <- mu3(R)
     if(shape=='poly3')
-        yc <- 1.75*R^3
+      yc <- 1.75*R^3
+    if(shape=='wass')
+      yc <- mu4(R)
 
     if(plt) plot(R,yc)
 
@@ -389,17 +395,18 @@ polyDisp <- function(sim){
 #' @return list of output for each simulation run
 #' @export
 #'
-totalPolySim <- function(nreps=5000){
-    res <- list()
+totalPolySim <- function(nreps=5000,cluster=NULL){
+  appFunc <- if(is.null(cluster)) sapply else function(X,FUN) parSapply(cl=cluster,X=X,FUN=FUN)
+  res <- list()
     #B=5000
     n=500
     tau=0
     degs <- 1:5
 
-    for(shape in c('lin','antiSym','oneSide')){
-        for(tdist in c(TRUE,FALSE)){
+    for(shape in c('lin','antiSym','wass')){
+        for(tdist in c(TRUE)){#,FALSE)){
             res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
-                sapply(1:nreps,function(i) polySim(n,degs,shape,tdist,tau))
+                appFunc(1:nreps,function(i) polySim(n,degs,shape,tdist,tau))
         }
     }
     res
