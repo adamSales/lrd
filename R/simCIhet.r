@@ -227,7 +227,7 @@ $n$& Error &', paste(rep(c('Bias','Coverage','Width'),3),collapse='&'),'\\\\
 
 
 
-displayCIsimHet <- function(res,tau=0){
+displayCIsimHet <- function(res,tau=0,caption='',label=''){
   ## omit cases where one of the methods (ours?) didn't converge, gave NA
   res <- lapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]))
 
@@ -246,7 +246,7 @@ displayCIsimHet <- function(res,tau=0){
 \\begin{tabular}{ccc|ccc|ccc|ccc}
 \\hline
 
-&& \\multicolumn{ 3 }{c}{Permutation}&\\multicolumn{ 3 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 3 }{c}{Local OLS}\\\\
+&&& \\multicolumn{ 3 }{c}{Permutation}&\\multicolumn{ 3 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 3 }{c}{Local OLS}\\\\
 $n$& Effect& Error &', paste(rep(c('Bias','Coverage','Width'),3),collapse='&'),'\\\\
 \\hline \n')
   for(n in c(50,250,2500))
@@ -264,15 +264,36 @@ $n$& Effect& Error &', paste(rep(c('Bias','Coverage','Width'),3),collapse='&'),'
       cat(paste(round(row,2),collapse='&'),'\\\\ \n')
     }
   cat('\\hline
-\\end{tabular}\n')
-  #\\caption{',caption,'}
-  #\\label{',label,'}',sep='')
+\\end{tabular}
+  \\caption{',caption,'}
+  \\label{',label,'}\n',sep='')
   cat('\\end{table}\n')
 }
 
 
+dispAllSimp <- function(res){
+  res <- lapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]))
+  tab0 <- lapply(res,function(x)
+    apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
+      1:2,mean))
+
+  cond <- strsplit(names(res),'_')
+  cond <- lapply(cond,function(x) gsub('err|tau','',x))
+  cond <- lapply(cond,function(x) c(x[1],x[2],strsplit(x[3],'W')[[1]]))
+  cond <- do.call('rbind',cond)
+  out <- data.frame(tab0[[1]],stringsAsFactors=FALSE)
+  out <- cbind(cond[rep(1,3),],c('Bias','Coverage','Width'),out)
+
+  for(i in 2:length(tab0))
+    out <- rbind(out,cbind(cond[rep(i,3),],
+      c('Bias','Coverage','Width'),
+      data.frame(tab0[[i]],stringsAsFactors=FALSE)))
 
 
+  names(out) <- c('n','error','ATE','TE randomness','meas','Limitless','Local-OLS','Permutation')
+
+  out
+}
 
 ###############
 ### polynomial sim

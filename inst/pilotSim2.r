@@ -8,7 +8,7 @@ library('RItools')
 library('sandwich')
 library('nnet')
 source('R/functions.r')
-source('R/simCI.r')
+source('R/simCIhet.r')
 
 nrep <- 5000
 
@@ -19,11 +19,11 @@ clusterEvalQ(cl,{
              library('sandwich')
              library('nnet')
              source('R/functions.r')
-             source('R/simCI.r')
+             source('R/simCIhet.r')
              })
 
-st <- system.time(outcomeSimCI2 <- totalOutcomeSim2(nrep,cl))
+st <- system.time(res <- totalOutcomeSim(nrep,cl))
 
 stopCluster(cl)
 
-save(list=ls(), file='outcomeSimCI2hetTrtEff.RData')
+save(list=ls(), file=paste0('outcomeSimCIhetTrtEff',Sys.Date(),'.RData'))

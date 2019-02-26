@@ -13,8 +13,12 @@ knitr::opts_knit$set(root.dir = '.')
 General dependencies.
 ```{r}
 library('knitr')
-library('lrd')
+#library('lrd')
 library('kableExtra')
+source('R/simCIhet.r')
+source('R/functions.r')
+source('R/ddsandwich.R')
+source('R/displaySim.r')
 ```
 
 
@@ -28,6 +32,15 @@ variable should have been set to a positive integer before initiating this scrip
 The following code (optionally, if `nreps>0`) runs the simulation
 reported in Table 3 of "Limitless Regression Discontinuity"
 
+To run the simulations in parallel, using the `parallel` package in
+`R`,
+register a cluster, called `cl` with the desired number of nodes, with
+code similar to the following:
+```{r eval=FALSE,echo=TRUE}
+library(parallel)
+cl <- makeCluster(5)
+```
+
 ```{r  warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
 nreps
@@ -38,48 +51,77 @@ library('RItools')
 library('sandwich')
 library('nnet')
 
+if(require('parallel')&exists('cl')&inherits(cl,"cluster")){
+  clusterEvalQ(cl,{
+             library('robustbase')
+             library('rdd')
+             library('RItools')
+             library('sandwich')
+             library('nnet')
+             source('R/functions.r')
+             source('R/simCIhet.r')
+             })
+} else cl <- NULL
+
 set.seed(201609)
-st <- system.time(outcomeSim <- totalOutcomeSim(nreps))
-save(outcomeSim, file="dataResults/outcomeSim.RData")
+st <- system.time(outcomeSim <- totalOutcomeSim(nrep,cl))
+save(outcomeSim, file=paste0('inst/outcomeSim',Sys.Date(),'.RData'))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='dataResults/fullOutcomeSim-runtime.txt', append=TRUE)
-} else load('dataResults/outcomeSim.RData')
+} else{ ### load the most recent simulation
+  sims <- sort(grep('outcomeSim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',sims[1]))
+}
 ```
 
 This code creates Table 3:
 ```{r}
-levTab <- simlevels(outcomeSim)
-powTab <-simpower(outcomeSim)
 capture.output({
- prntOutcomeSim(levTab=levTab,powTab=powTab,
-                caption= paste('Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power with a treatment effect of 0.2.'),
-                label='tab:level')
-},file="tab-levelSimulation.tex")
+  displayCIsimHet(outcomeSim,tau=0,
+    caption=paste('Empirical bias and 95\\% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    label='tab:level')
+  },file="inst/r1/tab-levelSimulation.tex")
 ```
-Here are the results, first for the empirical size of $\alpha=0.05$
-hypothesis tests:
+Here are the results, for all cases run:
+
 ```{r}
-rownames(levTab) <- rep(c('N(0,1) error','$t_3$ error'),3)
-colnames(levTab) <- c('Permutation','Limitless','Local OLS')
-kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2,format='html')%>%
-    kable_styling(full_width=FALSE)%>%
-    group_rows("n=50",1,2)%>%group_rows("n=250",3,4)%>%group_rows("n=2500",5,6)
+allRes <- dispAllSimp(outcomeSim)
+rownames(allRes) <- NULL
+save(allRes,file=paste0('inst/outcomeSimResults',Sys.Date(),'.RData'))
 ```
 
-Here are the results for power, when the treatment effect is 0.2:
-```{r}
-rownames(powTab) <- rep(c('N(0,1) error','$t_3$ error'),3)
-colnames(powTab) <- c('Permutation','Limitless','Local OLS')
-kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2,format='html')%>%
-    kable_styling(full_width=FALSE)%>%
-    group_rows("n=50",1,2)%>%group_rows("n=250",3,4)%>%group_rows("n=2500",5,6)
+###Full Results: Bias
+```{r biasTab}
+kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
 ```
+
+###95% CI Coverage
+```{r coverTab}
+kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% confidence interval coverage for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
+```
+
+###95% CI Width
+```{r widthTab}
+kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% confidence interval width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
+```
+
+
 
 ##Polynomial Simulation
 
-```{r  warning=FALSE, message=FALSE}
+```{r  warning=FALSE, message=FALSE,eval=FALSE}
 if (!exists('nreps') ) nreps <- 0
 nreps
 if (nreps) {
@@ -101,7 +143,7 @@ The following gives the results in Table 4 of the paper, in addition
 to the break-down of RMSE into bias and variance, and analogous
 results for normally-distributed errors.
 
-```{r}
+```{r,eval=FALSE}
 tab.paper <- prntTab(totalPoly,full=FALSE,md=FALSE)
 capture.output(
 polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
