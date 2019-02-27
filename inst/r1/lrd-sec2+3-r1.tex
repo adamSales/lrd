@@ -64,19 +64,16 @@ Finally, test $H$ with statistic
 \begin{equation} \label{eq:MeanDiffTestStat}
 \meanDiffT(\mathbf{Y}_H , \mathbf{Z}) =
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
-\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0},
+\overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}
 \end{equation}
-where $\hat{\alpha}$ and $\hat{\beta}$ are the OLS estimates of
-intercept and slope in a variant of \eqref{eq:classicOLS}
-with $\mathbf{y}_{H}$ replacing $\mathbf{y}$ as dependent variable. Thus
-$\meanDiffT(\mathbf{y}_{H}, \mathbf{z})$ coincides with the $\tau$-estimate
-from the same OLS fit. 
+--- that is, the $\tau$ estimate from an OLS fit of the variant of \eqref{eq:classicOLS}
+with dependent variable $\mathbf{y}_{H}$. 
 Because of the structural relationship
 between $R$ and $Z$, its null distribution
 is not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
 $T(\mathbf{Y}_{H}, \cdot)$ had straightforward permutation distributions
-because trend parameters had been estimated
-from a separate dataset.) However, under the parametric \textsc{ancova} model, with
+because slope and intercept parameters had been estimated
+from a separate sample.) However, under the parametric \textsc{ancova} model, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
 \mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
 $\meanDiffT(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
