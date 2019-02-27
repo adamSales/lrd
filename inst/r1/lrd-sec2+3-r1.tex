@@ -61,21 +61,25 @@ Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
 b\mathbf{r}$.
 Finally, test $H$ with statistic
-\begin{equation*}
-t(\mathbf{Y}_H , \mathbf{Z}) =
+\begin{equation} \label{eq:MeanDiffTestStat}
+\meanDiffT(\mathbf{Y}_H , \mathbf{Z}) =
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0},
-\end{equation*}
-where $\hat{\alpha}$ and $\hat{\beta}$ are the standard OLS estimates.
+\end{equation}
+where $\hat{\alpha}$ and $\hat{\beta}$ are the OLS estimates of
+intercept and slope in a variant of \eqref{eq:classicOLS}
+with $\mathbf{y}_{H}$ replacing $\mathbf{y}$ as dependent variable. Thus
+$\meanDiffT(\mathbf{y}_{H}, \mathbf{z})$ coincides with the $\tau$-estimate
+from the same OLS fit. 
 Because of the structural relationship
-between $R$ and $Z$, (and, unlike in
-\S~\ref{sec:using-eqref-test}, regression parameters were not estimated
-with a separate dataset)
-permutation tests based on this statistic are not tractable.
-However, under the parametric \textsc{ancova} model, with
+between $R$ and $Z$, its null distribution
+is not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
+$T(\mathbf{Y}_{H}, \cdot)$ had straightforward permutation distributions
+because trend parameters had been estimated
+from a separate dataset.) However, under the parametric \textsc{ancova} model, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
 \mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
-$t(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
+$\meanDiffT(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
 variance equal to the classical OLS variance of the coefficient on
 $Z$.
 
@@ -86,7 +90,7 @@ $Z$.
 % b\mathbf{r}$.
 % Finally, test $H_\tau$ with statistic
 % \begin{equation*}
-% t(\mathbf{Y}_H , \mathbf{Z}) =
+% \meanDiffT(\mathbf{Y}_H , \mathbf{Z}) =
 % \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
 % \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0},
 % \end{equation*}
@@ -99,7 +103,7 @@ $Z$.
 % However, under the parametric \textsc{ancova} model, with
 % conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
 % \mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
-% $t(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
+% $\meanDiffT(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
 % variance equal to the classical OLS variance of the coefficient on
 % $Z$.
 
@@ -107,7 +111,7 @@ In general, the set \{$c$:
 $H_{c}$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
 $100(1-\alpha)\%$ confidence interval for $\tau$ of the Rao score type
 \citep{agresti2011scoreintervals}; the $c$ solving
-$t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to
+$\meanDiffT(\mathbf{y}_{H}, \mathbf{z}) = 0$, which can be seen to
 be unique, is an M-estimate of $\tau$ under both the classical
 \textsc{ancova} model and various of its generalizations.
 (In fact, the estimate for $\tau$ corresponding to these statistical tests is
@@ -143,7 +147,7 @@ $\EE(Y_{T} - Y_{C}| D_{T}=1)$.
 Statistical hypotheses about the TOTE take the form
 $H_\tau:Y_T=Y_C+D\tau$.
 To test $H_\tau$ under non-compliance, let $Y_H=Y-\tau D$,
-construct test statistic as $t (\mathbf{y}_H,\mathbf{r})$, and compare
+designate $t (\mathbf{y}_H,\mathbf{r})$ as test statistic, and compare
 its value to a standard normal distribution.
 (The only difference between hypothesis testing for a ``strict'' RDD, one
 with full compliance, versus a fuzzy RDD, is in the formulation of
@@ -175,14 +179,14 @@ To test
 $\EE\{ \dt[\hat\theta]{{Y_H}}{ R} | Z=1\} = \EE\{ \dt[\hat\theta]{{Y_H}}{
 R} | Z=0\}$
 under potential heteroskedasticity, one estimates
-$\var\left\{t(\mathbf{Y}_H , \mathbf{Z})\right\}$
+$\var\left\{\meanDiffT(\mathbf{Y}_H , \mathbf{Z})\right\}$
 using a sandwich or Huber-White estimator,
-$\mathrm{SE}_{s}^{2} \left\{ t(\mathbf{Y}_H , \mathbf{Z}) \right\}$
+$\mathrm{SE}_{s}^{2} \left\{ \meanDiffT(\mathbf{Y}_H , \mathbf{Z}) \right\}$
 \citep{huber1967behavior,mackinnonWhite1985sandwichHC,longErvin2000sandwichHC,
 bellmccaffrey2002sandwichSEs,pustejovskyTipton2017sandwichSEs}, %as opposed to the %$\mathrm{SE}_{p}$; then
 %$\mathrm{SE}_{u} %( \overline{e({Y_H}| R)}_{Z=1} -  \overline{e({Y_H}| R)}_{Z=0} )$
 %of \eqref{eq:tudef}:
-and refers $t(\mathbf{Y}_H,\mathbf{Z})/\mathrm{SE}_{s}$
+and refers $\meanDiffT(\mathbf{Y}_H,\mathbf{Z})/\mathrm{SE}_{s}$
 % \begin{equation} \label{eq:tedef}
 % t_{e} (\mathbf{y}_H,\mathbf{r}) =
 % \frac{\overline{\dt[\hat\theta]{{y_H}}{ r}}_{z=1} -
