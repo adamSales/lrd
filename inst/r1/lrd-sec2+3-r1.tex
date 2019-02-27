@@ -120,9 +120,9 @@ strategies outside of OLS, such as the robust estimators of
 \S~\ref{sec:robustFitters} below.)
 
 \subsubsection{Fuzzy Regression Discontinuity}
-So-called ``Fuzzy'' RD describes non-compliance---when subjects' actual
-treatment differed from $Z$.
-In those cases, let $D$ indicate whether treatment was actually
+RDDs susceptible to non-compliance---where subjects' actual
+treatments may differ from $Z$--- are called ``fuzzy.''
+In these cases, let $D$ indicate whether treatment was actually
 received.
 This $D$ is an intermediate outcome, so there are
 corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
@@ -145,10 +145,10 @@ $H_\tau:Y_T=Y_C+D\tau$.
 To test $H_\tau$ under non-compliance, let $Y_H=Y-\tau D$,
 construct test statistic as $t (\mathbf{y}_H,\mathbf{r})$, and compare
 its value to a standard normal distribution.
-That is, the only difference between ``strict'' RD analysis, in which
-compliance is perfect, and fuzzy RD, is in the formulation of
+(The only difference between hypothesis testing for a ``strict'' RDD, one
+with full compliance, versus a fuzzy RDD, is in the formulation of
 hypothesis $H$, and the construction of $Y_H$---the rest of the
-process remains unchanged \citep{rosenbaum:1996:onAIR}.
+process remains unchanged [\citealp{rosenbaum:1996:onAIR}].)
 
 As compared to Wald-type
 confidence intervals, that is intervals of form $\hat\tau \pm q_{*}

@@ -929,7 +929,7 @@ columns of Table~\ref{tab:level} labeled ``Power.''
 Across the board, the local permutation method rejected most often;
 however type-I error rates were
 similarly inflated. % for most simulation runs.
-Our limitless RD method tended to have equal or slightly higher power than the
+Our limitless method tended to have equal or slightly higher power than the
 local OLS approach, with greater advantage under $t_3$- as opposed to
 $\mathcal{N}(0,1)$-distributed disturbances, and under larger sample
 size scenarios.
@@ -966,7 +966,7 @@ We ran an additional simulation to explore the potential of robust
 polynomial regression to mitigate influence, as discussed in
 \S~\ref{sec:test-hypoth-no} above, while adding flexibility
 to the specification of the $Y_{C}$ on $R$ regression.
-We compared limitless RD analysis, with $\mu_{\bm{\beta}}$ a polynomial in $R$ with
+We compared limitless regression discontinuity analysis, with $\mu_{\bm{\beta}}$ a polynomial in $R$ with
 degree 1, 2, 3, or 4, to analogous estimates from OLS.
 In the OLS regressions, we followed the advice of \citet[e.g.][p. 318]{lee2010regression} and
 included interactions between the $R$-polynomial and $Z$.
