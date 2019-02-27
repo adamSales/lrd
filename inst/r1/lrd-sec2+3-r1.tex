@@ -120,7 +120,7 @@ However, these equivalences do not necessarily extend to estimation
 strategies outside of OLS, such as the robust estimators of
 \S~\ref{sec:robustFitters} below.)
 
-\subsubsection{Fuzzy Regression Discontinuity} \label{sec:fuzzy-regr-disc}
+\subsubsection{Addressing the Wald interval's shortcomings for fuzzy RDDs} \label{sec:fuzzy-regr-disc}
 RDDs susceptible to non-compliance---where subjects' actual
 treatments may differ from $Z$--- are called ``fuzzy.''
 In these cases, let $D$ indicate whether treatment was actually
@@ -149,9 +149,7 @@ its value to a standard normal distribution.
 (The only difference between hypothesis testing for a ``strict'' RDD, one
 with full compliance, versus a fuzzy RDD, is in the formulation of
 hypothesis $H$, and the construction of $Y_H$---the rest of the
-process remains unchanged [\citealp{rosenbaum:1996:onAIR}].)
-
-As compared to Wald-type
+process remains unchanged [\citealp{rosenbaum:1996:onAIR}].)  As compared to Wald-type
 confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
 \mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
 hypothesis independent quantity, under partial compliance this iterative method
