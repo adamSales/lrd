@@ -55,7 +55,7 @@ first adjusting outcomes for $R$ and then testing hypotheses using a test
 statistic that contrasts treated and untreated subjects.
 However, the OLS estimator may be restated in the manner of
 \S~\ref{sec:using-eqref-test}---a more involved procedure, to be sure,
-but one with a number of conceptual and statistical advantages.
+but one with an important advantage to be described in \S~\ref{sec:fuzzy-regr-disc}.
 Consider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
 Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
@@ -123,7 +123,7 @@ However, these equivalences do not necessarily extend to estimation
 strategies outside of OLS, such as the robust estimators of
 \S~\ref{sec:robustFitters} below.)
 
-\subsubsection{Fuzzy Regression Discontinuity}
+\subsubsection{Fuzzy Regression Discontinuity} \label{sec:fuzzy-regr-disc}
 RDDs susceptible to non-compliance---where subjects' actual
 treatments may differ from $Z$--- are called ``fuzzy.''
 In these cases, let $D$ indicate whether treatment was actually
