@@ -353,7 +353,7 @@ This liability is already
 in evidence with $J=1$, the linear specification, where leverage
 increases with the square of $r -\bar{r}$.  With an analysis sample
 of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
-$\mathcal{W} \ni c$, if $\mathcal{W}$ is slightly too wide then the
+$\mathcal{W}$ containing  $c$, if $\mathcal{W}$ is slightly too wide then the
 sample is contaminated near its outer boundaries, precisely
 where leverage is at its highest.
 In order to identify leverage points that are also influential,
@@ -412,14 +412,14 @@ The following section will discuss an alternate remedy.
 % % $\EE (Y_{C}| R)$, nor to make further distributional assumptions on
 % % the disturbances.
 
-The analysis of Hurricane Maria's death toll in \S~\ref{sec:maria}
-treated an RDD as analogous to a randomized experiment by following a
-two-step procedure: first, modeling the non-random component of
-outcomes $Y$, and then treating the residuals as ignorable, \emph{vis
-  a vis} treatment assignment $Z$.
+The analysis of \S~\ref{sec:maria}
+mounted an analogy between the Hurricane Maria RDD and a hypothetical
+RCT, but only after a preparatory step of modeling and removing the
+outcomes' non-random component.
 In \S~\ref{sec:maria}, these two steps used two different
 datasets---we regressed $Y$ on $R$ using data from years prior to
-2017, when Maria hit, and used 2017 data to estimate effects.
+2017, when Maria hit, and then used 2017 data to estimate effects, treating residuals as ignorable, \emph{vis
+  a vis} treatment assignment $Z$.
 This luxury is unavailable in the typical RDD, in which both steps
 must use the same data, as in \S~\ref{sec:robust-analys-covar}.
 This section will describe a generalization of the method in
@@ -490,8 +490,7 @@ the variables comprising $\mathbf{A}$ are jointly
 S-ancillary, just as $\mathbf{A}^{\dagger}$ was seen to be
 in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
-inferences. \marginpar{I changed ``Neyman'' to ``Fisher''
-  here. AS}
+inferences. 
 
 
 \subsection{Inference About the Treatment Effect}
@@ -528,18 +527,21 @@ $\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
 the t-ratio comparing $\hat{\gamma}_{H}$ to
 $\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
 t-statistic with covariance adjustment for $R$, as in \S~\ref{sec:sandwich}.
-Iterative testing is facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and $\mathbf{z}$
-with offset variable $\mathbf{d}\tau_{0}$; then only the offset needs to
-be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 
-The results of these hypothesis tests imply point and interval
-estimates for $\tau$, as described in
-\S~\ref{sec:robust-analys-covar}.
+As in \S~\ref{sec:robust-analys-covar}, the corresponding
+M-estimate of the CACE is the value of $\tau_{0}$ making
+$\hat{\gamma}_{H}/\text{SE}_{s}(\hat{\gamma}_{H})$ equal 0; those $\tau_{0}$ for
+which $H: \tau = \tau_{0}$ is not rejected at level $\alpha$
+constitute a $100(1-\alpha)\%$ confidence interval.  Iteration is
+facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and
+$\mathbf{z}$ with offset variable $\mathbf{d}\tau_{0}$; then only the
+offset needs to be modified to test $H: \tau = \tau_{1}$,  
+$\tau_{1}\neq \tau_{0}$.
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
 Subsets of the analysis sample that do not satisfy Residual Ignorability
- can undercut the validity of an RDD analysis, provided
-that these subsets include are influential observations.
+ can undercut the validity of an RDD analysis, \marginpar{wc} provided
+that these subsets include influential observations. 
 If such moderate sample contamination may be present --- specifically, contamination of
 a $O(n^{-1/2})$-sized
 share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
