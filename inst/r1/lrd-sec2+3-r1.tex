@@ -110,13 +110,14 @@ $100(1-\alpha)\%$ confidence interval for $\tau$ of the Rao score type
 $t_{u}(\mathbf{y}-c\mathbf{d}, \mathbf{z}) = 0$, which can be seen to
 be unique, is an M-estimate of $\tau$ under both the classical
 \textsc{ancova} model and various of its generalizations.
-In fact, the estimate for $\tau$ corresponding to these statistical tests is
+(In fact, the estimate for $\tau$ corresponding to these statistical tests is
 algebraically equal to the $Z$-coefficient from an OLS estimate of
 \eqref{eq:classicOLS}, and the two-sided 95\% confidence interval induced in this
 manner is the familiar
 $\hat{\tau} \pm 1.96\, \mathrm{SE}(\tau)$.
-These equivalences, however, do not necessarily extend to estimation
-strategies outside of OLS.
+However, these equivalences do not necessarily extend to estimation
+strategies outside of OLS, such as the robust estimators of
+\S~\ref{sec:robustFitters} below.)
 
 \subsubsection{Fuzzy Regression Discontinuity}
 So-called ``Fuzzy'' RD describes non-compliance---when subjects' actual
@@ -532,7 +533,7 @@ be modified to test $H: Y_{T} = Y_{C} +  \tau D_{T}$ for a new $\tau$.
 
 The results of these hypothesis tests imply point and interval
 estimates for $\tau$, as described in
-\S~ref{sec:robust-analys-covar}.
+\S~\ref{sec:robust-analys-covar}.
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
 Subsets of the analysis sample that do not satisfy Residual Ignorability
