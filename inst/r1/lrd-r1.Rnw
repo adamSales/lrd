@@ -557,11 +557,9 @@ also be obtained in this way. Rather that pursuing this approach
 further, we now turn to developing a residual ignorability-based
 procedure using M-estimation \citep[][also called ``generalized
 estimating equations'' or ``generalized method of
-moments'']{huber1964robust,stefanski2002calculus}.  Although less
-equipped for analyses with small $n$s, this approach is less rigid
-about the form of the treatment effect, and more adaptable to the
-common scenario calling for simultaneous estimation of treatment
-effects and parameters governing residualization.%$(y,r) \mapsto\dt[]{y}{r}$.
+moments'']{huber1964robust,stefanski2002calculus}, which is better 
+adapted to data scenarios without the luxury of separate samples for estimation of
+trends in the absence of treatment and of treatment effects themselves.
 
 
 \input{lrd-sec2+3-r1}
