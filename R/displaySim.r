@@ -11,6 +11,28 @@ dgms <- function(tp){
     abline(v=0,lty=2)
 }
 
+dgms <- function(){
+  lin <- function(x) 0.5*x
+  as <- function(x) ifelse(abs(x)>0.5,3*x+sign(x)*(0.5-3)*0.5,lin(x))
+  p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))+xlim(-1,1)+
+    theme(axis.line=element_blank(),
+      axis.text.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks=element_blank(),
+      #axis.title.x='$r$',
+      #axis.title.y='$\\EE[Y|R=r]$',
+      legend.position="none",
+      ## panel.background=element_blank(),
+      ## panel.border=element_blank(),
+      ## panel.grid.major=element_blank(),
+      ## panel.grid.minor=element_blank(),
+      ## plot.background=element_blank()
+    )+xlab('$r$')+ylab('$\\EE[Y|R=r]$')
+
+  gridExtra::grid.arrange(p+stat_function(fun=lin)+ggtitle('Linear'),
+    p+stat_function(fun=as)+ggtitle('Anti-Symmetric'),
+    p+stat_function(fun=mu4)+ggtitle('Sine'),nrow=1)
+}
 
 resTab <- function(run,full=FALSE){
     llr <- run[c(nrow(run)-1,nrow(run)),]
@@ -48,8 +70,18 @@ resTab <- function(run,full=FALSE){
         bias=rowMeans(rbind(ests)),
         RMSE=sqrt(rowMeans(rbind(ests^2))))
 
-  sapply(c('sh','ik','ll'),function(mm) tabFun(run[grep(paste0(mm,'.est'),rownames(run)),]),
+  tabFunP <- function(ps)
+    apply(rbind(ps),1,function(x) mean(x<0.05,na.rm=TRUE))
+
+
+  out <- sapply(c('sh','ik','ll'),function(mm) tabFun(run[grep(paste0(mm,'.est'),rownames(run)),]),
     simplify=FALSE)
+
+  if(full) out <- sapply(c('sh','ik','ll'),
+    function(mm) rbind(out[[mm]],level= tabFunP(run[grep(paste0(mm,'.p'),rownames(run)),])),
+    simplify=FALSE)
+
+  out
 }
 
 #' @export
@@ -72,12 +104,14 @@ prntTab <- function(totalPoly,maxDeg=4,full=TRUE,md=FALSE){
     }
     for(dgm in c('lin','antiSym','wass')){
         tab <- rbind(tab,ctab(paste0(dgm,'_t'),full))
-        if(full) tab <- rbind(tab,ctab(paste0(dgm,'_norm'),full))
+        if(full) if(paste0(dgm,'_norm')%in%names(totalPoly)) tab <- rbind(tab,ctab(paste0(dgm,'_norm'),full))
     }
     if(md){
-        colnames(tab) <- c(paste('Rob, deg=',1:maxDeg),paste('OLS, deg=',1:maxDeg),'Loc.Lin')
-        rownames(tab) <- paste(rep(c('lin','antiSym','oneSide'),each=nrow(tab)/6,times=2),
-                              rep(c('t err','norm err'),each=nrow(tab)/2),rownames(tab))
+        colnames(tab) <- c(paste('LRD, deg=',1:maxDeg),paste('OLS, deg=',1:maxDeg),'Loc.Lin')
+        rownames(tab) <- paste(rep(c('lin','antiSym','sine'),
+          each=nrow(tab)/sum(rownames(tab)=='bias')),#,times=2),
+          #rep(c('t err','norm err'),each=nrow(tab)/2),
+          rownames(tab))
     }
     return(tab)
 }
@@ -100,6 +134,37 @@ polyLatex <- function(tab,full,caption='',label='tab:poly'){
         if(rr==1) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Linear\\end{sideways}','Linear'),'}')
         if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
         if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','One-Side'),'}')
+        cat('&',rownames(tab)[rr],'&')
+        cat(paste(sprintf("%.2f", round(tab[rr,],2)),collapse='&'))
+        cat('\\\\ \n')
+    }
+    cat('
+ \\hline
+\\end{tabular}
+\\caption{',caption,'}
+\\label{',label,'}
+\\end{table}\n',sep='')
+
+}
+
+#' @export
+polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
+    if(NCOL(tab)!=11) stop('This only works with polynomial degree=1,...,5')
+    cat('
+        \\begin{table}[ht]
+\\centering
+\\begin{tabular}{cr|lllll|lllll|l',ifelse(full,'|llll|llll|l}','}'),'
+  \\hline \n')
+    if(full) cat('&&\\multicolumn{11}{c|}{$t_3$ Errors} &\\multicolumn{11}{c|}{$\\mathcal{N}(0,1)$ Errors} \\\\ \n')
+
+ cat('&& \\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',
+        ifelse(full,'\\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',''),'\\\\
+ \\multicolumn{2}{r|}{Polynomial Degree}&1&2&3&4&5&1&2&3&4&5&',ifelse(full,'&1&2&3&4&1&2&3&4&5&n/a','n/a'),' \\\\
+')
+    for(rr in 1:nrow(tab)){
+        if(rr==1) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Linear\\end{sideways}','Linear'),'}')
+        if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
+        if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','Sine'),'}')
         cat('&',rownames(tab)[rr],'&')
         cat(paste(sprintf("%.2f", round(tab[rr,],2)),collapse='&'))
         cat('\\\\ \n')

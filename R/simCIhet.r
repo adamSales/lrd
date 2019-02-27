@@ -272,10 +272,13 @@ $n$& Effect& Error &', paste(rep(c('Bias','Coverage','Width'),3),collapse='&'),'
 
 
 dispAllSimp <- function(res){
-  res <- lapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]))
-  tab0 <- lapply(res,function(x)
+  res <- sapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]),simplify=FALSE)
+  tab0 <- lapply(names(res),function(nn){
+    x <- res[[nn]]
+    tau <- ifelse(grepl('tau0.2',nn,fixed=TRUE),0.2,0)
     apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
-      1:2,mean))
+      1:2,mean)
+  })
 
   cond <- strsplit(names(res),'_')
   cond <- lapply(cond,function(x) gsub('err|tau','',x))

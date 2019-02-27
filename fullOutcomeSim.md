@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "26 February, 2019"
+date: "27 February, 2019"
 output: html_document
 ---
 
@@ -99,7 +99,7 @@ Here are the results, for all cases run:
 ```r
 allRes <- dispAllSimp(outcomeSim)
 rownames(allRes) <- NULL
-save(allRes,file=paste0('inst/outcomeSimResults',Sys.Date(),'.RData'))
+save(allRes,file=paste0('inst/levelSimResults',Sys.Date(),'.RData'))
 ```
 
 ###Full Results: Bias
@@ -113,8 +113,9 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>Empirical bias for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
- <thead><tr>
-<th style="text-align:left;">   </th>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
    <th style="text-align:left;"> n </th>
    <th style="text-align:left;"> error </th>
    <th style="text-align:left;"> ATE </th>
@@ -122,10 +123,11 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <th style="text-align:right;"> Limitless </th>
    <th style="text-align:right;"> Local-OLS </th>
    <th style="text-align:right;"> Permutation </th>
-  </tr></thead>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;"> 1 </td>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -134,18 +136,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 4 </td>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.21 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 7 </td>
+  <tr>
+   <td style="text-align:left;"> 7 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -154,18 +156,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.01 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 10 </td>
+  <tr>
+   <td style="text-align:left;"> 10 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.19 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 13 </td>
+  <tr>
+   <td style="text-align:left;"> 13 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -174,18 +176,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 16 </td>
+  <tr>
+   <td style="text-align:left;"> 16 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 19 </td>
+  <tr>
+   <td style="text-align:left;"> 19 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -194,18 +196,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.36 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 22 </td>
+  <tr>
+   <td style="text-align:left;"> 22 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 25 </td>
+  <tr>
+   <td style="text-align:left;"> 25 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -214,18 +216,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 28 </td>
+  <tr>
+   <td style="text-align:left;"> 28 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 31 </td>
+  <tr>
+   <td style="text-align:left;"> 31 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -234,18 +236,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 34 </td>
+  <tr>
+   <td style="text-align:left;"> 34 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 37 </td>
+  <tr>
+   <td style="text-align:left;"> 37 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -254,18 +256,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 40 </td>
+  <tr>
+   <td style="text-align:left;"> 40 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 43 </td>
+  <tr>
+   <td style="text-align:left;"> 43 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -274,18 +276,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 46 </td>
+  <tr>
+   <td style="text-align:left;"> 46 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 49 </td>
+  <tr>
+   <td style="text-align:left;"> 49 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -294,18 +296,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 52 </td>
+  <tr>
+   <td style="text-align:left;"> 52 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 55 </td>
+  <tr>
+   <td style="text-align:left;"> 55 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -314,18 +316,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 58 </td>
+  <tr>
+   <td style="text-align:left;"> 58 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.58 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.38 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 61 </td>
+  <tr>
+   <td style="text-align:left;"> 61 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -334,18 +336,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.38 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 64 </td>
+  <tr>
+   <td style="text-align:left;"> 64 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 67 </td>
+  <tr>
+   <td style="text-align:left;"> 67 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -354,15 +356,15 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.38 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 70 </td>
+  <tr>
+   <td style="text-align:left;"> 70 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.58 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.38 </td>
   </tr>
 </tbody>
 </table>
@@ -378,8 +380,9 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>Empirical 95% confidence interval coverage for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
- <thead><tr>
-<th style="text-align:left;">   </th>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
    <th style="text-align:left;"> n </th>
    <th style="text-align:left;"> error </th>
    <th style="text-align:left;"> ATE </th>
@@ -387,10 +390,11 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <th style="text-align:right;"> Limitless </th>
    <th style="text-align:right;"> Local-OLS </th>
    <th style="text-align:right;"> Permutation </th>
-  </tr></thead>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;"> 2 </td>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -399,18 +403,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.50 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 5 </td>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.88 </td>
-   <td style="text-align:right;"> 0.90 </td>
-   <td style="text-align:right;"> 0.15 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.49 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 8 </td>
+  <tr>
+   <td style="text-align:left;"> 8 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -419,18 +423,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.65 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 11 </td>
+  <tr>
+   <td style="text-align:left;"> 11 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.91 </td>
-   <td style="text-align:right;"> 0.91 </td>
-   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.66 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 14 </td>
+  <tr>
+   <td style="text-align:left;"> 14 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -439,18 +443,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.64 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 17 </td>
+  <tr>
+   <td style="text-align:left;"> 17 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.91 </td>
-   <td style="text-align:right;"> 0.91 </td>
-   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.64 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 20 </td>
+  <tr>
+   <td style="text-align:left;"> 20 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -459,18 +463,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.76 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 23 </td>
+  <tr>
+   <td style="text-align:left;"> 23 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.91 </td>
-   <td style="text-align:right;"> 0.91 </td>
-   <td style="text-align:right;"> 0.47 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.75 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 26 </td>
+  <tr>
+   <td style="text-align:left;"> 26 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -479,18 +483,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 29 </td>
+  <tr>
+   <td style="text-align:left;"> 29 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.70 </td>
-   <td style="text-align:right;"> 0.79 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 32 </td>
+  <tr>
+   <td style="text-align:left;"> 32 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -499,18 +503,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.03 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 35 </td>
+  <tr>
+   <td style="text-align:left;"> 35 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.80 </td>
-   <td style="text-align:right;"> 0.86 </td>
-   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.04 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 38 </td>
+  <tr>
+   <td style="text-align:left;"> 38 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -519,18 +523,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.03 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 41 </td>
+  <tr>
+   <td style="text-align:left;"> 41 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.82 </td>
-   <td style="text-align:right;"> 0.82 </td>
-   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.04 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 44 </td>
+  <tr>
+   <td style="text-align:left;"> 44 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -539,18 +543,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.13 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 47 </td>
+  <tr>
+   <td style="text-align:left;"> 47 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.87 </td>
-   <td style="text-align:right;"> 0.86 </td>
-   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.13 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 50 </td>
+  <tr>
+   <td style="text-align:left;"> 50 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -559,18 +563,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 53 </td>
+  <tr>
+   <td style="text-align:left;"> 53 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.01 </td>
-   <td style="text-align:right;"> 0.08 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 56 </td>
+  <tr>
+   <td style="text-align:left;"> 56 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -579,18 +583,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 59 </td>
+  <tr>
+   <td style="text-align:left;"> 59 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 62 </td>
+  <tr>
+   <td style="text-align:left;"> 62 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -599,18 +603,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 65 </td>
+  <tr>
+   <td style="text-align:left;"> 65 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.10 </td>
-   <td style="text-align:right;"> 0.08 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 68 </td>
+  <tr>
+   <td style="text-align:left;"> 68 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -619,31 +623,33 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 71 </td>
+  <tr>
+   <td style="text-align:left;"> 71 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.24 </td>
-   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
 </tbody>
 </table>
 
+###95% CI Width
 
 ```r
-kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias and 95% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% confidence interval width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
   kable_styling(full_width=FALSE)%>%
 #  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
   collapse_rows(columns = 1:4)#, valign = "center")
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Empirical bias and 95% confidence interval coverage and width for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
- <thead><tr>
-<th style="text-align:left;">   </th>
+<caption>Empirical 95% confidence interval width for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
    <th style="text-align:left;"> n </th>
    <th style="text-align:left;"> error </th>
    <th style="text-align:left;"> ATE </th>
@@ -651,10 +657,11 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <th style="text-align:right;"> Limitless </th>
    <th style="text-align:right;"> Local-OLS </th>
    <th style="text-align:right;"> Permutation </th>
-  </tr></thead>
+  </tr>
+ </thead>
 <tbody>
-<tr>
-<td style="text-align:left;"> 3 </td>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -663,8 +670,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 1.66 </td>
    <td style="text-align:right;"> 0.74 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 6 </td>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -673,8 +680,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 1.66 </td>
    <td style="text-align:right;"> 0.74 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 9 </td>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -683,8 +690,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 2.04 </td>
    <td style="text-align:right;"> 0.95 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 12 </td>
+  <tr>
+   <td style="text-align:left;"> 12 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -693,8 +700,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 2.05 </td>
    <td style="text-align:right;"> 0.95 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 15 </td>
+  <tr>
+   <td style="text-align:left;"> 15 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -703,8 +710,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 1.69 </td>
    <td style="text-align:right;"> 0.91 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 18 </td>
+  <tr>
+   <td style="text-align:left;"> 18 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -713,8 +720,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 1.68 </td>
    <td style="text-align:right;"> 0.90 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 21 </td>
+  <tr>
+   <td style="text-align:left;"> 21 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -723,8 +730,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 2.05 </td>
    <td style="text-align:right;"> 1.10 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 24 </td>
+  <tr>
+   <td style="text-align:left;"> 24 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -733,8 +740,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 2.05 </td>
    <td style="text-align:right;"> 1.10 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 27 </td>
+  <tr>
+   <td style="text-align:left;"> 27 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -743,8 +750,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.74 </td>
    <td style="text-align:right;"> 0.29 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 30 </td>
+  <tr>
+   <td style="text-align:left;"> 30 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -753,8 +760,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.74 </td>
    <td style="text-align:right;"> 0.30 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 33 </td>
+  <tr>
+   <td style="text-align:left;"> 33 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -763,8 +770,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.91 </td>
    <td style="text-align:right;"> 0.38 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 36 </td>
+  <tr>
+   <td style="text-align:left;"> 36 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -773,8 +780,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.91 </td>
    <td style="text-align:right;"> 0.38 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 39 </td>
+  <tr>
+   <td style="text-align:left;"> 39 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -783,8 +790,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.75 </td>
    <td style="text-align:right;"> 0.39 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 42 </td>
+  <tr>
+   <td style="text-align:left;"> 42 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -793,8 +800,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.75 </td>
    <td style="text-align:right;"> 0.39 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 45 </td>
+  <tr>
+   <td style="text-align:left;"> 45 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -803,8 +810,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.91 </td>
    <td style="text-align:right;"> 0.47 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 48 </td>
+  <tr>
+   <td style="text-align:left;"> 48 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -813,8 +820,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.91 </td>
    <td style="text-align:right;"> 0.47 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 51 </td>
+  <tr>
+   <td style="text-align:left;"> 51 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
    <td style="text-align:left;"> 0 </td>
@@ -823,8 +830,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.23 </td>
    <td style="text-align:right;"> 0.09 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 54 </td>
+  <tr>
+   <td style="text-align:left;"> 54 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -833,8 +840,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.23 </td>
    <td style="text-align:right;"> 0.09 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 57 </td>
+  <tr>
+   <td style="text-align:left;"> 57 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -843,8 +850,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.29 </td>
    <td style="text-align:right;"> 0.11 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 60 </td>
+  <tr>
+   <td style="text-align:left;"> 60 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -853,8 +860,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.29 </td>
    <td style="text-align:right;"> 0.11 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 63 </td>
+  <tr>
+   <td style="text-align:left;"> 63 </td>
    
    <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
    <td style="text-align:left;"> 0 </td>
@@ -863,8 +870,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.24 </td>
    <td style="text-align:right;"> 0.12 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 66 </td>
+  <tr>
+   <td style="text-align:left;"> 66 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -873,8 +880,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.24 </td>
    <td style="text-align:right;"> 0.12 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 69 </td>
+  <tr>
+   <td style="text-align:left;"> 69 </td>
    
    
    <td style="text-align:left;"> 0 </td>
@@ -883,8 +890,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical bias an
    <td style="text-align:right;"> 0.29 </td>
    <td style="text-align:right;"> 0.15 </td>
   </tr>
-<tr>
-<td style="text-align:left;"> 72 </td>
+  <tr>
+   <td style="text-align:left;"> 72 </td>
    
    
    <td style="text-align:left;"> 0.2 </td>
@@ -908,14 +915,16 @@ if (nreps) {
 
 
 set.seed(201609)
-st2 <- system.time(totalPoly <- totalPolySim(nreps))
-save(totalPoly,file="dataResults/totalPolySim.RData")
+st2 <- system.time(totalPoly <- totalPolySim(nreps,cl))
+save(totalPoly,file=paste0("inst/totalPolySim",Sys.Date(),".RData"))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='dataResults/totalPolySim-runtime.txt', append=TRUE)
 } else{
-    load('dataResults/totalPolySim.RData')
+  psims <- sort(grep('totalPolySim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',psims[1]))
 }
 ```
 
@@ -962,32 +971,21 @@ sessionInfo()
 ## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
-## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] rmarkdown_1.7      lrd_0.0.2.9000     kableExtra_0.6.1  
-##  [4] knitr_1.17         nnet_7.3-12        RItools_0.2-0.9001
-##  [7] SparseM_1.77       rdd_0.57           Formula_1.2-1     
-## [10] AER_1.2-4          survival_2.41-3    car_2.1-3         
-## [13] lmtest_0.9-34      zoo_1.7-13         sandwich_2.4-0    
-## [16] robustbase_0.93-0 
+## [1] kableExtra_1.0.1 knitr_1.21      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] splines_3.4.4      lattice_0.20-35    colorspace_1.2-6  
-##  [4] viridisLite_0.2.0  htmltools_0.3.5    yaml_2.1.13       
-##  [7] mgcv_1.8-15        XML_3.98-1.5       rlang_0.1.2       
-## [10] nloptr_1.0.4       pillar_1.1.0       foreign_0.8-69    
-## [13] selectr_0.3-1      plyr_1.8.4         stringr_1.2.0     
-## [16] MatrixModels_0.4-1 munsell_0.4.3      svd_0.4.1         
-## [19] rvest_0.3.2        evaluate_0.10      quantreg_5.29     
-## [22] pbkrtest_0.4-6     highr_0.6          DEoptimR_1.0-8    
-## [25] Rcpp_0.12.13       xtable_1.8-2       readr_1.1.1       
-## [28] backports_1.1.2    scales_0.4.1       abind_1.4-5       
-## [31] lme4_1.1-12        hms_0.3            digest_0.6.10     
-## [34] stringi_1.1.1      grid_3.4.4         rprojroot_1.2     
-## [37] tools_3.4.4        magrittr_1.5       tibble_1.4.2      
-## [40] MASS_7.3-49        Matrix_1.2-12      xml2_1.1.1        
-## [43] minqa_1.2.4        httr_1.2.1         R6_2.1.2          
-## [46] nlme_3.1-131.1     compiler_3.4.4
+##  [1] Rcpp_0.12.13      rstudioapi_0.6    xml2_1.1.1       
+##  [4] magrittr_1.5      hms_0.3           rvest_0.3.2      
+##  [7] munsell_0.4.3     viridisLite_0.2.0 colorspace_1.2-6 
+## [10] R6_2.1.2          rlang_0.1.2       highr_0.6        
+## [13] plyr_1.8.4        stringr_1.2.0     httr_1.2.1       
+## [16] tools_3.4.4       webshot_0.5.1     xfun_0.5         
+## [19] selectr_0.3-1     htmltools_0.3.5   digest_0.6.10    
+## [22] rprojroot_1.2     tibble_1.4.2      readr_1.1.1      
+## [25] glue_1.1.1        evaluate_0.10     rmarkdown_1.7    
+## [28] stringi_1.1.1     compiler_3.4.4    pillar_1.1.0     
+## [31] scales_0.4.1      backports_1.1.2   XML_3.98-1.5
 ```

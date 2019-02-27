@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "17 November, 2017"
+date: "27 February, 2019"
 output: html_document
 ---
 
@@ -11,8 +11,12 @@ General dependencies.
 
 ```r
 library('knitr')
-library('lrd')
+#library('lrd')
 library('kableExtra')
+source('R/simCIhet.r')
+source('R/functions.r')
+source('R/ddsandwich.R')
+source('R/displaySim.r')
 ```
 
 
@@ -25,6 +29,16 @@ variable should have been set to a positive integer before initiating this scrip
 ##Level/Power Simulation
 The following code (optionally, if `nreps>0`) runs the simulation
 reported in Table 3 of "Limitless Regression Discontinuity"
+
+To run the simulations in parallel, using the `parallel` package in
+`R`,
+register a cluster, called `cl` with the desired number of nodes, with
+code similar to the following:
+
+```r
+library(parallel)
+cl <- makeCluster(5)
+```
 
 
 ```r
@@ -44,149 +58,852 @@ library('RItools')
 library('sandwich')
 library('nnet')
 
+if(require('parallel')&exists('cl')&inherits(cl,"cluster")){
+  clusterEvalQ(cl,{
+             library('robustbase')
+             library('rdd')
+             library('RItools')
+             library('sandwich')
+             library('nnet')
+             source('R/functions.r')
+             source('R/simCIhet.r')
+             })
+} else cl <- NULL
+
 set.seed(201609)
-st <- system.time(outcomeSim <- totalOutcomeSim(nreps))
-save(outcomeSim, file="dataResults/outcomeSim.RData")
+st <- system.time(outcomeSim <- totalOutcomeSim(nrep,cl))
+save(outcomeSim, file=paste0('inst/outcomeSim',Sys.Date(),'.RData'))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='dataResults/fullOutcomeSim-runtime.txt', append=TRUE)
-} else load('dataResults/outcomeSim.RData')
+} else{ ### load the most recent simulation
+  sims <- sort(grep('outcomeSim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',sims[1]))
+}
 ```
 
 This code creates Table 3:
 
 ```r
-levTab <- simlevels(outcomeSim)
-powTab <-simpower(outcomeSim)
 capture.output({
- prntOutcomeSim(levTab=levTab,powTab=powTab,
-                caption= paste('Proportion of ',ncol(outcomeSim[[1]]),' simulations resulting in a p-value below $\\alpha=0.05$ using either permutation tests, limitless or local OLS methods. When the treatment effect $\tau$ is zero (left) these are empirical estimates of size; otherwise (right), they are estimates of power with a treatment effect of 0.2.'),
-                label='tab:level')
-},file="tab-levelSimulation.tex")
+  displayCIsimHet(outcomeSim,tau=0,
+    caption=paste('Empirical bias and 95\\% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    label='tab:level')
+  },file="inst/r1/tab-levelSimulation.tex")
 ```
-Here are the results, first for the empirical size of $\alpha=0.05$
-hypothesis tests:
+Here are the results, for all cases run:
+
 
 ```r
-rownames(levTab) <- rep(c('N(0,1) error','$t_3$ error'),3)
-colnames(levTab) <- c('Permutation','Limitless','Local OLS')
-kable(levTab,caption = 'Empirical size for hypothesis tests',digits = 2,format='html')%>%
-    kable_styling(full_width=FALSE)%>%
-    group_rows("n=50",1,2)%>%group_rows("n=250",3,4)%>%group_rows("n=2500",5,6)
+allRes <- dispAllSimp(outcomeSim)
+rownames(allRes) <- NULL
+save(allRes,file=paste0('inst/levelSimResults',Sys.Date(),'.RData'))
+```
+
+###Full Results: Bias
+
+```r
+kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Empirical size for hypothesis tests</caption>
- <thead><tr>
-<th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Permutation </th>
+<caption>Empirical bias for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> n </th>
+   <th style="text-align:left;"> error </th>
+   <th style="text-align:left;"> ATE </th>
+   <th style="text-align:left;"> TE randomness </th>
    <th style="text-align:right;"> Limitless </th>
-   <th style="text-align:right;"> Local OLS </th>
-  </tr></thead>
+   <th style="text-align:right;"> Local-OLS </th>
+   <th style="text-align:right;"> Permutation </th>
+  </tr>
+ </thead>
 <tbody>
-<tr grouplength="2"><td colspan="4" style="border-bottom: 1px solid;"><strong>n=50</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> N(0,1) error </td>
-   <td style="text-align:right;"> 0.14 </td>
-   <td style="text-align:right;"> 0.07 </td>
-   <td style="text-align:right;"> 0.07 </td>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> $t_3$ error </td>
-   <td style="text-align:right;"> 0.10 </td>
-   <td style="text-align:right;"> 0.07 </td>
-   <td style="text-align:right;"> 0.06 </td>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr grouplength="2"><td colspan="4" style="border-bottom: 1px solid;"><strong>n=250</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> N(0,1) error </td>
-   <td style="text-align:right;"> 0.48 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
+  <tr>
+   <td style="text-align:left;"> 7 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> $t_3$ error </td>
-   <td style="text-align:right;"> 0.34 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
+  <tr>
+   <td style="text-align:left;"> 10 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr grouplength="2"><td colspan="4" style="border-bottom: 1px solid;"><strong>n=2500</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1"> N(0,1) error </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
+  <tr>
+   <td style="text-align:left;"> 13 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1"> $t_3$ error </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
+  <tr>
+   <td style="text-align:left;"> 16 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 19 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.36 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 22 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 25 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 28 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 31 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 34 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 37 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 40 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 43 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 46 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 49 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 52 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 55 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 58 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 61 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 64 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.37 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 67 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 70 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.38 </td>
   </tr>
 </tbody>
 </table>
 
-Here are the results for power, when the treatment effect is 0.2:
+###95% CI Coverage
 
 ```r
-rownames(powTab) <- rep(c('N(0,1) error','$t_3$ error'),3)
-colnames(powTab) <- c('Permutation','Limitless','Local OLS')
-kable(powTab,caption = 'Empirical power for hypothesis tests, treatment effect =0.2',digits = 2,format='html')%>%
-    kable_styling(full_width=FALSE)%>%
-    group_rows("n=50",1,2)%>%group_rows("n=250",3,4)%>%group_rows("n=2500",5,6)
+kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% confidence interval coverage for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Empirical power for hypothesis tests, treatment effect =0.2</caption>
- <thead><tr>
-<th style="text-align:left;">   </th>
-   <th style="text-align:right;"> Permutation </th>
+<caption>Empirical 95% confidence interval coverage for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> n </th>
+   <th style="text-align:left;"> error </th>
+   <th style="text-align:left;"> ATE </th>
+   <th style="text-align:left;"> TE randomness </th>
    <th style="text-align:right;"> Limitless </th>
-   <th style="text-align:right;"> Local OLS </th>
-  </tr></thead>
+   <th style="text-align:right;"> Local-OLS </th>
+   <th style="text-align:right;"> Permutation </th>
+  </tr>
+ </thead>
 <tbody>
-<tr grouplength="2"><td colspan="4" style="border-bottom: 1px solid;"><strong>n=50</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> N(0,1) error </td>
-   <td style="text-align:right;"> 0.32 </td>
-   <td style="text-align:right;"> 0.08 </td>
-   <td style="text-align:right;"> 0.08 </td>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.50 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> $t_3$ error </td>
-   <td style="text-align:right;"> 0.22 </td>
-   <td style="text-align:right;"> 0.08 </td>
-   <td style="text-align:right;"> 0.07 </td>
-  </tr>
-<tr grouplength="2"><td colspan="4" style="border-bottom: 1px solid;"><strong>n=250</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> N(0,1) error </td>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;"> 0.12 </td>
-   <td style="text-align:right;"> 0.12 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.49 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> $t_3$ error </td>
-   <td style="text-align:right;"> 0.79 </td>
-   <td style="text-align:right;"> 0.10 </td>
-   <td style="text-align:right;"> 0.08 </td>
+  <tr>
+   <td style="text-align:left;"> 8 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.65 </td>
   </tr>
-<tr grouplength="2"><td colspan="4" style="border-bottom: 1px solid;"><strong>n=2500</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1"> N(0,1) error </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 0.67 </td>
+  <tr>
+   <td style="text-align:left;"> 11 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.66 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentLevel="1"> $t_3$ error </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 0.50 </td>
-   <td style="text-align:right;"> 0.29 </td>
+  <tr>
+   <td style="text-align:left;"> 14 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.64 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 17 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.64 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 20 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.76 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 23 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.75 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 26 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 29 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 32 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.03 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 35 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 38 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.03 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 41 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 44 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.13 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 47 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.13 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.96 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 53 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 56 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 59 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 62 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 65 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 68 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 71 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.00 </td>
   </tr>
 </tbody>
 </table>
+
+###95% CI Width
+
+```r
+kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% confidence interval width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
+```
+
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>Empirical 95% confidence interval width for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> n </th>
+   <th style="text-align:left;"> error </th>
+   <th style="text-align:left;"> ATE </th>
+   <th style="text-align:left;"> TE randomness </th>
+   <th style="text-align:right;"> Limitless </th>
+   <th style="text-align:right;"> Local-OLS </th>
+   <th style="text-align:right;"> Permutation </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 1.41 </td>
+   <td style="text-align:right;"> 1.66 </td>
+   <td style="text-align:right;"> 0.74 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 1.40 </td>
+   <td style="text-align:right;"> 1.66 </td>
+   <td style="text-align:right;"> 0.74 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 1.80 </td>
+   <td style="text-align:right;"> 2.04 </td>
+   <td style="text-align:right;"> 0.95 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 12 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 1.82 </td>
+   <td style="text-align:right;"> 2.05 </td>
+   <td style="text-align:right;"> 0.95 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 15 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 1.75 </td>
+   <td style="text-align:right;"> 1.69 </td>
+   <td style="text-align:right;"> 0.91 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 18 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 1.74 </td>
+   <td style="text-align:right;"> 1.68 </td>
+   <td style="text-align:right;"> 0.90 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 21 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 2.11 </td>
+   <td style="text-align:right;"> 2.05 </td>
+   <td style="text-align:right;"> 1.10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 24 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 2.11 </td>
+   <td style="text-align:right;"> 2.05 </td>
+   <td style="text-align:right;"> 1.10 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 27 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.74 </td>
+   <td style="text-align:right;"> 0.29 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 30 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.57 </td>
+   <td style="text-align:right;"> 0.74 </td>
+   <td style="text-align:right;"> 0.30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 33 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.73 </td>
+   <td style="text-align:right;"> 0.91 </td>
+   <td style="text-align:right;"> 0.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 36 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.73 </td>
+   <td style="text-align:right;"> 0.91 </td>
+   <td style="text-align:right;"> 0.38 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 39 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.77 </td>
+   <td style="text-align:right;"> 0.75 </td>
+   <td style="text-align:right;"> 0.39 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 42 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.77 </td>
+   <td style="text-align:right;"> 0.75 </td>
+   <td style="text-align:right;"> 0.39 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 45 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.91 </td>
+   <td style="text-align:right;"> 0.47 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 48 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.91 </td>
+   <td style="text-align:right;"> 0.47 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 51 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.09 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 54 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.09 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 57 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.22 </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 60 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 0.22 </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.11 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 63 </td>
+   
+   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.24 </td>
+   <td style="text-align:right;"> 0.24 </td>
+   <td style="text-align:right;"> 0.12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 66 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 0.24 </td>
+   <td style="text-align:right;"> 0.24 </td>
+   <td style="text-align:right;"> 0.12 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 69 </td>
+   
+   
+   <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.15 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 72 </td>
+   
+   
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.29 </td>
+   <td style="text-align:right;"> 0.15 </td>
+  </tr>
+</tbody>
+</table>
+
+
 
 ##Polynomial Simulation
 
@@ -205,14 +922,16 @@ if (nreps) {
 
 
 set.seed(201609)
-st2 <- system.time(totalPoly <- totalPolySim(nreps))
-save(totalPoly,file="dataResults/totalPolySim.RData")
+st2 <- system.time(totalPoly <- totalPolySim(nreps,cl))
+save(totalPoly,file=paste0("inst/totalPolySim",Sys.Date(),".RData"))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='dataResults/totalPolySim-runtime.txt', append=TRUE)
 } else{
-    load('dataResults/totalPolySim.RData')
+  psims <- sort(grep('totalPolySim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',psims[1]))
 }
 ```
 
@@ -222,342 +941,182 @@ results for normally-distributed errors.
 
 
 ```r
-tab.paper <- prntTab(totalPoly,full=FALSE,md=FALSE)
+tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
-polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using robust regression and OLS, using all the data, and local linear regression with a triangular kernel and the \\citet{imbens2012optimal} bandwidth. The sample size for all runs was 500, the error distribution was $t_3$, and there was no treatment effect. The data generating models are those depicted in Figure \\ref{fig:dgms}.'),label='tab:poly'),
-    file="tab-polynomialSimulation.tex")
-tab <- prntTab(totalPoly,full=TRUE,md=TRUE)
-rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
-colnames(tab) <- c(rep(paste0('deg=',1:4),2),'')
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
+    file="inst/r1/tab-polynomialSimulation.tex")
+
+tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
+#rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
+colnames(tab) <- gsub('(sh|ik)\\.est.','deg=',colnames(tab))#c(rep(paste0('deg=',1:4),2),'')
+colnames(tab)[ncol(tab)] <- 'n/a'
 kable(tab,format='html',caption='Full results for polynomial simulation',digits=2)%>%
-    kable_styling()%>% column_spec( 5,border_right=TRUE)%>%column_spec(9,border_right=TRUE)%>%
-        add_header_above(c(" " = 1, "Limitless" = 4, "OLS" = 4, "Loc. Lin." = 1))%>%
-            group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
-            group_rows("linear",1,4)%>%group_rows('antiSym',5,8)%>%group_rows('oneSide',9,12)%>%
-                group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
+    kable_styling()%>% column_spec( 6,border_right=TRUE)%>%column_spec(11,border_right=TRUE)%>%
+        add_header_above(c(" " = 1, "Limitless" = 5, "OLS" = 5, "Loc. Lin." = 1))%>%
+            #group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
+            group_rows("linear",1,3)%>%group_rows('antiSym',4,6)%>%group_rows('sine',7,9)#%>%
 ```
 
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>Full results for polynomial simulation</caption>
  <thead>
-<tr>
+  <tr>
 <th style="border-bottom:hidden" colspan="1"></th>
-<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="4"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">Limitless</div></th>
-<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="4"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">OLS</div></th>
-<th style="text-align:center; border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;" colspan="1"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px;">Loc. Lin.</div></th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Limitless</div></th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">OLS</div></th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Loc. Lin.</div></th>
 </tr>
 <tr>
-<th style="text-align:left;">   </th>
+   <th style="text-align:left;">   </th>
    <th style="text-align:right;"> deg=1 </th>
    <th style="text-align:right;"> deg=2 </th>
    <th style="text-align:right;"> deg=3 </th>
    <th style="text-align:right;"> deg=4 </th>
+   <th style="text-align:right;"> deg=5 </th>
    <th style="text-align:right;"> deg=1 </th>
    <th style="text-align:right;"> deg=2 </th>
    <th style="text-align:right;"> deg=3 </th>
    <th style="text-align:right;"> deg=4 </th>
-   <th style="text-align:right;">  </th>
+   <th style="text-align:right;"> deg=5 </th>
+   <th style="text-align:right;"> n/a </th>
   </tr>
-</thead>
+ </thead>
 <tbody>
-<tr grouplength="12"><td colspan="10" style="border-bottom: 1px solid;"><strong>$t_3$ Error</strong></td></tr>
-<tr grouplength="4"><td colspan="10" style="border-bottom: 1px solid;"><strong>linear</strong></td></tr>
+  <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>linear</strong></td></tr>
 <tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.07 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.22 </td>
-   <td style="text-align:right;"> 0.22 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.30 </td>
-   <td style="text-align:right;"> 0.31 </td>
-   <td style="text-align:right;"> 1.09 </td>
-   <td style="text-align:right;"> 4.75 </td>
-   <td style="text-align:right;border-right:1px solid;"> 21.85 </td>
-   <td style="text-align:right;"> 0.49 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.01 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.01 </td>
    <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> -0.01 </td>
    <td style="text-align:right;"> 0.02 </td>
-   <td style="text-align:right;"> -0.08 </td>
-   <td style="text-align:right;border-right:1px solid;"> -0.24 </td>
-   <td style="text-align:right;"> 0.00 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> sd </td>
-   <td style="text-align:right;"> 0.22 </td>
-   <td style="text-align:right;"> 0.22 </td>
    <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.30 </td>
-   <td style="text-align:right;"> 0.31 </td>
-   <td style="text-align:right;"> 1.09 </td>
-   <td style="text-align:right;"> 4.75 </td>
-   <td style="text-align:right;border-right:1px solid;"> 21.85 </td>
-   <td style="text-align:right;"> 0.49 </td>
-  </tr>
-<tr grouplength="4"><td colspan="10" style="border-bottom: 1px solid;"><strong>antiSym</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.08 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.24 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.24 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 2.72 </td>
-   <td style="text-align:right;border-right:1px solid;"> 12.70 </td>
-   <td style="text-align:right;"> 0.28 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> bias </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.16 </td>
-   <td style="text-align:right;"> 0.00 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> sd </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.24 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.24 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 2.72 </td>
-   <td style="text-align:right;border-right:1px solid;"> 12.70 </td>
-   <td style="text-align:right;"> 0.28 </td>
-  </tr>
-<tr grouplength="4"><td colspan="10" style="border-bottom: 1px solid;"><strong>oneSide</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.79 </td>
-   <td style="text-align:right;"> 0.79 </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
-   <td style="text-align:right;"> 0.54 </td>
-   <td style="text-align:right;"> 0.37 </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.07 </td>
-   <td style="text-align:right;"> 0.08 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.30 </td>
-   <td style="text-align:right;"> 0.70 </td>
-   <td style="text-align:right;"> 2.10 </td>
-   <td style="text-align:right;"> 5.16 </td>
-   <td style="text-align:right;border-right:1px solid;"> 25.45 </td>
-   <td style="text-align:right;"> 0.51 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> bias </td>
-   <td style="text-align:right;"> -0.60 </td>
-   <td style="text-align:right;"> -0.60 </td>
-   <td style="text-align:right;"> -0.02 </td>
-   <td style="text-align:right;border-right:1px solid;"> -0.02 </td>
-   <td style="text-align:right;"> -0.63 </td>
-   <td style="text-align:right;"> 1.73 </td>
-   <td style="text-align:right;"> 1.70 </td>
-   <td style="text-align:right;border-right:1px solid;"> -9.08 </td>
-   <td style="text-align:right;"> 0.00 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> sd </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.30 </td>
-   <td style="text-align:right;"> 0.31 </td>
-   <td style="text-align:right;"> 1.20 </td>
-   <td style="text-align:right;"> 4.88 </td>
-   <td style="text-align:right;border-right:1px solid;"> 23.77 </td>
-   <td style="text-align:right;"> 0.51 </td>
-  </tr>
-<tr grouplength="12"><td colspan="10" style="border-bottom: 1px solid; padding-left: 2em;" indentlevel="1"><strong>N(0,1) Error</strong></td></tr>
-<tr grouplength="4"><td colspan="10" style="border-bottom: 1px solid;"><strong>linear</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.92 </td>
-   <td style="text-align:right;"> 0.92 </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
-   <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;"> 0.77 </td>
-   <td style="text-align:right;"> 0.10 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.11 </td>
-   <td style="text-align:right;"> 0.07 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 0.25 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.25 </td>
-   <td style="text-align:right;"> 0.66 </td>
-   <td style="text-align:right;"> 1.83 </td>
-   <td style="text-align:right;"> 3.23 </td>
-   <td style="text-align:right;border-right:1px solid;"> 15.63 </td>
-   <td style="text-align:right;"> 0.30 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> bias </td>
-   <td style="text-align:right;"> -0.62 </td>
-   <td style="text-align:right;"> -0.62 </td>
-   <td style="text-align:right;"> -0.02 </td>
-   <td style="text-align:right;border-right:1px solid;"> -0.02 </td>
-   <td style="text-align:right;"> -0.63 </td>
-   <td style="text-align:right;"> 1.71 </td>
-   <td style="text-align:right;"> 1.76 </td>
-   <td style="text-align:right;border-right:1px solid;"> -9.21 </td>
+   <td style="text-align:right;border-right:1px solid;"> -1.70 </td>
    <td style="text-align:right;"> 0.01 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> sd </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.25 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.25 </td>
-   <td style="text-align:right;"> 0.19 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 2.71 </td>
-   <td style="text-align:right;border-right:1px solid;"> 12.63 </td>
-   <td style="text-align:right;"> 0.30 </td>
-  </tr>
-<tr grouplength="4"><td colspan="10" style="border-bottom: 1px solid;"><strong>antiSym</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.29 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.19 </td>
-   <td style="text-align:right;"> 0.13 </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.07 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.39 </td>
-   <td style="text-align:right;"> 0.39 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.30 </td>
-   <td style="text-align:right;"> 0.45 </td>
-   <td style="text-align:right;"> 1.41 </td>
-   <td style="text-align:right;"> 4.88 </td>
-   <td style="text-align:right;border-right:1px solid;"> 22.49 </td>
-   <td style="text-align:right;"> 0.51 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> bias </td>
-   <td style="text-align:right;"> -0.32 </td>
-   <td style="text-align:right;"> -0.32 </td>
-   <td style="text-align:right;"> -0.01 </td>
-   <td style="text-align:right;border-right:1px solid;"> -0.01 </td>
-   <td style="text-align:right;"> -0.32 </td>
-   <td style="text-align:right;"> 0.87 </td>
-   <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;border-right:1px solid;"> -4.52 </td>
-   <td style="text-align:right;"> -0.01 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1"> sd </td>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
    <td style="text-align:right;"> 0.23 </td>
    <td style="text-align:right;"> 0.23 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.30 </td>
    <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.37 </td>
+   <td style="text-align:right;"> 0.30 </td>
    <td style="text-align:right;"> 1.11 </td>
-   <td style="text-align:right;"> 4.79 </td>
-   <td style="text-align:right;border-right:1px solid;"> 22.03 </td>
-   <td style="text-align:right;"> 0.51 </td>
+   <td style="text-align:right;"> 4.68 </td>
+   <td style="text-align:right;"> 21.58 </td>
+   <td style="text-align:right;border-right:1px solid;"> 106.41 </td>
+   <td style="text-align:right;"> 0.48 </td>
   </tr>
-<tr grouplength="4"><td colspan="10" style="border-bottom: 1px solid;"><strong>oneSide</strong></td></tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1" indentLevel="1"> level </td>
-   <td style="text-align:right;"> 0.37 </td>
-   <td style="text-align:right;"> 0.38 </td>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
    <td style="text-align:right;"> 0.05 </td>
    <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.40 </td>
-   <td style="text-align:right;"> 0.29 </td>
-   <td style="text-align:right;"> 0.07 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.06 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
    <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
+   <td style="text-align:right;"> 0.07 </td>
+  </tr>
+  <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>antiSym</strong></td></tr>
+<tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.12 </td>
+   <td style="text-align:right;"> -0.64 </td>
+   <td style="text-align:right;"> 1.68 </td>
+   <td style="text-align:right;"> 1.76 </td>
+   <td style="text-align:right;"> -9.02 </td>
+   <td style="text-align:right;border-right:1px solid;"> -9.38 </td>
+   <td style="text-align:right;"> -0.02 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 0.67 </td>
+   <td style="text-align:right;"> 0.67 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.38 </td>
+   <td style="text-align:right;"> 0.71 </td>
+   <td style="text-align:right;"> 2.00 </td>
+   <td style="text-align:right;"> 5.04 </td>
+   <td style="text-align:right;"> 23.53 </td>
+   <td style="text-align:right;border-right:1px solid;"> 106.12 </td>
+   <td style="text-align:right;"> 0.50 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 0.80 </td>
+   <td style="text-align:right;"> 0.79 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
+   <td style="text-align:right;"> 0.56 </td>
+   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 0.07 </td>
+   <td style="text-align:right;"> 0.07 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.07 </td>
+  </tr>
+  <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>sine</strong></td></tr>
+<tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.02 </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> -2.63 </td>
+   <td style="text-align:right;"> -2.18 </td>
+   <td style="text-align:right;"> 1.84 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.17 </td>
    <td style="text-align:right;"> 0.08 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1" indentLevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.36 </td>
-   <td style="text-align:right;"> 0.36 </td>
-   <td style="text-align:right;"> 0.25 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.25 </td>
-   <td style="text-align:right;"> 0.36 </td>
-   <td style="text-align:right;"> 1.08 </td>
-   <td style="text-align:right;"> 2.88 </td>
-   <td style="text-align:right;border-right:1px solid;"> 13.12 </td>
-   <td style="text-align:right;"> 0.29 </td>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 1.18 </td>
+   <td style="text-align:right;"> 1.18 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.36 </td>
+   <td style="text-align:right;"> 1.20 </td>
+   <td style="text-align:right;"> 2.86 </td>
+   <td style="text-align:right;"> 5.20 </td>
+   <td style="text-align:right;"> 21.45 </td>
+   <td style="text-align:right;border-right:1px solid;"> 103.41 </td>
+   <td style="text-align:right;"> 0.54 </td>
   </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1" indentLevel="1"> bias </td>
-   <td style="text-align:right;"> -0.31 </td>
-   <td style="text-align:right;"> -0.31 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.00 </td>
-   <td style="text-align:right;"> -0.31 </td>
-   <td style="text-align:right;"> 0.88 </td>
-   <td style="text-align:right;"> 0.83 </td>
-   <td style="text-align:right;border-right:1px solid;"> -4.29 </td>
-   <td style="text-align:right;"> 0.01 </td>
-  </tr>
-<tr>
-<td style="text-align:left; padding-left: 2em; padding-left: 2em;" indentlevel="1" indentLevel="1"> sd </td>
-   <td style="text-align:right;"> 0.19 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.25 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.25 </td>
-   <td style="text-align:right;"> 0.18 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 2.76 </td>
-   <td style="text-align:right;border-right:1px solid;"> 12.40 </td>
-   <td style="text-align:right;"> 0.29 </td>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.69 </td>
+   <td style="text-align:right;"> 0.08 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.04 </td>
+   <td style="text-align:right;"> 0.09 </td>
   </tr>
 </tbody>
 </table>
+
+```r
+                #group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
+```
 
 
 Session information
@@ -567,39 +1126,44 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.1 (2016-06-21)
-## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X 10.12.6 (Sierra)
+## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## 
+## Matrix products: default
 ## 
 ## locale:
-## [1] C
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] nnet_7.3-12       RItools_0.2-0     SparseM_1.77     
-##  [4] rdd_0.57          Formula_1.2-1     AER_1.2-4        
-##  [7] survival_2.40-1   car_2.1-4         lmtest_0.9-34    
-## [10] zoo_1.8-0         sandwich_2.4-0    robustbase_0.92-8
-## [13] lrd_0.0.2.9000    rmarkdown_1.8     kableExtra_0.6.1 
-## [16] knitr_1.15.1     
+## [1] lrd_0.0.2.9000   rmarkdown_1.7    kableExtra_1.0.1 knitr_1.21      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] splines_3.3.1      lattice_0.20-33    colorspace_1.2-6  
-##  [4] htmltools_0.3.5    viridisLite_0.2.0  yaml_2.1.13       
-##  [7] mgcv_1.8-15        rlang_0.1.2        nloptr_1.0.4      
-## [10] withr_1.0.2        plyr_1.8.4         stringr_1.2.0     
-## [13] MatrixModels_0.4-1 munsell_0.4.3      svd_0.4           
-## [16] rvest_0.3.2        devtools_1.13.2    memoise_1.0.0     
-## [19] evaluate_0.10      quantreg_5.29      pbkrtest_0.4-6    
-## [22] parallel_3.3.1     DEoptimR_1.0-8     highr_0.6         
-## [25] Rcpp_0.12.8        xtable_1.8-2       readr_1.1.1       
-## [28] backports_1.1.1    scales_0.4.1       abind_1.4-5       
-## [31] lme4_1.1-12        hms_0.3            digest_0.6.10     
-## [34] stringi_1.1.1      grid_3.3.1         rprojroot_1.2     
-## [37] tools_3.3.1        magrittr_1.5       tibble_1.3.4      
-## [40] MASS_7.3-45        Matrix_1.2-6       xml2_1.1.1        
-## [43] minqa_1.2.4        httr_1.2.1         R6_2.1.3          
-## [46] nlme_3.1-128       git2r_0.15.0       compiler_3.3.1
+##  [1] zoo_1.7-13         xfun_0.5           splines_3.4.4     
+##  [4] lattice_0.20-35    colorspace_1.2-6   htmltools_0.3.5   
+##  [7] viridisLite_0.2.0  yaml_2.2.0         mgcv_1.8-15       
+## [10] survival_2.41-3    XML_3.98-1.5       rlang_0.1.2       
+## [13] pillar_1.1.0       nloptr_1.0.4       glue_1.1.1        
+## [16] selectr_0.3-1      plyr_1.8.4         robustbase_0.93-0 
+## [19] stringr_1.2.0      MatrixModels_0.4-1 munsell_0.4.3     
+## [22] rvest_0.3.2        evaluate_0.10      SparseM_1.77      
+## [25] lmtest_0.9-34      quantreg_5.29      pbkrtest_0.4-6    
+## [28] parallel_3.4.4     DEoptimR_1.0-8     highr_0.6         
+## [31] Rcpp_0.12.13       readr_1.1.1        scales_0.4.1      
+## [34] backports_1.1.2    webshot_0.5.1      lme4_1.1-12       
+## [37] hms_0.3            digest_0.6.10      stringi_1.1.1     
+## [40] AER_1.2-4          rprojroot_1.2      grid_3.4.4        
+## [43] tools_3.4.4        sandwich_2.4-0     magrittr_1.5      
+## [46] rdd_0.57           tibble_1.4.2       Formula_1.2-1     
+## [49] car_2.1-3          MASS_7.3-49        Matrix_1.2-12     
+## [52] xml2_1.1.1         minqa_1.2.4        httr_1.2.1        
+## [55] rstudioapi_0.6     R6_2.1.2           nnet_7.3-12       
+## [58] nlme_3.1-131.1     compiler_3.4.4
 ```

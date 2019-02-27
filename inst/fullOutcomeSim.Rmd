@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,error=FALSE)
 knitr::opts_knit$set(root.dir = '.')
 ```
 
@@ -41,7 +41,7 @@ library(parallel)
 cl <- makeCluster(5)
 ```
 
-```{r  warning=FALSE, message=FALSE}
+```{r  runLoadOutSim, warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
 nreps
 if (nreps) {
@@ -78,7 +78,7 @@ cat(paste0(date(), ', nreps=', nreps, '\n'),
 ```
 
 This code creates Table 3:
-```{r}
+```{r table3}
 capture.output({
   displayCIsimHet(outcomeSim,tau=0,
     caption=paste('Empirical bias and 95\\% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
@@ -87,7 +87,7 @@ capture.output({
 ```
 Here are the results, for all cases run:
 
-```{r}
+```{r fullOutSim}
 allRes <- dispAllSimp(outcomeSim)
 rownames(allRes) <- NULL
 save(allRes,file=paste0('inst/levelSimResults',Sys.Date(),'.RData'))
@@ -121,21 +121,23 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
 
 ##Polynomial Simulation
 
-```{r  warning=FALSE, message=FALSE,eval=FALSE}
+```{r  runLoadPolySim, warning=FALSE, message=FALSE}
 if (!exists('nreps') ) nreps <- 0
 nreps
 if (nreps) {
 
 
 set.seed(201609)
-st2 <- system.time(totalPoly <- totalPolySim(nreps))
-save(totalPoly,file="dataResults/totalPolySim.RData")
+st2 <- system.time(totalPoly <- totalPolySim(nreps,cl))
+save(totalPoly,file=paste0("inst/totalPolySim",Sys.Date(),".RData"))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='dataResults/totalPolySim-runtime.txt', append=TRUE)
 } else{
-    load('dataResults/totalPolySim.RData')
+  psims <- sort(grep('totalPolySim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',psims[1]))
 }
 ```
 
@@ -143,20 +145,22 @@ The following gives the results in Table 4 of the paper, in addition
 to the break-down of RMSE into bias and variance, and analogous
 results for normally-distributed errors.
 
-```{r,eval=FALSE}
-tab.paper <- prntTab(totalPoly,full=FALSE,md=FALSE)
+```{r}
+tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
-polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
-    file="tab-polynomialSimulation.tex")
-tab <- prntTab(totalPoly,full=TRUE,md=TRUE)
-rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
-colnames(tab) <- c(rep(paste0('deg=',1:4),2),'')
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
+    file="inst/r1/tab-polynomialSimulation.tex")
+
+tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
+#rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
+colnames(tab) <- gsub('(sh|ik)\\.est.','deg=',colnames(tab))#c(rep(paste0('deg=',1:4),2),'')
+colnames(tab)[ncol(tab)] <- 'n/a'
 kable(tab,format='html',caption='Full results for polynomial simulation',digits=2)%>%
-    kable_styling()%>% column_spec( 5,border_right=TRUE)%>%column_spec(9,border_right=TRUE)%>%
-        add_header_above(c(" " = 1, "Limitless" = 4, "OLS" = 4, "Loc. Lin." = 1))%>%
-            group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
-            group_rows("linear",1,4)%>%group_rows('antiSym',5,8)%>%group_rows('oneSide',9,12)%>%
-                group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
+    kable_styling()%>% column_spec( 6,border_right=TRUE)%>%column_spec(11,border_right=TRUE)%>%
+        add_header_above(c(" " = 1, "Limitless" = 5, "OLS" = 5, "Loc. Lin." = 1))%>%
+            #group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
+            group_rows("linear",1,3)%>%group_rows('antiSym',4,6)%>%group_rows('sine',7,9)#%>%
+                #group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
 ```
 
 

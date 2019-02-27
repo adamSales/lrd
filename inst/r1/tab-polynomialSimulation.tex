@@ -1,31 +1,25 @@
 
         \begin{table}[ht]
 \centering
-\begin{tabular}{cr|llll|llll|l }
-  \hline
-&& \multicolumn{4}{c|}{Limitless} &  \multicolumn{4}{c|}{OLS} &\makecell[c]{Local\\Linear}  \\
- \multicolumn{2}{r|}{Polynomial Degree}&1&2&3&4&1&2&3&4& n/a  \\
+\begin{tabular}{cr|lllll|lllll|l } 
+  \hline 
+&& \multicolumn{5}{c|}{Limitless} &  \multicolumn{5}{c|}{OLS} &\makecell[c]{Local\\Linear}  \\
+ \multicolumn{2}{r|}{Polynomial Degree}&1&2&3&4&5&1&2&3&4&5& n/a  \\
 \hline
 \hline
-\multirow{ 2 }{*}{ Linear }& level &0.05&0.05&0.05&0.05&0.05&0.05&0.05&0.05&0.07\\
-& RMSE &0.22&0.22&0.30&0.30&0.31&1.09&4.75&21.85&0.49\\
+\multirow{ 2 }{*}{ Linear }& bias &0.00&0.00&0.00&0.00&0.00&0.00&-0.01&0.02&0.30&-1.70&0.01\\ 
+& RMSE &0.23&0.23&0.31&0.31&0.37&0.30&1.11&4.68&21.58&106.41&0.48\\ 
 \hline
 \hline
-\multirow{ 2 }{*}{ Anti-Sym }& level &0.79&0.79&0.06&0.06&0.54&0.37&0.06&0.07&0.08\\
-& RMSE &0.64&0.64&0.30&0.30&0.70&2.10&5.16&25.45&0.51\\
+\multirow{ 2 }{*}{ Anti-Sym }& bias &-0.63&-0.63&-0.03&-0.03&0.12&-0.64&1.68&1.76&-9.02&-9.38&-0.02\\ 
+& RMSE &0.67&0.67&0.30&0.30&0.38&0.71&2.00&5.04&23.53&106.12&0.50\\ 
 \hline
 \hline
-\multirow{ 2 }{*}{ One-Side }& level &0.29&0.30&0.05&0.05&0.19&0.13&0.06&0.05&0.07\\
-& RMSE &0.39&0.39&0.30&0.30&0.45&1.41&4.88&22.49&0.51\\
+\multirow{ 2 }{*}{ Sine }& bias &1.16&1.16&0.17&0.17&0.02&1.16&-2.63&-2.18&1.84&0.17&0.08\\ 
+& RMSE &1.18&1.18&0.35&0.35&0.36&1.20&2.86&5.20&21.45&103.41&0.54\\ 
 
  \hline
 \end{tabular}
-\caption{Results from 5,000 simulations
-of polynomial specifications for RDD analysis, using
-MM-estimation, OLS, or
-local linear regression. Data generating models were
-as depicted in Figure~\ref{fig:dgms}, with $t_{3}$ errors;
-sample size for all runs was 500, and there was no
-treatment effect.}
+\caption{Results from 5000 simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.}
 \label{tab:poly}
 \end{table}
