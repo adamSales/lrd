@@ -728,7 +728,7 @@ show little association with $R$,
 \includegraphics[width=.58\textwidth]{../figure/weightPlot.png}
 }
 \caption{Robustness weights from robust MM estimation of the model
-  that $\EE(Y_{C} | R)$ is linear in $R$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
+  that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
 \label{fig:robweights}
 %\end{figure}
 \end{wrapfigure}
