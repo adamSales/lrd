@@ -490,51 +490,69 @@ in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inferen
 unobserved; but this is not an impediment, at least for large-sample
 inferences. 
 
+Causal inference based on Residual Ignorability takes place
+in four steps: (1) choosing and validating the analysis sample or
+bandwidth, (2) choosing an appropriate fitting procedure (we recommend
+robust fitters), (3) treatment effect estiamtion and inference, and
+(4) post-fitting diagnostics. 
+We will discuss each of these steps in sequence. 
 
-\subsection{Inference About the Treatment Effect}
-\label{sec:test-hypoth-no}
+\subsection{Pre-Fitting Diagnostics and Bandwidth Choice}
+\label{sec:bandwidthChoice}
 
-For inference about $\tau$ under the model
-$Y_{T} = Y_{C} + \tau D_{T}$, select a specification
-$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$, %in the application of
-%Section~\ref{sec:appl-effect-acad}
-such as the
-linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, and a fitter,
-such as OLS.
+If subject matter knowledge suggests that chance variability intrinsic
+to $R$ is typically of magnitude $b$, then RDD modeling focused on
+distilling local randomization might set $\mathcal{W}$ to $[-b,b]$. But it
+is also sensible to subject such an initial choice to specification
+testing (\S~\ref{sec:specification}).
 
-Separately for each hypothesis $H: \tau=\tau_0$ under
-consideration, one calculates
-$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
-applies the chosen specification and fitter to
-$(\mathbf{y}_{H}, \mathbf{r})$.
-The combination of the data, the
-model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
-$\dt[\hat\theta]{\mathbf{y}_{H}}{\mathbf{r}}$, completing the
-detrending procedure. Whether $H$ is rejected or sustained is
-determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
-in \S~\ref{sec:sandwich}.
+Common RDD specification checks
+can be regarded as testing Residual Ignorability with a multivariate
+``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
+$\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
 
-In practice it is expedient to use a near-equivalent
-test by modifying the detrending
-procedure.
-When regressing $Y_{H}$ on $R$, include an additive
-contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
-R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
-\beta_{1}R + \gamma Z$. With sandwich estimates of
-$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
-the t-ratio comparing $\hat{\gamma}_{H}$ to
-$\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
-t-statistic with covariance adjustment for $R$, as in \S~\ref{sec:sandwich}.
+This calls for preliminary detrending procedures, mechanisms to
+decompose  $X$ into components that are systematic or unpredictable,
+vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
+%% Since $Z$ cannot have an effect on a pre-treatment
+%% covariate, the preliminary step of reconstructing
+%% $x_{C}$ is not needed.
+%%% [Reorg obviated need for the above, as this passage now precedes
+%%% discussion of reconstructing Y_C]
+Our analysis of the LSO data posits systematic components that are
+linear and logistic-linear in $R$, depending on whether $X$ is
+a measurement or binary variable. %, paralleling its choice of a linear decomposition
+% for the primary outcome, subsequent GPA.  (It is fitting that the $X$- and
+% $Y$-specifications mirror each other in model complexity.)
+The placebo check adds $Z$ to the specification and tests whether its
+coefficient is zero.  We implement these checks as Wald tests with
+heteroskedasticity-robust standard errors, as in
+\S~\ref{sec:robust-analys-covar}, using the Bonferroni method to
+combine placebo checks across covariates.
+To compensate for conservatism of
+the Bonferroni method, we test with size
+$\alpha_{B}=.15$, not $.05$.
 
-As in \S~\ref{sec:robust-analys-covar}, the corresponding
-M-estimate of the CACE is the value of $\tau_{0}$ making
-$\hat{\gamma}_{H}/\text{SE}_{s}(\hat{\gamma}_{H})$ equal 0; those $\tau_{0}$ for
-which $H: \tau = \tau_{0}$ is not rejected at level $\alpha$
-constitute a $100(1-\alpha)\%$ confidence interval.  Iteration is
-facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and
-$\mathbf{z}$ with offset variable $\mathbf{d}\tau_{0}$; then only the
-offset needs to be modified to test $H: \tau = \tau_{1}$,  
-$\tau_{1}\neq \tau_{0}$.
+We use sequential balance tests to adjust the bandwidth $b$ and, alongside McCrary density tests, to
+refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
+% yielding a test of the
+% hypothesis that all of the covariates' residuals are jointly ignorable within the
+% given $\mathcal{W}$.
+
+% If the first window tested has form $\mathcal{W} = (-b, b)$,
+% write $H_{b}$ for the corresponding joint ignorability hypothesis.
+% If the $R$-adjusted covariate placebo tests reject $H_{b}$ then the process is repeated for
+% $\mathcal{W}' = (-b', b')$, some
+% $b' < b$, and perhaps repeated again if $H_{b'}$ also is rejected.
+%  To compensate for conservatism of
+% the Bonferroni method, we test with size
+% $\alpha_{B}=.15$, not $.05$.
+
+% Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
+% \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
+% manipulation test to $(-b,b)$.   within windows
+% $\{ i: |R_{i}| \in (a_{j}, b)\}$, $0 = a_{0} < a_{1}< \cdots < b$,
+
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
 Subsets of the analysis sample that do not satisfy Residual Ignorability
@@ -593,62 +611,50 @@ which optionally provide Huber-White standard errors
 % %\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
 % (Appendix~\ref{sec:suppl-s-refs}).
 
-\subsection{Pre-Fitting Diagnostics and Bandwidth Choice}
-\label{sec:bandwidthChoice}
+\subsection{Inference About the Treatment Effect}
+\label{sec:test-hypoth-no}
 
-If subject matter knowledge suggests that chance variability intrinsic
-to $R$ is typically of magnitude $b$, then RDD modeling focused on
-distilling local randomization might set $\mathcal{W}$ to $[-b,b]$. But it
-is also sensible to subject such an initial choice to specification
-testing (\S~\ref{sec:specification}).
+For inference about $\tau$ under the model
+$Y_{T} = Y_{C} + \tau D_{T}$, select a specification
+$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$, %in the application of
+%Section~\ref{sec:appl-effect-acad}
+such as the
+linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, and a fitter,
+such as OLS.
 
-Common RDD specification checks
-can be regarded as testing Residual Ignorability with a multivariate
-``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
-$\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
+Separately for each hypothesis $H: \tau=\tau_0$ under
+consideration, one calculates
+$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
+applies the chosen specification and fitter to
+$(\mathbf{y}_{H}, \mathbf{r})$.
+The combination of the data, the
+model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
+$\dt[\hat\theta]{\mathbf{y}_{H}}{\mathbf{r}}$, completing the
+detrending procedure. Whether $H$ is rejected or sustained is
+determined by the value of the sandwich-based \textsc{ancova} $t$-statistic
+in \S~\ref{sec:sandwich}.
 
-This calls for preliminary detrending procedures, mechanisms to
-decompose  $X$ into components that are systematic or unpredictable,
-vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
-%% Since $Z$ cannot have an effect on a pre-treatment
-%% covariate, the preliminary step of reconstructing
-%% $x_{C}$ is not needed.
-%%% [Reorg obviated need for the above, as this passage now precedes
-%%% discussion of reconstructing Y_C]
-Our analysis of the LSO data posits systematic components that are
-linear and logistic-linear in $R$, depending on whether $X$ is
-a measurement or binary variable. %, paralleling its choice of a linear decomposition
-% for the primary outcome, subsequent GPA.  (It is fitting that the $X$- and
-% $Y$-specifications mirror each other in model complexity.)
-The placebo check adds $Z$ to the specification and tests whether its
-coefficient is zero.  We implement these checks as Wald tests with
-heteroskedasticity-robust standard errors, as in
-\S~\ref{sec:robust-analys-covar}, using the Bonferroni method to
-combine placebo checks across covariates.
-To compensate for conservatism of
-the Bonferroni method, we test with size
-$\alpha_{B}=.15$, not $.05$.
+In practice it is expedient to use a near-equivalent
+test by modifying the detrending
+procedure.
+When regressing $Y_{H}$ on $R$, include an additive
+contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
+R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
+\beta_{1}R + \gamma Z$. With sandwich estimates of
+$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
+the t-ratio comparing $\hat{\gamma}_{H}$ to
+$\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
+t-statistic with covariance adjustment for $R$, as in \S~\ref{sec:sandwich}.
 
-We use sequential balance tests to adjust the bandwidth $b$ and, alongside McCrary density tests, to
-refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
-% yielding a test of the
-% hypothesis that all of the covariates' residuals are jointly ignorable within the
-% given $\mathcal{W}$.
-
-% If the first window tested has form $\mathcal{W} = (-b, b)$,
-% write $H_{b}$ for the corresponding joint ignorability hypothesis.
-% If the $R$-adjusted covariate placebo tests reject $H_{b}$ then the process is repeated for
-% $\mathcal{W}' = (-b', b')$, some
-% $b' < b$, and perhaps repeated again if $H_{b'}$ also is rejected.
-%  To compensate for conservatism of
-% the Bonferroni method, we test with size
-% $\alpha_{B}=.15$, not $.05$.
-
-% Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
-% \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
-% manipulation test to $(-b,b)$.   within windows
-% $\{ i: |R_{i}| \in (a_{j}, b)\}$, $0 = a_{0} < a_{1}< \cdots < b$,
-
+As in \S~\ref{sec:robust-analys-covar}, the corresponding
+M-estimate of the CACE is the value of $\tau_{0}$ making
+$\hat{\gamma}_{H}/\text{SE}_{s}(\hat{\gamma}_{H})$ equal 0; those $\tau_{0}$ for
+which $H: \tau = \tau_{0}$ is not rejected at level $\alpha$
+constitute a $100(1-\alpha)\%$ confidence interval.  Iteration is
+facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and
+$\mathbf{z}$ with offset variable $\mathbf{d}\tau_{0}$; then only the
+offset needs to be modified to test $H: \tau = \tau_{1}$,  
+$\tau_{1}\neq \tau_{0}$.
 
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
