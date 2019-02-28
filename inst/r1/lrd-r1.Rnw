@@ -975,7 +975,7 @@ polynomial regression to mitigate influence, as discussed in
 \S~\ref{sec:test-hypoth-no} above, while adding flexibility
 to the specification of the $Y_{C}$ on $R$ regression.
 We compared limitless RD analysis, with $\mu_{\bm{\beta}}$ a polynomial in $R$ with
-degree 1, 2, 3, or 4, to analogous estimates from OLS.
+degree 1, 2, 3, 4, or 5 to analogous estimates from OLS.
 In the OLS regressions, we followed the advice of \citet[e.g.][p. 318]{lee2010regression} and
 included interactions between the $R$-polynomial and $Z$.
 Finally, we compared these methods to local-linear regression with the
@@ -989,20 +989,24 @@ Figure~\ref{fig:dgms} to form $Y_{C}$.
 %Appendix B.
 
 Table~\ref{tab:poly} displays the results.
-For both limitless and OLS methods, linear and quadratic specifications suffered severe inflation of type-I
-error under either non-linear data generating model.
-With a cubic or quartic
-specification, the limitless method achieved nominal
-levels, whereas OLS's were slightly inflated.
-OLS and MM-estimation sharply diverge in the quality of their
-point estimates: the root mean squared error (RMSE) of OLS estimation
+For the linear data generating model, all estimates were unbiased,
+while root mean squared errors (RMSEs) were lowest for the limitless
+method.
+For the non-linear data generating models, the limitless estimators
+using linear and quadratic specifications had substantial bias, and
+bias was much lower for higher-order polynomial specifications.
+In contrast, OLS estimators of all polynomial degrees were heavily
+biased.
+OLS and limitless estimation sharply diverge in the quality of their
+point estimates: the RMSE of OLS estimation
 increases rapidly with polynomial degree, but the limitless method's does not.
 With the method based on MM estimators but not with OLS, increasing
-the degree of the polynomial improved accuracy of testing and
+the degree of the polynomial improved accuracy of
 estimation in the presence of non-linearity.
 
 The local linear model does not employ higher-order global
-polynomials. It fared better than OLS, but worse than cubic or quartic robust regression.
+polynomials. It fared better than OLS, and had similar bias but
+higher RMSE than the limitless method using higher-order polynomials.
 
 
 
