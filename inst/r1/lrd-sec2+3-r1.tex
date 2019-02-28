@@ -67,7 +67,7 @@ Finally, test $H$ with statistic
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}
 \end{equation}
 --- that is, the $\tau$ estimate from an OLS fit of the variant of \eqref{eq:classicOLS}
-with dependent variable $\mathbf{y}_{H}$. 
+with dependent variable $\mathbf{y}_{H}$.
 Because of the structural relationship
 between $R$ and $Z$, its null distribution
 is not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
@@ -485,17 +485,18 @@ $\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$,
 are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
 the variables comprising $\mathbf{A}$ are jointly
 %\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
-S-ancillary, just as $\mathbf{A}^{\dagger}$ was seen to be
+S-ancillary, just as $\bm{A}^*$ %$\mathbf{A}^{\dagger}$
+was seen to be
 in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
-inferences. 
+inferences.
 
 Causal inference based on Residual Ignorability takes place
 in four steps: (1) choosing and validating the analysis sample or
 bandwidth, (2) choosing an appropriate fitting procedure (we recommend
 robust fitters), (3) treatment effect estiamtion and inference, and
-(4) post-fitting diagnostics. 
-We will discuss each of these steps in sequence. 
+(4) post-fitting diagnostics.
+We will discuss each of these steps in sequence.
 
 \subsection{Pre-Fitting Diagnostics and Bandwidth Choice}
 \label{sec:bandwidthChoice}
@@ -557,7 +558,7 @@ refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
 \subsection{Robust Fitters}\label{sec:robustFitters}
 Subsets of the analysis sample that do not satisfy Residual Ignorability
  can undercut the validity of an RDD analysis, \marginpar{wc} provided
-that these subsets include influential observations. 
+that these subsets include influential observations.
 If such moderate sample contamination may be present --- specifically, contamination of
 a $O(n^{-1/2})$-sized
 share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
@@ -653,7 +654,7 @@ which $H: \tau = \tau_{0}$ is not rejected at level $\alpha$
 constitute a $100(1-\alpha)\%$ confidence interval.  Iteration is
 facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and
 $\mathbf{z}$ with offset variable $\mathbf{d}\tau_{0}$; then only the
-offset needs to be modified to test $H: \tau = \tau_{1}$,  
+offset needs to be modified to test $H: \tau = \tau_{1}$,
 $\tau_{1}\neq \tau_{0}$.
 
 
