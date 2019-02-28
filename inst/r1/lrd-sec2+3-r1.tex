@@ -494,7 +494,7 @@ inferences.
 Causal inference based on Residual Ignorability takes place
 in four steps: (1) choosing and validating the analysis sample or
 bandwidth, (2) choosing an appropriate fitting procedure (we recommend
-robust fitters), (3) treatment effect estiamtion and inference, and
+robust fitters), (3) treatment effect estimation and inference, and
 (4) post-fitting diagnostics.
 We will discuss each of these steps in sequence.
 
@@ -556,9 +556,9 @@ refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
 
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
-Subsets of the analysis sample that do not satisfy Residual Ignorability
- can undercut the validity of an RDD analysis, \marginpar{wc} provided
-that these subsets include influential observations.
+Subsets of the analysis sample that do not satisfy Residual
+Ignorability but include influential observations
+ can undercut the validity of an RDD analysis. \marginpar{better?}
 If such moderate sample contamination may be present --- specifically, contamination of
 a $O(n^{-1/2})$-sized
 share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
@@ -570,9 +570,9 @@ to reliably detect contamination of this size; power to detect anomalies
 affecting only $O(n^{-1/2})$ of the sample can only tend to a number
 strictly less than 1.
 Hence, the
-proper limits of $\mathcal{W}$ will be uncertain (c.f. \S~\ref{sec:bandwidth},
-\S~\ref{sec:bandwidthChoice}, below), and some sample contamination
-may be present.
+proper limits of $\mathcal{W}$ will be uncertain
+% (c.f. \S~\ref{sec:bandwidth}, \S~\ref{sec:bandwidthChoice}, below),
+and some sample contamination may be present.
 
 Instead, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
  as to possess a bounded influence function (\citealp[Thm.~3]{he1991localbreakdown};
@@ -612,7 +612,7 @@ which optionally provide Huber-White standard errors
 % %\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
 % (Appendix~\ref{sec:suppl-s-refs}).
 
-\subsection{Inference About the Treatment Effect}
+\subsection{Treatment Effect Estimation and Inference}
 \label{sec:test-hypoth-no}
 
 For inference about $\tau$ under the model
@@ -645,7 +645,9 @@ R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
 $\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
 the t-ratio comparing $\hat{\gamma}_{H}$ to
 $\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
-t-statistic with covariance adjustment for $R$, as in \S~\ref{sec:sandwich}.
+t-statistic with covariance adjustment for $R$ (with fitting via OLS,
+this correspondence would be exact, as noted in Section~\ref{sec:sandwich}; with the robust MM estimation we
+favor, the correspondence is one of large-sample equivalence; see Appendix~\ref{sec:suppl-s-refs}).
 
 As in \S~\ref{sec:robust-analys-covar}, the corresponding
 M-estimate of the CACE is the value of $\tau_{0}$ making
@@ -659,7 +661,7 @@ $\tau_{1}\neq \tau_{0}$.
 
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
-Once the Hodges-Lehmann estimate $\hat{\tau}_{\mathrm{HL}}$ has been found, one
+Once the M-estimate for the treatment effect has been found, one
 inspects the corresponding regression fit for points of high influence.
 Bounded influence regression is helpful here.  Besides making
 influential points easier to see in residual plots, this limits

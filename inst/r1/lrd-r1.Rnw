@@ -557,7 +557,7 @@ also be obtained in this way. Rather that pursuing this approach
 further, we now turn to developing a residual ignorability-based
 procedure using M-estimation \citep[][also called ``generalized
 estimating equations'' or ``generalized method of
-moments'']{huber1964robust,stefanski2002calculus}, which is better 
+moments'']{huber1964robust,stefanski2002calculus}, which is better
 adapted to data scenarios without the luxury of separate samples for estimation of
 trends in the absence of treatment and of treatment effects themselves.
 
@@ -728,7 +728,7 @@ show little association with $R$,
 \includegraphics[width=.58\textwidth]{../figure/weightPlot.png}
 }
 \caption{Robustness weights from robust MM estimation of the model
-  that $\EE(Y_{C} | R)$ is linear in $R$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}_{HL}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
+  that $\EE(Y_{C} | R)$ is linear in $R$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
 \label{fig:robweights}
 %\end{figure}
 \end{wrapfigure}
