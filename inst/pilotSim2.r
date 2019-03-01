@@ -22,6 +22,7 @@ clusterEvalQ(cl,{
              source('R/simCIhet.r')
              })
 
+st <- system.time(res <- totalOutcomeSim(nrep,cl))
 
 
 stopCluster(cl)

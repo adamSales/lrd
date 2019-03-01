@@ -142,11 +142,12 @@ of sample pruning and robust M-estimation is uniquely equipped
 to address.
 
 The remainder of Section~\ref{sec:introduction} uses a public health
-example to introduce residual ignorability.  Limitless RDD analysis
-combines ideas from distribution-free analysis of randomized
-controlled trials (RCTs; \S~\ref{sec:randProc}); classical, wholly
-parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}); robust
-estimation (\S~\ref{sec:robust-altern-ordin}); and RDD specification
+example to introduce residual ignorability, and review distribution-free analysis of randomized
+controlled trials (RCTs).  Limitless RDD analysis
+combines these ideas with classical, wholly
+parametric methods for RDDs (\S~\ref{sec:robust-analys-covar});
+%robust estimation (\S~\ref{sec:robust-altern-ordin});
+and RDD specification
 tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
 adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
 of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
@@ -292,7 +293,7 @@ analysis considered recorded mortality in
 months before and after the hurricane, estimating
 Maria to have caused 1139 excess
 deaths. This section demonstrates residual ignorability,
-if not the scope and particulars of the method detailed in Sections~\ref{sec:revi-select-meth} and~\ref{sec:theMethod},
+if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
 in a limited reanalysis of these monthly death counts.
 
 
@@ -556,11 +557,9 @@ also be obtained in this way. Rather that pursuing this approach
 further, we now turn to developing a residual ignorability-based
 procedure using M-estimation \citep[][also called ``generalized
 estimating equations'' or ``generalized method of
-moments'']{huber1964robust,stefanski2002calculus}.  Although less
-equipped for analyses with small $n$s, this approach is less rigid
-about the form of the treatment effect, and more adaptable to the
-common scenario calling for simultaneous estimation of treatment
-effects and parameters governing residualization.%$(y,r) \mapsto\dt[]{y}{r}$.
+moments'']{huber1964robust,stefanski2002calculus}, which is better
+adapted to data scenarios without the luxury of separate samples for estimation of
+trends in the absence of treatment and of treatment effects themselves.
 
 
 \input{lrd-sec2+3-r1}
@@ -729,7 +728,7 @@ show little association with $R$,
 \includegraphics[width=.58\textwidth]{../figure/weightPlot.png}
 }
 \caption{Robustness weights from robust MM estimation of the model
-  that $\EE(Y_{C} | R)$ is linear in $R$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}_{HL}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
+  that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
 \label{fig:robweights}
 %\end{figure}
 \end{wrapfigure}
@@ -928,6 +927,7 @@ times.
 
 \input{tab-levelSimulation}
 
+
 The results are displayed in Table~\ref{tab:level}.
 With a linear data generating model and a symmetric window, the bias
 for the local permutation approach will generally be equal to the
@@ -946,6 +946,7 @@ Our limitless RD method tended to have equal or slightly narrower
 interval widths than the local OLS approach, with greater advantage
 when $\epsilon$ was distributed as $t_3$, than when $\epsilon$ was
 normally distributed.
+
 
 \subsection{Polynomial Regression}
 

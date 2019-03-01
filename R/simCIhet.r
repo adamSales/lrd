@@ -185,6 +185,7 @@ levTabCI <- function(res,eff=0){
 }
 
 
+
 displayCIsim <- function(res,tau=0,add){
   ## omit cases where one of the methods (ours?) didn't converge, gave NA
   #res <- lapply(res,function(x) if(is.list(x)) do.call('rbind',x[sapply(x,length)==15]) else t(x))
@@ -297,6 +298,7 @@ dispAllSimp <- function(res){
 
   out
 }
+
 
 ###############
 ### polynomial sim
