@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE)
 options(scipen=1, digits=3)
 ```
 
@@ -18,11 +18,11 @@ library(ggplot2)
 library(xtable)
 library(robustbase)
 library(rdd)
-if(!require('lrd')){
- source("lrd/R/functions.r")
- source("lrd/R/simulations.r")
- source("lrd/R/displaySim.r")
-}
+#if(!require('lrd')){
+ source("~/lrd/R/functions.r")
+ source("~/lrd/R/simulations.r")
+ source("~/lrd/R/displaySim.r")
+#}
 ```
 
 Initialization.
@@ -77,22 +77,26 @@ ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
 ntot <- nrow(dat)
 ```
 
-
-Create plots for Figure 1. First of the outcome (subsequent GPA):
+Create RDD plots. First of the outcome (subsequent GPA):
 ```{r rddFig}
 
 figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),
                     FUN=mean,na.rm=TRUE)
 figDat$n <- as.vector(table(dat$R))
-figDat <- within(figDat,n <- 2*n/max(n))
+#figDat <- within(figDat,n <- 2*n/max(n))
 
 with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg Subsequent GPA'))
+abline(v=0,lty=2)
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
 with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg logit(hsgrade_pct)'))
+
+ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
+
 ```
 
 The McCrary density test failure and recovery described in Section 4.1
@@ -105,9 +109,10 @@ The Frandsen (2016) test for manipulation when the
 running variable is discrete, when the cutoff is the maximum GPA
 receiving probation, or the minimum GPA not receiving probation:
 ```{r}
-(frandsen1 <- lrd::frandsen(dat$R,cutoff=-0.01,BW=0.5))
-(frandsen2 <- lrd::frandsen(dat$R,cutoff=0,BW=0.5))
+(frandsen1 <- frandsen(dat$R,cutoff=-0.01,BW=0.5))
+(frandsen2 <- frandsen(dat$R,cutoff=0,BW=0.5))
 ```
+
 
 
 ## main analysis ##
@@ -124,19 +129,19 @@ set.seed(201705)
 lmrob_seed <- .Random.seed
 
 
-SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
+SHmain <- sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 unlist(SHmain)
 
 # No-donut variant (not discussed in text)
-SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
+SHnodo <- sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
-SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
+SHdataDriven <- sh(dat=subset(dat,R!=0),outcome='nextGPA')
 unlist(SHdataDriven)
 
-SHcubic <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
+SHcubic <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
 unlist(SHcubic)
 
-SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
+SHitt <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 unlist(SHitt)
 ```
 
@@ -166,8 +171,8 @@ print(xtable(resultsTab,align='lrrrl'),
 
 Results from two alternative methods, creating Table 2:
 ```{r}
-CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- lrd::ik(dat,outcome='nextGPA')
+CFT <- cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
+IK <- ik(dat,outcome='nextGPA')
 
 altTab <-
  do.call('rbind',
