@@ -193,25 +193,25 @@ if(grepl('acs',Sys.info()['login'])){
         "~/Dropbox/Documents/wcs/lrd/"
 }
 
-dat <- read.csv(paste0(lrd_package_location,
+datM <- read.csv(paste0(lrd_package_location,
                        'extdata/death_file_JAMA.csv')
                 )
 
-dat$hurYear <- dat$year==2017
-dat$year <- as.factor(dat$year)
-rownames(dat) <- paste0(month.abb[dat$month_num],substr(dat$year,3,4))
+datM$hurYear <- datM$year==2017
+datM$year <- as.factor(datM$year)
+rownames(datM) <- paste0(month.abb[datM$month_num],substr(datM$year,3,4))
 
 month_lengths  <-
     c(31, 28.25, 31, 30, 31, 30,
       31, 31, 30, 31, 30, 31)
 
-dat$dailyDeath <- dat$deaths_original/month_lengths[dat$month_num]
-dat$adjDeath <- dat$dailyDeath*mean(month_lengths)
+datM$dailyDeath <- datM$deaths_original/month_lengths[datM$month_num]
+datM$adjDeath <- datM$dailyDeath*mean(month_lengths)
 
 ## are we adjusting deaths for month length??
 ## choose one of the following:
 #dat$deaths <- dat$adjDeath
-dat$deaths <- dat$deaths_original
+datM$deaths <- datM$deaths_original
 
 @
 
@@ -219,7 +219,7 @@ dat$deaths <- dat$deaths_original
 ### model monthly deaths prior to 2017
 mod  <-   lmrob(deaths~year+
                      pbs(month_num, knots=seq(2,11,by=3)),
-                 data=dat,subset=!hurYear)
+                 data=datM,subset=!hurYear)
 
 ### predict monthly
 fitCurve <- function(x,year='avg'){
@@ -230,13 +230,13 @@ fitCurve <- function(x,year='avg'){
 }
 
 
-dat$yhat <- NA
-dat$yhat[!dat$hurYear] <- predict(mod)
-dat$yhat[dat$hurYear] <- fitCurve(dat$month_num[dat$hurYear],'avg')
+datM$yhat <- NA
+datM$yhat[!datM$hurYear] <- predict(mod)
+datM$yhat[datM$hurYear] <- fitCurve(datM$month_num[datM$hurYear],'avg')
 
-dat$resid <- dat$deaths-dat$yhat
+datM$resid <- datM$deaths-datM$yhat
 
-dat$Z <- dat$month_num>8
+datM$Z <- datM$month_num>8
 
 @
 
@@ -245,14 +245,14 @@ dat$Z <- dat$month_num>8
 ## set eval=FALSE if not.
 ## modify the following for a different window:
 window <- 6:11
-dat <- subset(dat,month_num%in%window)
+datM <- subset(datM,month_num%in%window)
 
 @
 
 <<mariaFigs,eval=FALSE,include=FALSE>>=
-pd <- rbind(dat,dat)
-pd$Deaths <- c(dat$deaths,dat$resid)
-pd$type <- factor(c(rep('Death Counts',nrow(dat)),rep('Residual Death Counts',nrow(dat))),
+pd <- rbind(datM,datM)
+pd$Deaths <- c(datM$deaths,datM$resid)
+pd$type <- factor(c(rep('Death Counts',nrow(datM)),rep('Residual Death Counts',nrow(datM))),
                   levels=c('Death Counts','Residual Death Counts'))
 pd$hurYear <- factor(ifelse(pd$hurYear,'2017','2010-2016'))
 
@@ -265,7 +265,7 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYe
   facet_wrap(~type,nrow=1,scales='free_y')+
   geom_hline(data=data.frame(yint=0,type='Residual Death Counts'),aes(yintercept=yint),
     size=2,color='black',linetype='dashed')+
-  stat_function(data=data.frame(x=dat$month_num,type='Death Counts',y=dat$deaths,year='avg',hurYear=TRUE),
+  stat_function(data=data.frame(x=datM$month_num,type='Death Counts',y=datM$deaths,year='avg',hurYear=TRUE),
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
 
@@ -461,8 +461,8 @@ or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
 %% change this if we use a different window of analysis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<estimates,include=FALSE>>=
-N1 <- sum(dat$hurYear&dat$Z)
-N0 <- sum(dat$hurYear&!dat$Z)
+N1 <- sum(datM$hurYear&datM$Z)
+N0 <- sum(datM$hurYear&!datM$Z)
 N <- N1+N0
 cardZ <- choose(N,N1)
 
@@ -477,8 +477,8 @@ all.subsets <- function(set,size) {
 subs <- all.subsets(1:N,N1)
 stopifnot(nrow(subs)==cardZ)
 
-rr <- dat$resid[dat$hurYear]
-z <- dat$Z[dat$hurYear]
+rr <- datM$resid[datM$hurYear]
+z <- datM$Z[datM$hurYear]
 
 testStat <- function(Z,RR)
   sum(RR[Z])
@@ -901,38 +901,42 @@ source(paste0(lrd_package_location, 'R/displaySim.r'))
 ## outcomeSim <- totalOutcomeSim()
 ## save(outcomeSim,file='dataResults/outcomeSim.RData')
 sims <- sort(grep('outcomeSim',list.files(dataResults_location),value=TRUE),decreasing=TRUE)
-load(paste0(dataResults_location, sims[1]))
+#load(paste0(dataResults_location, sims[1]))
 @
-We ran a simulation study to compare bias and confidence interval
-covarage and width
- under our ``limitless'' method, local-OLS, and
-local-permutation methods, varying sample size, regression error
-distribution, and treatment effect distribution.
-We generated the running variable $R$ as
-$\mathrm{Uniform}(-0.5,0.5)$, with cutoff $c=0$, and control potential
-outcomes as $Y_C=0.75R+\epsilon$, with $\epsilon$
-distributed as either Normal or Student's $t$ with 3 d.f., and with a
+Our first simulation study compares the performance---bias and confidence interval
+covarage and width---of our ``limitless'' method to local-OLS, and
+local-permutation methods.
+Across all simulation runs, the running variable $R$ was distributed as
+$\mathrm{Uniform}(-0.5,0.5)$, the cutoff was $c=0$, and control potential
+outcomes as $Y_C=0.75R+\epsilon$, where the 0.75 slope was chosen to
+approximately match the estimated slope from the LSO study.
+Within this framework, we varied three factors: (a) sample size, (b)
+the distribution of regression error $\epsilon$, and (c) the
+treatment effect.
+We considered three sample sizes: $n=50$, 250, and 2,500.
+Regression errors were distributed as either Normal or Student's $t$
+with 3 d.f.; to mimic the LSO data, we forced the errors to have a
 standard deviation of 0.75.
-The values for slope and residual standard error were approximately equal to
-those estimated from the LSO data.
-In all simulation runs, the ATE was 0; in six runs the effect was
-exactly zero and in three they were equal in distribution to the
-regression errors, i.e. $t_3$ with a standard deviation of 0.75.
-Each simulation scenario was run
-\Sexpr{format(ncol(outcomeSim[[1]]),big.mark=',')}
+Finally, the treatment effect was either exactly
+zero---i.e. $Y_T\equiv Y_C$---or was set as random, $Y_T\equiv
+Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$ where $\eta$ was
+adjusted to have a standard deviation of 0.75.
+Each simulation scenario was run 5,000
+%\Sexpr{format(ncol(outcomeSim[[1]]),big.mark=',')}
 times.
 
 
 \input{tab-levelSimulation}
 
 The results are displayed in Table~\ref{tab:level}.
-Bias for the local permutation approach was approximately equal across
-simulation scenarios---roughly the product of the bandwidth (0.5) and the
-slope (0.75), as will generally be the case with linear data
-generating processes and symmetric windows---with confidence interval
-coverage decreasing with sample size.
-Bias and coverage were more favorable for the limitless and local OLS
-methods, despite slight under-coverage in small samples.
+With a linear data generating model and a symmetric window, the bias
+for the local permutation approach will generally be equal to the
+product of the slope and the bandwidth; in our secenario its bias was
+approximately $0.75\timex0.5\approx 0.37$ across simulation runs.
+The covarage of permuation confidence intervals decreased with sample size.
+The limitless and local OLS methods were approximately unbiased, and
+95\% confidence intervals achieved approximately nominal coverage for
+$n=250$ or 2,500, and under-covered for $n=50$.
 Noteably, random treatment effect heterogeneity did not affect bias or
 coverage.
 
@@ -940,7 +944,8 @@ Across the board, the local permutation method gave the smallest
 confidence intervals; however this came at the expense of coverage.
 Our limitless RD method tended to have equal or slightly narrower
 interval widths than the local OLS approach, with greater advantage
-under $t_3$- as opposed to $\mathcal{N}(0,1)$-distributed disturbances.
+when $\epsilon$ was distributed as $t_3$, than when $\epsilon$ was
+normally distributed.
 
 \subsection{Polynomial Regression}
 
