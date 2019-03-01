@@ -114,7 +114,6 @@ receiving probation, or the minimum GPA not receiving probation:
 ```
 
 
-
 ## main analysis ##
 
 The sh method uses `lmrob`, which in turn requires a random
