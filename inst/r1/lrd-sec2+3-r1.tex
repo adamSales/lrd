@@ -424,17 +424,24 @@ RCT, but only after a preparatory step of modeling and removing the
 outcomes' non-random component.
 In \S~\ref{sec:maria}, these two steps used two different
 datasets---we regressed $Y$ on $R$ using data from years prior to
-2017, when Maria hit, and then used 2017 data to estimate effects, treating residuals as ignorable, \emph{vis
-  a vis} treatment assignment $Z$.
+2017, when Maria hit, and then used 2017 data to estimate effects,
+under the assumption of residual ignorability, \eqref{eq:ignore2}.
 This luxury is unavailable in the typical RDD, in which both steps
 must use the same data, as in \S~\ref{sec:robust-analys-covar}.
-This section will describe a generalization of the method in
-\S~\ref{sec:maria} to the typical case, while incorporating
-specification tests described in \S~\ref{sec:specification} and robust
+This section will describe a generalization of residual ignorability
+\eqref{eq:ignore2} to the typical case, along with an accompanying
+method that incorporates specification tests described in \S~\ref{sec:specification} and robust
 modeling strategies %described in
 \S~\ref{sec:robustFitters}.
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
+
+This section will formalize residual ignorabilty for the typical RDD,
+which relies on a single dataset including variables $Y$, $R$, and $Z$.
+The assumption is that, after a suitable transformation,
+potential outcomes $Y_C$ are conditionally independent of $Z$.
+Hence, causal inference may take the perspective
+that $Z$ is random due to randomness in $R$.
 
 Suppose the statistician to have selected a \textit{detrending procedure}: a
 trend fitter, i.e. a function of
@@ -449,10 +456,7 @@ Appendix~\ref{sec:large-sample-rand}
 states the
 needed regularity condition, which is ordinarily met by OLS and always
 met with our preferred fitters (Section~\ref{sec:test-hypoth-no}).
-Causal inferences taking
-the perspective that $Z$ is random due to
-randomness in $R$ are then possible under the following assumption.
-
+Then, causal inference in an RDD proceeds from the following assumption:
 \begin{ass}{Residual Ignorability}
 \sloppy
 Given $\mathcal{W}$ with $0< \PP( R \in
@@ -465,7 +469,7 @@ where $\thetaInf$ is the probability limit of $\hat\theta$.
 \end{ass}
 Residual Ignorability states that, though $Y_C$ may not be independent of
 $Z$,  it admits a residual transformation bringing about such
-independence.   With $\dt[\hat\theta]{Y_{C}}{ R}$ a suitable
+independence. With $\dt[\hat\theta]{Y_{C}}{ R}$ a suitable
 partial residual, Residual Ignorability is entailed by the
 \textsc{ancova} model (\S~\ref{sec:robust-analys-covar}), or by the combination of any parametric model
 for $\EE (Y_{C}| R)$ with a strict null $H$ relative to which the

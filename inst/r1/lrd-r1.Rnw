@@ -917,7 +917,7 @@ Regression errors were distributed as either Normal or Student's $t$
 with 3 d.f.; to mimic the LSO data, we forced the errors to have a
 standard deviation of 0.75.
 Finally, the treatment effect was either exactly
-zero---i.e. $Y_T\equiv Y_C$---or was set as random, $Y_T\equiv
+zero---i.e. $Y_T= Y_C$---or was set as random, $Y_T=
 Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$ where $\eta$ was
 adjusted to have a standard deviation of 0.75.
 Each simulation scenario was run 5,000
@@ -932,7 +932,7 @@ The results are displayed in Table~\ref{tab:level}.
 With a linear data generating model and a symmetric window, the bias
 for the local permutation approach will generally be equal to the
 product of the slope and the bandwidth; in our secenario its bias was
-approximately $0.75\timex0.5\approx 0.37$ across simulation runs.
+approximately $0.75\times 0.5\approx 0.37$ across simulation runs.
 The covarage of permuation confidence intervals decreased with sample size.
 The limitless and local OLS methods were approximately unbiased, and
 95\% confidence intervals achieved approximately nominal coverage for

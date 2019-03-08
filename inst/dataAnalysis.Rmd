@@ -78,24 +78,24 @@ ntot <- nrow(dat)
 ```
 
 Create RDD plots. First of the outcome (subsequent GPA):
-```{r rddFig}
+```{r rddFig, fig.height=3.9,fig.width=3.9}
 
 figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),
                     FUN=mean,na.rm=TRUE)
 figDat$n <- as.vector(table(dat$R))
 #figDat <- within(figDat,n <- 2*n/max(n))
 
-with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
-                 ylab='Avg Subsequent GPA'))
-abline(v=0,lty=2)
-ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
+#with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
+#                 ylab='Avg Subsequent GPA'))
+#abline(v=0,lty=2)
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
 with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg logit(hsgrade_pct)'))
 
-ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
+ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 
 ```
 
