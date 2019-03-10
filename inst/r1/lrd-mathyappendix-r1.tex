@@ -489,22 +489,23 @@ explicit acknowledgment of sampling variability in $\hat\theta$.
 But this argument does not extend to RDDs.  Rather, in an RDD the
 expected values compared in \eqref{eq:thetahatdd} coincide only for a
 single value of the slope component of $\theta$, as discussed in
-Section~\ref{sec:model-eey-c-r}.The differential at right of
+Section~\ref{sec:model-eey-c-r}.\marginpar{Still discussed there?} The differential at right of
 \eqref{eq:thetahatdd} is generally nonzero; it must be permitted to
 make a contribution. Fortunately any ordinary standard error attaching
 to the $z$-coefficient of the regression of ${\mathbf{Y}_{H}}$ on
 $\mathbf{1}$, $\mathbf{R}$ and $\mathbf{Z}$ will do so; this includes
-Huber-White standard errors.  With such an $\mathrm{SE}_{s}$ in the
-denominator of \eqref{eq:tedef}, provided only that
-$\var (\hat\theta ) = O_{p}(n^{-1})$, the argument behind asymptotic
-Normality of \eqref{eq:tudef} again gives
-$t_{e}({\mathbf{Y}_H}, \mathbf{R}) \stackrel{d}{\rightarrow} N(0, 1)$,
-under either the strong null $H: {Y_H} \equiv Y_{C}$ or its relaxation
-$H': \EE \{ \dt[\bar\theta]{Y_H}{R} | Z=1 \} = \EE \{
-\dt[\bar\theta]{Y_H}{R} | Z=0 \}$;
-for OLS- and other M-estimates, $\var (\hat\theta) = O_{p}(n^{-1})$
-requires only independence and bounded second moments of the
-observations.
+Huber-White standard errors.  
+% With such an $\mathrm{SE}_{s}$ in the
+% denominator of \eqref{eq:tedef}, provided only that
+% $\var (\hat\theta ) = O_{p}(n^{-1})$, the argument behind asymptotic
+% Normality of \eqref{eq:tudef} again gives
+% $t_{e}({\mathbf{Y}_H}, \mathbf{R}) \stackrel{d}{\rightarrow} N(0, 1)$,
+% under either the strong null $H: {Y_H} \equiv Y_{C}$ or its relaxation
+% $H': \EE \{ \dt[\bar\theta]{Y_H}{R} | Z=1 \} = \EE \{
+% \dt[\bar\theta]{Y_H}{R} | Z=0 \}$;
+% for OLS- and other M-estimates, $\var (\hat\theta) = O_{p}(n^{-1})$
+% requires only independence and bounded second moments of the
+% observations.
 
 
 %% THE FOLLOWING PARA WAS IN R2
