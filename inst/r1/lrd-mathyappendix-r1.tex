@@ -250,7 +250,7 @@ but since
 $t \mathrm{Cov}[\IC{W_{1}}{(\thetaInf, \InfPar{\eta})} \mid \mathcal{F}_{1}^{*} ] t'
 \leq t \mathrm{Cov}[\IC{W_{1}}{(\thetaInf, \InfPar{\eta})}] t'$ for
 each $t$, under $H$ we have $\hat{\gamma}_{H}/\mathrm{SE}_{s}(\hat{\gamma}_{H})
-\stackrel{d}{\rightarrow} \mathrm{Normal}(0, v)$ for some $v\leq 1$.
+\stackrel{d}{\rightarrow} \mathrm{Normal}(0, v)$ for some $v\leq 1$ (where ``$\mathrm{SE}_{s}$'' indicates a sandwich estimate).
 
 % In the case of bounded influence $M$-estimation, consistency of
 % sandwich variance estimates can be seen as follows. For $(\theta,
@@ -269,8 +269,7 @@ each $t$, under $H$ we have $\hat{\gamma}_{H}/\mathrm{SE}_{s}(\hat{\gamma}_{H})
 % that $\hat{A}_{n}(\hat\theta, \hat\gamma)^{-1}\hat{B}_{n}(\hat\theta,
 % \hat\gamma) \hat{A}_{n}(\hat\theta, \hat\gamma)^{-t}$ tends to $\Sigma$.
 
-\subsection{Large-sample equivalence of $t_{e}(y, r)$ and the
- $z$-coefficient's $t$-statistic} \label{sec:suppl-s-refs}
+\subsection{Equivalence of tests from $z$-coefficent and from mean difference of partial residuals} \label{sec:suppl-s-refs}
 
 Let $f_{0}(r)=1$,
 $f_1(r) = \indicator{r<0} -\EE \indicator{R<0} = z - p_{z}$, and $f_j(\cdot)$, $j=2,
@@ -488,8 +487,8 @@ explicit acknowledgment of sampling variability in $\hat\theta$.
 
 But this argument does not extend to RDDs.  Rather, in an RDD the
 expected values compared in \eqref{eq:thetahatdd} coincide only for a
-single value of the slope component of $\theta$, as discussed in
-Section~\ref{sec:model-eey-c-r}.\marginpar{Still discussed there?} The differential at right of
+single value, ordinarily 0, of $\theta$'s slope component.  The 
+differential at right of
 \eqref{eq:thetahatdd} is generally nonzero; it must be permitted to
 make a contribution. Fortunately any ordinary standard error attaching
 to the $z$-coefficient of the regression of ${\mathbf{Y}_{H}}$ on
