@@ -112,31 +112,12 @@ The local linear model does not employ higher-order global
 polynomials. It fared better than OLS, but worse than cubic or quartic robust regression.
 
 \end{comment}
-\section{Large-sample randomization inference in RCTs}
-Section~\ref{sec:randProc} %of \citet{lrdauthors:main}
-discusses
-$t_{u}(\mathbf{Y}, \mathbf{Z})$, the two-sample $t$ statistic without
-pooling of variances as considered by Neyman, in RCTs. The discussion
-is in the context of a fixed total sample size $n$ and of conditioning on
-\begin{equation*}
-\mathcal{N} = \sigma(\tilde{\mathbf{Y}}_{T}, \tilde{\mathbf{Y}}_C,
-\mathbf{D}_{T}, N_{0}, N_{1})\quad \text{or} \quad \mathcal{N}^{*} = \sigma(\tilde{\mathbf{Y}}_{T}, \tilde{\mathbf{Y}}_C,
-\mathbf{D}_{T}),
-\end{equation*}
-where $\tilde{\mathbf{v}} = \mathbf{v} - \bar{v}$ and
-$N_{j}=\sum_{i=1}^{n} \indicator{Z_{i}=j}$, $j=0,1$.  Since neither
-$\bar{Y}_T$ nor $\bar{Y}_C$ is observed, $\tilde{\mathbf{Y}}_{T}$ and
-$\tilde{\mathbf{Y}}_C$ are unobserved, despite ${\mathbf{Y}}_{T}$ and
-${\mathbf{Y}}_C$ being partly observed; after conditioning on
-$\mathcal{N}$ or $\mathcal{N}^{*}$, $\tilde{\mathbf{y}}_{T}$ and
-$\tilde{\mathbf{y}}_C$ are fixed but unobserved constants.
 
-Elsewhere in Section~\ref{sec:randProc} conditioning on
-$\mathcal{F}=\sigma(\mathbf{Y}_{C}, N_{0}, N_{1})$ is discussed, but without
-corresponding claims about asymptotics under that conditioning;
-accordingly it is not discussed further in this supplement.  Later,
-however, in
-Section~\ref{sec:theMethod} and following, the conditioning is with respect to
+
+
+\section{Large-sample randomization inference for RDDs} \label{sec:large-sample-rand}
+
+In Section~\ref{sec:theMethod} and following, the conditioning is with respect to
 \begin{equation} \label{eq:1}
 \mathcal{F}^*_{n}=\sigma\left[ \dt[\thetaInf]{\mathbf{Y}_{C}}{
     \mathbf{R}},
@@ -144,9 +125,9 @@ Section~\ref{sec:theMethod} and following, the conditioning is with respect to
 Y_{Ci}, D_{Ti}, R_{i})\indicator{{R}_{i} \not\in
   \mathcal{W}}\}_{i=1}^{n}\right],
 \end{equation}
-a sigma field resembling $\mathcal{F}$ in bearing
-information about $Y_C$s but not $Y_T$s but that, in contrast to
-$\mathcal{F}$ but in similarity to $\mathcal{N}^*$, does not carry
+a sigma field bearing
+information about $Y_C$s but not $Y_T$s. In contrast to sigma fields 
+used in Fisherian randomization inference, it does not carry
 information about the sizes of the treatment and control groups
 (within $\{i : R_{i} \in \mathcal{W}\}$).
 In~\eqref{eq:1}, conditioning on full information about subjects $i$
@@ -162,127 +143,6 @@ and monotonicity (of $(D_{C}, D_{T})$).  In varying degree, the
 sections that follow place additional assumptions bounding $Y_{T}$,
 $Y_{C}$ or transformations of them.
 
-
-\subsection{Normality of $t_{u}(\mathbf{Y}_{H}, \mathbf{Z})$
-} \label{apnd:RICLT}
-
-
-
-
-% For simplicity we argue conditionally upon $\mathcal{N}_{\infty} =
-% \cup_{n\geq 1} \mathcal{N}_{n}$.  Conditional on $\mathcal{N}_{n}$,
-% $\{(\tilde{Y}_{Ti(n)}, \tilde{Y}_{Ci(n)}, D_{Ti(n)}, D_{Ci(n)}): i=1, \ldots, n; n\}$ can be considered a triangular array
-% $\{(\tilde{y}_{Ti(n)}, \tilde{y}_{Ci(n)},  d_{Ti(n)}, d_{Ci(n)}): i=1, \ldots, n; n\}$ of fixed
-% constants, and $(N_{1(n)}, N_{0(n)})$ can also be considered fixed.
-% We shall abuse notation by writing
-% $Y_{Ti}, Y_{Ci}, \tilde{y}_{Ti}, \tilde{y}_{Ci},
-% d_{Ti}, d_{Ci}$,
-% $n_{1}$ and $n_{0}$ for
-% $Y_{Ti(n)}, Y_{Ci(n)}, \allowbreak \tilde{y}_{Ti(n)},
-% \tilde{y}_{Ci(n)}, \allowbreak  d_{Ti(n)}, d_{Ci(n)}$,
-% $n_{1(n)}$ and $n_{0(n)}$ respectively.
-
-First, fix $H: Y_T = Y_C + \tau_0 D_T$ and write
-\begin{equation}
-  \label{eq:yhc}
-  {Y}_{HC} = {Y}_{T} - {D}_{T}\tau_{0}\quad
-  \text{and}  \quad Y_{H} = ZY_{HC} + (1-Z)Y_{C},
-\end{equation}
- so that for each $i$  ${Y}_{HC i}$ is the  $y_{C}$-value that would be
- reconstructed from data $(y_{Ti}, d_{Ti})$ under $H$, if $(y_{Ti},
- d_{Ti})$ rather than $y_{Ci}$ were observed, whereas $\mathbf{y}_{H}$ is the reconstruction of $\mathbf{y}_{C}$
- according to $H$ based on those data that were actually observed.  Thus $\mathbf{Y}_{HC} \equiv \mathbf{Y}_{C}$ if $H$ is true, but not otherwise. To focus ideas suppose $(Y_{HC}, Y_{C})$ to be bounded.
-
-Second, finite population sampling theory entails as $n_{0}$
-and $n_{1}$ increase, the difference between \eqref{eq:sudef}'s
-$\mathrm{SE}_{u}^2$, a random variable, and the $\mathcal{N}^{*}$-constant
-$s^{2}(\tilde{\mathbf{y}}_{T(n)} - \tau_0\mathbf{d}_{T(n)})/n_1 +
-s^{2}(\tilde{\mathbf{y}}_{C(n)})/n_0$,
-where $s^{2}(\mathbf{v}) = (n-1)^{-1}\sum (v_{i} - \bar{v})^{2}$,
-tends to 0, at rate $o_P[\min(n_0, n_1)^{-1}]$.
-For $j=0$ or $1$ and for any $\mathbf{v} = (v_{1}, \ldots, v_{n})$,  $\EE
-[s^{2}_{Z=j}(\mathbf{v}) | N_{j}=n_{j}] =
-s^{2}(\mathbf{v})$ \citep[Thm.~2.4]{cochran:1977}, while $\var
-[s^{2}_{Z=j}(\mathbf{v}) | N_{j}=n_{j}] =$
-$$\frac{n_{j}^{2}}{(n_{j}-1)^{2}}\frac{n_{(1-j)}}{n+1}\left\{
-\frac{1}{n_{j}}\left(1 - \frac{1}{N} \frac{n_{j}+1}{n_{j}-1}\right)
-\kappa_{4}(\mathbf{v}) +
-  \frac{2}{n_{j}-1}s^{4}(\mathbf{v}) \right\},$$
-where $\kappa_{4}(\mathbf{v})$ denotes the fourth cumulant of
-$\mathbf{v}$ \citep[ex. 12.11, p.422]{kendallStuartOrd87}.  Boundedness of $(Y_{HC}, Y_{C})$ entails boundedness for
-$s^{4}(\tilde{\mathbf{y}}_{T} - \tau_0\mathbf{d})$, $\kappa_{4}(\tilde{\mathbf{y}}_{T(n)} - \tau_0\mathbf{d})$,
-$s^{4}(\tilde{\mathbf{y}}_{C})$, and $\kappa_{4}(\tilde{\mathbf{y}}_{C})$, forcing
-the conditional variances of $s^{2}_{Z=1}(\tilde{\mathbf{y}}_{T} - \tau_0\mathbf{d})$ and
-$s^{2}_{Z=0}(\tilde{\mathbf{y}}_{C})$ to be  $O(n_0^{-1})$ and $O(n_1^{-1})$,
-respectively, so that $s^{2}_{Z=1}(\tilde{\mathbf{y}}_{T} - \tau_0\mathbf{d}) - s^{2}(\tilde{\mathbf{y}}_{T} - \tau_0\mathbf{d})$ and $s^{2}_{Z=0}(\tilde{\mathbf{y}}_{C})-s^{2}(\tilde{\mathbf{y}}_{C})$ tend in probability to 0 as $n_0$ and $n_1$ increase without bound.  To connect this to \eqref{eq:sudef}'s definition of $\mathrm{SE}_u^2$ as the sum of
-$s^{2}_{Z=1}({\mathbf{y}}_{T} - \tau_0\mathbf{d})/n_1$ and
-$s^{2}_{Z=0}({\mathbf{y}}_{C})/n_0$, observe that $s^{2}_{Z=j}(\tilde{\mathbf{y}}_{C}) = s^{2}_{Z=j}({\mathbf{y}}_{C})$ and $s^{2}_{Z=j}(\tilde{\mathbf{y}}_{T} - \tau_0\mathbf{d}) = s^{2}_{Z=j}({\mathbf{y}}_{T} - \tau_0\mathbf{d})$, $j=0$ or 1.
-
- Third, as shown by e.g. \citet{samii2012equivalencies},
-$$
-\var(\overline{({y}_{H})}_{Z=1} - \overline{({y}_{H})}_{Z=0} |
-\mathcal{N}) \leq
-s^{2}(\tilde{\mathbf{y}}_{T(n)} - \tau_0\mathbf{d}_{(n)})/n_{1}
-+ s^{2}(\tilde{\mathbf{y}}_{C(n)})/n_{0} ;
-$$
-since $\mathcal{N} \subseteq \mathcal{N}^{*}$, a similar inequality
-holds with conditioning on $\mathcal{N}^{*}$ rather than
-$\mathcal{N}$.  Combining this with the previous solution, the ratio of
-$\mathrm{SE}_u^2$ to $\var(\overline{({y}_{H})}_{Z=1} - \overline{({y}_{H})}_{Z=0} |
-\mathcal{G})$, $\mathcal{G} = \mathcal{N}$ or $\mathcal{N}^{*}$,
-converges to $\nu \leq 1$.
-
-
-It remains to show that  $\overline{({y}_{H})}_{Z=1} -
-\overline{({y}_{H})}_{Z=0}$ is asymptotically Normal.  We may assume
-that $\PP(Z_{i}=j) > 0$, $j=0$, 1.  Under
-conditioning on $\mathcal{N}^{*}_{n} =
-\sigma\left(\{\tilde{Y}_{Ti}\}_{i=1}^{n},
-  \{\tilde{Y}_{Ci}\}_{i=1}^{n}, \{D_{Ti}\}_{i=1}^{n} \right)$,
-\begin{equation*}
-\sum_{i=1}^{n} \left\{\frac{\indicator{Z_{i}=1}}{\PP({Z_{i}=1})} [Y_{HC i} -
-\EE(Y_{HC i})] \, \text{and}\, \frac{\indicator{Z_{i}=0}}{\PP({Z_{i}=0})} [Y_{C i} -
-\EE(Y_{C i})] \right\}
-\end{equation*}
-are both martingale sequences.  Because they have bounded increments,
-the martingale CLT applies: scaled by $n^{-1/2}$, each is
-asymptotically Normal, as is their difference.  Since the CLT also
-applies to $\{Z_{i}\}_{i=1}^{n}$,  the difference of
-$n^{-1}$ times that difference from $\overline{({y}_{H})}_{Z=1} -
-\overline{({y}_{H})}_{Z=0}$ is seen to be $O_{P}(n^{-1})$. The
-same conclusion holds with conditioning on $\mathcal{N}$, but calls
-for additional setup.
-
-\sloppy
-For asymptotics that respect conditioning on $(N_{0}, N_{1}) \in \mathcal{N}$, it is
-helpful to start from a triangular array of i.i.d. random variables
-$\{(Y_{Ti(n)}, Y_{Ci(n)}, D_{Ti(n)}, D_{Ci(n)}, Z_{i(n)}): i=1,
-\ldots, n; n\}$, with corresponding non-nested sigma fields
-$\mathcal{N}_{n} = \sigma(\tilde{\mathbf{Y}}_{T(n)}, \allowbreak
-\tilde{\mathbf{Y}}_{C(n)}, \mathbf{D}_{T(n)}, N_{1(n)}, N_{0(n)})$.
-Due to the contributions of $\bar{Y}_{T}$, $\bar{Y}_{C}$, $N_{1}$ and
-$N_{0}$, sample-size specific sigma fields $\mathcal{N}$ as above are
-non-nested, with or without the triangular array.  For example, if
-$\mathbf{Z}_{(n)}$ were an initial segment of the vector
-$\mathbf{Z}_{(n+1)}$ rather than an independent random variable, then
-the random variables $N_{1(n)} = \sum_{i=1}^{n} \indicator{Z_{i}=1}$
-and $N_{1(n+1)} = \sum_{i=1}^{n+1} \indicator{Z_{i}=1}$ would jointly
-determine the value of $Z_{n+1}$, which in a randomization inference
-cannot be conditioned upon.  Given a triangular array with independent
-rows, however, we can condition on nested sigma fields
-$\cup_{n\leq \nu} \mathcal{N}_{n}$, without indirectly spoiling
-relevant structure. Now one can apply the finite population central limit theorem
-\citep{hajek:1959,li+Ding17CLTsforCI} giving that
-$\var\left(\overline{({y}_{H})}_{Z=1} - \overline{({y}_{H})}_{Z=0}\right)^{-1/2}(\overline{({y}_{H})}_{Z=1} -
-\overline{({y}_{H})}_{Z=0})$  converges in
-distribution to the standard Normal distribution.
-
-Finally, these results
-combine via Slutsky's lemma, giving
-$t_u({Y}_{H}, \mathbf{Z}) \stackrel{d}{\rightarrow} \mathcal{N}(0,v)$,
-some $v\leq 1$.
-
-\section{Large-sample randomization inference for RDDs} \label{sec:large-sample-rand}
 
 
 The Residual Ignorability condition of \S~\ref{sec:model-eey-c-r}
@@ -548,6 +408,16 @@ n^{1/2}\left| \frac{\bar{z}(1-\bar{z})}{\hat{\dot{\Psi}}_{1\gamma} }
 %%  %% - \overline{[\nabla_{\theta} \dt[\theta]{\bty }{ \mathbf{x}}|_{ \theta=\bar\theta  } ]}_{0} \}  + o_{P}(n^{-1/2}).
 %% \end{equation*}
 
+fix $H: Y_T = Y_C + \tau_0 D_T$ and write
+\begin{equation}
+  \label{eq:yhc}
+  {Y}_{HC} = {Y}_{T} - {D}_{T}\tau_{0}\quad
+  \text{and}  \quad Y_{H} = ZY_{HC} + (1-Z)Y_{C},
+\end{equation}
+ so that for each $i$  ${Y}_{HC i}$ is the  $y_{C}$-value that would be
+ reconstructed from data $(y_{Ti}, d_{Ti})$ under $H$, if $(y_{Ti},
+ d_{Ti})$ rather than $y_{Ci}$ were observed, whereas $\mathbf{y}_{H}$ is the reconstruction of $\mathbf{y}_{C}$
+ according to $H$ based on those data that were actually observed.  Thus $\mathbf{Y}_{HC} \equiv \mathbf{Y}_{C}$ if $H$ is true, but not otherwise. 
 Let $\bar\theta = (\bar\alpha, \bar\beta, \bar{s}, \ldots)$
 describe a solution of a system of estimating equations, including a
 subsystem $\EE \psi\{ (Y_{H} -
