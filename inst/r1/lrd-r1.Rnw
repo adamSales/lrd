@@ -959,8 +959,8 @@ normally distributed.
 % unwanted warnings in latex file.  To regenerate dgms-1.pdf,
 % set eval to TRUE, comments out the \includegraphics{} and compile;
 % then come back and reset it to FALSE
-%\includegraphics[width=\maxwidth]{../figure/dgms-1}
-<<dgms,fig.height=2,fig.width=6,cache=TRUE,eval=TRUE>>=
+\includegraphics[width=\maxwidth]{../figure/dgms-1}
+<<dgms,fig.height=2,fig.width=6,cache=TRUE,eval=FALSE>>=
 par(mfrow=c(1,3))
 dgms()
 @
