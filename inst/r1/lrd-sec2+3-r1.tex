@@ -314,16 +314,30 @@ of sequential testing implicitly corrects for multiplicity, according to the
 sequential intersection union principle
 (\citealp[SIUP;][Proposition~1]{rosenbaum2008testing};
 \citealp{hansenSales2015cochran}).
+\citet{liMatteiMealli2015BayesianRD} and
+\citet{cattaneo2014randomization} also suggest the use of covariate
+balance to select a bandwidth.
 
-Alternatively,
-\citet{cattaneo2014randomization} recommend testing hypotheses
-$H_{b_{i}}: {X} \independent {Z}| \{|R| < b_{i}\}$, $b_1 > b_2 > \cdots >0$, in sequence,
-proceeding until identifying  $b = \max \{ b_i: H_{b_{i}}$ is not rejected$\}$;
-the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
-%This method's tests of each $H_{b_{i}}$ are neither covariance
-%adjusted nor multiplicity corrected.
-The analyst decides whether this test-and-reduce process
-should begin in the middle of $\mathcal{W}$ or at its boundaries.
+Restricting analysis to data within a bandwidth may change the
+intepretation of the result. The ATE and the
+TOTE refer to a discrete populations, and reducing the bandwidth likewise
+reduces those populations---the new target populations are comprised of
+subjects for whom $|R|\le b$.
+This suggests selecting a bandwidth with a particular target
+population in mind, perhaps the subjects for whom causal inference
+would be most relevant.
+In contrast, the definition of the LATE is unaffected by bandwidth
+choice.
+
+% Alternatively,
+% \citet{cattaneo2014randomization} recommend testing hypotheses
+% $H_{b_{i}}: {X} \independent {Z}| \{|R| < b_{i}\}$, $b_1 > b_2 > \cdots >0$, in sequence,
+% proceeding until identifying  $b = \max \{ b_i: H_{b_{i}}$ is not rejected$\}$;
+% the analytic sample is then restricted to  $\{i: r_{i} \in (-b,b)\}$.
+% %This method's tests of each $H_{b_{i}}$ are neither covariance
+% %adjusted nor multiplicity corrected.
+% The analyst decides whether this test-and-reduce process
+% should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
 Similarly, failures of the density test are addressed by restricting
 estimation to observations with $|R|>a$, some $a \geq 0$
