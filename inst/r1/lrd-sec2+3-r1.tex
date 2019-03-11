@@ -1,4 +1,4 @@
-\section{Review of Selected Methods}
+\section{Review of Selected Methods}\label{sec:review}
 %% introduces notation
 % Z
 % Y
@@ -231,7 +231,7 @@ Methodological RDD literature has responded with specification tests
 to detect these threats, or with flexible or robust estimators that
 seek to avoid them.
 
-\subsubsection{Covariate Balance Tests}
+\subsubsection{Covariate Balance Tests}\label{sec:balanceTesting}
 Analysis of RCTs and quasiexperiments often hinges on assumptions of
 independence of
  $\mathbf{Z}$ from $(\mathbf{X}, \mathbf{Y}_{C}, \mathbf{Y}_{T})$.
@@ -339,7 +339,7 @@ choice.
 % The analyst decides whether this test-and-reduce process
 % should begin in the middle of $\mathcal{W}$ or at its boundaries.
 
-Similarly, failures of the density test are addressed by restricting
+Failures of the density test are also addressed by restricting
 estimation to observations with $|R|>a$, some $a \geq 0$
 \citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}, and
 repeat the test.
@@ -371,11 +371,10 @@ implicitly assign case weights that can vary widely and
 counterintuitively \citep{gelman2016high}.
 This liability is already
 in evidence with $J=1$, the linear specification, where leverage
-increases with the square of $r -\bar{r}$.  With an analysis sample
-of the form $\{i : R_{i} \in \mathcal{W}\}$ for a ``window''
-$\mathcal{W}$ containing  $c$, if $\mathcal{W}$ is slightly too wide then the
-sample is contaminated near its outer boundaries, precisely
-where leverage is at its highest.
+increases with the square of $r -\bar{r}$.
+If analysts select a bandwidth $b$ that is slightly too large, then
+the analysis sample will include problematic observations near its outer
+boundaries, precisely where leverage is at its highest.
 In order to identify leverage points that are also influential,
 OLS fitting is sometimes combined with specialized diagnostics such as
 plots of Cook's distances \citeyearpar{cook1982residuals}.
@@ -527,13 +526,13 @@ We will discuss each of these steps in sequence.
 \subsection{Pre-Fitting Diagnostics and Bandwidth Choice}
 \label{sec:bandwidthChoice}
 
-If subject matter knowledge suggests that chance variability intrinsic
-to $R$ is typically of magnitude $b$, then RDD modeling focused on
-distilling local randomization might set $\mathcal{W}$ to $[-b,b]$. But it
-is also sensible to subject such an initial choice to specification
+If subject matter knowledge suggests that the ATE or TOTE would be
+most relevent for subjects with $|R|\le b$, then $b$ might form an an
+initial bandwidth choice. But it
+is also sensible to subject this choice to specification
 testing (\S~\ref{sec:specification}).
 
-Common RDD specification checks
+Balance tests in an an RDD (\S~\ref{sec:balanceTesting})
 can be regarded as testing Residual Ignorability with a multivariate
 ``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
 $\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
