@@ -14,7 +14,7 @@
 dgms <- function(){
   lin <- function(x) 0.5*x
   as <- function(x) ifelse(abs(x)>0.5,3*x+sign(x)*(0.5-3)*0.5,lin(x))
-  mu4 <- function(x) .5*x+crv*sin(x*pi)
+  mu4 <- function(x) sin(3*x)
   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))+xlim(-1,1)+
     theme(axis.line=element_blank(),
       axis.text.x=element_blank(),
