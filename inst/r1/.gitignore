@@ -1,4 +1,3 @@
-lrd-sec2+3-r1.tex
 lrd-r1.tex
 *.out
 *.aux
@@ -9,4 +8,8 @@ lrd-r1.tex
 .#-emacs*
 .Rhistory
 figure
+*tikzDictionary
+*.blg
+*.fdb_latexmk
+*.fls
 *~
