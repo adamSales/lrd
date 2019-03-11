@@ -892,7 +892,7 @@ includes the estimates from our and the local linear approach.
 
 
 \section{Simulation Studies}\label{sec:simulation}
-\subsection{Point and Interval Estimates for Three RDD Methods}\lable{sec:levelPower}
+\subsection{Point and Interval Estimates for Three RDD Methods}\label{sec:levelPower}
 <<loadSim, results="hide", include=FALSE>>=
 source(paste0(lrd_package_location, 'R/simulations.r'))
 source(paste0(lrd_package_location, 'R/displaySim.r'))
@@ -959,8 +959,8 @@ normally distributed.
 % unwanted warnings in latex file.  To regenerate dgms-1.pdf,
 % set eval to TRUE, comments out the \includegraphics{} and compile;
 % then come back and reset it to FALSE
-\includegraphics[width=\maxwidth]{../figure/dgms-1}
-<<dgms,fig.height=2,fig.width=6,cache=TRUE,eval=FALSE>>=
+%\includegraphics[width=\maxwidth]{../figure/dgms-1}
+<<dgms,fig.height=2,fig.width=6,cache=FALSE,eval=TRUE>>=
 par(mfrow=c(1,3))
 dgms()
 @
@@ -1020,19 +1020,22 @@ higher RMSE than the limitless method using higher-order polynomials.
 
 RDD analysis calls for a ``window'' of estimation
 $\mathcal{W}$, along with a means with which to isolate and remove
-non-causal association of the running variable with potential outcomes.
-In this it resembles processes of true random number generation,
-which begin with physical processes that are either chaotic
-\citep%[e.g.][]
-{uchida2008fast} or quantum
-\citep%[e.g.][]
-{stefanov2000optical}, yet typically contain elements
-of predictability \citep{raz2005extractors}.
-%% --- as do Puerto Rico's mortality series, and the transcripts of college sophomores
-Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable
-component has, with the help of a model, been isolated and removed
-\citep%[e.g.][]
-{Nisan1999148}.
+non-causal association of the running variable with potential
+outcomes.
+If these steps are successful, the randomness in treatment assignment
+can be leveraged for causal inference within $\mathcal{W}$
+% In this it resembles processes of true random number generation,
+% which begin with physical processes that are either chaotic
+% \citep%[e.g.][]
+% {uchida2008fast} or quantum
+% \citep%[e.g.][]
+% {stefanov2000optical}, yet typically contain elements
+% of predictability \citep{raz2005extractors}.
+% %% --- as do Puerto Rico's mortality series, and the transcripts of college sophomores
+% Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable
+% component has, with the help of a model, been isolated and removed
+% \citep%[e.g.][]
+% {Nisan1999148}.
 
 The method of Section~\ref{sec:theMethod} targets the TOTE or ATE within
 $\mathcal{W}$, as opposed to a difference of limits.
@@ -1095,7 +1098,7 @@ AP effect (Table~\ref{tab:alt}).
 %% regression with robust standard errors, as recommended by
 %% \citealp{crouxetal2004robustSEforrobustreg}, are surprisingly uncommon. )
 
-Our analysis effects adjustment for $R$ using robust
+Our analysis adjusts for $R$ using robust
 M-estimation. For analysis of potentially imperfect RDDs, we see this
 as a necessity.  There is little reason to expect covariate placebo
 testing alone to exclude windows $\mathcal{W}$ that are only
@@ -1104,11 +1107,13 @@ measurements of outcome variables.  Likewise, if the initial sample
 includes subjects with the capability to manipulate their recorded $R$
 values, then the use of donut-shaped $\mathcal{W}$ can be expected to
 remove some such subjects but not necessarily purify the sample of
-them.  With finite samples, sample pruning guided by specification
-tests is expected to leave an $O(n^{-1/2})$-sized share of the sample
-that perfect information would have counseled removing.  Robust
-M-estimation retains consistency under
-contamination fractions of this order \citep{he1991localbreakdown,yohaiZamar1997locallyrobustMestimates}, whereas OLS does not.
+them.  % With finite samples, sample pruning guided by specification
+% tests is expected to leave an $O(n^{-1/2})$-sized share of the sample
+% that perfect information would have counseled removing.
+Robust
+M-estimation retains consistency under moderate amounts of
+contamination % fractions of this order
+\citep{he1991localbreakdown,yohaiZamar1997locallyrobustMestimates}, whereas OLS does not.
 
 If the contamination fraction exceeds $O(n^{-1/2})$, even robust M-estimates
 can be inconsistent.
@@ -1175,7 +1180,7 @@ Thus, these methods should be used in addition to, rather than instead of, prepa
 In simulated RDDs of moderate size, our
 robust regression-based generalized score tests
 achieve nominal levels; as compared to
-the alternative methods considered here, they improve power.
+the alternative methods considered here, they improve precision.
 Furthermore the simulations find robust
 M-estimation to be compatible with the use of
 non-local cubic and quartic polynomials to

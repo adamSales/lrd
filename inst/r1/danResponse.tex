@@ -166,7 +166,7 @@ In Figure 1, a vertical line at zero might be helpful.
 The line has been added.
 
 \begin{quote}
-In Section 5.1, it would be helpful if you explicitly defined Y_T.
+In Section 5.1, it would be helpful if you explicitly defined $Y_T$.
 \end{quote}
 The new Section \ref{sec:levelPower} implements this suggestion.
 
@@ -175,19 +175,32 @@ In Table 3 the values appear to be percentages not proportion. However,
 in Table 4 you present levels as proportions.
 \end{quote}
 In the new manuscript, we present bias, confidence interval coverage
-and width, and root mean squared error.
+and width, and root mean squared error. We express confidence interval
+coverage as a percentage, and note it as such.
 
+\begin{quote}
 In Section 5.2 all the
 generating functions are locally linear. With the appropriate window
 local linear is exactly correct. Limitless is not. As generating
 function with curvature might be an interesting alternative.
+\end{quote}
+We replaced the ``one-side'' data generating function with a
+sinusoidal function, for which all the methods are misspecified.
 
+\begin{quote}
 In your inference, the fact that the same data are used to select W
 and test the RDD is not considered and doesn’t seem to matter in the
 simulation. Can you provide some insight for this or a reference that
 discusses this?
+\end{quote}
+We pointed out in \S~\ref{sec:bandwidthChoice} that the specification
+checks use only $R$, $Z$, and covariates, but not $Y$, and give
+references that that protects outcome inference.
 
+\begin{quote}
 In the Discussion the reference to random number generation is again a
 distraction and should be removed.
+\end{quote}
+We have removed the reference.
 
 \end{document}
