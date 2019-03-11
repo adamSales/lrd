@@ -136,7 +136,7 @@ polyLatex <- function(tab,full,caption='',label='tab:poly'){
         if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
         if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','One-Side'),'}')
         cat('&',rownames(tab)[rr],'&')
-        cat(paste(sprintf("%.2f", round(tab[rr,],2)),collapse='&'))
+        cat(paste(sprintf("%.2f", round(tab[rr,],1)),collapse='&'))
         cat('\\\\ \n')
     }
     cat('
@@ -167,7 +167,7 @@ polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
         if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
         if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','Sine'),'}')
         cat('&',rownames(tab)[rr],'&')
-        cat(paste(sprintf("%.1f", round(tab[rr,],2)),collapse='&'))
+        cat(paste(sprintf("%.1f", round(tab[rr,],1)),collapse='&'))
         cat('\\\\ \n')
     }
     cat('
