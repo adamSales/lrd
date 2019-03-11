@@ -1,19 +1,20 @@
 #' @export
-dgms <- function(tp){
+## dgms <- function(tp){
 
-    ### the DGMs
-    curve(0.5*x,from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='Linear')
-    abline(v=0,lty=2)
-    curve(ifelse(abs(x)>0.5, 3*x+sign(x)*(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='Anti-Symmetric')
-    abline(v=0,lty=2)
-  #curve(ifelse(x>0.5,3*x+(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
-  curve(mu4,from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
-    abline(v=0,lty=2)
-}
+##     ### the DGMs
+##     curve(0.5*x,from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='Linear')
+##     abline(v=0,lty=2)
+##     curve(ifelse(abs(x)>0.5, 3*x+sign(x)*(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='Anti-Symmetric')
+##     abline(v=0,lty=2)
+##   #curve(ifelse(x>0.5,3*x+(0.5-3)*0.5,0.5*x),from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
+##   curve(mu4,from=-1,to=1,ylim=c(-2,2),xlab='r',ylab='$\\EE[Y|R=r]$',main='One-Sided')
+##     abline(v=0,lty=2)
+## }
 
 dgms <- function(){
   lin <- function(x) 0.5*x
   as <- function(x) ifelse(abs(x)>0.5,3*x+sign(x)*(0.5-3)*0.5,lin(x))
+  mu4 <- function(x) .5*x+crv*sin(x*pi)
   p <- ggplot(data = data.frame(x = 0), mapping = aes(x = x))+xlim(-1,1)+
     theme(axis.line=element_blank(),
       axis.text.x=element_blank(),
@@ -166,7 +167,7 @@ polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
         if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
         if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','Sine'),'}')
         cat('&',rownames(tab)[rr],'&')
-        cat(paste(sprintf("%.2f", round(tab[rr,],2)),collapse='&'))
+        cat(paste(sprintf("%.1f", round(tab[rr,],2)),collapse='&'))
         cat('\\\\ \n')
     }
     cat('

@@ -248,7 +248,7 @@ displayCIsimHet <- function(res,tau=0,caption='',label=''){
 \\hline
 
 &&& \\multicolumn{ 3 }{c}{Permutation}&\\multicolumn{ 3 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 3 }{c}{Local OLS}\\\\
-$n$& Effect& Error &', paste(rep(c('Bias','Coverage','Width'),3),collapse='&'),'\\\\
+$n$& Effect& Error &', paste(rep(c('Bias','Cover.','Width'),3),collapse='&'),'\\\\
 \\hline \n')
   for(n in c(50,250,2500))
 #    for(err in c('norm','t')){
