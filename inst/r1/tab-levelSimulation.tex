@@ -5,20 +5,20 @@
 \hline
 
 &&& \multicolumn{ 3 }{c}{Permutation}&\multicolumn{ 3 }{c}{``Limitless''}&\multicolumn{ 3 }{c}{Local OLS}\\
-$n$& Effect& Error & Bias&Coverage&Width&Bias&Coverage&Width&Bias&Coverage&Width \\
+$n$& Effect& Error & Bias&Cover.&Width&Bias&Cover.&Width&Bias&Cover.&Width \\
 \hline 
 \hline 
-\multirow{3}{*}{ 50 } &0& $\mathcal{N}(0,1)$ &0.37&0.64&0.91&0&0.93&1.75&0&0.93&1.69 \\ 
- &  0 & $t_3$ &0.37&0.5&0.74&0.01&0.94&1.41&0&0.94&1.66 \\ 
- &  $t_3$ & $t_3$ &0.37&0.65&0.95&0.01&0.93&1.8&0.01&0.93&2.04 \\ 
+\multirow{3}{*}{ 50 } &0& $\mathcal{N}(0,1)$ &0.37&64&0.91&-0.00&93&1.75&-0.00&93&1.69 \\ 
+ &  0 & $t_3$ &0.37&50&0.74&0.01&94&1.41&-0.00&94&1.66 \\ 
+ &  $t_3$ & $t_3$ &0.37&65&0.95&0.01&93&1.80&0.01&93&2.04 \\ 
 \hline 
-\multirow{3}{*}{ 250 } &0& $\mathcal{N}(0,1)$ &0.37&0.03&0.39&0&0.95&0.77&0&0.95&0.75 \\ 
- &  0 & $t_3$ &0.37&0&0.29&0&0.95&0.57&0&0.95&0.74 \\ 
- &  $t_3$ & $t_3$ &0.37&0.03&0.38&0&0.95&0.73&0&0.95&0.91 \\ 
+\multirow{3}{*}{ 250 } &0& $\mathcal{N}(0,1)$ &0.37&3&0.39&-0.00&95&0.77&-0.00&95&0.75 \\ 
+ &  0 & $t_3$ &0.37&0&0.29&-0.00&95&0.57&-0.00&95&0.74 \\ 
+ &  $t_3$ & $t_3$ &0.37&3&0.38&-0.00&95&0.73&-0.00&95&0.91 \\ 
 \hline 
-\multirow{3}{*}{ 2500 } &0& $\mathcal{N}(0,1)$ &0.38&0&0.12&0&0.95&0.24&0&0.95&0.24 \\ 
- &  0 & $t_3$ &0.37&0&0.09&0&0.96&0.17&0&0.95&0.23 \\ 
- &  $t_3$ & $t_3$ &0.37&0&0.11&0&0.94&0.22&0&0.95&0.29 \\ 
+\multirow{3}{*}{ 2500 } &0& $\mathcal{N}(0,1)$ &0.38&0&0.12&0.00&95&0.24&0.00&95&0.24 \\ 
+ &  0 & $t_3$ &0.37&0&0.09&0.00&96&0.17&0.00&95&0.23 \\ 
+ &  $t_3$ & $t_3$ &0.37&0&0.11&0.00&94&0.22&0.00&95&0.29 \\ 
 \hline
 \end{tabular}
   \caption{Empirical bias and 95\% confidence interval coverage and width for the analyses of  5000 simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.}

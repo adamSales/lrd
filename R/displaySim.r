@@ -129,14 +129,14 @@ polyLatex <- function(tab,full,caption='',label='tab:poly'){
 
  cat('&& \\multicolumn{4}{c|}{Limitless} &  \\multicolumn{4}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',
         ifelse(full,'\\multicolumn{4}{c|}{Limitless} &  \\multicolumn{4}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',''),'\\\\
- \\multicolumn{2}{r|}{Polynomial Degree}&1&2&3&4&1&2&3&4&',ifelse(full,'&1&2&3&4&1&2&3&4&n/a','n/a'),' \\\\
+ \\multicolumn{2}{r|}{\\makecell[r]{Polynomial\\\\Degree}}&1&2&3&4&1&2&3&4&',ifelse(full,'&1&2&3&4&1&2&3&4&n/a','n/a'),' \\\\
 ')
     for(rr in 1:nrow(tab)){
         if(rr==1) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Linear\\end{sideways}','Linear'),'}')
         if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
         if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','One-Side'),'}')
         cat('&',rownames(tab)[rr],'&')
-        cat(paste(sprintf("%.2f", round(tab[rr,],1)),collapse='&'))
+        cat(paste(sprintf("%.1f", round(tab[rr,],1)),collapse='&'))
         cat('\\\\ \n')
     }
     cat('

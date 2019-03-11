@@ -240,6 +240,10 @@ displayCIsimHet <- function(res,tau=0,caption='',label=''){
     apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
       1:2,mean))
 
+  tab0 <- lapply(tab0,function(xx){
+    out <- rbind(sprintf("%.2f",round(xx[1,],2)),sprintf("%i",as.integer(round(xx[2,]*100))),sprintf("%.2f",round(xx[3,],2)))
+    dimnames(out) <- dimnames(xx)
+    out})
 
   cat('
 \\begin{table}
@@ -262,7 +266,7 @@ $n$& Effect& Error &', paste(rep(c('Bias','Cover.','Width'),3),collapse='&'),'\\
         cat('\\hline \n')
         cat('\\multirow{3}{*}{',n,'} &0& $\\mathcal{N}(0,1)$ &')
       } else cat(' & ',eff,'& $t_3$ &')
-      cat(paste(round(row,2),collapse='&'),'\\\\ \n')
+      cat(paste(row,collapse='&'),'\\\\ \n')
     }
   cat('\\hline
 \\end{tabular}
