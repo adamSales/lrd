@@ -1,7 +1,7 @@
 ---
 title: "LRD paper Appendix C, Data Analysis"
 author: "lrd authors"
-date: "02 May, 2018"
+date: "01 March, 2019"
 output: html_document
 ---
 
@@ -13,75 +13,14 @@ General dependencies.
 #print(getwd())
 library('knitr')
 library(ggplot2)
-```
-
-```
-## Find out what's changed in ggplot2 at
-## http://github.com/tidyverse/ggplot2/releases.
-```
-
-```r
 library(xtable)
 library(robustbase)
 library(rdd)
-```
-
-```
-## Loading required package: sandwich
-```
-
-```
-## Loading required package: lmtest
-```
-
-```
-## Loading required package: zoo
-```
-
-```
-## 
-## Attaching package: 'zoo'
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     as.Date, as.Date.numeric
-```
-
-```
-## Loading required package: AER
-```
-
-```
-## Loading required package: car
-```
-
-```
-## Loading required package: survival
-```
-
-```
-## 
-## Attaching package: 'survival'
-```
-
-```
-## The following object is masked from 'package:robustbase':
-## 
-##     heart
-```
-
-```
-## Loading required package: Formula
-```
-
-```r
-if(!require('lrd')){
- source("lrd/R/functions.r")
- source("lrd/R/simulations.r")
- source("lrd/R/displaySim.r")
-}
+#if(!require('lrd')){
+ source("~/lrd/R/functions.r")
+ source("~/lrd/R/simulations.r")
+ source("~/lrd/R/displaySim.r")
+#}
 ```
 
 Initialization.
@@ -91,7 +30,6 @@ If the variable `paperdir` is supplied, LaTeX code for the tables is saved there
 ```r
 if(!exists('paperdir')) paperdir <- '.'
 
-logit=function(x) log(x*.01/(1-x*.01))
 
 
 ciChar <- function(ci,est=FALSE){
@@ -123,7 +61,7 @@ if(!is.element('dat',ls())){
                                         #dat=subset(dat,left_school!=1)
     dat$dist_from_cut <- round(dat$dist_from_cut,2)
     dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
-    dat$lhsgrade_pct=logit(dat$hsgrade_pct)
+    dat$lhsgrade_pct=plogis(dat$hsgrade_pct)
   #dat$age <- dat$age_at_entry>=19
     dat$R <- dat$dist_from_cut
     dat$Z <- dat$gpalscutoff
@@ -138,20 +76,26 @@ ncomp <- with(dat,sum(gpalscutoff& !probation_year1))
 ntot <- nrow(dat)
 ```
 
-
-Create plots for Figure 1. First of the outcome (subsequent GPA):
+Create RDD plots. First of the outcome (subsequent GPA):
 
 ```r
 figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),
                     FUN=mean,na.rm=TRUE)
 figDat$n <- as.vector(table(dat$R))
-figDat <- within(figDat,n <- 2*n/max(n))
+#figDat <- within(figDat,n <- 2*n/max(n))
 
 with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg Subsequent GPA'))
+abline(v=0,lty=2)
 ```
 
 ![plot of chunk rddFig](figure/rddFig-1.png)
+
+```r
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
+```
+
+![plot of chunk rddFig](figure/rddFig-2.png)
 then a covariate (High-School GPA):
 
 ```r
@@ -160,6 +104,12 @@ with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
 ```
 
 ![plot of chunk hs_gpaFig](figure/hs_gpaFig-1.png)
+
+```r
+ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
+```
+
+![plot of chunk hs_gpaFig](figure/hs_gpaFig-2.png)
 
 The McCrary density test failure and recovery described in Section 4.1
 
@@ -184,7 +134,7 @@ running variable is discrete, when the cutoff is the maximum GPA
 receiving probation, or the minimum GPA not receiving probation:
 
 ```r
-(frandsen1 <- lrd::frandsen(dat$R,cutoff=-0.01,BW=0.5))
+(frandsen1 <- frandsen(dat$R,cutoff=-0.01,BW=0.5))
 ```
 
 ```
@@ -197,7 +147,7 @@ receiving probation, or the minimum GPA not receiving probation:
 ```
 
 ```r
-(frandsen2 <- lrd::frandsen(dat$R,cutoff=0,BW=0.5))
+(frandsen2 <- frandsen(dat$R,cutoff=0,BW=0.5))
 ```
 
 ```
@@ -208,6 +158,7 @@ receiving probation, or the minimum GPA not receiving probation:
 ## 4 0.020000 0
 ## 5 0.100000 0
 ```
+
 
 
 ## main analysis ##
@@ -225,7 +176,7 @@ set.seed(201705)
 lmrob_seed <- .Random.seed
 
 
-SHmain <- lrd::sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
+SHmain <- sh(subset(dat,R!=0),BW=0.5,outcome='nextGPA',Dvar='probation_year1')
 unlist(SHmain)
 ```
 
@@ -238,21 +189,21 @@ unlist(SHmain)
 
 ```r
 # No-donut variant (not discussed in text)
-SHnodo <- lrd::sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
+SHnodo <- sh(dat, BW=0.5, outcome='nextGPA',Dvar='probation_year1')
 
-SHdataDriven <- lrd::sh(dat=subset(dat,R!=0),outcome='nextGPA')
+SHdataDriven <- sh(dat=subset(dat,R!=0),outcome='nextGPA')
 unlist(SHdataDriven)
 ```
 
 ```
 ##  p.value   CI.CI1   CI.CI2   CI.est       BW bal.pval       W1       W2 
-## 1.33e-19 1.68e-01 2.61e-01 2.15e-01 1.03e+00 1.54e-01 1.00e-02 1.03e+00 
+## 4.56e-24 1.83e-01 2.70e-01 2.27e-01 1.13e+00 1.51e-01 1.00e-02 1.13e+00 
 ##        n 
-## 2.16e+04
+## 2.39e+04
 ```
 
 ```r
-SHcubic <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
+SHcubic <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA',rhs='~Z+poly(R,3)')
 unlist(SHcubic)
 ```
 
@@ -264,7 +215,7 @@ unlist(SHcubic)
 ```
 
 ```r
-SHitt <- lrd::sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
+SHitt <- sh(dat=subset(dat,R!=0),BW=0.5,outcome='nextGPA', Dvar=NULL)
 unlist(SHitt)
 ```
 
@@ -297,7 +248,7 @@ kable(resultsTab)
 |            |Estimate |95\% CI      |$\mathcal{W}$ |n      |
 |:-----------|:--------|:------------|:-------------|:------|
 |main        |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
-|data_driven |0.21     |(0.17, 0.26) |[0.01, 1.03)  |21,593 |
+|data_driven |0.23     |(0.18, 0.27) |[0.01, 1.13)  |23,874 |
 |cubic       |0.24     |(0.15, 0.34) |[0.01, 0.50)  |10,014 |
 |ITT         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
 
@@ -313,12 +264,12 @@ print(xtable(resultsTab,align='lrrrl'),
 Results from two alternative methods, creating Table 2:
 
 ```r
-CFT <- lrd::cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
-IK <- lrd::ik(dat,outcome='nextGPA')
+CFT <- cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
+IK <- ik(dat,outcome='nextGPA')
 
 altTab <-
  do.call('rbind',
-  lapply(list(`Local OLS`=IK,Limitless=SHitt,`Local Permutation`=CFT),
+  lapply(list(`Local Linear`=IK,Limitless=SHitt,`Local Permutation`=CFT),
    function(res) c(round2(res$CI[3]),
     ciChar(res$CI[1:2]),
     W=Wfunc(res$W),
@@ -335,9 +286,9 @@ kable(altTab)
 
 |                  |Estimate |95\% CI      |$\mathcal{W}$ |n      |
 |:-----------------|:--------|:------------|:-------------|:------|
-|Local OLS         |0.24     |(0.19, 0.28) |[0.00, 1.25)  |26,647 |
+|Local Linear      |0.24     |(0.19, 0.28) |[0.00, 1.25)  |26,647 |
 |Limitless         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
-|Local Permutation |0.11     |(0.05, 0.17) |[0.01, 0.18)  |3,436  |
+|Local Permutation |0.10     |(0.04, 0.15) |[0.01, 0.19)  |3,766  |
 
 ```r
 print(xtable(altTab,align='rlllr'),
@@ -390,12 +341,7 @@ ggp_main + geom_point(alpha=.1) + stat_smooth()
 ```
 
 ```
-## `geom_smooth()` using method = 'gam'
-```
-
-```
-## Warning: Computation failed in `stat_smooth()`:
-## object 'C_crspl' not found
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
 ![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png)
@@ -468,12 +414,7 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 ```
 
 ```
-## `geom_smooth()` using method = 'gam'
-```
-
-```
-## Warning: Computation failed in `stat_smooth()`:
-## object 'C_crspl' not found
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
 ![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
@@ -493,46 +434,42 @@ sessionInfo()
 
 ```
 ## R version 3.4.4 (2018-03-15)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS  10.14.2
 ## 
 ## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+## [1] C
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] rdd_0.57          Formula_1.2-1     AER_1.2-4        
-##  [4] survival_2.41-3   car_2.1-3         lmtest_0.9-34    
-##  [7] zoo_1.7-13        sandwich_2.4-0    robustbase_0.93-0
-## [10] xtable_1.8-2      ggplot2_2.2.1     knitr_1.17       
-## [13] lrd_0.0.2.9000   
+##  [1] rdd_0.57          Formula_1.2-2     AER_1.2-5        
+##  [4] survival_2.41-3   car_3.0-0         carData_3.0-1    
+##  [7] lmtest_0.9-36     zoo_1.8-1         sandwich_2.4-0   
+## [10] robustbase_0.92-8 xtable_1.8-2      ggplot2_3.0.0    
+## [13] knitr_1.20       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] splines_3.4.4      lattice_0.20-35    colorspace_1.2-6  
-##  [4] testthat_1.0.2     mgcv_1.8-15        rlang_0.1.2       
-##  [7] pillar_1.1.0       nloptr_1.0.4       foreign_0.8-69    
-## [10] withr_2.1.2        plyr_1.8.4         stringr_1.2.0     
-## [13] MatrixModels_0.4-1 munsell_0.4.3      commonmark_1.2    
-## [16] gtable_0.2.0       devtools_1.12.0    memoise_1.0.0     
-## [19] evaluate_0.10      labeling_0.3       SparseM_1.77      
-## [22] quantreg_5.29      pbkrtest_0.4-6     parallel_3.4.4    
-## [25] highr_0.6          DEoptimR_1.0-8     Rcpp_0.12.13      
-## [28] backports_1.0.5    scales_0.4.1       desc_1.1.0        
-## [31] lme4_1.1-12        digest_0.6.10      stringi_1.1.1     
-## [34] grid_3.4.4         rprojroot_1.2      tools_3.4.4       
-## [37] magrittr_1.5       tibble_1.4.2       lazyeval_0.2.0    
-## [40] crayon_1.3.4       MASS_7.3-49        Matrix_1.2-12     
-## [43] xml2_1.1.1         assertthat_0.1     minqa_1.2.4       
-## [46] roxygen2_6.0.1     R6_2.1.2           nnet_7.3-12       
-## [49] nlme_3.1-131.1     git2r_0.15.0       compiler_3.4.4
+##  [1] Rcpp_0.12.16        highr_0.6           cellranger_1.1.0   
+##  [4] pillar_1.2.1        compiler_3.4.4      DEoptimR_1.0-8     
+##  [7] plyr_1.8.4          bindr_0.1.1         forcats_0.3.0      
+## [10] tools_3.4.4         lrd_0.0.2.9000      nlme_3.1-131.1     
+## [13] evaluate_0.10.1     tibble_1.4.2        gtable_0.2.0       
+## [16] lattice_0.20-35     mgcv_1.8-23         pkgconfig_2.0.1    
+## [19] rlang_0.2.0         Matrix_1.2-14       openxlsx_4.0.17    
+## [22] curl_3.2            haven_1.1.1         rio_0.5.10         
+## [25] bindrcpp_0.2.2      withr_2.1.2         dplyr_0.7.4        
+## [28] stringr_1.3.0       grid_3.4.4          glue_1.2.0         
+## [31] data.table_1.10.4-3 R6_2.2.2            readxl_1.1.0       
+## [34] foreign_0.8-69      magrittr_1.5        splines_3.4.4      
+## [37] scales_0.5.0        abind_1.4-5         assertthat_0.2.0   
+## [40] colorspace_1.3-2    labeling_0.3        stringi_1.1.7      
+## [43] lazyeval_0.2.1      munsell_0.4.3
 ```
 
 
