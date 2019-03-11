@@ -81,7 +81,7 @@ This code creates Table 3:
 ```{r table3}
 capture.output({
   displayCIsimHet(outcomeSim,tau=0,
-    caption=paste('Empirical bias and 95\\% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    caption=paste('Empirical bias and 95\\% confidence interval coverage (%) and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
     label='tab:level')
   },file="inst/r1/tab-levelSimulation.tex")
 ```
