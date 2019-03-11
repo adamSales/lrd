@@ -1,0 +1,193 @@
+\documentclass[12pt]{article}
+\usepackage{setspace}
+
+\usepackage{fullpage}
+\usepackage{wrapfig}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{comment}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,amsbsy}
+\usepackage{stmaryrd} %bbm,
+\usepackage{verbatim}
+\usepackage[authoryear]{natbib}
+\usepackage{soul}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{bm}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,
+    citecolor=black,
+    urlcolor=cyan}
+\usepackage{xr}
+
+\externaldocument{lrd-r1}
+\externaldocument{lrd-sec2+3-r1}
+
+\title{Response to Dan's Comments}
+
+\begin{document}
+[Note: for the time being I'm using this for bookkeeping---it will
+have to be edited before we can send it in]\\
+
+\begin{quote}
+This can be accomplished by better sign posting of what
+is background and what is a specific development of your
+method.
+\end{quote}
+\begin{quote}
+\dots More generally, your actual contributions
+are not clear described. For example, it is not clear if use of the
+residuals for RDD is an innovation of this paper or a method being
+taken from the literature.
+\end{quote}
+We have attempted to clarify this distinction by restricting Section
+\ref{sec:review} to background and Section \ref{sec:theMethod} to new
+developments. Regarding residualization, we refer (in the
+Introduction) to our main
+methodological contribution as a ``novel identifying assumption termed
+`residual ignorability.''' and generally use the term ``residual
+ignorability'' to define our method.
+Although we note (e.g. \S~\ref{sec:robust-analys-covar}) that
+traditional methods may be expressed in terms of residuals, we hope
+that these changes make clear that we take residualization to be our
+main, novel, contribution.
+
+\begin{quote}
+Language and notation should use the most common forms not
+uncommon ones. For example the overbar arrow is not the common
+notation for vectors the educational literature. It is more common in
+the econometrics literature. Similarly, joint tests of multiple
+hypotheses are not typically referred to as intersection tests. MM
+estimation maybe more commonly referred to as robust estimation. If
+the uncommon terminology and notation has significant advantages use
+them but draw the connections to the more common forms and heuristic
+understandings.
+\end{quote}
+(I couldn't find ``overbar arrow'' notation?) We removed reference to
+the ``intersection hypothesis'' but retained reference to the
+``sequential intersection-union principal.'' We referred to MM
+regression as ``robust'' regression, unless the distinction between MM
+and other robust models was intrinsic to our point.
+
+\begin{quote}
+I found the formal development of randomization based inference in
+Section 2 useful but the distinction of the purely background material
+from the development that was specific importance for your innovations
+was not sufficiently clear.
+\end{quote}
+We moved our discussion of Fisherian randomization based inference to
+Section \ref{sec:using-eqref-test}, and re-worded around our
+analysis of Hurricaine Maria death tolls. We hope this clarifies its
+connection with our method. We removed the discussion of Neymann-style
+inference which was less directly connected to our method.
+
+\begin{quote}
+Section 2.3 is confusing. The importance of leverage and contamination
+are not made clear. Contamination needs to be clearly defined. If the
+window is small, the leverage from the edges doesn’t seem that
+great. Is this also the case where the model is assumed nonlinear and
+so failure in the approximation with a linear function also breaks
+down further from the discontinuity. The use of the window to motivate
+the contamination and the need for robust regression needs clarity.
+\end{quote}
+We re-wrote our description of sample contamination (now in
+\S~\ref{sec:robustFitters}) to clarify the problem, and its connection
+to bandwidth selection.
+We also modified our discussion of non-robust non-linear modeling
+(\S~\ref{sec:nonlinear}) to clarify the issue of leverage.
+
+\begin{quote}
+Also the discussion starts with a robustness to functional form but
+the discussion transitions to robust regression and robustness to
+leverage. How these are the same issue needs to be clearer than the
+current discussion. The transition from describing problem with
+regression to your preferred fix isn’t clear. MM estimation is one of
+the key contributions of the paper but it is introduced in the middle
+of a paragraph with an introductory sentence that does not signal this
+a focusing on a key innovation. Moreover the language seems offhand as
+if this is a method that could be considered but not one that is being
+recommended.
+\end{quote}
+We moved the introduction of robust MM estimation to Section
+\ref{theMethod} to better frame it as a novel contribution, and
+clarify its crucial role in the method we are proposing.
+
+\begin{quote}
+There should also be a clearer explanation of the role of a window in
+limitless RDD. In the introduction the expectation in the definition
+is not limited to a window.
+\end{quote}
+We attempted to clarify the role of the window in
+\S~\ref{sec:bandwidth} and \S~\ref{sec:bandwidthChoice}. In the
+introduction we write ``The residual ignorability assumption and corresponding ATE
+estimates pertain to all subjects in the window of analysis.'' linking
+residual ignorability with a window from the outset \marginpar{Is this
+  what he meant by ``In the introduction\dots''?}
+
+\begin{quote}
+The first paragraph of section 3 is superfluous and such superfluous
+material can district or worse confuse readers. \dots
+I would also be useful if there
+was some explanation of the point of Section 3.1 before the section or
+after it.
+\end{quote}
+We replaced the paragraph in question with one that explains the
+purpose of each subsection of section 3.
+
+\begin{quote}
+On p. 13 line 49 the sentence “Conditioning on $e_{\theta\infty}(\mathbf{Y}_C \mid \mathbf{R})$... is a good example of
+writing where the point maybe lost some readers because of the way it
+is presented. The entropy in R will not be obvious to readers and they
+will need to figure out what you mean.
+\end{quote}
+We simplified the sentence and replaced ``entropy'' with
+``randomness.''
+
+\begin{quote}
+Pp 14­15, setting alpha to 0.15 to compensate for the conservatism in
+the Bonferroni correct seems odd. You will reject less but you lost
+the control of familywise error at the originally desired
+level. Wouldn’t a less conservative method with the desired alpha
+level be better?
+\end{quote}
+Setting alpha to a higher level will increase the power of the
+specification tests to detect violations of the assumptions. We've
+re-worded in \S~\ref{sec:bandwidthChoice}.
+We also added citations to more powerful multiplicity adjustments in
+\S~\ref{sec:balanceTesting}; however, we kept the Bonferroni procedure
+in our analysis for the sake of simplicity.
+
+\begin{quote}
+In Figure 1, a vertical line at zero might be helpful.
+\end{quote}
+The line has been added.
+
+\begin{quote}
+In Section 5.1, it would be helpful if you explicitly defined Y_T.
+\end{quote}
+The new Section \ref{sec:levelPower} implements this suggestion.
+
+\begin{quote}
+In Table 3 the values appear to be percentages not proportion. However,
+in Table 4 you present levels as proportions.
+\end{quote}
+In the new manuscript, we present bias, confidence interval coverage
+and width, and root mean squared error.
+
+In Section 5.2 all the
+generating functions are locally linear. With the appropriate window
+local linear is exactly correct. Limitless is not. As generating
+function with curvature might be an interesting alternative.
+
+In your inference, the fact that the same data are used to select W
+and test the RDD is not considered and doesn’t seem to matter in the
+simulation. Can you provide some insight for this or a reference that
+discusses this?
+
+In the Discussion the reference to random number generation is again a
+distraction and should be removed.
+
+\end{document}

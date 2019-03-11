@@ -217,7 +217,7 @@ the following section.
 % $t$-statistic of contrast $\hat{\alpha}_{1} -\hat{\alpha}_{0}$.
 
 
-\subsection{Misspecification, Contamination, and Their Remedies}\label{sec:specification}
+\subsection{Threats to RDD Validity and some Remedies}\label{sec:specification}
 
 The \textsc{Ancova} model for RDDs encodes additional assumptions,
 beyond normality and homoskedasticity of regression errors and full
@@ -279,9 +279,10 @@ regressions themselves may be fused within a
 hierarchical Bayesian model
 \citep{liMatteiMealli2015BayesianRD}, or the
 separate tests' p-values could simply be combined using the Bonferroni
-principle.
+principle, the bootstrap maxT correction \citep{westfall2011using}, or
+other multiple comparison corrections.
 
-\subsubsection{The McCrary Density Test}
+\subsubsection{The McCrary Density Test}\label{sec:mccrary}
 McCrary's test for manipulation of treatment assignments
 \citeyearpar{mccrary2008manipulation} can be understood as a %lack of
 %association test applied over an $\{|R| < b\}$ window.
@@ -351,7 +352,7 @@ density test.
 Taken together, placebo and McCrary tests restrict the sample to
 $\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
 
-\subsubsection{Non-linear Models for Y as a function of R}
+\subsubsection{Non-linear Models for Y as a function of R}\label{sec:nonlinear}
 % \citep[\S~5]{lee2008regression, kolesarRothe17}.
 %On the other hand,
 The methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
@@ -555,12 +556,18 @@ coefficient is zero.  We implement these checks as Wald tests with
 heteroskedasticity-robust standard errors, as in
 \S~\ref{sec:robust-analys-covar}, using the Bonferroni method to
 combine placebo checks across covariates.
-To compensate for conservatism of
-the Bonferroni method, we test with size
-$\alpha_{B}=.15$, not $.05$.
+To ensure adaquate power to detect misspecification,
+%the Bonferroni method,
+we test with size $\alpha_{B}=.15$, not $.05$.
 
-We use sequential balance tests to adjust the bandwidth $b$ and, alongside McCrary density tests, to
+We use sequential balance tests to adjust the bandwidth $b$, alongside
+McCrary density tests to further
 refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
+These specification tests rely on covariates, $R$, and $Z$, but not on
+$Y$; therefore, selection of $\mathcal{W}$ preserves the objectivity
+\citep[c.f.][]{rubin2007design}, and, after appropriate conditioning,
+the inferencial properties of the subsequent outcome analysis
+\citep[e.g.][]{rosenbaum2002covariance}.
 % yielding a test of the
 % hypothesis that all of the covariates' residuals are jointly ignorable within the
 % given $\mathcal{W}$.
@@ -581,8 +588,8 @@ refine the analysis sample $\mathcal{W}$ (\S~\ref{sec:bandwidth}).
 
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
-Subsets of the analysis sample that do not satisfy Residual
-Ignorability but include influential observations
+Influential observations in the analysis sample that do not satisfy Residual
+Ignorability %but include influential observations
  can undercut the validity of an RDD analysis. \marginpar{better?}
 If such moderate sample contamination may be present --- specifically, contamination of
 a $O(n^{-1/2})$-sized
@@ -590,8 +597,13 @@ share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
 nor will many robust regression methods engineered to meet
 objectives other than bounding the influence function
 \citep{stefanski1991note}.
-Further, no specification test is powerful enough
-to reliably detect contamination of this size; power to detect anomalies
+The inclusion of problematic observations in the analysis sample can
+be due to misspecification of the model for $\EE (Y_{C}|R)$
+(\S~\ref{sec:nonlinear}), manipulation of treatment assignments
+(\S~\ref{sec:mccrary}), or other violations of residual ignorability,
+coupled with the failure of specification tests to detect these problems.
+However, no specification test is powerful enough
+to reliably detect moderate contamination; power to detect anomalies
 affecting only $O(n^{-1/2})$ of the sample can only tend to a number
 strictly less than 1.
 Hence, the

@@ -892,7 +892,7 @@ includes the estimates from our and the local linear approach.
 
 
 \section{Simulation Studies}\label{sec:simulation}
-\subsection{Level and Power of Hypothesis Tests}
+\subsection{Point and Interval Estimates for Three RDD Methods}\lable{sec:levelPower}
 <<loadSim, results="hide", include=FALSE>>=
 source(paste0(lrd_package_location, 'R/simulations.r'))
 source(paste0(lrd_package_location, 'R/displaySim.r'))
@@ -1006,7 +1006,7 @@ biased.
 OLS and limitless estimation sharply diverge in the quality of their
 point estimates: the RMSE of OLS estimation
 increases rapidly with polynomial degree, but the limitless method's does not.
-With the method based on MM estimators but not with OLS, increasing
+With the method based on robust estimators but not with OLS, increasing
 the degree of the polynomial improved accuracy of
 estimation in the presence of non-linearity.
 
