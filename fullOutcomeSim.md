@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "27 February, 2019"
+date: "11 March, 2019"
 output: html_document
 ---
 
@@ -89,7 +89,7 @@ This code creates Table 3:
 ```r
 capture.output({
   displayCIsimHet(outcomeSim,tau=0,
-    caption=paste('Empirical bias and 95\\% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    caption=paste('Empirical bias and 95\\% confidence interval coverage (\\%) and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
     label='tab:level')
   },file="inst/r1/tab-levelSimulation.tex")
 ```
@@ -911,6 +911,13 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
 ```r
 if (!exists('nreps') ) nreps <- 0
 nreps
+```
+
+```
+## [1] 0
+```
+
+```r
 if (nreps) {
 
 
@@ -934,19 +941,181 @@ results for normally-distributed errors.
 
 
 ```r
-tab.paper <- prntTab(totalPoly,full=FALSE,md=FALSE)
+tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
-polyLatex(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
-    file="tab-polynomialSimulation.tex")
-tab <- prntTab(totalPoly,full=TRUE,md=TRUE)
-rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
-colnames(tab) <- c(rep(paste0('deg=',1:4),2),'')
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
+    file="inst/r1/tab-polynomialSimulation.tex")
+
+tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
+#rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
+colnames(tab) <- gsub('(sh|ik)\\.est.','deg=',colnames(tab))#c(rep(paste0('deg=',1:4),2),'')
+colnames(tab)[ncol(tab)] <- 'n/a'
 kable(tab,format='html',caption='Full results for polynomial simulation',digits=2)%>%
-    kable_styling()%>% column_spec( 5,border_right=TRUE)%>%column_spec(9,border_right=TRUE)%>%
-        add_header_above(c(" " = 1, "Limitless" = 4, "OLS" = 4, "Loc. Lin." = 1))%>%
-            group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
-            group_rows("linear",1,4)%>%group_rows('antiSym',5,8)%>%group_rows('oneSide',9,12)%>%
-                group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
+    kable_styling()%>% column_spec( 6,border_right=TRUE)%>%column_spec(11,border_right=TRUE)%>%
+        add_header_above(c(" " = 1, "Limitless" = 5, "OLS" = 5, "Loc. Lin." = 1))%>%
+            #group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
+            group_rows("linear",1,3)%>%group_rows('antiSym',4,6)%>%group_rows('sine',7,9)#%>%
+```
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>Full results for polynomial simulation</caption>
+ <thead>
+  <tr>
+<th style="border-bottom:hidden" colspan="1"></th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Limitless</div></th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">OLS</div></th>
+<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Loc. Lin.</div></th>
+</tr>
+<tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> deg=1 </th>
+   <th style="text-align:right;"> deg=2 </th>
+   <th style="text-align:right;"> deg=3 </th>
+   <th style="text-align:right;"> deg=4 </th>
+   <th style="text-align:right;"> deg=5 </th>
+   <th style="text-align:right;"> deg=1 </th>
+   <th style="text-align:right;"> deg=2 </th>
+   <th style="text-align:right;"> deg=3 </th>
+   <th style="text-align:right;"> deg=4 </th>
+   <th style="text-align:right;"> deg=5 </th>
+   <th style="text-align:right;"> n/a </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>linear</strong></td></tr>
+<tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;"> 0.02 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;border-right:1px solid;"> -1.70 </td>
+   <td style="text-align:right;"> 0.01 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.37 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 1.11 </td>
+   <td style="text-align:right;"> 4.68 </td>
+   <td style="text-align:right;"> 21.58 </td>
+   <td style="text-align:right;border-right:1px solid;"> 106.41 </td>
+   <td style="text-align:right;"> 0.48 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.06 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
+   <td style="text-align:right;"> 0.07 </td>
+  </tr>
+  <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>antiSym</strong></td></tr>
+<tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;"> -0.03 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.12 </td>
+   <td style="text-align:right;"> -0.64 </td>
+   <td style="text-align:right;"> 1.68 </td>
+   <td style="text-align:right;"> 1.76 </td>
+   <td style="text-align:right;"> -9.02 </td>
+   <td style="text-align:right;border-right:1px solid;"> -9.38 </td>
+   <td style="text-align:right;"> -0.02 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 0.67 </td>
+   <td style="text-align:right;"> 0.67 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.38 </td>
+   <td style="text-align:right;"> 0.71 </td>
+   <td style="text-align:right;"> 2.00 </td>
+   <td style="text-align:right;"> 5.04 </td>
+   <td style="text-align:right;"> 23.53 </td>
+   <td style="text-align:right;border-right:1px solid;"> 106.12 </td>
+   <td style="text-align:right;"> 0.50 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 0.80 </td>
+   <td style="text-align:right;"> 0.79 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
+   <td style="text-align:right;"> 0.56 </td>
+   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 0.07 </td>
+   <td style="text-align:right;"> 0.07 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.07 </td>
+  </tr>
+  <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>sine</strong></td></tr>
+<tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.02 </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> -2.63 </td>
+   <td style="text-align:right;"> -2.18 </td>
+   <td style="text-align:right;"> 1.84 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.17 </td>
+   <td style="text-align:right;"> 0.08 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 1.18 </td>
+   <td style="text-align:right;"> 1.18 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.36 </td>
+   <td style="text-align:right;"> 1.20 </td>
+   <td style="text-align:right;"> 2.86 </td>
+   <td style="text-align:right;"> 5.20 </td>
+   <td style="text-align:right;"> 21.45 </td>
+   <td style="text-align:right;border-right:1px solid;"> 103.41 </td>
+   <td style="text-align:right;"> 0.54 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 1.00 </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;"> 0.09 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.69 </td>
+   <td style="text-align:right;"> 0.08 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.04 </td>
+   <td style="text-align:right;"> 0.09 </td>
+  </tr>
+</tbody>
+</table>
+
+```r
+                #group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
 ```
 
 
@@ -974,18 +1143,27 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] kableExtra_1.0.1 knitr_1.21      
+## [1] lrd_0.0.2.9000   kableExtra_1.0.1 knitr_1.21      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.13      rstudioapi_0.6    xml2_1.1.1       
-##  [4] magrittr_1.5      hms_0.3           rvest_0.3.2      
-##  [7] munsell_0.4.3     viridisLite_0.2.0 colorspace_1.2-6 
-## [10] R6_2.1.2          rlang_0.1.2       highr_0.6        
-## [13] plyr_1.8.4        stringr_1.2.0     httr_1.2.1       
-## [16] tools_3.4.4       webshot_0.5.1     xfun_0.5         
-## [19] selectr_0.3-1     htmltools_0.3.5   digest_0.6.10    
-## [22] rprojroot_1.2     tibble_1.4.2      readr_1.1.1      
-## [25] glue_1.1.1        evaluate_0.10     rmarkdown_1.7    
-## [28] stringi_1.1.1     compiler_3.4.4    pillar_1.1.0     
-## [31] scales_0.4.1      backports_1.1.2   XML_3.98-1.5
+##  [1] zoo_1.7-13         xfun_0.5           splines_3.4.4     
+##  [4] lattice_0.20-35    colorspace_1.2-6   htmltools_0.3.5   
+##  [7] viridisLite_0.2.0  mgcv_1.8-15        XML_3.98-1.5      
+## [10] survival_2.41-3    rlang_0.1.2        pillar_1.1.0      
+## [13] nloptr_1.0.4       glue_1.1.1         selectr_0.3-1     
+## [16] plyr_1.8.4         robustbase_0.93-0  stringr_1.2.0     
+## [19] MatrixModels_0.4-1 munsell_0.4.3      rvest_0.3.2       
+## [22] evaluate_0.10      SparseM_1.77       lmtest_0.9-34     
+## [25] quantreg_5.29      pbkrtest_0.4-6     parallel_3.4.4    
+## [28] highr_0.6          DEoptimR_1.0-8     Rcpp_0.12.13      
+## [31] readr_1.1.1        scales_0.4.1       backports_1.1.2   
+## [34] webshot_0.5.1      lme4_1.1-12        hms_0.3           
+## [37] digest_0.6.10      stringi_1.1.1      AER_1.2-4         
+## [40] grid_3.4.4         rprojroot_1.2      tools_3.4.4       
+## [43] sandwich_2.4-0     magrittr_1.5       rdd_0.57          
+## [46] tibble_1.4.2       Formula_1.2-1      car_2.1-3         
+## [49] MASS_7.3-49        Matrix_1.2-12      xml2_1.1.1        
+## [52] minqa_1.2.4        rmarkdown_1.7      httr_1.2.1        
+## [55] rstudioapi_0.6     R6_2.1.2           nnet_7.3-12       
+## [58] nlme_3.1-131.1     compiler_3.4.4
 ```
