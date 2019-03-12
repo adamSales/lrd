@@ -150,7 +150,13 @@ polyLatex <- function(tab,full,caption='',label='tab:poly'){
 
 #' @export
 polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
-    if(NCOL(tab)!=11) stop('This only works with polynomial degree=1,...,5')
+  if(NCOL(tab)!=11) stop('This only works with polynomial degree=1,...,5')
+  tab2 <- tab
+  for(i in 1:nrow(tab)) for(j in 1:ncol(tab))
+                          tab2[i,j] <- ifelse(tab[i,j]>10,
+                            sprintf("%i",as.integer(round(tab[i,j]))),
+                            sprintf("%.1f",round(tab[i,j],1)))
+
     cat('
         \\begin{table}[ht]
 \\centering
@@ -160,14 +166,14 @@ polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
 
  cat('&& \\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',
         ifelse(full,'\\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',''),'\\\\
- \\multicolumn{2}{r|}{\\makecell[r]{Polynomial\\\\Degree}}&1&2&3&4&5&1&2&3&4&5&',ifelse(full,'&1&2&3&4&1&2&3&4&5&n/a','n/a'),' \\\\
+ DGM&\\makecell[r]{Polynomial\\\\Degree}&1&2&3&4&5&1&2&3&4&5&',ifelse(full,'&1&2&3&4&1&2&3&4&5&n/a','n/a'),' \\\\
 ')
     for(rr in 1:nrow(tab)){
-        if(rr==1) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Linear\\end{sideways}','Linear'),'}')
-        if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','Anti-Sym'),'}')
-        if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','Sine'),'}')
+        if(rr==1) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Linear\\end{sideways}','Linear'),'}',sep='')
+        if(rr==3) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Anti-Sym\\end{sideways}','\\makecell[c]{Anti-\\\\Sym}'),'}',sep='')
+        if(rr==5) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}One-Side\\end{sideways}','Sine'),'}',sep='')
         cat('&',rownames(tab)[rr],'&')
-        cat(paste(sprintf("%.1f", round(tab[rr,],1)),collapse='&'))
+        cat(paste(tab2[rr,],collapse='&'))
         cat('\\\\ \n')
     }
     cat('

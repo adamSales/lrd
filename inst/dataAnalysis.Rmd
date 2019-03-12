@@ -9,9 +9,9 @@ Initialization.
 If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
 
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE,cache=FALSE}
 if(!exists('paperdir')) paperdir <- '.'
-knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,fig.path=paste0(paperdir,'/figure'))
+knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,fig.path=paste0(paperdir,'/figure/'))
 options(scipen=1, digits=3)
 ```
 
@@ -90,7 +90,7 @@ figDat$n <- as.vector(table(dat$R))
 #with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
 #                 ylab='Avg Subsequent GPA'))
 #abline(v=0,lty=2)
-ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted',size=2)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dashed',size=1.5)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
@@ -160,14 +160,18 @@ resultsTab <-
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 
+
 kable(resultsTab)
 
-rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
 
-print(xtable(resultsTab,align='lrrrl'),
-      file=paste0(paperdir,"/tab-results.tex"), floating=F,
-      sanitize.colnames.function=function(x) x,
-      sanitize.rownames.function=function(x) x)
+resultsTab <- cbind(Specification=c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT'),resultsTab)
+
+print(xtable(resultsTab,align='rrlccl'),
+  file=paste0(paperdir,"/tab-results.tex"), floating=F,
+  include.rownames=FALSE,
+  sanitize.colnames.function=function(x) x,
+  sanitize.text.function=function(x) x)
+
 ```
 
 Results from two alternative methods, creating Table 2:
@@ -189,9 +193,13 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 kable(altTab)
 
-print(xtable(altTab,align='rlllr'),
-      file=paste0(paperdir,"/tab-alt.tex"), floating=F,
-      sanitize.colnames.function=function(x) x)
+altTab <- cbind(Method=rownames(altTab),altTab)
+
+print(xtable(altTab,align='rrlccl'),
+  file=paste0(paperdir,"/tab-alt.tex"), floating=F,
+  include.rownames=FALSE,
+  sanitize.colnames.function=function(x) x)
+
 ```
 
 

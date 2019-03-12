@@ -85,10 +85,10 @@ figDat$n <- as.vector(table(dat$R))
 #with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
 #                 ylab='Avg Subsequent GPA'))
 #abline(v=0,lty=2)
-ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted',size=2)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dashed',size=1.5)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 
-![plot of chunk rddFig](r1/figurerddFig-1.png)
+![plot of chunk rddFig](r1/figure/rddFig-1.png)
 then a covariate (High-School GPA):
 
 ```r
@@ -96,13 +96,13 @@ with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg logit(hsgrade_pct)'))
 ```
 
-![plot of chunk hs_gpaFig](r1/figurehs_gpaFig-1.png)
+![plot of chunk hs_gpaFig](r1/figure/hs_gpaFig-1.png)
 
 ```r
-ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
+ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted',size=2)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 
-![plot of chunk hs_gpaFig](r1/figurehs_gpaFig-2.png)
+![plot of chunk hs_gpaFig](r1/figure/hs_gpaFig-2.png)
 
 The McCrary density test failure and recovery described in Section 4.1
 
@@ -232,6 +232,7 @@ resultsTab <-
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 
+
 kable(resultsTab)
 ```
 
@@ -278,12 +279,13 @@ kable(resultsTab)
 </table>
 
 ```r
-rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
+resultsTab <- cbind(Specification=c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT'),resultsTab)
 
-print(xtable(resultsTab,align='lrrrl'),
-      file=paste0(paperdir,"/tab-results.tex"), floating=F,
-      sanitize.colnames.function=function(x) x,
-      sanitize.rownames.function=function(x) x)
+print(xtable(resultsTab,align='rrlccl'),
+  file=paste0(paperdir,"/tab-results.tex"), floating=F,
+  include.rownames=FALSE,
+  sanitize.colnames.function=function(x) x,
+  sanitize.text.function=function(x) x)
 ```
 
 Results from two alternative methods, creating Table 2:
@@ -343,9 +345,12 @@ kable(altTab)
 </table>
 
 ```r
-print(xtable(altTab,align='rlllr'),
-      file=paste0(paperdir,"/tab-alt.tex"), floating=F,
-      sanitize.colnames.function=function(x) x)
+altTab <- cbind(Method=rownames(altTab),altTab)
+
+print(xtable(altTab,align='rrlccl'),
+  file=paste0(paperdir,"/tab-alt.tex"), floating=F,
+  include.rownames=FALSE,
+  sanitize.colnames.function=function(x) x)
 ```
 
 
@@ -397,7 +402,7 @@ ggp_main + geom_point(alpha=.1) + stat_smooth()+theme(text = element_text(size=1
 ## `geom_smooth()` using method = 'gam'
 ```
 
-![plot of chunk weightPlot](r1/figureweightPlot-1.png)
+![plot of chunk weightPlot](r1/figure/weightPlot-1.png)
 
 When we fit without omitting R=0 students, here is
 the best fitting version of the model.
@@ -470,7 +475,7 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 ## `geom_smooth()` using method = 'gam'
 ```
 
-![plot of chunk weightNoDonutPlot](r1/figureweightNoDonutPlot-1.png)
+![plot of chunk weightNoDonutPlot](r1/figure/weightNoDonutPlot-1.png)
 
 
 Save results:

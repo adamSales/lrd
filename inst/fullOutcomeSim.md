@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "27 February, 2019"
+date: "12 March, 2019"
 output: html_document
 ---
 
@@ -89,7 +89,7 @@ This code creates Table 3:
 ```r
 capture.output({
   displayCIsimHet(outcomeSim,tau=0,
-    caption=paste('Empirical bias and 95\\% confidence interval coverage and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    caption=paste('Empirical bias and 95\\% confidence interval coverage (\\%) and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
     label='tab:level')
   },file="inst/r1/tab-levelSimulation.tex")
 ```
@@ -943,7 +943,7 @@ results for normally-distributed errors.
 ```r
 tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
-polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data generating models (DGMs) were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.'),label='tab:poly'),
     file="inst/r1/tab-polynomialSimulation.tex")
 
 tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
@@ -1143,27 +1143,36 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] lrd_0.0.2.9000   rmarkdown_1.7    kableExtra_1.0.1 knitr_1.21      
+##  [1] gridExtra_2.2.1   lrd_0.0.2.9000    rmarkdown_1.7    
+##  [4] kableExtra_1.0.1  perm_1.0-0.0      pbs_1.1          
+##  [7] dplyr_0.7.4       Hmisc_4.0-3       lattice_0.20-35  
+## [10] mgcv_1.8-27       nlme_3.1-131.1    rdd_0.57         
+## [13] Formula_1.2-1     AER_1.2-4         survival_2.41-3  
+## [16] car_2.1-3         lmtest_0.9-34     zoo_1.7-13       
+## [19] sandwich_2.4-0    robustbase_0.93-0 xtable_1.8-2     
+## [22] ggplot2_2.2.1     knitr_1.21       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] zoo_1.7-13         xfun_0.5           splines_3.4.4     
-##  [4] lattice_0.20-35    colorspace_1.2-6   htmltools_0.3.5   
-##  [7] viridisLite_0.2.0  yaml_2.2.0         mgcv_1.8-15       
-## [10] survival_2.41-3    XML_3.98-1.5       rlang_0.1.2       
-## [13] pillar_1.1.0       nloptr_1.0.4       glue_1.1.1        
-## [16] selectr_0.3-1      plyr_1.8.4         robustbase_0.93-0 
-## [19] stringr_1.2.0      MatrixModels_0.4-1 munsell_0.4.3     
-## [22] rvest_0.3.2        evaluate_0.10      SparseM_1.77      
-## [25] lmtest_0.9-34      quantreg_5.29      pbkrtest_0.4-6    
-## [28] parallel_3.4.4     DEoptimR_1.0-8     highr_0.6         
-## [31] Rcpp_0.12.13       readr_1.1.1        scales_0.4.1      
-## [34] backports_1.1.2    webshot_0.5.1      lme4_1.1-12       
-## [37] hms_0.3            digest_0.6.10      stringi_1.1.1     
-## [40] AER_1.2-4          rprojroot_1.2      grid_3.4.4        
-## [43] tools_3.4.4        sandwich_2.4-0     magrittr_1.5      
-## [46] rdd_0.57           tibble_1.4.2       Formula_1.2-1     
-## [49] car_2.1-3          MASS_7.3-49        Matrix_1.2-12     
-## [52] xml2_1.1.1         minqa_1.2.4        httr_1.2.1        
-## [55] rstudioapi_0.6     R6_2.1.2           nnet_7.3-12       
-## [58] nlme_3.1-131.1     compiler_3.4.4
+##  [1] httr_1.2.1          viridisLite_0.2.0   splines_3.4.4      
+##  [4] assertthat_0.1      highr_0.6           latticeExtra_0.6-28
+##  [7] selectr_0.3-1       pillar_1.1.0        backports_1.1.2    
+## [10] quantreg_5.29       glue_1.1.1          chron_2.3-47       
+## [13] digest_0.6.10       RColorBrewer_1.1-2  checkmate_1.8.2    
+## [16] rvest_0.3.2         minqa_1.2.4         colorspace_1.2-6   
+## [19] htmltools_0.3.5     Matrix_1.2-12       plyr_1.8.4         
+## [22] XML_3.98-1.5        pkgconfig_2.0.1     SparseM_1.77       
+## [25] webshot_0.5.1       scales_0.4.1        lme4_1.1-12        
+## [28] MatrixModels_0.4-1  htmlTable_1.9       tibble_1.4.2       
+## [31] nnet_7.3-12         lazyeval_0.2.0      pbkrtest_0.4-6     
+## [34] magrittr_1.5        evaluate_0.10       MASS_7.3-49        
+## [37] xml2_1.1.1          foreign_0.8-69      tools_3.4.4        
+## [40] data.table_1.9.6    hms_0.3             stringr_1.2.0      
+## [43] munsell_0.4.3       cluster_2.0.6       bindrcpp_0.2       
+## [46] compiler_3.4.4      rlang_0.1.2         grid_3.4.4         
+## [49] nloptr_1.0.4        rstudioapi_0.6      htmlwidgets_0.7    
+## [52] base64enc_0.1-3     labeling_0.3        codetools_0.2-15   
+## [55] gtable_0.2.0        R6_2.1.2            bindr_0.1          
+## [58] rprojroot_1.2       readr_1.1.1         stringi_1.1.1      
+## [61] parallel_3.4.4      Rcpp_0.12.13        rpart_4.1-13       
+## [64] acepack_1.3-3.3     DEoptimR_1.0-8      xfun_0.5
 ```
