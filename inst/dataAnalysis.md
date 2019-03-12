@@ -1,9 +1,13 @@
 ---
 title: "LRD paper Appendix C, Data Analysis"
 author: "lrd authors"
-date: "01 March, 2019"
+date: "12 March, 2019"
 output: html_document
 ---
+
+Initialization.
+If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
+
 
 
 
@@ -23,15 +27,9 @@ library(rdd)
 #}
 ```
 
-Initialization.
-If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
 
 
 ```r
-if(!exists('paperdir')) paperdir <- '.'
-
-
-
 ciChar <- function(ci,est=FALSE){
     #ci <- round(ci,2)
     ci.out <- paste('(',round2(ci[1]),', ',round2(ci[2]),')',sep='')
@@ -84,18 +82,13 @@ figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),
 figDat$n <- as.vector(table(dat$R))
 #figDat <- within(figDat,n <- 2*n/max(n))
 
-with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
-                 ylab='Avg Subsequent GPA'))
-abline(v=0,lty=2)
+#with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
+#                 ylab='Avg Subsequent GPA'))
+#abline(v=0,lty=2)
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted',size=2)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 
-![plot of chunk rddFig](figure/rddFig-1.png)
-
-```r
-ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
-```
-
-![plot of chunk rddFig](figure/rddFig-2.png)
+![plot of chunk rddFig](r1/figurerddFig-1.png)
 then a covariate (High-School GPA):
 
 ```r
@@ -103,13 +96,13 @@ with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg logit(hsgrade_pct)'))
 ```
 
-![plot of chunk hs_gpaFig](figure/hs_gpaFig-1.png)
+![plot of chunk hs_gpaFig](r1/figurehs_gpaFig-1.png)
 
 ```r
-ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)
+ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 
-![plot of chunk hs_gpaFig](figure/hs_gpaFig-2.png)
+![plot of chunk hs_gpaFig](r1/figurehs_gpaFig-2.png)
 
 The McCrary density test failure and recovery described in Section 4.1
 
@@ -158,7 +151,6 @@ receiving probation, or the minimum GPA not receiving probation:
 ## 4 0.020000 0
 ## 5 0.100000 0
 ```
-
 
 
 ## main analysis ##
@@ -243,14 +235,47 @@ colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 kable(resultsTab)
 ```
 
-
-
-|            |Estimate |95\% CI      |$\mathcal{W}$ |n      |
-|:-----------|:--------|:------------|:-------------|:------|
-|main        |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
-|data_driven |0.23     |(0.18, 0.27) |[0.01, 1.13)  |23,874 |
-|cubic       |0.24     |(0.15, 0.34) |[0.01, 0.50)  |10,014 |
-|ITT         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> Estimate </th>
+   <th style="text-align:left;"> 95\% CI </th>
+   <th style="text-align:left;"> $\mathcal{W}$ </th>
+   <th style="text-align:left;"> n </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> main </td>
+   <td style="text-align:left;"> 0.24 </td>
+   <td style="text-align:left;"> (0.17, 0.31) </td>
+   <td style="text-align:left;"> [0.01, 0.50) </td>
+   <td style="text-align:left;"> 10,014 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> data_driven </td>
+   <td style="text-align:left;"> 0.23 </td>
+   <td style="text-align:left;"> (0.18, 0.27) </td>
+   <td style="text-align:left;"> [0.01, 1.13) </td>
+   <td style="text-align:left;"> 23,874 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> cubic </td>
+   <td style="text-align:left;"> 0.24 </td>
+   <td style="text-align:left;"> (0.15, 0.34) </td>
+   <td style="text-align:left;"> [0.01, 0.50) </td>
+   <td style="text-align:left;"> 10,014 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ITT </td>
+   <td style="text-align:left;"> 0.24 </td>
+   <td style="text-align:left;"> (0.17, 0.31) </td>
+   <td style="text-align:left;"> [0.01, 0.50) </td>
+   <td style="text-align:left;"> 10,014 </td>
+  </tr>
+</tbody>
+</table>
 
 ```r
 rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
@@ -282,13 +307,40 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 kable(altTab)
 ```
 
-
-
-|                  |Estimate |95\% CI      |$\mathcal{W}$ |n      |
-|:-----------------|:--------|:------------|:-------------|:------|
-|Local Linear      |0.24     |(0.19, 0.28) |[0.00, 1.25)  |26,647 |
-|Limitless         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
-|Local Permutation |0.10     |(0.04, 0.15) |[0.01, 0.19)  |3,766  |
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> Estimate </th>
+   <th style="text-align:left;"> 95\% CI </th>
+   <th style="text-align:left;"> $\mathcal{W}$ </th>
+   <th style="text-align:left;"> n </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> Local Linear </td>
+   <td style="text-align:left;"> 0.24 </td>
+   <td style="text-align:left;"> (0.19, 0.28) </td>
+   <td style="text-align:left;"> [0.00, 1.25) </td>
+   <td style="text-align:left;"> 26,647 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Limitless </td>
+   <td style="text-align:left;"> 0.24 </td>
+   <td style="text-align:left;"> (0.17, 0.31) </td>
+   <td style="text-align:left;"> [0.01, 0.50) </td>
+   <td style="text-align:left;"> 10,014 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Local Permutation </td>
+   <td style="text-align:left;"> 0.10 </td>
+   <td style="text-align:left;"> (0.04, 0.15) </td>
+   <td style="text-align:left;"> [0.01, 0.19) </td>
+   <td style="text-align:left;"> 3,766 </td>
+  </tr>
+</tbody>
+</table>
 
 ```r
 print(xtable(altTab,align='rlllr'),
@@ -334,17 +386,18 @@ rose above the cut due to savvyness.
 
 
 ```r
+require(mgcv)
 ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                               robweights=robwts_main),
                    aes(x=R,y=robweights))
-ggp_main + geom_point(alpha=.1) + stat_smooth()
+ggp_main + geom_point(alpha=.1) + stat_smooth()+theme(text = element_text(size=12))+ylab('Robustness Weights')
 ```
 
 ```
-## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+## `geom_smooth()` using method = 'gam'
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png)
+![plot of chunk weightPlot](r1/figureweightPlot-1.png)
 
 When we fit without omitting R=0 students, here is
 the best fitting version of the model.
@@ -414,10 +467,10 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 ```
 
 ```
-## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+## `geom_smooth()` using method = 'gam'
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
+![plot of chunk weightNoDonutPlot](r1/figureweightNoDonutPlot-1.png)
 
 
 Save results:
@@ -434,42 +487,54 @@ sessionInfo()
 
 ```
 ## R version 3.4.4 (2018-03-15)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS  10.14.2
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 7 x64 (build 7601) Service Pack 1
 ## 
 ## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] C
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] rdd_0.57          Formula_1.2-2     AER_1.2-5        
-##  [4] survival_2.41-3   car_3.0-0         carData_3.0-1    
-##  [7] lmtest_0.9-36     zoo_1.8-1         sandwich_2.4-0   
-## [10] robustbase_0.92-8 xtable_1.8-2      ggplot2_3.0.0    
-## [13] knitr_1.20       
+##  [1] gridExtra_2.2.1   lrd_0.0.2.9000    rmarkdown_1.7    
+##  [4] kableExtra_1.0.1  perm_1.0-0.0      pbs_1.1          
+##  [7] dplyr_0.7.4       Hmisc_4.0-3       lattice_0.20-35  
+## [10] mgcv_1.8-27       nlme_3.1-131.1    rdd_0.57         
+## [13] Formula_1.2-1     AER_1.2-4         survival_2.41-3  
+## [16] car_2.1-3         lmtest_0.9-34     zoo_1.7-13       
+## [19] sandwich_2.4-0    robustbase_0.93-0 xtable_1.8-2     
+## [22] ggplot2_2.2.1     knitr_1.21       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.16        highr_0.6           cellranger_1.1.0   
-##  [4] pillar_1.2.1        compiler_3.4.4      DEoptimR_1.0-8     
-##  [7] plyr_1.8.4          bindr_0.1.1         forcats_0.3.0      
-## [10] tools_3.4.4         lrd_0.0.2.9000      nlme_3.1-131.1     
-## [13] evaluate_0.10.1     tibble_1.4.2        gtable_0.2.0       
-## [16] lattice_0.20-35     mgcv_1.8-23         pkgconfig_2.0.1    
-## [19] rlang_0.2.0         Matrix_1.2-14       openxlsx_4.0.17    
-## [22] curl_3.2            haven_1.1.1         rio_0.5.10         
-## [25] bindrcpp_0.2.2      withr_2.1.2         dplyr_0.7.4        
-## [28] stringr_1.3.0       grid_3.4.4          glue_1.2.0         
-## [31] data.table_1.10.4-3 R6_2.2.2            readxl_1.1.0       
-## [34] foreign_0.8-69      magrittr_1.5        splines_3.4.4      
-## [37] scales_0.5.0        abind_1.4-5         assertthat_0.2.0   
-## [40] colorspace_1.3-2    labeling_0.3        stringi_1.1.7      
-## [43] lazyeval_0.2.1      munsell_0.4.3
+##  [1] httr_1.2.1          viridisLite_0.2.0   splines_3.4.4      
+##  [4] assertthat_0.1      highr_0.6           latticeExtra_0.6-28
+##  [7] pillar_1.1.0        backports_1.1.2     quantreg_5.29      
+## [10] glue_1.1.1          chron_2.3-47        digest_0.6.10      
+## [13] RColorBrewer_1.1-2  checkmate_1.8.2     rvest_0.3.2        
+## [16] minqa_1.2.4         colorspace_1.2-6    htmltools_0.3.5    
+## [19] Matrix_1.2-12       plyr_1.8.4          pkgconfig_2.0.1    
+## [22] SparseM_1.77        webshot_0.5.1       scales_0.4.1       
+## [25] lme4_1.1-12         MatrixModels_0.4-1  htmlTable_1.9      
+## [28] tibble_1.4.2        nnet_7.3-12         lazyeval_0.2.0     
+## [31] pbkrtest_0.4-6      magrittr_1.5        evaluate_0.10      
+## [34] MASS_7.3-49         xml2_1.1.1          foreign_0.8-69     
+## [37] tools_3.4.4         data.table_1.9.6    hms_0.3            
+## [40] stringr_1.2.0       munsell_0.4.3       cluster_2.0.6      
+## [43] bindrcpp_0.2        compiler_3.4.4      rlang_0.1.2        
+## [46] grid_3.4.4          nloptr_1.0.4        rstudioapi_0.6     
+## [49] htmlwidgets_0.7     base64enc_0.1-3     labeling_0.3       
+## [52] codetools_0.2-15    gtable_0.2.0        R6_2.1.2           
+## [55] bindr_0.1           rprojroot_1.2       readr_1.1.1        
+## [58] stringi_1.1.1       parallel_3.4.4      Rcpp_0.12.13       
+## [61] rpart_4.1-13        acepack_1.3-3.3     DEoptimR_1.0-8     
+## [64] xfun_0.5
 ```
 
 
