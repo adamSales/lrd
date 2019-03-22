@@ -5,8 +5,13 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE)
+Initialization.
+If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
+
+
+```{r setup, include=FALSE,cache=FALSE}
+if(!exists('paperdir')) paperdir <- '.'
+knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,fig.path=paste0(paperdir,'/figure/'))
 options(scipen=1, digits=3)
 ```
 
@@ -25,11 +30,8 @@ library(rdd)
 #}
 ```
 
-Initialization.
-If the variable `paperdir` is supplied, LaTeX code for the tables is saved there, for inclusion in the main paper; otherwise, the code is saved in the current working directory.
 
 ```{r load-data,warning=FALSE,message=FALSE}
-if(!exists('paperdir')) paperdir <- '.'
 
 
 
@@ -78,7 +80,7 @@ ntot <- nrow(dat)
 ```
 
 Create RDD plots. First of the outcome (subsequent GPA):
-```{r rddFig, fig.height=3.9,fig.width=3.9}
+```{r rddFig, fig.height=3.9,fig.width=3.9,dpi=300}
 
 figDat <- aggregate(dat[,c('nextGPA','lhsgrade_pct')],by=list(R=dat$R),
                     FUN=mean,na.rm=TRUE)
@@ -88,14 +90,14 @@ figDat$n <- as.vector(table(dat$R))
 #with(figDat,plot(R,nextGPA,xlab='First-Year GPA (Distance from Cutoff)',
 #                 ylab='Avg Subsequent GPA'))
 #abline(v=0,lty=2)
-ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
+ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dashed',size=1.5)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 then a covariate (High-School GPA):
 ```{r hs_gpaFig}
 with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg logit(hsgrade_pct)'))
 
-ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted')+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
+ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted',size=2)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 
 ```
 
@@ -123,7 +125,7 @@ S-estimation initializers will always be sampling the same
 subsets of the sample.
 
 
-```{r}
+```{r main,cache=TRUE}
 set.seed(201705)
 lmrob_seed <- .Random.seed
 
@@ -145,7 +147,7 @@ unlist(SHitt)
 ```
 
 Create Table 1:
-```{r}
+```{r table1}
 
 resultsTab <-
  do.call('rbind',
@@ -158,18 +160,22 @@ resultsTab <-
 colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 
+
 kable(resultsTab)
 
-rownames(resultsTab) <- c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT')
 
-print(xtable(resultsTab,align='lrrrl'),
-      file=paste0(paperdir,"/tab-results.tex"), floating=F,
-      sanitize.colnames.function=function(x) x,
-      sanitize.rownames.function=function(x) x)
+resultsTab <- cbind(Specification=c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT'),resultsTab)
+
+print(xtable(resultsTab,align='rrlccl'),
+  file=paste0(paperdir,"/tab-results.tex"), floating=F,
+  include.rownames=FALSE,
+  sanitize.colnames.function=function(x) x,
+  sanitize.text.function=function(x) x)
+
 ```
 
 Results from two alternative methods, creating Table 2:
-```{r}
+```{r tabAlt,cache=TRUE}
 CFT <- cft(subset(dat,R!=0),BW=NULL,outcome='nextGPA')
 IK <- ik(dat,outcome='nextGPA')
 
@@ -187,9 +193,13 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 
 kable(altTab)
 
-print(xtable(altTab,align='rlllr'),
-      file=paste0(paperdir,"/tab-alt.tex"), floating=F,
-      sanitize.colnames.function=function(x) x)
+altTab <- cbind(Method=rownames(altTab),altTab)
+
+print(xtable(altTab,align='rrlccl'),
+  file=paste0(paperdir,"/tab-alt.tex"), floating=F,
+  include.rownames=FALSE,
+  sanitize.colnames.function=function(x) x)
+
 ```
 
 
@@ -200,7 +210,7 @@ should reject or downweight more frequently in those regions, and we'll see dips
 on the plot of robustness weights vs R.
 
 Here is the plot corresponding to the main analysis presented in the paper.
-```{r}
+```{r weightMod}
 lmrob_main <- lmrob(nextGPA~Z+R,
               offset=(SHmain$CI[3]*probation_year1),
               data=dat,subset=(R!=0 & abs(R)<.5),
@@ -211,7 +221,7 @@ lmrob_main <- lmrob(nextGPA~Z+R,
 ```
 
 Robustness weights are mostly near 1, never below .25.
-```{r}
+```{r weightSummary}
 robwts_main <- weights(lmrob_main, type="robustness")
 summary(robwts_main)
 ```
@@ -221,17 +231,18 @@ although the lowest values do occur at slightly above
 the cutpoint, where we'd see savvy students whose
 rose above the cut due to savvyness.
 
-```{r}
+```{r weightPlot, fig.height=3.9,fig.width=3.9,dpi=300}
+require(mgcv)
 ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                               robweights=robwts_main),
                    aes(x=R,y=robweights))
-ggp_main + geom_point(alpha=.1) + stat_smooth()
+ggp_main + geom_point(alpha=.1) + stat_smooth()+theme(text = element_text(size=12))+ylab('Robustness Weights')
 ```
 
 When we fit without omitting R=0 students, here is
 the best fitting version of the model.
 
-```{r}
+```{r weightNoDonut}
 lmrob_nodo <- lmrob(nextGPA~Z+R,
               offset=(SHnodo$CI[3]*probation_year1),
               data=dat,subset=(abs(R)<.5),
@@ -247,7 +258,7 @@ Do the observations at R=0 stand out?
 With no donut, robustness weights have a slight tendency
 to be lower among observations at R=0.
 
-```{r}
+```{r weightNoDonutSummary}
 by(robwts_nodo,
    lmrob_nodo$model$R==0, summary)
 t.test(wt~atcut, data.frame(wt=robwts_nodo,
@@ -258,7 +269,7 @@ t.test(wt~atcut, data.frame(wt=robwts_nodo,
 The plot is similar to that of the main analysis,
 with some low robustness weight observations as R=0
 but also plenty of ordinary weight observations there.
-```{r}
+```{r weightNoDonutPlot}
 ggp_nodo <- ggplot(data.frame(R=lmrob_nodo$model$R,
                               robweights=robwts_nodo),
                    aes(x=R,y=robweights))
@@ -267,7 +278,7 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 
 
 Save results:
-```{r}
+```{r save}
 save(list=ls(),file=paste0('RDanalysis-',format(Sys.time(),"%m%d%H%M"),'.RData'))
 ```
 
