@@ -276,13 +276,12 @@ covariates there will be several such tests. To summarize their
 findings with a single p-value, the
 regressions themselves may be fused within a
 ``seemingly unrelated regressions'' model \citep{lee2010regression};
-however, to our knowledge, combining linear and generalized linear
-models is not supported in current software implementations, so
-covariates of mixed type might pose problems.  Alternatively, balance
-assessments could be combined in a hierarchical Bayesian model
-\citep{liMatteiMealli2015BayesianRD}, or the
-separate tests' p-values could simply be combined using the Bonferroni
-principle or
+however, to our knowledge, current software implementations do not
+support the combination of linear and generalized linear
+models, such as when covariates are of mixed type.
+Alternatives include hierarchical Bayesian modeling
+\citep{liMatteiMealli2015BayesianRD}, or combining
+separate tests' p-values using the Bonferroni principle or
 other multiple comparison corrections.
 
 \subsubsection{The McCrary Density Test}\label{sec:mccrary}
