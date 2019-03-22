@@ -7,7 +7,7 @@ lrd-r1.tex
 *-bhnotes.txt
 .#-emacs*
 .Rhistory
-figure
+# figure
 *tikzDictionary
 *.blg
 *.fdb_latexmk
