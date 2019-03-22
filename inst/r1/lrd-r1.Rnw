@@ -139,7 +139,7 @@ of the cutpoint, sacrificing power and external validity.
 To circumvent limitations of the simple RCT model, and of the limit understanding, this paper weds parametric and local
 randomization ideas into a novel identifying assumption termed ``residual
 ignorability.'' The residual ignorability assumption and corresponding ATE
-estimates pertain to all subjects in the window of analysis; discrete
+estimates pertain to all subjects in the data analysis sample; discrete
 GPAs do not pose a threat. Manipulation of the running variable
 remains a threat, but one that Section~\ref{sec:theMethod}'s combination
 of sample pruning and robust M-estimation is uniquely equipped
@@ -289,7 +289,8 @@ Hurricane Maria struck the island of Puerto Rico on September 20,
 2017.
 In spite of widespread devastation, for nearly a year after the
 hurricane, the Puerto Rican government%
-\marginpar{\& the White House,  I think} officially maintained a
+\marginpar{\& the White House,  I think AS: I can't find anything
+  about \emph{official} white house numbers, just Trump mouthing off.} officially maintained a
 suprisingly low death toll of 64 based on examinations of individual
 death reports.
 Estimates from investigative journalists and academic
@@ -591,7 +592,10 @@ first-year GPA.
 %\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
 %}
 \caption{%(a)
-LSO's \citeyearpar {lindo2010ability} RDD. %First-year GPAs (x-axis) have been
+ \texttt{nextGPA} as a
+function of first year GPA, centered by campus-specific cutoff and
+binned by unique first-year GPA values. Point size is proportional to
+the number of students in the bin. %First-year GPAs (x-axis) have been
 %  centered around a campus-specific cut-point for academic probation. Subsequent
 % GPA (y-axis) has been averaged according to first-year GPA. %(b)
 %Log-transformed high-school grade percentile (a covariate), also averaged by first-year college
@@ -1023,173 +1027,77 @@ higher RMSE than the limitless method using higher-order polynomials.
 
 
 \section{Discussion} \label{sec:discussion}
-
-RDD analysis calls for a ``window'' of estimation
-$\mathcal{W}$, along with a means with which to isolate and remove
-non-causal association of the running variable with potential
-outcomes.
-If these steps are successful, the randomness in treatment assignment
-can be leveraged for causal inference within $\mathcal{W}$
-% In this it resembles processes of true random number generation,
-% which begin with physical processes that are either chaotic
-% \citep%[e.g.][]
-% {uchida2008fast} or quantum
-% \citep%[e.g.][]
-% {stefanov2000optical}, yet typically contain elements
-% of predictability \citep{raz2005extractors}.
-% %% --- as do Puerto Rico's mortality series, and the transcripts of college sophomores
-% Just as the method of this paper asserts ignorability of potential outcome residuals, but not of potential outcomes themselves, true random numbers are obtained only after the chaotic process's predictable
-% component has, with the help of a model, been isolated and removed
-% \citep%[e.g.][]
-% {Nisan1999148}.
-
-The method of Section~\ref{sec:theMethod} targets the TOTE or ATE within
-$\mathcal{W}$, as opposed to a difference of limits.
-In RDDs with discrete running variables such as LSO's, neither
+Beginning with \citet{thistlethwaite1960regression}, the dominant mode
+of RDD analysis has relied on regression modeling; in its modern
+formulation, targeting parameters such as the LATE which are defined
+in terms of limits as $r\rightarrow c$.
+However, in RDDs with discrete running variables such as LSO's, neither
 $\lim_{r\downarrow 0} \EE (Y |R=r)$ nor $\lim_{r\uparrow 0} \EE (Y | R=r)$
 exists, except perhaps as $\EE (Y | R=-.01)$ or $\EE (Y | R=0)$.
 A separate embarrassment for  limit-based modeling of RDDs occurs if
 a donut-shaped $\mathcal{W}$ is necessary to address potential
 manipulation of the running variable, as we found to occur with the
-LSO data.  Neither discrete $R$s nor donut-shaped
-$\mathcal{W}$s are in tension with the method of Section~\ref{sec:theMethod}.
-The LSO case study also demonstrates
-the importance of founding RDD inferences on assumptions acknowledging
-the importance of detrending. A local permutation method not adjusting for trend
+LSO data.
+
+% This approach has been largely successful, but as we have seen,
+% encounters problems when $R$ is discrete, when donut designs are
+% called for, or when researchers are interested in estimating an effect
+% for a specific set of subjects.
+An alternative approach \citep[e.g.]{cattaneo2014randomization,liMatteiMealli2015BayesianRD} takes the ``local
+randomization'' heuristic more literally, analyzing data in a small
+region around the cutoff as if it were from a randomized experiment.
+However, this approach assumes that potential outcomes are
+independent of $R$ in a window around the cutoff.
+The LSO case study also demonstrates the importance of acknowleging
+and modeling the dependence between $R$ and $Y$. A local permutation method not adjusting for trend
 %\marginpar{$\leftarrow$ Outdated cross-ref?}
 %(\S~\ref{sec:local-rand-based})
-performed poorly in simulations (\S~\ref{sec:simulation}) and gave discrepant estimates of the
-AP effect (Table~\ref{tab:alt}).
+gave discrepant estimates of the
+AP effect (Table~\ref{tab:alt}) and performed poorly in simulations
+(\S~\ref{sec:simulation}).
 
-% The method of this article is intrinsically asymptotic, a limitation.
-% %% Although a study of our method's
-% %% finite-sample properties in RDDs broadly is beyond the scope of this
-% %% article, related literatures have reached pertinent conclusions.
-% It blends Wald methods with generalized score tests
-% \citep{boos1992genscoretest}, an approach adapted to moderately large samples.
-% % (A ``pure'' generalized score test would have
-% % avoided Section~\ref{sec:test-hypoth-no}'s shortcut of borrowing its
-% % $t$-statistic from a regression fit, instead calculating both the
-% % numerator and denominator of \eqref{eq:tedef} under the constraint of
-% % $H$.)
-% More research is needed to determine whether such a method would
-% improve small-sample performance% as documented in Section~\ref{sec:simulation-results}
-% ; preliminary results from Section~\ref{sec:simulation} suggest
-% similar performance to the conventional method.
-%theory and simulations not specific to RDDs
-%suggest that it may, if perhaps at the expense of power to detect smaller effects in larger samples \citep{heShao1996Bahadurefficiencyofscoretests,guoetal2005robustscoretestsmalln}.
-  %% Its heteroskedasticity-consistent variance estimates may s sometimes perform poorly in finite samples, due
-  %% to the difficulty of tallying contributions to sampling variability
-  %% from high-leverage observations
-  %% \citep{cribarietal2007leverage,cribarietal2008leverageerrata}.
-  %%  However, robust \textit{regression}
-  %% \citep{tukey1962future,huber1967behavior,hampel1974influence}
-  %% attacks the problem of high leverage directly, as discussed
-  %% above in Sec.~\ref{sec:model-eey-c-r},
-  %% limiting the need to keep track of influential observations'
-  %% outsized contributions to coefficients' sampling variability.
-  %% %% Simulation studies of modern robust fitting methods,
-  %% %% including the one used in this article,
-  %% %% document close agreement between asymptotic size and empirical
-  %% %% coverage at $n=25$
-  %% %% \citep{kollerstahel2011robust}.
-  %% These
-  %% studies considered Wald-type tests, whereas ours combine aspects of
-  %% Wald and generalized score tests, which may perform better in small
-%%  samples; see Section~\ref{sec:randProc}, above.
-%% (Our tests did not estimate $\mathrm{SE}_{s}$ while holding the
-%% regression's $z$-coefficient fixed at the hypothesized value, as a true
-%% generalized score test would, because that was not supported by the
-%% robust fitting software. Indeed, pairings of robust
-%% regression with robust standard errors, as recommended by
-%% \citealp{crouxetal2004robustSEforrobustreg}, are surprisingly uncommon. )
+Our framework for RDD analysis links the two approaches.
+Residual ignorability \eqref{ycheck} assumes that the component of
+$Y_c$ that depends on $R$ may be modeled and removed, leaving
+residuals $\dt[\thetaInf]$ that are independent of $Z$.
+Like the local randomization approach, it targets the TOTE or ATE
+within $\mathcal{W}$, as opposed to a difference of limits, and
+accomodates discreteness in $R$ and donut designs.
+In fact, with $\dt{\bm{Y}}{\bm}\equiv\bm{Y}$, it reduces to the local
+randomization method.
+Like the limit-based approach, it models and accounts for the correlation between
+$R$ and $Y$.
+With the right modeling and fitting choices, it returns the
+classical \textsc{ancova} estimate for an RDD (see \S~\ref{sec:robust-analys-covar}).
 
-Our analysis adjusts for $R$ using robust
-M-estimation. For analysis of potentially imperfect RDDs, we see this
-as a necessity.  There is little reason to expect covariate placebo
-testing alone to exclude windows $\mathcal{W}$ that are only
-moderately too wide; this is particularly so in the absence of lagged
-measurements of outcome variables.  Likewise, if the initial sample
-includes subjects with the capability to manipulate their recorded $R$
-values, then the use of donut-shaped $\mathcal{W}$ can be expected to
-remove some such subjects but not necessarily purify the sample of
-them.  % With finite samples, sample pruning guided by specification
+Our method improves upon both approaches by using robust
+M-estimation to adjust for $R$.
+For analysis of potentially imperfect RDDs, we see this
+as a necessity.
+For instance, covariate balance tests will necessarily be underpowered
+to detect imbalance in a small fraction of the sample, so the proper
+bandwidth $b$ will be uncertain.
+  Likewise, if the initial sample
+includes subjects who manipulated their recorded $R$
+values, then the use of donut-shaped $\mathcal{W}$ may
+remove some, but not all such subjects.  % With finite samples, sample pruning guided by specification
 % tests is expected to leave an $O(n^{-1/2})$-sized share of the sample
 % that perfect information would have counseled removing.
 Robust
-M-estimation retains consistency under moderate amounts of
+M-estimation retains consistency under scenarios such as these, with moderate amounts of
 contamination % fractions of this order
 \citep{he1991localbreakdown,yohaiZamar1997locallyrobustMestimates}, whereas OLS does not.
 
-If the contamination fraction exceeds $O(n^{-1/2})$, even robust M-estimates
+If a large fraction of the dataset violates \eqref{ycheck}, even robust M-estimates
 can be inconsistent.
 Thus, these methods should be used in addition to, rather than instead of, preparatory specification checks.
-% These
-% methods should be used in addition to, not instead of, preliminary
-% specification tests.
-% The tests must have non-negligible power
-% against local alternatives \citep[\textit{e.g.},][ch.~14]{vdvaart:1998}: for
-% contamination fractions diminishing
-% at rate $n^{1/2}$, the probability of detection must be positive; it cannot tend to 0.  It
-% may be more important to test in such a way as to have some power
-% against each credible contamination scenario than to test so as to
-% have to high power against any one contamination scenario.
 
-
-
-%, especially when disturbances from the population regression have
-%heavier-than-Normal tails.
-
-%% In the study of academic probation discussed here, our method yielded
-%% a wider confidence than the conventional method.  Its disadvantage may
-%% stem in part from our decision to focus attention on a substantively
-%% meaningful analysis window that was narrower than the conventional
-%% method's -- and narrower than the largest $\mathcal{W}$ that would
-%% have been compatible with it.
-
-% <!-- A para about strict vs weak nulls that we decided to cut, for length -->
-% <!-- consider restoring if these issues come up in review -->
-% Our method tests strict hypotheses,
-% $H: Y_{T} = Y_{C} + \tau D_{T}$.  Had it used OLS, its tests would
-% have been ill equipped to withstand modest contamination of the
-% sample,  but absent such contamination they would have been
-% valid as tests of
-% corresponding weak nulls, $\EE(Y_{T} - Y_{C}| D_{T}=1) = \tau$.
-% % : with OLS, $e_{\theta}(y|r) = y - r\theta$, or more generally $y - \vec{f}(r)\theta$, and given
-% % \eqref{ycheck} the estimating equation $\EE(Y - \tau D -
-% % \vec{f}(R)\bar\theta| Z=1) = \EE(Y - \vec{f}(R)\bar\theta| Z=0)$ is
-% % solved for $\tau = \EE(Y_{T} - Y_{C} | D_{T}=1)$.
-% It is a limitation of our method that this extension does not hold for it, due to its
-% $e_{\theta}(y|r)$ not being the ordinary residual $y -
-% \vec{f}(r)\beta_{\theta}$ but rather its transformation $\psi[(y -
-% \vec{f}(r)\beta_{\theta})/s_{\theta}]$; the boundedness of the
-% transformation means that $\EE [\dt{Y_{T} - \tau D_{T}}{R} | Z=j]$
-% need not equal $\EE [\dt{Y_{C}}{R} | Z=j]$, even for $\tau =\EE(Y_{T}
-% - Y_{C}| D_{T}=1)$.
-% Reassuringly, in our analysis robustness weights
-% (Section~\ref{sec:test-hypoth-no}) appeared
-% not to correlate with the ordinary residuals.
-% % $\mathbf{y}_{HL} - \vec{f}(\mathbf{r})\hat\theta$, where $\mathbf{y}_{HL} = \mathbf{y} -
-% % \tau_{HL}\mathbf{d}$, $\tau_{HL}$ being the Hodges-Lehmann estimate,
-% This suggests insensitivity to departures from $Y_{T} = Y_{C} + \tau
-% D_{T}$ that maintain $\EE(Y_{T} - Y_{C}| D_{T}=1) = \tau$.
-% <!-- Here is a part of that passage that had already been cut before para as a whole was  cut: -->
-% This is an indication that a hybrid analysis using $e_{\theta}(y|r) = y
-% - r\theta$ in \eqref{ycheck} and to test hypotheses about $\tau$,
-% but fitting $\hat\theta$ using a robust method and folding a
-% contribution from $\cov (\hat\theta)$ into $\mathrm{SE}_{s}\left\{ \overline{e_{\hat\theta}({Y_H}| R)}_{Z=1} -
-%                              \overline{e_{\hat\theta}({Y_H}| R)}_{Z=0}
-%                            \right\} $ via \eqref{eq:thetahatdd} \citep{lrdauthors:supp}, would have furnished
-% similar inferences.  Such a hybrid gives valid tests of weak
-% hypotheses, at the expense of more elaborate computation.
-
-In simulated RDDs of moderate size, our
-robust regression-based generalized score tests
-achieve nominal levels; as compared to
-the alternative methods considered here, they improve precision.
-Furthermore the simulations find robust
+In simulated RDDs of moderate size, our estimates were unbiased and
+our confidence intervals were typically narrower than those from an
+OLS-based approach, while achieving nominal coverage.
+Further simulations found robust
 M-estimation to be compatible with the use of
-non-local cubic and quartic polynomials to
+global cubic and quartic polynomials to
 accommodate nonlinear, imperfectly modeled relationships
 between $R$ and $Y_{C}$, in marked contrast to methods using OLS to adjust for
 trend.
