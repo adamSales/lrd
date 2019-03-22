@@ -93,7 +93,8 @@ promoting satisfactory grades.
 LSO's data analysis, like most RDD studies, used ordinary regression analyses to target an extraordinary parameter.
 In Imbens and Lemieux's telling \citeyearpar{imbens2008regression}, for example, the target of estimation is not
 the average treatment effect (ATE) in any one region around the cutoff
-but rather the limit of ATEs over concentric ever-shrinking regions, essentially
+but rather the ``local'' average treatment effect, or ``LATE'':
+the limit of ATEs over concentric ever-shrinking regions, essentially
 an ATE over an infinitesimal interval.
 Following this ``limit understanding,'' it is common to analyze RDDs
 using regression. If $Y$ is the outcome of interest, estimate the functional
@@ -103,18 +104,21 @@ is interpreted as the treatment effect
 \citep[e.g.,][]{berk1983capitalizing,angrist1999using}.%,oreopoulos2006estimating}.
 
 However,
-the GPAs in the academic probation dataset are
-discrete, measured in 1/100s of a grade point.
+the GPAs in the academic probation study are
+discrete, measured in 1/100s of a grade point;
+hence, limits of functions of GPA do not exist \footnote{Non-existance
+  of the LATE when $R$ is discrete
+  \emph{by definition} is arguably a more severe problem than bias due
+  to rounding in $R$, as discussed in,
+  e.g. \citet{kolesarRothe17} and \citet{dong2015regression}.}.
 Further,
 re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
 finely manipulated their GPAs to avoid probation.
 This necessitates %a ``donut design''
 %\citep[c.f.][p. 2119]{barreca2011saving},
-excluding subjects immediately on or around the cut-point%,
-%and rendered local randomization---as commonly
-%understood---implausible
-.
+excluding subjects immediately on or around the cut-point---precisely
+those students to whom the LATE might most plausibly pertain.
 Either circumstance calls
 into question the appropriateness of limit-based methods.
 
@@ -250,7 +254,7 @@ datM <- subset(datM,month_num%in%window)
 
 @
 
-<<mariaFigs,eval=TRUE,include=FALSE>>=
+<<mariaFigs,eval=TRUE,include=FALSE,cache=TRUE>>=
 pd <- rbind(datM,datM)
 pd$Deaths <- c(datM$deaths,datM$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(datM)),rep('Residual Death Counts',nrow(datM))),
@@ -270,7 +274,7 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYe
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
 
-ggsave('figure/maria.png',width=6.4,height=3,dpi=600)
+ggsave('figure/maria.png',width=6.4,height=3,dpi=300)
 @
 
 

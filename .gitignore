@@ -4,6 +4,7 @@
 
 # Session Data files
 .RData
+*.RData
 
 # Example code in package build process
 *-Ex.R
@@ -36,3 +37,24 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 
+data
+
+*.r~
+*#
+
+extdata/death_file_JAMA.csv
+inst/cache/
+inst/figureOLD/
+inst/r1/cache/
+inst/r1/danResponse.pdf
+inst/r1/figure/dgms-1.tex
+inst/r1/figure/hs_gpaFig-1.png
+inst/r1/figure/hs_gpaFig-2.png
+inst/r1/figure/mariaFigs-1.pdf
+inst/r1/figure/mariaFigs-1.tex
+inst/r1/figure/weightNoDonutPlot-1.png
+inst/r1/lrd-r1.pdf
+inst/r1/lrd-sec2+3-r1a.tex
+inst/r1/mariaM.r
+inst/r1/revNotes.txt
+inst/r1/reviews/
