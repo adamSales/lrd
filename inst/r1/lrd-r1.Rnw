@@ -106,7 +106,7 @@ is interpreted as the treatment effect
 However,
 the GPAs in the academic probation study are
 discrete, measured in 1/100s of a grade point;
-hence, limits of functions of GPA do not exist \footnote{Non-existance
+hence, limits of functions of GPA do not exist \footnote{Non-existence
   of the LATE when $R$ is discrete
   \emph{by definition} is arguably a more severe problem than bias due
   to rounding in $R$, as discussed in,
@@ -291,7 +291,7 @@ In spite of widespread devastation, for nearly a year after the
 hurricane, the Puerto Rican government%
 \marginpar{\& the White House,  I think AS: I can't find anything
   about \emph{official} white house numbers, just Trump mouthing off.} officially maintained a
-suprisingly low death toll of 64 based on examinations of individual
+surprisingly low death toll of 64 based on examinations of individual
 death reports.
 Estimates from investigative journalists and academic
 researchers were higher.
@@ -365,9 +365,9 @@ Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals
 a periodic, non-linear relationship
 between calendar month and death count, with some years appearing to be
 more hazardous than others.
-To accomodate these factors, we regressed 2010-2016 monthly death counts
+To accommodate these factors, we regressed 2010-2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
-with knots at Februrary, May, August, and November.
+with knots at February, May, August, and November.
 There are several outlying observations, one of which \citet{santos2018use} remove
 from the sample prior to analysis.
 %for instance, death counts in the final three months of 2014---in particular,
@@ -913,7 +913,7 @@ sims <- sort(grep('outcomeSim',list.files(dataResults_location),value=TRUE),decr
 #load(paste0(dataResults_location, sims[1]))
 @
 Our first simulation study compares the performance---bias and confidence interval
-covarage and width---of our ``limitless'' method to local-OLS, and
+coverage and width---of our ``limitless'' method to local-OLS, and
 local-permutation methods.
 Across all simulation runs, the running variable $R$ was distributed as
 $\mathrm{Uniform}(-0.5,0.5)$, the cutoff was $c=0$, and control potential
@@ -941,13 +941,13 @@ times.
 The results are displayed in Table~\ref{tab:level}.
 With a linear data generating model and a symmetric window, the bias
 for the local permutation approach will generally be equal to the
-product of the slope and the bandwidth; in our secenario its bias was
+product of the slope and the bandwidth; in our scenario its bias was
 approximately $0.75\times 0.5\approx 0.37$ across simulation runs.
-The covarage of permuation confidence intervals decreased with sample size.
+The coverage of permutation confidence intervals decreased with sample size.
 The limitless and local OLS methods were approximately unbiased, and
 95\% confidence intervals achieved approximately nominal coverage for
 $n=250$ or 2,500, and under-covered for $n=50$.
-Noteably, random treatment effect heterogeneity did not affect bias or
+Notably, random treatment effect heterogeneity did not affect bias or
 coverage.
 
 Across the board, the local permutation method gave the smallest
@@ -1048,7 +1048,7 @@ randomization'' heuristic more literally, analyzing data in a small
 region around the cutoff as if it were from a randomized experiment.
 However, this approach assumes that potential outcomes are
 independent of $R$ in a window around the cutoff.
-The LSO case study also demonstrates the importance of acknowleging
+The LSO case study also demonstrates the importance of acknowledging
 and modeling the dependence between $R$ and $Y$. A local permutation method not adjusting for trend
 %\marginpar{$\leftarrow$ Outdated cross-ref?}
 %(\S~\ref{sec:local-rand-based})
@@ -1062,8 +1062,8 @@ $Y_c$ that depends on $R$ may be modeled and removed, leaving
 residuals $\dt[\thetaInf]$ that are independent of $Z$.
 Like the local randomization approach, it targets the TOTE or ATE
 within $\mathcal{W}$, as opposed to a difference of limits, and
-accomodates discreteness in $R$ and donut designs.
-In fact, with $\dt{\bm{Y}}{\bm}\equiv\bm{Y}$, it reduces to the local
+accommodates discreteness in $R$ and donut designs.
+In fact, with $\dt{\bm{Y}}{\bm{R}}\equiv\bm{Y}$, it reduces to the local
 randomization method.
 Like the limit-based approach, it models and accounts for the correlation between
 $R$ and $Y$.
