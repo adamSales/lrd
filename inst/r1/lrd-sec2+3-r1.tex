@@ -275,11 +275,14 @@ If there are multiple
 covariates there will be several such tests. To summarize their
 findings with a single p-value, the
 regressions themselves may be fused within a
-``seemingly unrelated regressions'' model \citep{lee2010regression} or
-hierarchical Bayesian model
+``seemingly unrelated regressions'' model \citep{lee2010regression};
+however, to our knowledge, combining linear and generalized linear
+models is not supported in current software implementations, so
+covariates of mixed type might pose problems.  Alternatively, balance
+assessments could be combined in a hierarchical Bayesian model
 \citep{liMatteiMealli2015BayesianRD}, or the
 separate tests' p-values could simply be combined using the Bonferroni
-principle, the bootstrap maxT correction \citep{westfall2011using}, or
+principle or
 other multiple comparison corrections.
 
 \subsubsection{The McCrary Density Test}\label{sec:mccrary}
