@@ -158,6 +158,8 @@ of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
 with the LSO study, Section~\ref{sec:simulation}
 explores the method's performance in simulations and Section~\ref{sec:discussion} takes stock.
 
+Computer code and data for all analyses are provided in an online
+supplement.\marginpar{OR: \dots at \url{www.github.com/}\dots}
 
 % Although Huber-White standard errors are common in RDD analysis,
 % ``Huberized'' fitting methods are not; they should be.
