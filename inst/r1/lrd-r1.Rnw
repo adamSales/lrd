@@ -106,7 +106,7 @@ is interpreted as the treatment effect
 However,
 the GPAs in the academic probation study are
 discrete, measured in 1/100s of a grade point;
-hence, limits of functions of GPA do not exist \footnote{Non-existence
+hence, limits of functions of GPA do not exist\footnote{Non-existence
   of the LATE when $R$ is discrete
   \emph{by definition} is arguably a more severe problem than bias due
   to rounding in $R$, as discussed in,
@@ -304,9 +304,8 @@ if not the scope and particulars of the method detailed in Section~\ref{sec:theM
 in a limited reanalysis of these monthly death counts.
 
 
-In this example, observations are of months of 2017 and Puerto
-Rico's monthly death
-counts $Y_i$, $i=1,\dots,12$, constitute the outcome.
+In this example, let $i=1,\dots,12$ denote the months of 2017 and let Puerto
+Rico's monthly death counts $Y_i$ constitute the outcome.
 The running variable $R_i=i$ is month order and months are
 ``treated,'' $Z_i=1$,
 if and only if $R\ge 9$, Hurricane Maria having occurred on September 20.
@@ -319,9 +318,9 @@ For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
 Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
-\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate
-of total excess mortality for 2017, $\sum_{i} \tau_{i}$, in due
-course.
+\ldots, 12$, represent mortality caused by Maria.  We will discuss RDD estimation
+of total excess mortality for 2017, $\sum_{i\ge 9} \tau_{i}$, in due
+course.\marginpar{AS: I think $\ge 9$ in the sum avoids confusion}
 The remainder of this section demonstrates how to test the
 hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
 test --- but without assuming % this phrasing disambiguates
@@ -442,7 +441,7 @@ $\bm{\resid}_{T} \equiv \bm{\resid}_{C}=\bm{\resid}$.
 %more readily tested.
 
 
-For this analysis $Y$, $R$ and $Z$ data for years 2010--2016 are treated as fixed --- formally,
+For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed --- formally,
 inference will be made after conditioning not only on $\bm{\resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
 To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
 we likewise condition on the realized sizes $N_{1}$
@@ -571,17 +570,7 @@ trends in the absence of treatment and of treatment effects themselves.
 
 \input{lrd-sec2+3-r1}
 
-\section{The Effect of Academic Probation}
-\label{sec:appl-effect-acad}
-
-
-One outcome in LSO's academic probation (AP) study was
-\texttt{nextGPA},
-grade-point average
-for the first term after the first year in which the student was
-enrolled, ordinarily the next fall.
-Figure~(\ref{LSO}) plots it against
-first-year GPA.
+\section{The Effect of Academic Probation}\label{sec:appl-effect-acad}
 \begin{wrapfigure}{l}{0.6\textwidth}%[htb]
 %\begin{figure}[!ht]
 \centering
@@ -592,9 +581,7 @@ first-year GPA.
 %\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
 %}
 \caption{%(a)
- \texttt{nextGPA} as a
-function of first year GPA, centered by campus-specific cutoff and
-binned by unique first-year GPA values. Point size is proportional to
+ \texttt{nextGPA} by centered first year GPA, binned by unique first-year GPA values. Point size is proportional to
 the number of students in the bin. %First-year GPAs (x-axis) have been
 %  centered around a campus-specific cut-point for academic probation. Subsequent
 % GPA (y-axis) has been averaged according to first-year GPA. %(b)
@@ -607,6 +594,14 @@ the number of students in the bin. %First-year GPAs (x-axis) have been
 % Their research question was whether AP caused a change in
 % \texttt{nextGPA}: did students on AP tend to have higher (or lower) subsequent
 % GPAs?
+
+One outcome in LSO's academic probation (AP) study was
+\texttt{nextGPA},
+grade-point average
+for the first term after the first year in which the student was
+enrolled, ordinarily the next fall.
+Figure~(\ref{LSO}) plots it against
+first-year GPA.
 In all but 50 of 44,362 cases, being on AP coincided with whether
 first-year cumulative GPA  ---  the running
 variable, $R$ --- fell below a cutoff.
@@ -719,7 +714,16 @@ in a window $\mathcal{W}=\{i: |R_i|\in (0,0.5)\}$, with students with
 $R=0$ removed, results in a p-value of \Sexpr{signif(mccraryDougnut,2)}.
 
 \subsection{AP Outcome Analysis}
-
+\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
+%\begin{figure}[ht!]
+{\centering
+\includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
+}
+\caption{Robustness weights from robust MM estimation of the model
+  that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
+\label{fig:robweights}
+%\end{figure}
+\end{wrapfigure}
 Table~\ref{tab:results} gives a set of %p-values, point estimates, and
 %interval
 estimates for the effect of AP.
@@ -732,22 +736,12 @@ of the model, robustness weights range from .28 to 1.
 These weights
 show little association with $R$,
 %(Supplemental Appendix~\ref{apnd:rob-plot}).
-\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
-%\begin{figure}[ht!]
-{\centering
-\includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
-}
-\caption{Robustness weights from robust MM estimation of the model
-  that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
-\label{fig:robweights}
-%\end{figure}
-\end{wrapfigure}
 although the
 lowest weights occur just above the cut-point and near $\mathcal{W}$'s
 edges (Figure~\ref{fig:robweights}).
 
 For students in $\mathcal{W}$, the main analysis estimates an average
-treatment effect of \Sexpr{round(SHmain[['CI']][3], 3)}, with a 95\% confidence
+treatment effect of \Sexpr{round(SHmain[['CI']][3], 2)}, with a 95\% confidence
 interval of \Sexpr{ciChar(SHmain[['CI']][1:2])}.
 
 The next three rows relax each of the main model's specifications.
@@ -928,8 +922,8 @@ with 3 d.f.; to mimic the LSO data, we forced the errors to have a
 standard deviation of 0.75.
 Finally, the treatment effect was either exactly
 zero---i.e. $Y_T= Y_C$---or was set as random, $Y_T=
-Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$ where $\eta$ was
-adjusted to have a standard deviation of 0.75.
+Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$, i.e. $\eta$
+was given the same distribution as $\epsilon$.
 Each simulation scenario was run 5,000
 %\Sexpr{format(ncol(outcomeSim[[1]]),big.mark=',')}
 times.
@@ -1059,7 +1053,7 @@ AP effect (Table~\ref{tab:alt}) and performed poorly in simulations
 Our framework for RDD analysis links the two approaches.
 Residual ignorability \eqref{ycheck} assumes that the component of
 $Y_c$ that depends on $R$ may be modeled and removed, leaving
-residuals $\dt[\thetaInf]$ that are independent of $Z$.
+residuals $\dt[\thetaInf]{\bm{Y}}{\bm{R}}$ that are independent of $Z$.
 Like the local randomization approach, it targets the TOTE or ATE
 within $\mathcal{W}$, as opposed to a difference of limits, and
 accommodates discreteness in $R$ and donut designs.
