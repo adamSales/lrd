@@ -25,3 +25,14 @@ anal <- function(ddd){
 
 res <- replicate(5000,anal(makeDat()))
 save(res,file='newSimRes.RData')
+
+res <- t(res)
+
+olsRes <- res[,1:4]
+shRes <- res[,5:8]
+
+summ <- rbind(ols=c(mean(olsRes[,3]),mean(olsRes[,4]<=0.05),mean(olsRes[,1]*olsRes[,2]<=0)),
+              sh=c(mean(shRes[,3]),mean(shRes[,4]<=0.05),mean(shRes[,1]*shRes[,2]<=0)))
+colnames(summ) <- c('bias','type1error','95ciCoverage')
+
+write.csv(summ,file='newSimResultsSummary.csv')
