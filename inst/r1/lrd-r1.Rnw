@@ -1111,7 +1111,7 @@ trend.
 %% Finally, this paper highlights the need for future work on choosing a
 %% window of analysis based on a sequence of specification tests.
 {%\small
-\bibliographystyle{asa}
+\bibliographystyle{apacite}
 \bibliography{causalinference}
 %\bibliography{../../../adam.sales/drafts/causalinference}
 }
