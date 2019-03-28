@@ -1,0 +1,354 @@
+diff --git a/inst/r1/lrd-r1.Rnw b/inst/r1/lrd-r1.Rnw
+index ecaf927..26eb1ca 100755
+--- a/inst/r1/lrd-r1.Rnw
++++ b/inst/r1/lrd-r1.Rnw
+@@ -106,7 +106,7 @@ is interpreted as the treatment effect
+ However,
+ the GPAs in the academic probation study are
+ discrete, measured in 1/100s of a grade point;
+-hence, limits of functions of GPA do not exist \footnote{Non-existence
++hence, limits of functions of GPA do not exist\footnote{Non-existence
+   of the LATE when $R$ is discrete
+   \emph{by definition} is arguably a more severe problem than bias due
+   to rounding in $R$, as discussed in,
+@@ -304,9 +304,8 @@ if not the scope and particulars of the method detailed in Section~\ref{sec:theM
+ in a limited reanalysis of these monthly death counts.
+ 
+ 
+-In this example, observations are of months of 2017 and Puerto
+-Rico's monthly death
+-counts $Y_i$, $i=1,\dots,12$, constitute the outcome.
++In this example, let $i=1,\dots,12$ denote the months of 2017 and let Puerto
++Rico's monthly death counts $Y_i$ constitute the outcome.
+ The running variable $R_i=i$ is month order and months are
+ ``treated,'' $Z_i=1$,
+ if and only if $R\ge 9$, Hurricane Maria having occurred on September 20.
+@@ -319,9 +318,9 @@ For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
+ observed, depending on $Z_i$; observed responses $Y$ coincide with
+ $ZY_{T}+(1-Z)Y_{C}$.
+ Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
+-\ldots, 12$, represent mortality caused by Maria.  We will offer an RDD estimate
+-of total excess mortality for 2017, $\sum_{i} \tau_{i}$, in due
+-course.
++\ldots, 12$, represent mortality caused by Maria.  We will discuss RDD estimation
++of total excess mortality for 2017, $\sum_{i\ge 9} \tau_{i}$, in due
++course.\marginpar{AS: I think $\ge 9$ in the sum avoids confusion}
+ The remainder of this section demonstrates how to test the
+ hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
+ test --- but without assuming % this phrasing disambiguates
+@@ -442,7 +441,7 @@ $\bm{\resid}_{T} \equiv \bm{\resid}_{C}=\bm{\resid}$.
+ %more readily tested.
+ 
+ 
+-For this analysis $Y$, $R$ and $Z$ data for years 2010--2016 are treated as fixed --- formally,
++For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed --- formally,
+ inference will be made after conditioning not only on $\bm{\resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
+ To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
+ we likewise condition on the realized sizes $N_{1}$
+@@ -571,17 +570,7 @@ trends in the absence of treatment and of treatment effects themselves.
+ 
+ \input{lrd-sec2+3-r1}
+ 
+-\section{The Effect of Academic Probation}
+-\label{sec:appl-effect-acad}
+-
+-
+-One outcome in LSO's academic probation (AP) study was
+-\texttt{nextGPA},
+-grade-point average
+-for the first term after the first year in which the student was
+-enrolled, ordinarily the next fall.
+-Figure~(\ref{LSO}) plots it against
+-first-year GPA.
++\section{The Effect of Academic Probation}\label{sec:appl-effect-acad}
+ \begin{wrapfigure}{l}{0.6\textwidth}%[htb]
+ %\begin{figure}[!ht]
+ \centering
+@@ -592,9 +581,7 @@ first-year GPA.
+ %\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
+ %}
+ \caption{%(a)
+- \texttt{nextGPA} as a
+-function of first year GPA, centered by campus-specific cutoff and
+-binned by unique first-year GPA values. Point size is proportional to
++ \texttt{nextGPA} by centered first year GPA, binned by unique first-year GPA values. Point size is proportional to
+ the number of students in the bin. %First-year GPAs (x-axis) have been
+ %  centered around a campus-specific cut-point for academic probation. Subsequent
+ % GPA (y-axis) has been averaged according to first-year GPA. %(b)
+@@ -607,6 +594,14 @@ the number of students in the bin. %First-year GPAs (x-axis) have been
+ % Their research question was whether AP caused a change in
+ % \texttt{nextGPA}: did students on AP tend to have higher (or lower) subsequent
+ % GPAs?
++
++One outcome in LSO's academic probation (AP) study was
++\texttt{nextGPA},
++grade-point average
++for the first term after the first year in which the student was
++enrolled, ordinarily the next fall.
++Figure~(\ref{LSO}) plots it against
++first-year GPA.
+ In all but 50 of 44,362 cases, being on AP coincided with whether
+ first-year cumulative GPA  ---  the running
+ variable, $R$ --- fell below a cutoff.
+@@ -719,7 +714,16 @@ in a window $\mathcal{W}=\{i: |R_i|\in (0,0.5)\}$, with students with
+ $R=0$ removed, results in a p-value of \Sexpr{signif(mccraryDougnut,2)}.
+ 
+ \subsection{AP Outcome Analysis}
+-
++\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
++%\begin{figure}[ht!]
++{\centering
++\includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
++}
++\caption{Robustness weights from robust MM estimation of the model
++  that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
++\label{fig:robweights}
++%\end{figure}
++\end{wrapfigure}
+ Table~\ref{tab:results} gives a set of %p-values, point estimates, and
+ %interval
+ estimates for the effect of AP.
+@@ -732,22 +736,12 @@ of the model, robustness weights range from .28 to 1.
+ These weights
+ show little association with $R$,
+ %(Supplemental Appendix~\ref{apnd:rob-plot}).
+-\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
+-%\begin{figure}[ht!]
+-{\centering
+-\includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
+-}
+-\caption{Robustness weights from robust MM estimation of the model
+-  that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
+-\label{fig:robweights}
+-%\end{figure}
+-\end{wrapfigure}
+ although the
+ lowest weights occur just above the cut-point and near $\mathcal{W}$'s
+ edges (Figure~\ref{fig:robweights}).
+ 
+ For students in $\mathcal{W}$, the main analysis estimates an average
+-treatment effect of \Sexpr{round(SHmain[['CI']][3], 3)}, with a 95\% confidence
++treatment effect of \Sexpr{round(SHmain[['CI']][3], 2)}, with a 95\% confidence
+ interval of \Sexpr{ciChar(SHmain[['CI']][1:2])}.
+ 
+ The next three rows relax each of the main model's specifications.
+@@ -928,8 +922,8 @@ with 3 d.f.; to mimic the LSO data, we forced the errors to have a
+ standard deviation of 0.75.
+ Finally, the treatment effect was either exactly
+ zero---i.e. $Y_T= Y_C$---or was set as random, $Y_T=
+-Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$ where $\eta$ was
+-adjusted to have a standard deviation of 0.75.
++Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$, i.e. $\eta$
++was given the same distribution as $\epsilon$.
+ Each simulation scenario was run 5,000
+ %\Sexpr{format(ncol(outcomeSim[[1]]),big.mark=',')}
+ times.
+@@ -1059,7 +1053,7 @@ AP effect (Table~\ref{tab:alt}) and performed poorly in simulations
+ Our framework for RDD analysis links the two approaches.
+ Residual ignorability \eqref{ycheck} assumes that the component of
+ $Y_c$ that depends on $R$ may be modeled and removed, leaving
+-residuals $\dt[\thetaInf]$ that are independent of $Z$.
++residuals $\dt[\thetaInf]{\bm{Y}}{\bm{R}}$ that are independent of $Z$.
+ Like the local randomization approach, it targets the TOTE or ATE
+ within $\mathcal{W}$, as opposed to a difference of limits, and
+ accommodates discreteness in $R$ and donut designs.
+diff --git a/inst/r1/lrd-sec2+3-r1.tex b/inst/r1/lrd-sec2+3-r1.tex
+index c94f9ca..5a57ba5 100755
+--- a/inst/r1/lrd-sec2+3-r1.tex
++++ b/inst/r1/lrd-sec2+3-r1.tex
+@@ -1,4 +1,4 @@
+-\section{Review of Selected Methods}\label{sec:review}
++\section{Review of Selected RDD Methods}\label{sec:review}
+ %% introduces notation
+ % Z
+ % Y
+@@ -6,12 +6,17 @@
+ %  $y_{Ti}$ and $y_{Ci}$ (upper or lower case??)
+ 
+ 
+-Capturing the local randomization essence of the RDD calls for
+-a merger of RDD methods with concepts developed for RCTs. This
+-section selectively reviews relevant literatures.
++% Capturing the local randomization essence of the RDD calls for
++% a merger of RDD methods with concepts developed for RCTs. This
++% section selectively reviews relevant literatures.
++Limitless RDD builds on a set of existing RDD methods.
++This section selectively reviews the relevant literature.
+ 
+ Let $Z \in \{0,1\}$ indicate assignment to treatment ($Z=1$) as opposed to control
+-($Z=0$).  For an RDD one defines $Z \equiv \indicator{R< 0}$,
++($Z=0$).
++For the remainder of the paper, let $R$ be the \emph{centered} running
++variable---the difference between the running variable and the RDD
++threshold $c$---so that $Z \equiv \indicator{R< 0}$,
+ $\indicator{R \leq 0}$, $\indicator{R\geq 0}$ or $\indicator{R > 0}$,
+ depending on how intervention eligibility relates to the threshold,
+ where $\indicator{x}=1$ if $x$ is true and $0$ otherwise.
+@@ -74,7 +79,7 @@ Finally, test $H$ with statistic
+ \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
+ \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}
+ \end{equation}
+---- that is, the $\tau$ estimate from an OLS fit of the variant of \eqref{eq:classicOLS}
++--- with $\hat{\alpha}$ and $\hat{\beta}$ estimated from an OLS fit of the variant of \eqref{eq:classicOLS}
+ with dependent variable $\mathbf{y}_{H}$.
+ Because of the structural relationship
+ between $R$ and $Z$, its null distribution
+@@ -157,16 +162,12 @@ its value to a standard normal distribution.
+ (The only difference between hypothesis testing for a ``strict'' RDD, one
+ with full compliance, versus a fuzzy RDD, is in the formulation of
+ hypothesis $H$, and the construction of $Y_H$---the rest of the
+-process remains unchanged [\citealp{rosenbaum:1996:onAIR}].)  As compared to Wald-type
++process remains unchanged [\citealp{rosenbaum:1996:onAIR}].)  When
++compliance is imperfect, this
++iterative method yields confidence intervals with better coverage than Wald-type
+ confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
+ \mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
+-hypothesis independent quantity, under partial compliance this iterative method
+-% of separate evaluation of $\mathrm{SE}_{u} \left\{
+-%   \overline{({y}_{H_{\tau}})}_{Z=1} -
+-%   \overline{({y}_{H_{\tau}})}_{Z=0} \right\}$ for each $H_{\tau}$,
+-improves correspondence of nominal and actual confidence levels
+-% , particularly if the ``instrument,'' $Z$, is ``weak,''
+-% i.e. $\PP(D_{T} =1) \approx \PP(D_{C} =1)$
++hypothesis independent quantity
+ \citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
+ 
+ 
+@@ -228,7 +229,7 @@ dispensed with.
+ % subjects who finely manipulate their values of $R$ around the cutoff
+ % in order to achieve or avoid a treatment assignment.
+ Methodological RDD literature has responded with specification tests
+-to detect these threats, or with flexible or robust estimators that
++to detect these threats, or with flexible estimators that
+ seek to avoid them.
+ 
+ \subsubsection{Covariate Balance Tests}\label{sec:balanceTesting}
+@@ -311,8 +312,9 @@ If that test fails, the process may be repeated with a new bandwidth
+ $b'<b$, and perhaps repeated again until arriving at suitable bandwidth.
+ This may seem to call for a further layer of multiplicity correction,
+ since any number of
+-bandwidths may have been tested before identifying a
+-$b$ for which $H_{b}$ is sustained; but it so happens that this form
++bandwidths may have been tested before identifying a suitable
++$b$% for which $H_{b}$ is sustained
++; but it so happens that this form
+ of sequential testing implicitly corrects for multiplicity, according to the
+ sequential intersection union principle
+ (\citealp[SIUP;][Proposition~1]{rosenbaum2008testing};
+@@ -342,12 +344,13 @@ choice.
+ % The analyst decides whether this test-and-reduce process
+ % should begin in the middle of $\mathcal{W}$ or at its boundaries.
+ 
+-Failures of the density test are also addressed by restricting
++Failures of the density test are addressed by restricting
+ estimation to observations with $|R|>a$, some $a \geq 0$
+ \citep[e.g.,][]{barrecaetal2011birthweightRDD,eggers2014validity}, and
+-repeat the test.
+-If this test rejects, we repeat it, terminating the process at the first $j$ for which
+-$p_{j} \geq \alpha_{M}$.
++repeating the test.
++If this test rejects, we repeat the process with a new $a'>a$,
++terminating the process when the p-value from the density test
++excceeds a pre-set threshold.
+ By a second application of the SIUP,
+ the size of this test sequence is equal to the size of each individual
+ density test.
+@@ -359,8 +362,9 @@ $\mathcal{W} = (-b, b)$ or  $(-b, -a) \cup (a, b)$.
+ %On the other hand,
+ The methods discussed in Sec~\ref{sec:robust-analys-covar} continue to
+ apply if $\EE (Y_{C}| R) = \alpha + R\beta$ is relaxed to
+-$\EE (Y_{C}| R) = \alpha + \vec{f}(R)\beta$, for
+-$\vec{f}(\cdot)$ a $1 \times k$ vector valued function.
++$\EE (Y_{C}| R) = \alpha + \bm{f}(R)\bm{\beta}$, for
++$\bm{f}(\cdot)$ a $1 \times k$ vector valued function, and
++$\bm{\beta}$ a $k \times 1$ vector of coefficients.
+ Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
+ side-effect of undercutting the robustness of the analysis.  The
+ reasons have to do with mechanics of regression fitting.
+@@ -466,12 +470,13 @@ fitted parameters $\hat{\theta}$ in a sufficiently regular
+ fashion, along with a
+ family $\{\dt{\cdot}{\cdot}: \theta\}$ of residual or partial
+ residual transformations, each mapping data $(\mathbf{y}, \mathbf{r})$ to
++residuals
+ $\{\dt {y_{i}}{\mathbf{r}} \}_{i=1}^{n}$.
+ Appendix~\ref{sec:large-sample-rand}
+ %\citet[\S~\ref{sec:large-sample-rand}]{lrdauthors:supp}
+ states the
+ needed regularity condition, which is ordinarily met by OLS and always
+-met with our preferred fitters (Section~\ref{sec:test-hypoth-no}).
++met with our preferred fitters (\S~\ref{sec:robustFitters}).
+ Then, causal inference in an RDD proceeds from the following assumption:
+ \begin{ass}{Residual Ignorability}
+ \sloppy
+@@ -513,7 +518,8 @@ $\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$,
+ are in themselves uninformative about $\EE(Y_{T} - Y_{C})$, so
+ the variables comprising $\mathbf{A}$ are jointly
+ %\marginpar{$\leftarrow \Delta$ to $(\mathbf{Y}_{C}, N_{0}, N_{1})$?}
+-S-ancillary, just as $\bm{A}^*$ %$\mathbf{A}^{\dagger}$
++%S-
++ancillary, just as $\bm{A}^*$ %$\mathbf{A}^{\dagger}$
+ was seen to be
+ in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inference for RCTs, some conditioning variables are
+ unobserved; but this is not an impediment, at least for large-sample
+@@ -590,7 +596,7 @@ in the sense of \citet{rubin2007design}.
+ \subsection{Robust Fitters}\label{sec:robustFitters}
+ Influential observations in the analysis sample that do not satisfy Residual
+ Ignorability %but include influential observations
+- can undercut the validity of an RDD analysis. \marginpar{better?}
++ can undercut the validity of an RDD analysis.
+ If such moderate sample contamination may be present --- specifically, contamination of
+ a $O(n^{-1/2})$-sized
+ share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
+@@ -617,9 +623,9 @@ Instead, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or simi
+ maximum likelihood.
+ Such procedures address influence in the course of the fitting process.
+  In MM-estimation as in OLS,
+-coefficients $\beta$ of a linear specification solve estimating equations
++coefficients $\bm{\beta}$ of a linear specification solve estimating equations
+ $\sum_{i} \psi\left\{ ({y}_{i} -
+-\vec{x}_{i}\beta)/s \right\} \vec{x}_{i} =0$, where $s>0$ and
++\bm{x}_{i}^T\bm{\beta})/s \right\} \bm{x}_{i}^T =\bm{0}$, where $s>0$ and
+ $\psi(\cdot)$ is an odd function satisfying $\psi(0)=0$,
+ $\psi'(0)=1$ and $t\psi(t)\geq 0$; bounded influence fitters replace OLS's $s\equiv 1$ with resistant preliminary
+ estimates of residual scale, and OLS's $\psi(t) = t$ with a continuous $\psi$
+@@ -654,16 +660,16 @@ which optionally provide Huber-White standard errors
+ 
+ For inference about $\tau$ under the model
+ $Y_{T} = Y_{C} + \tau D_{T}$, select a specification
+-$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$, %in the application of
++$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$%, %in the application of
+ %Section~\ref{sec:appl-effect-acad}
+-such as the
+-linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, and a fitter,
+-such as OLS.
+-
+-Separately for each hypothesis $H: \tau=\tau_0$ under
+-consideration, one calculates
+-$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, then
+-applies the chosen specification and fitter to
++ such as the
++linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, a window of
++analysis $\mathcal{W}$, and a fitter.
++
++Then, separately for each hypothesis $H: \tau=\tau_0$ under
++consideration, calculate
++$\mathbf{y}_{H} = \mathbf{y} - \mathbf{d}\tau_{0}$, and
++apply the chosen specification and fitter to
+ $(\mathbf{y}_{H}, \mathbf{r})$.
+ The combination of the data, the
+ model fit, and the residual transformation $\dt{\cdot}{\cdot}$ give rise to residuals
+@@ -700,11 +706,11 @@ $\tau_{1}\neq \tau_{0}$.
+ \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
+ Once the M-estimate for the treatment effect has been found, one
+ inspects the corresponding regression fit for points of high influence.
+-Bounded influence regression is helpful here.  Besides making
+-influential points easier to see in residual plots, this limits
++Robust MM regression is helpful here.  Besides making
++influential points easier to see in residual plots, it limits
+ effects of data contamination, as non-conforming influence points are
+ down-weighted as a result of the fitting process. This down-weighting
+-is reflected in ``robustness weights,'', ranging from 1, for non-discounted
++is reflected in ``robustness weights,'' ranging from 1, for non-discounted
+ observations, down to 0, for the most anomalous observations.
+ Plotting % As
+ % an indicator of robustness to non-constant effects.

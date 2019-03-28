@@ -45,6 +45,8 @@ important to provide conceptual definition which would be changed or
 not changed under the limit understanding.
 \end{quote}
 
+put ``LATE'' in intro.
+
 \begin{quote}
 I also appreciate the motivate example but was also not sure how these
 contaminated data and discrete assignment variable issues are actually
@@ -74,12 +76,15 @@ On page 3, the authors stated “Either circumstance calls into question
 the appropriateness of limit-based methods” but did not explain why it
 is so.
 \end{quote}
+Added explanations into the paragraph in the intro
 
 \begin{quote}
 The authors fail to reference Dong (2015) which provides a correction
 for running variables that are discretized due to rounding or heaping
 (such as in their motivating example).
 \end{quote}
+added a footnote to the intro citing Dong and related literature, and
+clarifying the difference between Dong's concern and ours.
 
 \begin{quote}
 From line 45, the authors explain the organization of each subsection
@@ -110,6 +115,9 @@ manuscript. Like many of published manuscripts in JEBS, I strongly
 recommend to providing code or more details on implementation of the
 proposed method.
 \end{quote}
+We will provide R code in an online supplement, and added a sentence
+saying so to the end of the introduction.
+
 
 \begin{quote}
 The authors also conducted two simulations \dots Most importantly, there was no justification for the considered
@@ -123,6 +131,12 @@ The article would benefit from focusing more on the treatment effect
 estimates by providing results in the form of treatment estimate bias,
 95\% interval coverage, and quality of standard error estimates.
 \end{quote}
+We now report results in Table 3 as bias, and 95\% CI coverage and
+width. Since the confidence intervals result from the inversion of a
+hypothesis test, the standard errors are not directly
+relevant. Instead, CI width and coverage are the relevant measurements
+of statistical precision and the quality of statistical inference,
+respectively.
 
 \begin{quote}
 Furthermore, more conditions should be included in the simulations. In
@@ -134,6 +148,15 @@ compared to standard RD using several different bandwidths, or
 windows.
 \end{quote}
 
+The bandwidth selection procedure we recommend relies on covariate
+balance, and the importance of bandwidth choice depends on the form of
+the E[Y|R=r] function inside and outside of the bandwidth, among other
+factors.
+While we agree that exploring these questions in simulation studies is
+valuable and important, doing it well would add considerable length
+and complexity to the manuscript.
+Instead, we hope to address these questions in future work.
+
 \begin{quote}
 The authors often choose terms that are less common in the education
 literature when a more appropriate term exists. For example, they use
@@ -144,6 +167,7 @@ region but fail to call that estimate the “local average treatment
 effect”. In addition, the use of “level” instead of “Type I error
 rate,” and the format of the number themselves, in Table 3.
 \end{quote}
+Changed
 
 \begin{quote}
 Last but not least, the article does not follow APA formatting at
@@ -153,6 +177,72 @@ format. In text citations also need to be correct to follow APA
 format.
 \end{quote}
 - Labeled every table column
+- Edited some captions
+
+\section{Reviewer 2}
+
+\begin{quote}
+This manuscript provides a motivation for a refinement of ``local randomization''-based approach to the regression discontinuity design.
+
+The manuscript is very polished and is largely publishable as-is in JEBS. My one recommendation is to add discussion of the constant effects assumption considered in Section 3. Where does it matter? If so, in what ways should the applied researcher worry about heterogeneity if inference on average effects are of interest? Simulations including heterogeneity might shed some light on this.  
+\end{quote}
+
+
+\section{Reviewer 3 (report.pdf)}
+
+\subsection{Major Comments}
+\begin{quote}
+In their “practical introduction to regression discontinuity designs,”
+Cattaneo et al. (2018, Cambridge University Press) compare the
+strength of the assump- tions in the continuity- and local
+randomization-based frameworks for regression discontinuity
+designs. They state that the assumptions required in the local ran-
+domization framework are stronger than in the continuity one. Please
+comment on this. Please also compare the strength of your assumptions
+to the ones of the two other frameworks.
+\end{quote}
+
+We edited the discussion section to explicitly place our method
+between local randomization and limit-based methods, and point out
+that under different configurations, it can return versions of each
+type of estimator.
+
+\begin{quote}
+Please articulate how your approach is different to the approach by
+Cattaneo et al. (2014, Journal of Causal Inference).
+\end{quote}
+
+\begin{quote}
+Like in every approach to regression discontinuity designs, the
+selection of the window seems to be central in your approach. In the
+simulations, can you explore the selection of the window?
+\end{quote}
+
+\begin{quote}
+Please work on the writing of sections 5 and 6
+\end{quote}
+
+\subsection{Minor Comments}
+\begin{itemize}
+\item In 3.1, the notation $\dt[\thetaInf]$ is unclear.
+\item ``In (4), don’t you need something similar for $R\ge 0$?'' I
+  think this refers to the ``overlap'' condition. We don't because
+  $Pr(R>0)=1$ implies $Pr(R<0)=0$ violating stated condition, etc etc.
+\item Parametric models are mentioned here and there in the
+  manuscript, but can the residuals be obtained by means of
+  nonparametric models in connection to Rosenbaum (2002, Statistical
+  Science) where the model is just a ``fit''?
+\item For estimation, would it make sense to use matching as in Keele
+  et al. (2015, Journal of the Royal Statistical Society: Series A)
+  and the “rebar” method by Sales et al. (2018, Journal of Educational
+  and Behavioral Statistics)?
+\item Please extend on the choice of $\alpha_B=0.15$.
+\item In the final discussion, there seems to be something missing in
+  the following sentence: “Our analysis effects adjustment for R using
+  bounded influence MM- estimation.”
+\item Please clarify the passage on the contamination fraction being of
+order $n^{-1/2}$
+
 
 \section{Editor (Dan M)}
 
@@ -190,7 +280,7 @@ the uncommon terminology and notation has significant advantages use
 them but draw the connections to the more common forms and heuristic
 understandings.
 \end{quote}
-(I couldn't find ``overbar arrow'' notation?) We removed reference to
+We substited boldfance for overbar arrow notation for vectors, and removed reference to
 the ``intersection hypothesis'' but retained reference to the
 ``sequential intersection-union principal.'' We referred to MM
 regression as ``robust'' regression, unless the distinction between MM

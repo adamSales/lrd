@@ -1,7 +1,7 @@
 ---
 title: "LRD paper Appendix C, Data Analysis"
 author: "lrd authors"
-date: "12 March, 2019"
+date: "22 March, 2019"
 output: html_document
 ---
 
@@ -88,7 +88,7 @@ figDat$n <- as.vector(table(dat$R))
 ggplot(figDat,aes(R,nextGPA,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dashed',size=1.5)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg Subsequent GPA')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 
-![plot of chunk rddFig](r1/figure/rddFig-1.png)
+![plot of chunk rddFig](./r1//figure/rddFig-1.png)
 then a covariate (High-School GPA):
 
 ```r
@@ -96,13 +96,13 @@ with(figDat,plot(R,lhsgrade_pct,xlab='First-Year GPA (Distance from Cutoff)',
                  ylab='Avg logit(hsgrade_pct)'))
 ```
 
-![plot of chunk hs_gpaFig](r1/figure/hs_gpaFig-1.png)
+![plot of chunk hs_gpaFig](./r1//figure/hs_gpaFig-1.png)
 
 ```r
 ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,linetype='dotted',size=2)+xlab('First-Year GPA (Distance from Cutoff)')+ylab('Avg logit(hsgrade_pct)')+scale_size_continuous(range=c(0.2,2),guide=FALSE)+theme(text = element_text(size=12))
 ```
 
-![plot of chunk hs_gpaFig](r1/figure/hs_gpaFig-2.png)
+![plot of chunk hs_gpaFig](./r1//figure/hs_gpaFig-2.png)
 
 The McCrary density test failure and recovery described in Section 4.1
 
@@ -236,47 +236,14 @@ colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 kable(resultsTab)
 ```
 
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:left;"> Estimate </th>
-   <th style="text-align:left;"> 95\% CI </th>
-   <th style="text-align:left;"> $\mathcal{W}$ </th>
-   <th style="text-align:left;"> n </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> main </td>
-   <td style="text-align:left;"> 0.24 </td>
-   <td style="text-align:left;"> (0.17, 0.31) </td>
-   <td style="text-align:left;"> [0.01, 0.50) </td>
-   <td style="text-align:left;"> 10,014 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> data_driven </td>
-   <td style="text-align:left;"> 0.23 </td>
-   <td style="text-align:left;"> (0.18, 0.27) </td>
-   <td style="text-align:left;"> [0.01, 1.13) </td>
-   <td style="text-align:left;"> 23,874 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> cubic </td>
-   <td style="text-align:left;"> 0.24 </td>
-   <td style="text-align:left;"> (0.15, 0.34) </td>
-   <td style="text-align:left;"> [0.01, 0.50) </td>
-   <td style="text-align:left;"> 10,014 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ITT </td>
-   <td style="text-align:left;"> 0.24 </td>
-   <td style="text-align:left;"> (0.17, 0.31) </td>
-   <td style="text-align:left;"> [0.01, 0.50) </td>
-   <td style="text-align:left;"> 10,014 </td>
-  </tr>
-</tbody>
-</table>
+
+
+|            |Estimate |95\% CI      |$\mathcal{W}$ |n      |
+|:-----------|:--------|:------------|:-------------|:------|
+|main        |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
+|data_driven |0.23     |(0.18, 0.27) |[0.01, 1.13)  |23,874 |
+|cubic       |0.24     |(0.15, 0.34) |[0.01, 0.50)  |10,014 |
+|ITT         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
 
 ```r
 resultsTab <- cbind(Specification=c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT'),resultsTab)
@@ -309,40 +276,13 @@ colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
 kable(altTab)
 ```
 
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:left;"> Estimate </th>
-   <th style="text-align:left;"> 95\% CI </th>
-   <th style="text-align:left;"> $\mathcal{W}$ </th>
-   <th style="text-align:left;"> n </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Local Linear </td>
-   <td style="text-align:left;"> 0.24 </td>
-   <td style="text-align:left;"> (0.19, 0.28) </td>
-   <td style="text-align:left;"> [0.00, 1.25) </td>
-   <td style="text-align:left;"> 26,647 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Limitless </td>
-   <td style="text-align:left;"> 0.24 </td>
-   <td style="text-align:left;"> (0.17, 0.31) </td>
-   <td style="text-align:left;"> [0.01, 0.50) </td>
-   <td style="text-align:left;"> 10,014 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Local Permutation </td>
-   <td style="text-align:left;"> 0.10 </td>
-   <td style="text-align:left;"> (0.04, 0.15) </td>
-   <td style="text-align:left;"> [0.01, 0.19) </td>
-   <td style="text-align:left;"> 3,766 </td>
-  </tr>
-</tbody>
-</table>
+
+
+|                  |Estimate |95\% CI      |$\mathcal{W}$ |n      |
+|:-----------------|:--------|:------------|:-------------|:------|
+|Local Linear      |0.24     |(0.19, 0.28) |[0.00, 1.25)  |26,647 |
+|Limitless         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
+|Local Permutation |0.10     |(0.04, 0.15) |[0.01, 0.19)  |3,766  |
 
 ```r
 altTab <- cbind(Method=rownames(altTab),altTab)
@@ -392,6 +332,32 @@ rose above the cut due to savvyness.
 
 ```r
 require(mgcv)
+```
+
+```
+## Loading required package: mgcv
+```
+
+```
+## Loading required package: nlme
+```
+
+```
+## 
+## Attaching package: 'nlme'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     collapse
+```
+
+```
+## This is mgcv 1.8-23. For overview type 'help("mgcv-package")'.
+```
+
+```r
 ggp_main <- ggplot(data.frame(R=lmrob_main$model$R,
                               robweights=robwts_main),
                    aes(x=R,y=robweights))
@@ -399,10 +365,10 @@ ggp_main + geom_point(alpha=.1) + stat_smooth()+theme(text = element_text(size=1
 ```
 
 ```
-## `geom_smooth()` using method = 'gam'
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
-![plot of chunk weightPlot](r1/figure/weightPlot-1.png)
+![plot of chunk weightPlot](./r1//figure/weightPlot-1.png)
 
 When we fit without omitting R=0 students, here is
 the best fitting version of the model.
@@ -472,10 +438,10 @@ ggp_nodo + geom_point(alpha=.1) + stat_smooth()
 ```
 
 ```
-## `geom_smooth()` using method = 'gam'
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
-![plot of chunk weightNoDonutPlot](r1/figure/weightNoDonutPlot-1.png)
+![plot of chunk weightNoDonutPlot](./r1//figure/weightNoDonutPlot-1.png)
 
 
 Save results:
@@ -492,54 +458,50 @@ sessionInfo()
 
 ```
 ## R version 3.4.4 (2018-03-15)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS  10.14.3
 ## 
 ## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+## [1] C
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] gridExtra_2.2.1   lrd_0.0.2.9000    rmarkdown_1.7    
-##  [4] kableExtra_1.0.1  perm_1.0-0.0      pbs_1.1          
-##  [7] dplyr_0.7.4       Hmisc_4.0-3       lattice_0.20-35  
-## [10] mgcv_1.8-27       nlme_3.1-131.1    rdd_0.57         
-## [13] Formula_1.2-1     AER_1.2-4         survival_2.41-3  
-## [16] car_2.1-3         lmtest_0.9-34     zoo_1.7-13       
-## [19] sandwich_2.4-0    robustbase_0.93-0 xtable_1.8-2     
-## [22] ggplot2_2.2.1     knitr_1.21       
+##  [1] mgcv_1.8-23       nlme_3.1-131.1    rdd_0.57         
+##  [4] AER_1.2-5         car_3.0-0         carData_3.0-1    
+##  [7] lmtest_0.9-36     zoo_1.8-1         sandwich_2.4-0   
+## [10] perm_1.0-0.0      pbs_1.1           robustbase_0.92-8
+## [13] dplyr_0.8.0.1     Hmisc_4.1-1       ggplot2_3.1.0    
+## [16] Formula_1.2-2     survival_2.41-3   lattice_0.20-35  
+## [19] xtable_1.8-2      knitr_1.20       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.2.1          viridisLite_0.2.0   splines_3.4.4      
-##  [4] assertthat_0.1      highr_0.6           latticeExtra_0.6-28
-##  [7] pillar_1.1.0        backports_1.1.2     quantreg_5.29      
-## [10] glue_1.1.1          chron_2.3-47        digest_0.6.10      
-## [13] RColorBrewer_1.1-2  checkmate_1.8.2     rvest_0.3.2        
-## [16] minqa_1.2.4         colorspace_1.2-6    htmltools_0.3.5    
-## [19] Matrix_1.2-12       plyr_1.8.4          pkgconfig_2.0.1    
-## [22] SparseM_1.77        webshot_0.5.1       scales_0.4.1       
-## [25] lme4_1.1-12         MatrixModels_0.4-1  htmlTable_1.9      
-## [28] tibble_1.4.2        nnet_7.3-12         lazyeval_0.2.0     
-## [31] pbkrtest_0.4-6      magrittr_1.5        evaluate_0.10      
-## [34] MASS_7.3-49         xml2_1.1.1          foreign_0.8-69     
-## [37] tools_3.4.4         data.table_1.9.6    hms_0.3            
-## [40] stringr_1.2.0       munsell_0.4.3       cluster_2.0.6      
-## [43] bindrcpp_0.2        compiler_3.4.4      rlang_0.1.2        
-## [46] grid_3.4.4          nloptr_1.0.4        rstudioapi_0.6     
-## [49] htmlwidgets_0.7     base64enc_0.1-3     labeling_0.3       
-## [52] codetools_0.2-15    gtable_0.2.0        R6_2.1.2           
-## [55] bindr_0.1           rprojroot_1.2       readr_1.1.1        
-## [58] stringi_1.1.1       parallel_3.4.4      Rcpp_0.12.13       
-## [61] rpart_4.1-13        acepack_1.3-3.3     DEoptimR_1.0-8     
-## [64] xfun_0.5
+##  [1] Rcpp_1.0.1          assertthat_0.2.0    digest_0.6.15      
+##  [4] cellranger_1.1.0    R6_2.2.2            plyr_1.8.4         
+##  [7] backports_1.1.2     acepack_1.4.1       evaluate_0.10.1    
+## [10] highr_0.6           pillar_1.3.1        rlang_0.3.1        
+## [13] readxl_1.1.0        lazyeval_0.2.1      curl_3.2           
+## [16] rstudioapi_0.9.0    data.table_1.10.4-3 rpart_4.1-13       
+## [19] Matrix_1.2-14       checkmate_1.8.5     tikzDevice_0.11    
+## [22] labeling_0.3        splines_3.4.4       stringr_1.3.0      
+## [25] foreign_0.8-69      htmlwidgets_1.2     munsell_0.4.3      
+## [28] tinytex_0.10        compiler_3.4.4      xfun_0.4           
+## [31] pkgconfig_2.0.2     base64enc_0.1-3     htmltools_0.3.6    
+## [34] nnet_7.3-12         tidyselect_0.2.5    tibble_2.1.1       
+## [37] gridExtra_2.3       htmlTable_1.11.2    rio_0.5.10         
+## [40] codetools_0.2-15    crayon_1.3.4        withr_2.1.2        
+## [43] grid_3.4.4          gtable_0.2.0        magrittr_1.5       
+## [46] scales_0.5.0        stringi_1.1.7       latticeExtra_0.6-28
+## [49] openxlsx_4.0.17     RColorBrewer_1.1-2  tools_3.4.4        
+## [52] forcats_0.3.0       glue_1.3.1          DEoptimR_1.0-8     
+## [55] purrr_0.3.2         lrd_0.0.2.9000      abind_1.4-5        
+## [58] colorspace_1.3-2    cluster_2.0.6       filehash_2.4-1     
+## [61] haven_1.1.1
 ```
 
 

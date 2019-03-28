@@ -1,0 +1,69 @@
+Adam's close edit
+
+- added $\ge 9$ to sum formula for total death toll (p. 4). even though we
+  previously defined tau_i for only months 9-12, that might escape
+  notice of the casual reader who will then wonder why all 12 tau's
+  should be included in the death toll.
+
+- we don't actually ever estimate the total death toll do we? (p. 4)
+  AS made minimal revision: change "offer an RDD estimate" -> "discuss RDD
+  estimation"
+
+- oxford commas? I'm in favor--adding them in when I see them missing
+
+- p. 7, "target of estimation" as the ATE. we previously said the
+  target was the total effect, \sum \tau_i. change here?
+
+- title of sec. 2: Review of Selected Methods-> Review of Selected RDD
+  Methods
+
+- I also re-wrote the 2-sentence intro to Sec. 2
+
+- I put something in the beginning of Sec. 2 about setting c=0, since
+  that's how we talk about stuff for the rest of the paper.
+
+- in intro to Sec. 2, potential outcomes and z_i are lower-case. Is
+  this right? are we consistant?
+
+- top of p. 10. (2.1) sentence: " that is, the tau estimate from an OLS fit
+  of the variant of (3) with dependent variable yH." This isn't
+  obvious--we never define alpha hat and beta hat, and why should (4)
+  be equal to tau? Revised a bit.
+
+- end of 2.1.1: I re-wrote the sentence comparing CIs from inversion
+  of hypothesis tests to Wald-type CIs. Mostly stylistic. "Partial
+  compliance"->"imperfect compliance" cuz "partial compliance" means
+  that D is strictly between 0 and 1. New formulation a bit less
+  precise, cuz doesn't state what is meant by "better" coverage, but
+  I think it's more readable.
+
+- beginning of 2.2: took out "or robust" since we don't discuss robust
+  fitters til later.
+
+- 2.2.3: took out H_b, \alpha_M, p_{j} which we never actually
+  define. Restated without extra notation.
+
+- 2.2.4: removed \vec{} notation, as Dan asked. Instead bolded
+  stuff. Also bolded \beta, and defined as a vector of
+  coefficients. Also see 3.3.
+
+-3.1 fixed section reference pointing to the wrong place
+
+-3.1 S-ancillary -> ancillary, as in 1.2
+
+- 3.3 replaced \vec{} with \bm{}, as Dan asked. I also made \beta and 0
+  bold. I put ^T on the x_i's, so that now they are column vectors
+  instead of row-vectors. I figure that's what people typically
+  expect.
+
+-3.5 "bounded influence regression"-> "robust MM regression" + a
+ couple other grammatical edits.
+
+- sec 4. put 2 figures at the beginning of their subsections, to fix
+  weird wrapfigure behavior.
+
+- Figure 2 caption edited for brevity
+
+- 4.2 rounded effect estimate to 2 decimal places, instead of 3
+
+- 5.1 fixed description of distribution of $\eta$
