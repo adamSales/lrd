@@ -1,11 +1,15 @@
 ---
 title: "Limitless Regression Discontinuity"
 author: "Adam Sales & Ben Hansen*"
-date: "Center for Social Data Analytics, Penn State (Feb. '19)"
+date: "Biostatistics Seminar, Ohio State (Mar. '19)"
 bibliography: ../r1/causalinference.bib
 output: 
   ioslides_presentation:
      widescreen: false
+  pdf_document:
+     keep_tex: true
+     toc: true
+     toc_depth: 1
 ---
 <!-- nocite:
   @hansenSales2015cochran-->
