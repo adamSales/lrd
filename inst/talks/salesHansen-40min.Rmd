@@ -18,6 +18,16 @@ output:
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 ```
 
+## Overview of talk
+
+- Three perspectives on the regression discontinuity design (RDD)
+- Methods for picking out RCTs within RDDs
+- Managing RDDs' inevitable imperfections
+    + The "donut design"
+    + Robustness to contamination of the sample
+- $\Rightarrow$ unusual (to RDD literature) methods. Are the answers any different?
+
+
 ```{r child="1_threePerspectives+methodsForPickingOutRDDs.Rmd"}
 ```
 
