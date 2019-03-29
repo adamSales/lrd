@@ -10,7 +10,7 @@
 
 <!-- 2 slides: LSO, Krafft points; robust MM regression-->
 
-## Sensitivity to removing _groups_ of points {.build}
+## Sensitivity to clumps of bad data {.build .smaller}
 
 Say there are "savvy" students who, when at risk for AP, "manipulate" grades $\uparrow$. (Bribes?)   
 This latent subgroup is overrepresented in excised donut hole $\{i: z_i=0\}$, but may be elsewhere too. As many as $O(n^{1/2})$ "bad" points remain, undercutting estimation of $E(Y_C | R)$. 

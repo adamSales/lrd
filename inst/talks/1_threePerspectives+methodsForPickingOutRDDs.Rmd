@@ -32,9 +32,9 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 >- We [@lrdauthors:main] offer a distinct intepretation of local randomization in terms of potential outcomes. It squares better with the concept of Thistlethwaite & Campbell, and with common patterns in RDD data.
 
 
-# Methods for picking out RCTs within RDDs
+# Methods to help pick out the RCT within a RDD
 
-## Methods for picking out RCTs within RDDs {.build}
+## Methods to help pick out the RCT within a RDD {.build}
 
 >  Q: I think I'm seeing naturally occurring random assignment in the vicinity of my regression discontinuity, but it's hard to isolate the subjects whose assignment can be regarded as haphazard.  Can methods help?
 
@@ -70,7 +70,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 </div>
 
-## Local randomization & the density of $R$ | the McCrary [-@mccrary2008manipulation] test
+## Local randomization & density of $R$ | the McCrary [-@mccrary2008manipulation] test
 
 <div class="columns-2">
 
