@@ -287,12 +287,8 @@ ggsave('figure/maria.png',width=6.4,height=3,dpi=300)
 
 Hurricane Maria struck the island of Puerto Rico on September 20,
 2017.
-In spite of widespread devastation, for nearly a year after the
-hurricane, the Puerto Rican government%
-\marginpar{\& the White House,  I think AS: I can't find anything
-  about \emph{official} white house numbers, just Trump mouthing off.} officially maintained a
-surprisingly low death toll of 64 based on examinations of individual
-death reports.
+In spite of widespread devastation, for nearly a year official
+statistics pegged the number of hurricane-induced deaths at just 64.
 Estimates from investigative journalists and academic
 researchers were higher.
 Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
@@ -320,7 +316,7 @@ $ZY_{T}+(1-Z)Y_{C}$.
 Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
 \ldots, 12$, represent mortality caused by Maria.  We will discuss RDD estimation
 of total excess mortality for 2017, $\sum_{i\ge 9} \tau_{i}$, in due
-course.\marginpar{AS: I think $\ge 9$ in the sum avoids confusion}
+course.%\marginpar{AS: I think $\ge 9$ in the sum avoids confusion}
 The remainder of this section demonstrates how to test the
 hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
 test --- but without assuming % this phrasing disambiguates
