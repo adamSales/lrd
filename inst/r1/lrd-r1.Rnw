@@ -85,8 +85,8 @@ LSO attempt to estimate the effect of
  on students' subsequent grade point averages (GPAs).
 At one large Canadian university, students with first-year GPAs below
 a cutoff were put on probation.
-Comparing subsequent GPAs for students with
-first-year GPA---the running variable---just below and above the cutoff should
+Comparing subsequent GPA ($Y$) for students with
+first-year GPA ($R$) just below and above the cutoff should
 reveal the effectiveness of the policy at
 promoting satisfactory grades.
 
@@ -97,7 +97,7 @@ but rather the ``local'' average treatment effect, or ``LATE'':
 the limit of ATEs over concentric ever-shrinking regions, essentially
 an ATE over an infinitesimal interval.
 Following this ``limit understanding,'' it is common to analyze RDDs
-using regression. If $Y$ is the outcome of interest, estimate the functional
+using regression to estimate the functional
 relationships of $r$ to $\EE( Y | R=r)$ on either side of the cutoff.  The difference between the
 two regression functions, as evaluated at the cut-point,
 is interpreted as the treatment effect
