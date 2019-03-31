@@ -964,7 +964,7 @@ normally distributed.
 dgms()
 @
 
-\caption{Data generating models for polynomial simulation.} %\texttt{(Note: If restoring polySim to body of paper, don't forget to take
+\caption{Data generating models (DGMs) for the polynomial simulation.} %\texttt{(Note: If restoring polySim to body of paper, don't forget to take
 %it out of appendix.)}}
 \label{fig:dgms}
 \end{figure}
@@ -994,7 +994,7 @@ Figure~\ref{fig:dgms} to form $Y_{C}$.
 %Appendix B.
 
 Table~\ref{tab:poly} displays the results.
-For the linear data generating model, all estimates were unbiased,
+For the linear data generating model (DGM), all estimates were unbiased,
 while root mean squared errors (RMSEs) were lowest for the limitless
 method.
 For the non-linear data generating models, the limitless estimators
@@ -1002,16 +1002,20 @@ using linear and quadratic specifications had substantial bias, and
 bias was much lower for higher-order polynomial specifications.
 In contrast, OLS estimators of all polynomial degrees were heavily
 biased.
-OLS and limitless estimation sharply diverge in the quality of their
-point estimates: the RMSE of OLS estimation
-increases rapidly with polynomial degree, but the limitless method's does not.
-With the method based on robust estimators but not with OLS, increasing
-the degree of the polynomial improved accuracy of
-estimation in the presence of non-linearity.
+The local linear model does not employ higher-order
+polynomials. It fared better than OLS, having similar bias but
+higher RMSE than limitless with higher-order polynomials.
 
-The local linear model does not employ higher-order global
-polynomials. It fared better than OLS, and had similar bias but
-higher RMSE than the limitless method using higher-order polynomials.
+OLS and limitless estimation sharply diverge in the quality of their
+point estimates, with the OLS estimates' RMSEs exceeding those of
+comparable robust M-estimates' by factors exceeding 200. 
+As \citet{gelman2016high} would predict, OLS estimates' RMSEs
+increased sharply with each increment of polynomial degree, whatever
+the form of the DGM.  In marked contrast, under non-linear DGMs accuracy of
+the robust, limitless method was improved with higher-degree polynomials,
+and under linear DGMs including higher-degree terms imposed little
+penalty.  
+
 
 
 
