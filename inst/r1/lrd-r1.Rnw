@@ -297,7 +297,7 @@ months before and after the hurricane, estimating
 Maria to have caused 1139 excess
 deaths. This section demonstrates residual ignorability,
 if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
-in a limited reanalysis of these monthly death counts.
+in a reanalysis of these monthly death counts.
 
 
 In this example, let $i=1,\dots,12$ denote the months of 2017 and let Puerto
@@ -346,9 +346,7 @@ the year; \eqref{eq:ignore} cannot be sustained.
 
 
 Dependence between $R$ and $Y_C$, violating
-\eqref{eq:ignore}, is common in RDDs; in the tradition of regression
-discontinuity, we address this dependence by modeling conditional
-mean function of $Y_C$ given $R$.
+\eqref{eq:ignore}, is common in RDDs; when present, it must be addressed.
 %% This model is fit using the same data, namely $Y$, $R$, and $Z$, that
 %% is used to estimate treatment effects, a practice which leads to a
 %% number of statistical and causal complications.
