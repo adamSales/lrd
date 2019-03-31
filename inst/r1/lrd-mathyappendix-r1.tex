@@ -313,7 +313,7 @@ np_{z}(1-p_{z}) \{ \overline{e_{(\gamma, \eta)}(W)}_{Z=1} -
 \overline{e_{(\gamma,\eta)}(W)}_{Z=0} \}$, but does
 not affect the value of $\gamma$ or its estimates $\hat\gamma$, due to
 the inclusion via $\Psi_{0}$ of an intercept term. Note that
-$\dt[\theta]{{y_H}}{r}  = \dt[(\gamma, \eta)]{{y_H}}{r} = e_{(0, \eta)}(x)$.
+$\dt[\theta]{{y_H}}{r}  = \dt[(\gamma, \eta)]{{y_H}}{r} = e_{(0, \eta)}(w)$.
 
 \sloppy
 Finally, assume that with these estimating equations and $\mathcal{L}(W)$
@@ -351,11 +351,12 @@ If $H$ is true then $\gamma_{H}=0$, and either of $(\hat\gamma,
 \hat\eta)$ and $(0, \hat\eta)$  is consistent for $(\gamma_H,
 \eta_H) = (0, \eta_{H})$.  Under $H$, then, we can apply \eqref{eq:3}
 to either of these estimator sequences, with the consequence that
-\begin{multline*}
-n^{-1}\sum_{i=1}^n \Psi_1(W_i, \hat{\gamma}, \hat{\eta}) - n^{-1}\sum_{i=1}^n \Psi_1(W_i, 0, \hat{\eta})\\= (\frac{\partial}{\partial\gamma} \EE \Psi_{1}(W,\gamma, \eta)
-|_{(0, \eta_{H})}) \hat{\gamma} + o_{P}(n^{-1/2}) \\
-= {\dot{\Psi}}_{1\gamma} \hat{\gamma} + o_{P}(n^{-1/2}) .
-\end{multline*}
+\begin{align*}
+n^{-1}\sum_{i=1}^n \Psi_1(W_i, \hat{\gamma}, \hat{\eta}) - &
+                                                             n^{-1}\sum_{i=1}^n \Psi_1(W_i, 0, \hat{\eta})\\ 
+&= \left[\frac{\partial}{\partial\gamma} \EE \Psi_{1}(W,\gamma, \eta)|_{(0, \eta_{H})}\right] \hat{\gamma} + o_{P}(n^{-1/2}) \\
+&= {\dot{\Psi}}_{1\gamma} \hat{\gamma} + o_{P}(n^{-1/2}) .\\
+\end{align*}
 Since $n^{-1}|\sum_{i=1}^n \Psi(W_i, \hat{\gamma}, \hat{\eta})|_{2} =
 o_{P}(n^{-1/2})$, this means that up to differences of order
 $o_{P}(n^{-1/2})$, $n^{-1}\sum_{i=1}^n \Psi_1(W_i, 0, \hat{\eta})
@@ -440,12 +441,12 @@ transformation $\dt{\cdot }{ \cdot}$, one has
  \{ \overline{\dt[\hat{\theta}]{Y_{H} }{ {R}}}_{Z=1} -
 \overline{\dt[\hat{\theta}]{Y_{H} }{ {R}}}_{Z=0} \} -
 \{  \overline{\dt[\bar{\theta} ]{ Y_{H} }{ {R}}}_{Z=1} -
-\overline{\dt[\bar{\theta}]{ Y_{H} }{ {R}}}_{Z=0}  \}   \\=
+\overline{\dt[\bar{\theta}]{ Y_{H} }{ {R}}}_{Z=0}  \}   = \\
 \nabla_{\theta} \bigg[ \EE \Big\{
 \dt[\theta]{{{Y}_H} }{ {R}}
 \Big| Z=1\Big\}   - \EE \Big\{
 \dt[\theta]{{{Y}_H} }{ {R}}
-\Big| Z=0\Big\} \bigg]_{\theta=\bar\theta}  (\hat\theta - \bar\theta)^{t}  \\ + o_{P}(n^{-1/2}),
+\Big| Z=0\Big\} \bigg]_{\theta=\bar\theta}  (\hat\theta - \bar\theta)^{t}  + o_{P}(n^{-1/2}),
 \end{multline}
 where $\bar\theta = \EE(\hat\theta({\btY}, \mathbf{R}))$;
 see Proposition~\ref{prop:thetahatdd} below.   When $\hat\theta$ is
