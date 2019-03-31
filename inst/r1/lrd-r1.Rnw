@@ -1021,9 +1021,9 @@ penalty.
 
 \section{Discussion} \label{sec:discussion}
 Beginning with \citet{thistlethwaite1960regression}, the dominant mode
-of RDD analysis has relied on regression modeling; in its modern
-formulation, targeting parameters such as the LATE which are defined
-in terms of limits as $r\rightarrow c$.
+of RDD analysis has built upon \textsc{ancova} models. A modern
+variant instead targets parameters defined
+in terms of limits as $r\rightarrow c$, such as the LATE.
 However, in RDDs with discrete running variables such as LSO's, neither
 $\lim_{r\downarrow 0} \EE (Y |R=r)$ nor $\lim_{r\uparrow 0} \EE (Y | R=r)$
 exists, except perhaps as $\EE (Y | R=-.01)$ or $\EE (Y | R=0)$.
@@ -1056,12 +1056,13 @@ residuals $\dt[\thetaInf]{\bm{Y}}{\bm{R}}$ that are independent of $Z$.
 Like the local randomization approach, it targets the TOTE or ATE
 within $\mathcal{W}$, as opposed to a difference of limits, and
 accommodates discreteness in $R$ and donut designs.
-In fact, with $\dt{\bm{Y}}{\bm{R}}\equiv\bm{Y}$, it reduces to the local
+In the special case of residual ignorability models with
+$\dt{\bm{Y}_{C}}{\bm{R}}\equiv\bm{Y}_{C}$ in \eqref{ycheck}, it reduces to the local
 randomization method.
 Like the limit-based approach, it models and accounts for the correlation between
 $R$ and $Y$.
-With the right modeling and fitting choices, it returns the
-classical \textsc{ancova} estimate for an RDD (see \S~\ref{sec:robust-analys-covar}).
+Under certain modeling and fitting choices, it returns the
+classical \textsc{ancova} estimate (\S~\ref{sec:robust-analys-covar}).
 
 Our method improves upon both approaches by using robust
 M-estimation to adjust for $R$.
@@ -1081,9 +1082,9 @@ M-estimation retains consistency under scenarios such as these, with moderate am
 contamination % fractions of this order
 \citep{he1991localbreakdown,yohaiZamar1997locallyrobustMestimates}, whereas OLS does not.
 
-If a large fraction of the dataset violates \eqref{ycheck}, even robust M-estimates
-can be inconsistent.
-Thus, these methods should be used in addition to, rather than instead of, preparatory specification checks.
+If a large fraction of the dataset violates \eqref{ycheck}, even robust M-estimators
+can be misled.
+Thus, these methods should be used in addition to, rather than instead of, preliminary specification checks.
 
 In simulated RDDs of moderate size, our estimates were unbiased and
 our confidence intervals were typically narrower than those from an
