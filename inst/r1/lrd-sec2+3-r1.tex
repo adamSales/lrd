@@ -9,8 +9,8 @@
 % Capturing the local randomization essence of the RDD calls for
 % a merger of RDD methods with concepts developed for RCTs. This
 % section selectively reviews relevant literatures.
-Limitless RDD builds on a set of existing RDD methods.
-This section selectively reviews the relevant literature.
+The method of this paper builds on existing methods for RDDs.
+This section selectively reviews relevant literature.
 
 Let $Z \in \{0,1\}$ indicate assignment to treatment ($Z=1$) as opposed to control
 ($Z=0$).
@@ -24,7 +24,7 @@ Let $Y$ represent the outcome of interest.
 For simplicity assume non-interference, the model that
 a subject's response may depend on his but not also on other subjects'
 treatment assignments \citep{cox:1958,rubin:1978}.  Thus we may take each $i$
-to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is observed, depending on whether $z_i=1$ or $0$, respectively;
+to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is observed;
  observed
 responses $Y$ coincide with $ZY_{T}+(1-Z)Y_{C}$.
 
@@ -56,21 +56,21 @@ Y_i=\alpha+\beta R_i+\tau Z_i+\epsilon_i
 \end{equation}
 fit using ordinary least squares (OLS), is unbiased for
 $\alpha_{1} - \alpha_{0}$.
-This estimand is the value of  $\lim_{r\downarrow 0} \EE(Y | R=r) -
+Under the \textsc{ancova} model, this estimation target coincides with  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
-limitless estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
+targets of limitless estimation such as $\EE Y_{T}  - \EE Y_{C}$.
 
 The OLS approach estimates $\tau$ as a parameter in regression model
 \eqref{eq:classicOLS}. In contrast, the approach in
 \S~\ref{sec:using-eqref-test} took place in two separate steps:
-first adjusting outcomes for $R$ and then testing hypotheses using a test
-statistic that contrasts treated and untreated subjects.
+first adjust outcomes for $R$; then, test hypotheses by contrasting
+adjusted outcomes of treated and untreated subjects.
 However, the OLS estimator may be restated in the manner of
 \S~\ref{sec:using-eqref-test}---a more involved procedure, to be sure,
 but one with an important advantage to be described in \S~\ref{sec:fuzzy-regr-disc}.
 Consider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
-Next, define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
-and residuals $\resid\equiv\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
+Define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
+and $\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
 b\mathbf{r}$.
 Finally, test $H$ with statistic
 \begin{equation} \label{eq:MeanDiffTestStat}
@@ -78,11 +78,11 @@ Finally, test $H$ with statistic
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}
 \end{equation}
---- with $\hat{\alpha}$ and $\hat{\beta}$ estimated from an OLS fit of the variant of \eqref{eq:classicOLS}
+--- where $\hat{\alpha}$ and $\hat{\beta}$ are estimated from an OLS fit of the variant of \eqref{eq:classicOLS}
 with dependent variable $\mathbf{y}_{H}$.
 Because of the structural relationship
-between $R$ and $Z$, its null distribution
-is not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
+between $R$ and $Z$, the null distribution
+of \eqref{eq:MeanDiffTestStat} not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
 $T(\mathbf{Y}_{H}, \cdot)$ had straightforward permutation distributions
 because slope and intercept parameters had been estimated
 from a separate sample.) However, under the parametric \textsc{ancova} model, with
@@ -117,20 +117,20 @@ $Z$.
 % $Z$.
 
 In general, the set \{$c$:
-$H_{c}$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
+$H_{c}: Y_{T} = Y_{C} + c$ is not rejected at level $\alpha$\}, which can be seen to be an interval, is a
 $100(1-\alpha)\%$ confidence interval for $\tau$ of the Rao score type
 \citep{agresti2011scoreintervals}; the $c$ solving
 $\meanDiffT(\mathbf{y}_{H}, \mathbf{z}) = 0$, which can be seen to
 be unique, is an M-estimate of $\tau$ under both the classical
 \textsc{ancova} model and various of its generalizations.
-(In fact, the estimate for $\tau$ corresponding to these statistical tests is
+In fact, the estimate for $\tau$ corresponding to these statistical tests is
 algebraically equal to the $Z$-coefficient from an OLS estimate of
 \eqref{eq:classicOLS}, and the two-sided 95\% confidence interval induced in this
 manner is the familiar
 $\hat{\tau} \pm 1.96\, \mathrm{SE}(\tau)$.
 However, these equivalences do not necessarily extend to estimation
 strategies outside of OLS, such as the robust estimators of
-\S~\ref{sec:robustFitters} below.)
+\S~\ref{sec:robustFitters} below.
 
 \subsubsection{Addressing the Wald interval's shortcomings for fuzzy RDDs} \label{sec:fuzzy-regr-disc}
 RDDs susceptible to non-compliance---where subjects' actual
@@ -166,7 +166,7 @@ compliance is imperfect, this
 iterative method yields confidence intervals with better coverage than Wald-type
 confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
 \mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
-hypothesis independent quantity
+hypothesis-independent quantity
 \citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
 
 
@@ -262,7 +262,7 @@ model-checking (%\citealp{bayarriBerger2000pvalues};
 %  $ i \leq k$, after conditioning on $\mathbf{X}$ in addition to
 %  $\sum_{i} Z_{i}$.
 Relatedly, \citet{lee2010regression} recommend a
- tests for conditional association, given $R$, of $\mathbf{Z}$ and
+ test for conditional association, given $R$, of $\mathbf{Z}$ and
  $\mathbf{X}$, by fitting models like those discussed in
  \S~\ref{sec:robust-analys-covar} for impact estimation, but with
  covariates rather than outcomes as independent variables.
@@ -324,14 +324,11 @@ balance to select a bandwidth.
 
 Restricting analysis to data within a bandwidth may change the
 interpretation of the result. The ATE and the
-TOTE refer to a discrete populations, and reducing the bandwidth likewise
+TOTE refer to a discrete population, and reducing the bandwidth likewise
 reduces those populations---the new target populations are comprised of
 subjects for whom $|R|\le b$.
-This suggests selecting a bandwidth with a particular target
-population in mind, perhaps the subjects for whom causal inference
-would be most relevant.
-In contrast, the definition of the LATE is unaffected by bandwidth
-choice.
+(In contrast, the definition of the LATE is unaffected by bandwidth
+choice.)
 
 % Alternatively,
 % \citet{cattaneo2014randomization} recommend testing hypotheses
@@ -365,7 +362,7 @@ $\EE (Y_{C}| R) = \alpha + \bm{f}(R)\bm{\beta}$, for
 $\bm{f}(\cdot)$ a $1 \times k$ vector valued function, and
 $\bm{\beta}$ a $k \times 1$ vector of coefficients.
 Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
-side-effect of undercutting the robustness of the analysis.  The
+side effect of undercutting the robustness of the analysis.  The
 reasons have to do with mechanics of regression fitting.
 
 % \marginpar{Should we also say something about local linear regression
@@ -448,16 +445,14 @@ under the assumption of residual ignorability, \eqref{eq:ignore2}.
 This luxury is unavailable in the typical RDD, in which both steps
 must use the same data, as in \S~\ref{sec:robust-analys-covar}.
 This section will describe a generalization of residual ignorability
-\eqref{eq:ignore2} to the typical case, along with an accompanying
-method that incorporates specification tests described in \S~\ref{sec:specification} and robust
-modeling strategies %described in
-\S~\ref{sec:robustFitters}.
+\eqref{eq:ignore2} to the typical case, along with robust analysis techniques
+incorporating the specification tests reviewed in \S~\ref{sec:specification}.
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
 
 This section will formalize residual ignorabilty for the typical RDD,
 which relies on a single dataset including variables $Y$, $R$, and $Z$.
-The assumption is that, after a suitable transformation,
+The assumption is that, after a suitable residual transformation,
 potential outcomes $Y_C$ are conditionally independent of $Z$.
 Hence, causal inference in an RDD may take the perspective
 that $Z$ is random due to randomness in $R$.
@@ -470,7 +465,7 @@ fashion, along with a
 family $\{\dt{\cdot}{\cdot}: \theta\}$ of residual or partial
 residual transformations, each mapping data $(\mathbf{y}, \mathbf{r})$ to
 residuals
-$\{\dt {y_{i}}{\mathbf{r}} \}_{i=1}^{n}$.
+$\{\dt {y_{i}}{{r}_{i}} \}_{i=1}^{n}$.
 Appendix~\ref{sec:large-sample-rand}
 %\citet[\S~\ref{sec:large-sample-rand}]{lrdauthors:supp}
 states the
@@ -483,9 +478,11 @@ Given $\mathcal{W}$ with $0< \PP( R \in
 \mathcal{W}, R\leq 0) < 1$ and a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
 \begin{equation}\label{ycheck}
 \dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
-\independent {Z}| \{R \in \mathcal{W}\},
+\independent {Z}| \{R \in \mathcal{W}\}
 \end{equation}
-where $\thetaInf$ is the probability limit of $\hat\theta$.
+for a fixed $\thetaInf$ such that
+$\sqrt{n}(\hat\theta - \thetaInf)$ is bounded in probability (and thus
+$\hat\theta \stackrel{P}{\rightarrow} \thetaInf$).
 \end{ass}
 Residual Ignorability states that, though $Y_C$ may not be independent of
 $Z$,  it admits a residual transformation bringing about such
