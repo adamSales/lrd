@@ -575,8 +575,8 @@ trends in the absence of treatment.
 %\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
 %}
 \caption{%(a)
- \texttt{nextGPA} by centered first year GPA, binned by unique first-year GPA values. Point size is proportional to
-the number of students in the bin. %First-year GPAs (x-axis) have been
+ \texttt{nextGPA} by first year GPA. 
+Data are plotted with binning by unique value of first-year GPA, vertical coordinates being bin means of \texttt{nextGPA} and point sizes being proportional to bin size. %First-year GPAs (x-axis) have been
 %  centered around a campus-specific cut-point for academic probation. Subsequent
 % GPA (y-axis) has been averaged according to first-year GPA. %(b)
 %Log-transformed high-school grade percentile (a covariate), also averaged by first-year college
@@ -589,22 +589,19 @@ the number of students in the bin. %First-year GPAs (x-axis) have been
 % \texttt{nextGPA}: did students on AP tend to have higher (or lower) subsequent
 % GPAs?
 
-One outcome in LSO's academic probation (AP) study was
-\texttt{nextGPA},
-grade-point average
-for the first term after the first year in which the student was
-enrolled, ordinarily the next fall.
-Figure~(\ref{LSO}) plots it against
+Figure~(\ref{LSO}) plots the LSO study's primary outcome,
+grade-point average in the next term a student was enrolled following his
+first year (\texttt{nextGPA}), against
 first-year GPA.
-In all but 50 of 44,362 cases, being on AP coincided with whether
+In all but 50 of 44,362 cases, being on academic probation (AP) coincided with whether
 first-year cumulative GPA  ---  the running
 variable, $R$ --- fell below a cutoff.
-The university in question had three campuses, two of which had
-cutoffs of 1.5; the other had a cutoff of 1.6.
+The university in question had three campuses, two having
+cutoffs of 1.5 and the other having a cutoff of 1.6.
 To combine data from the three schools, LSO centered each student's
 first-year GPA at the appropriate $c$, making $r_i$ the difference of student $i$'s
 realized first year GPA and the cutoff at his or her campus.   Figure~\ref{LSO}
-follows LSO in this, displaying on its $x$-axis these $r_{i}$s; it also averages \texttt{nextGPA} values over students
+follows LSO in this, displaying these $r_{i}$s on its $x$-axis; it also averages \texttt{nextGPA} values over students
 with equal first-year GPA, as opposed to plotting students individually.
 %Then, $Z=\indicator{R\le 0}$.
 There is both a discontinuity in \texttt{nextGPA} values as $R$
@@ -681,10 +678,6 @@ stopifnot(max(c(frandsen1[,'p'],frandsen2[,'p']))<0.001)
 
 The McCrary density test \citep{mccrary2008manipulation} identifies a
 discontinuity in the running variable at the cut-point ($p<0.001$).
-The Frandsen test for manipulation
-in a discrete running variable \citep{frandsenTest}
-likewise detected an anomaly at a wide range of tuning parameter values
-($p<0.001$ for $0\le k\le0.1$).
 AP is a
 dubious distinction, and savvy students may try to avoid it. %, perhaps
 %by dropping a course, pleading with an instructor, or otherwise
@@ -693,8 +686,13 @@ Inspection of the distribution of $R$
 reveals an unusual number of students whose first-year GPAs were
 exactly equal to the AP cutoff, $R=0$.
  %\Sexpr{latexSN(signif(mccrary1,2))}.
-Although the forcefulness of this rejection may be due
-in part to the discreteness of the GPA distribution, the finding is
+It would be reasonable to suspect this significant McCrary finding of
+being an artifact of the discreteness of first-year GPAs, but 
+Frandsen's \citeyearpar{frandsenTest} test for manipulation
+in a discrete running variable 
+likewise detected an anomaly at a wide range of tuning parameter values:
+$p<0.001$ provided that $0\le k\le0.1$.
+The finding is further
 corroborated by the fact that the number of students attempting four
 or fewer credits was also unusually high in the $R=0$ subgroup,
 suggesting that some students dropped courses to dodge AP.
@@ -703,9 +701,11 @@ suggesting that some students dropped courses to dodge AP.
 % Indeed, $R$'s other high points within $b=0.5$ of the cutpoint,
 % $R=$ Sexpr{paste(paste0(hipts,conn.chars), collapse=" ")}, also
 % feature more students attempting four or fewer credits.
-In any event, repeating the McCrary procedure
-in a window $\mathcal{W}=\{i: |R_i|\in (0,0.5)\}$, with students with
-$R=0$ removed, results in a p-value of \Sexpr{signif(mccraryDougnut,2)}.
+In any event, after removing the $R=0$
+subgroup, that is setting $\mathcal{W}=\{i: |R_i|\in (0,0.5)\} =
+\mathcal{W}_{0.5}\setminus \{i: R_{i}=0\}$, the McCrary procedure
+narrowly avoids rejecting the hypothesis of no manipulation 
+($p$=\Sexpr{signif(mccraryDougnut,2)}).
 
 \subsection{AP Outcome Analysis}
 \begin{wrapfigure}{l}{0.6\textwidth}%[htb]
@@ -720,7 +720,8 @@ $R=0$ removed, results in a p-value of \Sexpr{signif(mccraryDougnut,2)}.
 \end{wrapfigure}
 Table~\ref{tab:results} gives a set of %p-values, point estimates, and
 %interval
-estimates for the effect of AP.
+estimates for the effect of AP, each obtained
+using the robust procedure of \S~\ref{sec:robustFitters}--\ref{sec:test-hypoth-no}.
 The first row of Table~\ref{tab:results} gives our main result, with
 window of analysis
 $\mathcal{W}=\{i: |R_i|\in (0,0.5)\}$ and a linear model of $\EE(Y_C|R)$,
@@ -734,11 +735,11 @@ although the
 lowest weights occur just above the cut-point and near $\mathcal{W}$'s
 edges (Figure~\ref{fig:robweights}).
 
-For students in $\mathcal{W}$, the main analysis estimates an average
-treatment effect of \Sexpr{round(SHmain[['CI']][3], 2)}, with a 95\% confidence
-interval of \Sexpr{ciChar(SHmain[['CI']][1:2])}.
+The main analysis estimates an average
+treatment effect of \Sexpr{round(SHmain[['CI']][3], 2)}, with 95\% confidence
+interval \Sexpr{ciChar(SHmain[['CI']][1:2])}.
 
-The next three rows relax each of the main model's specifications.
+Table~\ref{tab:results}'s next three rows relax each of the main model's specifications.
 The row labeled ``Adaptive $\mathcal{W}$'' reports the results using
  the wider, adaptively chosen window $\mathcal{W}_{a}=\{i:R_i\in
 (0,$\Sexpr{SHdataDriven[['W']][2]}$)\}$.
@@ -750,7 +751,7 @@ This specification performed well in simulations %available in an
 described in Section~\ref{sec:simulation}. %Supplemental Appendix \ref{apnd:poly-sim}. %
 Finally, the ``ITT'' row gives an ``intent to treat'' analysis,
 ignoring the difference between students' actual probation and what we
-would have expected based on their GPAs.
+would have expected based on their GPAs.  
 
 According to all four analyses, AP gave a modest benefit
 over this range.
@@ -843,7 +844,7 @@ of detrended covariate residuals when applied with this $\mathcal{W}$
 Local linear effect estimation resembles our method,
 in that both require analysts to specify and fit models for $Y_C$ and $\tau$.
 However, whereas ours calls for robust M-estimation, the local linear method
-uses a variant of weighted least squares---when the kernel is
+uses weighted least squares---when the kernel is
 rectangular, as in our example, this reduces to OLS within the chosen window.
 Confidence intervals are of the Wald type---that is, $\hat{\tau} \pm
 z_{\alpha/2} \mathrm{SE}(\hat{\tau})$,
