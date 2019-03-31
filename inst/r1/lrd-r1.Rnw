@@ -110,7 +110,7 @@ hence, limits of functions of GPA do not exist\footnote{Non-existence
   of the LATE when $R$ is discrete
   \emph{by definition} is arguably a more severe problem than bias due
   to rounding in $R$, as discussed in,
-  e.g. \citet{kolesarRothe17} and \citet{dong2015regression}.}.
+  e.g. \citet{dong2015regression} and \citet{kolesarRothe17}.}.
 Further,
 re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
@@ -128,7 +128,7 @@ the model that, in effect, the RDD is a randomized controlled trial
 (RCT), at
 least in sufficiently small neighborhoods of the cut-point.
 Under this assumption, once
-attention is confined to a such a region, the difference of
+attention is confined to such a region, the difference of
 $Y$-means between subjects falling above and below the cut-point estimates the ATE within that region.
 Despite being natural as a specification of Lee's local randomization concept,
 the RCT model involves an independence condition that is rarely plausible in RDDs.
@@ -146,19 +146,19 @@ of sample pruning and robust M-estimation is uniquely equipped
 to address.
 
 The remainder of Section~\ref{sec:introduction} uses a public health
-example to introduce residual ignorability, and review distribution-free analysis of randomized
+example to introduce residual ignorability and to review distribution-free analysis of randomized
 controlled trials (RCTs).  Limitless RDD analysis
 combines these ideas with classical, wholly
-parametric methods for RDDs (\S~\ref{sec:robust-analys-covar});
+parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}),
 %robust estimation (\S~\ref{sec:robust-altern-ordin});
 and RDD specification
 tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
 adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
 of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
 with the LSO study, Section~\ref{sec:simulation}
-explores the method's performance in simulations and Section~\ref{sec:discussion} takes stock.
-
-Computer code and other replication materials are provided in an online
+explores the method's performance in simulations and
+Section~\ref{sec:discussion} takes stock.  Replication materials,
+including R code, are provided in an online
 supplement \citep{saleslrd2019}. 
 
 % Although Huber-White standard errors are common in RDD analysis,
@@ -301,7 +301,7 @@ in a limited reanalysis of these monthly death counts.
 
 
 In this example, let $i=1,\dots,12$ denote the months of 2017 and let Puerto
-Rico's monthly death counts $Y_i$ constitute the outcome.
+Rico's monthly death counts constitute the outcome, $Y_i$.
 The running variable $R_i=i$ is month order and months are
 ``treated,'' $Z_i=1$,
 if and only if $R\ge 9$, Hurricane Maria having occurred on September 20.
@@ -532,7 +532,7 @@ to its conditional distribution thus enumerated.
 In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
 since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
 Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
-The null hypothesis $H_0$ states that hurricane
+The null hypothesis $H_0$ states that Hurricane
 Maria caused precisely no change to each month's death count, nor to its residual.
 Under $H_0$, we condition on $\bm{A}^*$ and calculate the
 sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
@@ -560,8 +560,8 @@ further, we now turn to developing a residual ignorability-based
 procedure using M-estimation \citep[][also called ``generalized
 estimating equations'' or ``generalized method of
 moments'']{huber1964robust,stefanski2002calculus}, which is better
-adapted to data scenarios without the luxury of separate samples for estimation of
-trends in the absence of treatment and of treatment effects themselves.
+adapted to data scenarios without the luxury of a separate sample for estimation of
+trends in the absence of treatment.
 
 
 \input{lrd-sec2+3-r1}
