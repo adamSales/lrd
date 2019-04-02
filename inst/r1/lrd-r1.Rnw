@@ -1112,7 +1112,7 @@ trend.
 %% window of analysis based on a sequence of specification tests.
 {%\small
 \bibliographystyle{apacite}
-\bibliography{causalinference}
+\bibliography{lrd-r1.bib}
 %\bibliography{../../../adam.sales/drafts/causalinference}
 }
 
