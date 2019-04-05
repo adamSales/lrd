@@ -341,7 +341,7 @@ Rather, a marked seasonal trend is apparent, with death counts being higher
 in the winter months than during the rest of
 the year; \eqref{eq:ignore} cannot be sustained.
 (For RDD methodology founded on \eqref{eq:ignore}, see
-\citet{cattaneo2015randomization},
+\citet{cattaneo2014randomization},
 \citet{aronowRDDinterference} or \citet{matteiMealliObsStud}.)
 
 
