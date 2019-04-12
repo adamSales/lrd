@@ -71,15 +71,15 @@ if (!exists("analysis_objects")) analysis_objects <- load(paste0(dataResults_loc
 In a regression discontinuity design
 \citep[RDD;][]{thistlethwaite1960regression}, treatment is allocated to subjects for
 whom a ``running variable'' $R$ exceeds (or falls below) a pre-determined cut-point.
-\citet{lee2008randomized} argued that the regression discontinuity design features ``local
+\citet{lee2008randomized} has argued that the regression discontinuity design features ``local
 randomization'' of treatment assignment, and is therefore ``a highly
 credible and transparent way of estimating program effects''
-\citep[][p. 282]{lee2010regression}.
+\citep[][, p. 282]{lee2010regression}.
 %According to the local randomization heuristic, regression
 %discontinuity designs (RDDs)
 %can recover important advantages of randomized controlled trials (RCTs).
 
-Take the RDD found in  \citet*[][hereafter LSO]{lindo2010ability}.
+Take the RDD found in  \citet*[][; hereafter LSO]{lindo2010ability}.
 LSO attempt to estimate the effect of
 ``academic probation,'' an intervention for struggling college students,
  on students' subsequent grade point averages (GPAs).
@@ -91,7 +91,7 @@ reveal the effectiveness of the policy at
 promoting satisfactory grades.
 
 LSO's data analysis, like most RDD studies, used ordinary regression analyses to target an extraordinary parameter.
-In Imbens and Lemieux's telling \citeyearpar{imbens2008regression}, for example, the target of estimation is not
+In Imbens and Lemieux's \citeyearpar{imbens2008regression} telling, for example, the target of estimation is not
 the average treatment effect (ATE) in any one region around the cutoff
 but rather the ``local'' average treatment effect, or ``LATE'':
 the limit of ATEs over concentric ever-shrinking regions, essentially
@@ -116,7 +116,7 @@ re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
 finely manipulated their GPAs to avoid probation.
 This necessitates %a ``donut design''
-%\citep[c.f.][p. 2119]{barreca2011saving},
+%\citep[cf.][p. 2119]{barreca2011saving},
 excluding subjects immediately on or around the cut-point---precisely
 those students to whom the LATE might most plausibly pertain.
 Either circumstance calls
@@ -132,7 +132,7 @@ attention is confined to such a region, the difference of
 $Y$-means between subjects falling above and below the cut-point estimates the ATE within that region.
 Despite being natural as a specification of Lee's local randomization concept,
 the RCT model involves an independence condition that is rarely plausible in RDDs.
-In the LSO example, the data refute this model --- unless one
+In the LSO example, the data refute this model---unless one
 rejects all but the small share of the sample contained in a narrow band
 of the cutpoint, sacrificing power and external validity.
 
@@ -146,8 +146,7 @@ of sample pruning and robust M-estimation is uniquely equipped
 to address.
 
 The remainder of Section~\ref{sec:introduction} uses a public health
-example to introduce residual ignorability and to review distribution-free analysis of randomized
-controlled trials (RCTs).  Limitless RDD analysis
+example to introduce residual ignorability and to review distribution-free analysis of RCTs.  Limitless RDD analysis
 combines these ideas with classical, wholly
 parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}),
 %robust estimation (\S~\ref{sec:robust-altern-ordin});
@@ -156,10 +155,10 @@ tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
 adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
 of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
 with the LSO study, Section~\ref{sec:simulation}
-explores the method's performance in simulations and
+explores the method's performance in simulations, and
 Section~\ref{sec:discussion} takes stock.  Replication materials,
 including R code, are provided in an online
-supplement \citep{saleslrd2019}. 
+supplement \citep{saleslrd2019}.
 
 % Although Huber-White standard errors are common in RDD analysis,
 % ``Huberized'' fitting methods are not; they should be.
@@ -294,8 +293,8 @@ researchers were higher.
 Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
 analysis considered recorded mortality in
 months before and after the hurricane, estimating
-Maria to have caused 1139 excess
-deaths. This section demonstrates residual ignorability,
+Maria to have caused 1139 deaths, in excess of those that would have
+occurred otherwise. This section demonstrates residual ignorability,
 if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
 in a reanalysis of these monthly death counts.
 
@@ -319,20 +318,22 @@ of total excess mortality for 2017, $\sum_{i\ge 9} \tau_{i}$, in due
 course.%\marginpar{AS: I think $\ge 9$ in the sum avoids confusion}
 The remainder of this section demonstrates how to test the
 hypothesis $\tau_{i}\equiv 0$, all $i$, using a Fisher randomization
-test --- but without assuming % this phrasing disambiguates
+test---but without assuming % this phrasing disambiguates
 the following independence property: % the symbol $\independent$
-\begin{ass}{Strong Ignorability, \citealp{rosenbaum1983central}}
+\begin{ass}{Strong Ignorability; \citealp{rosenbaum1983central}}
 \begin{equation}\label{eq:ignore}
 Y_{C} \independent Z.
 \end{equation}
 \end{ass}
 
 Although RCTs validate \eqref{eq:ignore} as a
-matter of course, it is too strong to plausibly apply to the mortality series surrounding
+matter of course, the assumption is too strong to plausibly apply to the mortality series surrounding
 Maria.
 For \eqref{eq:ignore} to hold, $Z$ must be independent
 of monthly death counts that would have been observed in
-the absence of ``exposure'' to \maria.
+the absence of exposure to \maria. %% N.B. John didn't see need for
+                                %% quotes, I (AS) think it works fine
+                                %% without, too--BH: feel free to restore
 The distribution underlying the September through December counts would
 be no different than that of the year's first eight months.
 Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of
@@ -342,7 +343,7 @@ in the winter months than during the rest of
 the year; \eqref{eq:ignore} cannot be sustained.
 (For RDD methodology founded on \eqref{eq:ignore}, see
 \citet{cattaneo2015randomization},
-\citet{aronowRDDinterference} or \citet{matteiMealliObsStud}.)
+\citet{aronowRDDinterference}, or \citet{matteiMealliObsStud}.)
 
 
 Dependence between $R$ and $Y_C$, violating
@@ -394,7 +395,7 @@ Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 Aside from a technical elaboration that will be necessary to apply our method
 in the general case (\S~\ref{sec:model-eey-c-r}),
-assumption \eqref{eq:ignore2} is Residual Ignorability, this paper's alternative
+assumption \eqref{eq:ignore2} is residual ignorability, this paper's alternative
 to Strong Ignorability as a basis for analysis of RDDs.
 
 \begin{figure}
@@ -413,7 +414,7 @@ to Strong Ignorability as a basis for analysis of RDDs.
 \subsection{Using~\eqref{eq:ignore2} to Test the Hypothesis of Strictly No Effect}
 \label{sec:using-eqref-test}
 
-In parallel with Fisherian analysis of RCTs \citeyearpar{fisher:1935},
+In parallel with Fisherian analysis of RCTs \citep{fisher:1935},
 which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$,
 our Maria analysis conditions on the potential residual vector
 $\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{12}$.
@@ -435,16 +436,16 @@ $\bm{\resid}_{T} \equiv \bm{\resid}_{C}=\bm{\resid}$.
 %more readily tested.
 
 
-For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed --- formally,
+For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed---formally,
 inference will be made after conditioning not only on $\bm{\resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
 To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
 we likewise condition on the realized sizes $N_{1}$
 and $N_{0}$ of the treatment and control group samples%
-\footnote{\textit{Design of Experiments} [\citeyear[ch.~1]{fisher:1935}]
+\footnote{\textit{Design of Experiments} (\citeyear[ch.~1, ]{fisher:1935})
 takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: In Little's version,
 %% the flowers are red not purple.  (In case a reviewer says they couldn't locate the
 %% example there...)
-[\citealp[\textit{e.g.},][]{little:1989,upton1992FET}] demonstrates his view that random $N_{0}$ and $N_{1}$
+(\citealp[e.g.,][]{little:1989,upton1992FET}) demonstrates his view that random $N_{0}$ and $N_{1}$
 should be treated as fixed after conditioning upon them.
 For quite different assumptions supporting permutation tests in RDDs,
 see \citet{canayKamat17RDDpermutations}.
@@ -528,7 +529,7 @@ test statistic $T(\bm{\resid}_C,\bm{Z})=T(\bm{\resid},\bm{Z})$ conditional on
 $\bm{A}^*$; the permutational p-value is found by comparing a test statistic
 to its conditional distribution thus enumerated.
 In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
-since it is based on a model fit to pre-\maria\ death counts \citep[c.f.][]{rebarPaper}.
+since it is based on a model fit to pre-\maria\ death counts \citep[cf.][]{rebarPaper}.
 Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
 The null hypothesis $H_0$ states that Hurricane
 Maria caused precisely no change to each month's death count, nor to its residual.
@@ -555,7 +556,7 @@ at level 0.05 unless $c\geq$ \Sexpr{round(lb,-1)}, corresponding to
 confidence limits and Hodges-Lehmann-type estimates of the effect can
 also be obtained in this way. Rather that pursuing this approach
 further, we now turn to developing a residual ignorability-based
-procedure using M-estimation \citep[][also called ``generalized
+procedure using M-estimation \citep[][; also called ``generalized
 estimating equations'' or ``generalized method of
 moments'']{huber1964robust,stefanski2002calculus}, which is better
 adapted to data scenarios without the luxury of a separate sample for estimation of
@@ -575,7 +576,7 @@ trends in the absence of treatment.
 %\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
 %}
 \caption{%(a)
- \texttt{nextGPA} by first year GPA. 
+ \texttt{nextGPA} by first-year GPA.
 Data are plotted with binning by unique value of first-year GPA, vertical coordinates being bin means of \texttt{nextGPA} and point sizes being proportional to bin size. %First-year GPAs (x-axis) have been
 %  centered around a campus-specific cut-point for academic probation. Subsequent
 % GPA (y-axis) has been averaged according to first-year GPA. %(b)
@@ -590,17 +591,17 @@ Data are plotted with binning by unique value of first-year GPA, vertical coordi
 % GPAs?
 
 Figure~(\ref{LSO}) plots the LSO study's primary outcome,
-grade-point average in the next term a student was enrolled following his
+GPA in the next term a student was enrolled following his
 first year (\texttt{nextGPA}), against
 first-year GPA.
 In all but 50 of 44,362 cases, being on academic probation (AP) coincided with whether
-first-year cumulative GPA  ---  the running
-variable, $R$ --- fell below a cutoff.
+first-year cumulative GPA---the running
+variable, $R$---fell below a cutoff.
 The university in question had three campuses, two having
 cutoffs of 1.5 and the other having a cutoff of 1.6.
 To combine data from the three schools, LSO centered each student's
 first-year GPA at the appropriate $c$, making $r_i$ the difference of student $i$'s
-realized first year GPA and the cutoff at his or her campus.   Figure~\ref{LSO}
+realized first-year GPA and the cutoff at his or her campus.   Figure~\ref{LSO}
 follows LSO in this, displaying these $r_{i}$s on its $x$-axis; it also averages \texttt{nextGPA} values over students
 with equal first-year GPA, as opposed to plotting students individually.
 %Then, $Z=\indicator{R\le 0}$.
@@ -612,7 +613,7 @@ these features?  How much of the data bear directly in this inference?
 \subsection{Choosing $\mathcal{W}$ and $\mu_{\beta}(\cdot)$} \label{sec:choosing-mathcalw-f}
 The region %A relevant region in which to estimate a treatment effect is within
 $\mathcal{W}_{0.5} =  \pm $ 0.5 %$0.3$
-grade-points %.
+grade points %.
 %Conventionally, $0.3$ represents the difference in grade points
 %between a C, say, and a C-, or any other grade half-step.
 %This
@@ -687,9 +688,9 @@ reveals an unusual number of students whose first-year GPAs were
 exactly equal to the AP cutoff, $R=0$.
  %\Sexpr{latexSN(signif(mccrary1,2))}.
 It would be reasonable to suspect this significant McCrary finding of
-being an artifact of the discreteness of first-year GPAs, but 
+being an artifact of the discreteness of first-year GPAs, but
 Frandsen's \citeyearpar{frandsenTest} test for manipulation
-in a discrete running variable 
+in a discrete running variable
 likewise detected an anomaly at a wide range of tuning parameter values:
 $p<0.001$ provided that $0\le k\le0.1$.
 The finding is further
@@ -702,10 +703,10 @@ suggesting that some students dropped courses to dodge AP.
 % $R=$ Sexpr{paste(paste0(hipts,conn.chars), collapse=" ")}, also
 % feature more students attempting four or fewer credits.
 In any event, after removing the $R=0$
-subgroup, that is setting $\mathcal{W}=\{i: |R_i|\in (0,0.5)\} =
-\mathcal{W}_{0.5}\setminus \{i: R_{i}=0\}$, the McCrary procedure
-narrowly avoids rejecting the hypothesis of no manipulation 
-($p$=\Sexpr{signif(mccraryDougnut,2)}).
+subgroup---that is, setting $\mathcal{W}=\{i: |R_i|\in (0,0.5)\} =
+\mathcal{W}_{0.5}\setminus \{i: R_{i}=0\}$---the McCrary procedure
+narrowly avoids rejecting the hypothesis of no manipulation
+($p$ = \Sexpr{signif(mccraryDougnut,2)}).
 
 \subsection{AP Outcome Analysis}
 \begin{wrapfigure}{l}{0.6\textwidth}%[htb]
@@ -744,14 +745,14 @@ The row labeled ``Adaptive $\mathcal{W}$'' reports the results using
  the wider, adaptively chosen window $\mathcal{W}_{a}=\{i:R_i\in
 (0,$\Sexpr{SHdataDriven[['W']][2]}$)\}$.
 The ``Cubic'' row allows for a cubic
-relationship between first year GPA and subsequent GPA, with
+relationship between first-year GPA and subsequent GPA, with
 $\mu_\beta(R)=\beta_0+\beta_1R+\beta_2R^2+\beta_3 R^3$.
 This specification performed well in simulations %available in an
 %online supplement.%
 described in Section~\ref{sec:simulation}. %Supplemental Appendix \ref{apnd:poly-sim}. %
 Finally, the ``ITT'' row gives an ``intent to treat'' analysis,
 ignoring the difference between students' actual probation and what we
-would have expected based on their GPAs.  
+would have expected based on their GPAs.
 
 According to all four analyses, AP gave a modest benefit
 over this range.
@@ -824,14 +825,14 @@ We computed this bandwidth using Dimmery's \citeyearpar{rdd}
 implementation in \texttt{R}, using the ``rectangular'' kernel option
 to facilitate comparisons across methods.
 The resulting $\mathcal{W}$ is the widest shown in
-Table~\ref{tab:alt} --- too wide, from viewpoints either of
+Table~\ref{tab:alt}---too wide, from viewpoints either of
 Section~\ref{sec:model-eey-c-r}, or of local permutation
 analysis.  For example, Section~\ref{sec:bandwidthChoice}'s placebo tests reject comparability
 of detrended covariate residuals when applied with this $\mathcal{W}$
 ($p$=\Sexpr{round(IK[['bal.pval']],3)})%; \citet[][p. 2304]{cct}
 %and \citet[][p. 14]{kolesarRothe17} have discussion of this
 %possibility.
-. %\marginpar{AS: Removed refs to CCT \& KR, for length \& flow. ---B \ldots}
+. %\marginpar{AS: Removed refs to CCT \& KR, for length \& flow.---B \ldots}
 % AS It didn't seem to me that the passage demanded a cross-ref. I
 % found it disruptive to our story to reference theirs in without
 % explaining what it was that they say about the "too large"
@@ -848,7 +849,7 @@ uses weighted least squares---when the kernel is
 rectangular, as in our example, this reduces to OLS within the chosen window.
 Confidence intervals are of the Wald type---that is, $\hat{\tau} \pm
 z_{\alpha/2} \mathrm{SE}(\hat{\tau})$,
-where $z_{\alpha/2}$ is an appropriate normal or t-distribution
+where $z_{\alpha/2}$ is an appropriate normal or $t$-distribution
 quantile---rather than inversions of a family of hypothesis tests.
 Recent elaborations and extensions include those of \citet{cct},
 \citet{imbens2017optimized} and \citet{kolesarRothe17}.
@@ -981,7 +982,7 @@ polynomial regression to mitigate influence, as discussed in
 to the specification of the $Y_{C}$ on $R$ regression.
 We compared limitless RD analysis, with $\mu_{\bm{\beta}}$ a polynomial in $R$ with
 degree 1, 2, 3, 4, or 5 to analogous estimates from OLS.
-In the OLS regressions, we followed the advice of \citet[e.g.][p. 318]{lee2010regression} and
+In the OLS regressions, we followed the advice of \citet[e.g.][, p. 318]{lee2010regression} and
 included interactions between the $R$-polynomial and $Z$.
 Finally, we compared these methods to local-linear regression with the
 triangular kernel and the bandwidth of \citet{imbens2012optimal}.
@@ -1008,13 +1009,13 @@ higher RMSE than limitless with higher-order polynomials.
 
 OLS and limitless estimation sharply diverge in the quality of their
 point estimates, with the OLS estimates' RMSEs exceeding those of
-comparable robust M-estimates' by factors exceeding 200. 
+comparable robust M-estimates' by factors exceeding 200.
 As \citet{gelman2016high} would predict, OLS estimates' RMSEs
 increased sharply with each increment of polynomial degree, whatever
 the form of the DGM.  In marked contrast, under non-linear DGMs accuracy of
 the robust, limitless method was improved with higher-degree polynomials,
 and under linear DGMs including higher-degree terms imposed little
-penalty.  
+penalty.
 
 
 
@@ -1097,7 +1098,7 @@ between $R$ and $Y_{C}$, in marked contrast to methods using OLS to adjust for
 trend.
 %%Recent RDD methodology literature addresses
 %%multiple running variables \citep{papay2011extending,
-%%  reardon2012regression}. Residual Ignorability and robust
+%%  reardon2012regression}. residual ignorability and robust
 %%regression apply to such cases without modification.
 
 % Other advantages include limitlessness, the estimation not of opposing limits of

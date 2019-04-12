@@ -9,7 +9,7 @@
 % Capturing the local randomization essence of the RDD calls for
 % a merger of RDD methods with concepts developed for RCTs. This
 % section selectively reviews relevant literatures.
-The method of this paper builds on existing methods for RDDs.
+The method presented in this paper builds on existing methods for RDDs.
 This section selectively reviews relevant literature.
 
 Let $Z \in \{0,1\}$ indicate assignment to treatment ($Z=1$) as opposed to control
@@ -28,7 +28,7 @@ to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is o
  observed
 responses $Y$ coincide with $ZY_{T}+(1-Z)Y_{C}$.
 
-\subsection{The \textsc{Ancova} Model for RDDs}\label{sec:robust-analys-covar}
+\subsection{The ANCOVA Model for RDDs}\label{sec:robust-analys-covar}
 
 The classical analysis of covariance (\textsc{ancova}) model for
 groups $i=1,\ldots, k$, each including subjects $j=1, \ldots, n_{i}$,
@@ -52,7 +52,7 @@ determines $Z$.
 Nonetheless, under this model the estimated $Z$ coefficient from the
 model
 \begin{equation}\label{eq:classicOLS}
-Y_i=\alpha+\beta R_i+\tau Z_i+\epsilon_i
+Y_i=\alpha+\beta R_i+\tau Z_i+\epsilon_i,
 \end{equation}
 fit using ordinary least squares (OLS), is unbiased for
 $\alpha_{1} - \alpha_{0}$.
@@ -78,11 +78,11 @@ Finally, test $H$ with statistic
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=1} -
 \overline{\dt[(\hat{\alpha},\hat{\beta})]{{{Y}_H}}{ {R}}}_{Z=0}
 \end{equation}
---- where $\hat{\alpha}$ and $\hat{\beta}$ are estimated from an OLS fit of the variant of \eqref{eq:classicOLS}
+---where $\hat{\alpha}$ and $\hat{\beta}$ are estimated from an OLS fit of the variant of \eqref{eq:classicOLS}
 with dependent variable $\mathbf{y}_{H}$.
 Because of the structural relationship
 between $R$ and $Z$, the null distribution
-of \eqref{eq:MeanDiffTestStat} not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
+of \eqref{eq:MeanDiffTestStat} is not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
 $T(\mathbf{Y}_{H}, \cdot)$ had straightforward permutation distributions
 because slope and intercept parameters had been estimated
 from a separate sample.) However, under the parametric \textsc{ancova} model, with
@@ -134,14 +134,14 @@ strategies outside of OLS, such as the robust estimators of
 
 \subsubsection{Addressing the Wald interval's shortcomings for fuzzy RDDs} \label{sec:fuzzy-regr-disc}
 RDDs susceptible to non-compliance---where subjects' actual
-treatments may differ from $Z$--- are called ``fuzzy.''
+treatments may differ from $Z$---are called ``fuzzy.''
 In these cases, let $D$ indicate whether treatment was actually
 received.
 This $D$ is an intermediate outcome, so there are
 corresponding potential outcomes $D_{C}$ and $D_{T}$, with $D \equiv ZD_{T}
 + (1-Z)D_{C}$.
 Subject $i$ is a non-complier if $D_{Ci}=1$ or $D_{Ti}=0$, though we
-will assume the monotonicity condition $D_{C}\equiv 0$ --- there may be
+will assume the monotonicity condition $D_{C}\equiv 0$; there may be
 subjects assigned to the treatment who avoid it, but no one gets
 treatment without being assigned to it.
 We shall also posit the exclusion restriction,
@@ -164,10 +164,10 @@ hypothesis $H$, and the construction of $Y_H$---the rest of the
 process remains unchanged [\citealp{rosenbaum:1996:onAIR}].)  When
 compliance is imperfect, this
 iterative method yields confidence intervals with better coverage than Wald-type
-confidence intervals, that is intervals of form $\hat\tau \pm q_{*}
+confidence intervals---that is, intervals of form $\hat\tau \pm q_{*}
 \mathrm{SE}(\hat\tau)$ with $\mathrm{SE}(\hat\tau)$ a single,
 hypothesis-independent quantity
-\citep[Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
+\citep[, Sec.~7]{imbens:rose:2005,baiocchiChengSmall2014IVtutorial}.
 
 
 \subsubsection{Robust Standard Error Estimation}\label{sec:sandwich}
@@ -219,7 +219,7 @@ the following section.
 
 \subsection{Threats to RDD Validity and some Remedies}\label{sec:specification}
 
-The \textsc{Ancova} model for RDDs encodes additional assumptions,
+The \textsc{ancova} model for RDDs encodes additional assumptions,
 beyond normality and homoskedasticity of regression errors and full
 compliance with treatment assignment, which are not so easily
 dispensed with.
@@ -244,7 +244,7 @@ independence of
  conduct placebo tests for effects of $Z$ on $X$.
 Of course, treatment cannot affect pre-treatment variables; this is
 model-checking (%\citealp{bayarriBerger2000pvalues};
-\citealp[][\S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
+\citealp[][, \S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
 %\citealp[][Ch.~14]{lehmannRomano2006TSH}
 ).  % Here as
  % elsewhere \citep{box1980sab}, checks finding fault with a model prompt
@@ -316,7 +316,7 @@ $b$% for which $H_{b}$ is sustained
 ; but it so happens that this form
 of sequential testing implicitly corrects for multiplicity, according to the
 sequential intersection union principle
-(\citealp[SIUP;][Proposition~1]{rosenbaum2008testing};
+(\citealp[SIUP;][, Proposition~1]{rosenbaum2008testing};
 \citealp{hansenSales2015cochran}).
 \citet{liMatteiMealli2015BayesianRD} and
 \citet{cattaneo2014randomization} also suggest the use of covariate
@@ -325,7 +325,7 @@ balance to select a bandwidth.
 Restricting analysis to data within a bandwidth may change the
 interpretation of the result. The ATE and the
 TOTE refer to a discrete population, and reducing the bandwidth likewise
-reduces those populations---the new target populations are comprised of
+reduces those populations---the new target populations consist of
 subjects for whom $|R|\le b$.
 (In contrast, the definition of the LATE is unaffected by bandwidth
 choice.)
@@ -380,7 +380,7 @@ the analysis sample will include problematic observations near its outer
 boundaries, precisely where leverage is at its highest.
 In order to identify leverage points that are also influential,
 OLS fitting is sometimes combined with specialized diagnostics such as
-plots of Cook's distances \citeyearpar{cook1982residuals}.
+plots of Cook's \citeyearpar{cook1982residuals} distances.
 The following section will discuss an alternate remedy.
 
 % \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
@@ -450,7 +450,7 @@ incorporating the specification tests reviewed in \S~\ref{sec:specification}.
 
 \subsection{An Analytic Model for RDDs} \label{sec:model-eey-c-r}
 
-This section will formalize residual ignorabilty for the typical RDD,
+This section will formalize residual ignorability for the typical RDD,
 which relies on a single dataset including variables $Y$, $R$, and $Z$.
 The assumption is that, after a suitable residual transformation,
 potential outcomes $Y_C$ are conditionally independent of $Z$.
@@ -484,10 +484,10 @@ for a fixed $\thetaInf$ such that
 $\sqrt{n}(\hat\theta - \thetaInf)$ is bounded in probability (and thus
 $\hat\theta \stackrel{P}{\rightarrow} \thetaInf$).
 \end{ass}
-Residual Ignorability states that, though $Y_C$ may not be independent of
+Residual ignorability states that, though $Y_C$ may not be independent of
 $Z$,  it admits a residual transformation bringing about such
 independence. With $\dt[\hat\theta]{Y_{C}}{ R}$ a suitable
-partial residual, Residual Ignorability is entailed by the
+partial residual, residual ignorability is entailed by the
 \textsc{ancova} model (\S~\ref{sec:robust-analys-covar}), or by the combination of any parametric model
 for $\EE (Y_{C}| R)$ with a strict null $H$ relative to which the
 value of $Y_{C}$ can be reconstructed from the values of $Y$, $D$ and
@@ -498,7 +498,7 @@ a modest strengthening of~\eqref{ycheck}.)
 
 
 \sloppy
-Assuming Residual Ignorability, inference about treatment effects is
+Assuming residual ignorability, inference about treatment effects is
 made conditionally, on
 $\mathbf{A}= (\dt[\thetaInf]{\mathbf{Y}_{C}}{ \mathbf{R}}$, $\mathbf{D}_{T},
 \{(Y_{Ti}, Y_{Ci}, D_{Ti}, R_{i}) \indicator{{R}_{i} \not\in
@@ -521,7 +521,7 @@ in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inferen
 unobserved; but this is not an impediment, at least for large-sample
 inferences.
 
-Causal inference based on Residual Ignorability takes place
+Causal inference based on residual ignorability takes place
 in four steps: (1) choosing and validating the analysis sample or
 bandwidth, (2) choosing an appropriate fitting procedure (we recommend
 robust fitters), (3) treatment effect estimation and inference, and
@@ -538,7 +538,7 @@ is also sensible to subject this choice to specification
 testing (\S~\ref{sec:specification}).
 
 Balance tests in an an RDD (\S~\ref{sec:balanceTesting})
-can be regarded as testing Residual Ignorability with a multivariate
+can be regarded as testing residual ignorability with a multivariate
 ``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
 $\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
 
@@ -590,12 +590,12 @@ in the sense of \citet{rubin2007design}.
 
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
-Influential observations in the analysis sample that do not satisfy Residual
-Ignorability %but include influential observations
+Influential observations in the analysis sample that do not satisfy residual
+ignorability %but include influential observations
  can undercut the validity of an RDD analysis.
-If such moderate sample contamination may be present --- specifically, contamination of
+If such moderate sample contamination may be present---specifically, contamination of
 a $O(n^{-1/2})$-sized
-share of the sample --- an OLS fitter will not be consistent for $\hat{\theta}$;
+share of the sample---an OLS fitter will not be consistent for $\hat{\theta}$;
 nor will many robust regression methods engineered to meet
 objectives other than bounding the influence function
 \citep{stefanski1991note}.
@@ -610,11 +610,11 @@ affecting only $O(n^{-1/2})$ of the sample can only tend to a number
 strictly less than 1.
 Hence, the
 proper bandwidth $b$ will be uncertain
-% (c.f. \S~\ref{sec:bandwidth}, \S~\ref{sec:bandwidthChoice}, below),
+% (cf. \S~\ref{sec:bandwidth}, \S~\ref{sec:bandwidthChoice}, below),
 and some sample contamination may be present.
 
 Instead, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
- as to possess a bounded influence function (\citealp[Thm.~3]{he1991localbreakdown};
+ as to possess a bounded influence function (\citealp[, Thm.~3]{he1991localbreakdown};
 \citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
 maximum likelihood.
 Such procedures address influence in the course of the fitting process.
@@ -623,8 +623,8 @@ coefficients $\bm{\beta}$ of a linear specification solve estimating equations
 $\sum_{i} \psi\left\{ ({y}_{i} -
 \bm{x}_{i}^T\bm{\beta})/s \right\} \bm{x}_{i}^T =\bm{0}$, where $s>0$ and
 $\psi(\cdot)$ is an odd function satisfying $\psi(0)=0$,
-$\psi'(0)=1$ and $t\psi(t)\geq 0$; bounded influence fitters replace OLS's $s\equiv 1$ with resistant preliminary
-estimates of residual scale, and OLS's $\psi(t) = t$ with a continuous $\psi$
+$\psi'(0)=1$, and $t\psi(t)\geq 0$; bounded influence fitters replace OLS's $s\equiv 1$ with resistant preliminary
+estimates of residual scale and OLS's $\psi(t) = t$ with a continuous $\psi$
 that satisfies $\int_{0}^{\infty}\psi(t)dt < \infty$. This limits
 the loss incurred by the fitter for failing to adapt itself to a small
 portion of aberrant observations;
@@ -656,9 +656,9 @@ which optionally provide Huber-White standard errors
 
 For inference about $\tau$ under the model
 $Y_{T} = Y_{C} + \tau D_{T}$, select a specification
-$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$%, %in the application of
+$\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$ %, %in the application of
 %Section~\ref{sec:appl-effect-acad}
- such as the
+such as the
 linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, a window of
 analysis $\mathcal{W}$, and a fitter.
 
@@ -682,9 +682,9 @@ contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
 R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
 \beta_{1}R + \gamma Z$. With sandwich estimates of
 $\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
-the t-ratio comparing $\hat{\gamma}_{H}$ to
+the $t$-ratio comparing $\hat{\gamma}_{H}$ to
 $\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
-t-statistic with covariance adjustment for $R$ (with fitting via OLS,
+$t$-statistic with covariance adjustment for $R$ (with fitting via OLS,
 this correspondence would be exact, as noted in Section~\ref{sec:sandwich}; with the robust MM estimation we
 favor, the correspondence is one of large-sample equivalence; see Appendix~\ref{sec:suppl-s-refs}).
 
