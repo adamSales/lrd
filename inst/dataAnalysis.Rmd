@@ -157,7 +157,7 @@ resultsTab <-
                    W=Wfunc(res$W),
                    n=prettyNum(res$n,',',trim=TRUE))))
 
-colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
+colnames(resultsTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','$n$')
 
 
 
@@ -166,7 +166,7 @@ kable(resultsTab)
 
 resultsTab <- cbind(Specification=c('Main','Adaptive $\\mathcal{W}$','Cubic','ITT'),resultsTab)
 
-print(xtable(resultsTab,align='rrlccl'),
+print(xtable(resultsTab,align='rlcccc'),
   file=paste0(paperdir,"/tab-results.tex"), floating=F,
   include.rownames=FALSE,
   sanitize.colnames.function=function(x) x,
@@ -189,13 +189,13 @@ altTab <-
 
 
 
-colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','n')
+colnames(altTab) <- c('Estimate','95\\% CI','$\\mathcal{W}$','$n$')
 
 kable(altTab)
 
 altTab <- cbind(Method=rownames(altTab),altTab)
 
-print(xtable(altTab,align='rrlccl'),
+print(xtable(altTab,align='rlcccc'),
   file=paste0(paperdir,"/tab-alt.tex"), floating=F,
   include.rownames=FALSE,
   sanitize.colnames.function=function(x) x)

@@ -160,13 +160,15 @@ polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
     cat('
         \\begin{table}[ht]
 \\centering
-\\begin{tabular}{cr|lllll|lllll|l',ifelse(full,'|llll|llll|l}','}'),'
+\\begin{tabular}{ll|ccccc|ccccc|c',ifelse(full,'|llll|llll|l}','}'),'
   \\hline \n')
     if(full) cat('&&\\multicolumn{11}{c|}{$t_3$ Errors} &\\multicolumn{11}{c|}{$\\mathcal{N}(0,1)$ Errors} \\\\ \n')
 
- cat('&& \\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',
-        ifelse(full,'\\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &\\makecell[c]{Local\\\\Linear}',''),'\\\\
- DGM&\\makecell[r]{Polynomial\\\\Degree}&1&2&3&4&5&1&2&3&4&5&',ifelse(full,'&1&2&3&4&1&2&3&4&5&n/a','n/a'),' \\\\
+ cat('&& \\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &Local',
+        ifelse(full,'\\multicolumn{5}{c|}{Limitless} &  \\multicolumn{5}{c|}{OLS} &Local',''),'\\\\
+ && \\multicolumn{5}{c|}{Polynomial Degree}&\\multicolumn{5}{c|}{Polynomial Degree}&Linear',
+ ifelse(full,'\\multicolumn{5}{c|}{Polynomial Degree}&\\multicolumn{5}{c|}{Polynomial Degree}&Linear',''),'\\\\
+ DGM&Measure&1&2&3&4&5&1&2&3&4&5&',ifelse(full,'&1&2&3&4&1&2&3&4&5&',''),' \\\\
 ')
     for(rr in 1:nrow(tab)){
         if(rr==1) cat('\\hline\n\\hline\n\\multirow{',ifelse(full,4,2),'}{*}{',ifelse(full,'\\begin{sideways}Linear\\end{sideways}','Linear'),'}',sep='')

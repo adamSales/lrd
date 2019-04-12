@@ -100,7 +100,7 @@ Section 4: The term grade point average is spelled on first use; GPA after that.
 Page 20: You have extra spaces around the two em-dashes here.
 
 4.1 Page 21, first line: "grade-points" or "grade points"?
- 
+
 Page 21, bottom: "that is setting." you could do this with em-dashes, thus: "In any event, after removing the R = 0  subgroup-that is, setting . . . {i : Ri = 0}-the McCrary procedure narrowly avoids rejecting ..."
 
 Last line on page 21: p=0.15. Needs spaces around the equals sign.
@@ -111,8 +111,14 @@ Tables on page 23:
 Would it be better to have the four row heads in column 1 left flush, with the column head centered above them?
 Italicize and center n over column 5 in both tables.
 In both tables, center the column of values under "Estimate."
+AS: KEPT COLUMN 1 FLUSH RIGHT, CENTERED ALL OTHER COLUMNS; DIDN'T
+CHANGE CODE--ONLY .tex FILES--IF RE-RUNNING ANALYSIS THESE CHANGES
+WILL BE UNDONE (UPDATE: CHANGED CODE BUT DIDN'T RUN IT--IT'LL
+*PROBABLY* WORK)
 
-4.3 Page 23, paragraph below Table 2: R <1.25 and R <0.18. Add space after the "less than" symbols?
+
+4.3 Page 23, paragraph below Table 2: R <1.25 and R <0.18. Add space
+after the "less than" symbols? AS: NAH
 Same paragraph, line 2: "only including observations with." Should be "including only observations with."
 Same paragraph line 4: "while" or "whereas"?
 
@@ -122,11 +128,17 @@ Line 12: t-distribution; the t  is not italicized.
 Lien 15: The series comma should be added after (2017), before and.
 
 Page 25, next to last line above Section 5: "a similar point estimate as the permutational approach." Should be "a similar point estimate as does the permutational approach." Or, edit it differently (e.g., "a point estimate similar to that obtained with the permutational approach"). "Similar as" cannot link nouns, as the text seems to imply.
+AS: ADDED "DOES"
 
 5.1, first paragraph, line 2 (p. 25): why the comma after local-OLS?
 Same paragraph, line 3: add space between "Uniform" and parenthesis?
-Also, the three items listed here (lines 3-4) are not parallel, which makes the reader stumble: the running variable was distributed as Uniform, the cutoff was, and control potential outcome as.
-Same paragraph, line 10: comma after the first instance of i.e.?
+Also, the three items listed here (lines 3-4) are not parallel, which
+makes the reader stumble: the running variable was distributed as
+Uniform, the cutoff was, and control potential outcome as. AS:
+EDITED. TOOK OUT C=0 CUZ THAT'S IMPLIED IN THE REST OF THE PAPER.
+
+Same paragraph, line 10: comma after the first instance of i.e.? AS:
+RE-WROTE HERE A BIT
 
 Page 25, 6 lines from bottom: hyphenate "data generating"?-"a linear data-generating model." (Likewise in caption to Figure 4?)
 Page 25, 4 lines from bottom: comma after "in our scenario"?
@@ -147,7 +159,7 @@ As I mentioned, I noticed that for some authors, e.g., Cox and Rubin, you includ
 
 You have one reference as Li, F., Mattei, A., Mealli, R., et al., and you cite it thus in the text. APA style would not do it this way. In APA style, up to seven author names are given in the references. If more than seven, six are listed, followed by three ellipsis dots, followed by the last author's name. Within the text, works with six or more authors are cited as et al. right from the start.
 
-The following journal titles in the references are not always in title case: Journal of econometrics instead of Journal of Econometrics, Statistics in medicine instead of Statistics in Medicine. See Baiocchi et al.; MacKinnon & White; Rubin (2007). 
+The following journal titles in the references are not always in title case: Journal of econometrics instead of Journal of Econometrics, Statistics in medicine instead of Statistics in Medicine. See Baiocchi et al.; MacKinnon & White; Rubin (2007).
 
 Freedman: Some of the words in the article title should be in lowercase, and the period should be inside the quotation mark.
 Hansen & Sales: the proper name within the title should be capitalized (William G. Cochran).
@@ -156,9 +168,9 @@ Lin (2013b): you repeat doi: as "doi: DOI:" Indeed why include doi's at all if y
 Boos vs. Freedman vs. Little vs. Long & Ervin vs. Stefanski & Boos: Is this journal titled American Statistician or The American Statistician?
 Santos-Lozada & Howard: JAMA, not Jama.
 
- 
 
- 
+
+
 
 
 

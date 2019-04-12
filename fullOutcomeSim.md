@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "11 March, 2019"
+date: "12 April, 2019"
 output: html_document
 ---
 
@@ -943,7 +943,7 @@ results for normally-distributed errors.
 ```r
 tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
-polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using MM-estimation, OLS or local linear regression. Data generating models were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500, and there was no treatment effect.'),label='tab:poly'),
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data generating models (DGMs) were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.'),label='tab:poly'),
     file="inst/r1/tab-polynomialSimulation.tex")
 
 tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
@@ -1143,27 +1143,30 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] lrd_0.0.2.9000   kableExtra_1.0.1 knitr_1.21      
+##  [1] kableExtra_1.0.1  perm_1.0-0.0      pbs_1.1          
+##  [4] robustbase_0.93-0 dplyr_0.8.0.1     Hmisc_4.0-3      
+##  [7] ggplot2_2.2.1     Formula_1.2-1     survival_2.41-3  
+## [10] lattice_0.20-35   xtable_1.8-2      knitr_1.22       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] zoo_1.7-13         xfun_0.5           splines_3.4.4     
-##  [4] lattice_0.20-35    colorspace_1.2-6   htmltools_0.3.5   
-##  [7] viridisLite_0.2.0  mgcv_1.8-15        XML_3.98-1.5      
-## [10] survival_2.41-3    rlang_0.1.2        pillar_1.1.0      
-## [13] nloptr_1.0.4       glue_1.1.1         selectr_0.3-1     
-## [16] plyr_1.8.4         robustbase_0.93-0  stringr_1.2.0     
-## [19] MatrixModels_0.4-1 munsell_0.4.3      rvest_0.3.2       
-## [22] evaluate_0.10      SparseM_1.77       lmtest_0.9-34     
-## [25] quantreg_5.29      pbkrtest_0.4-6     parallel_3.4.4    
-## [28] highr_0.6          DEoptimR_1.0-8     Rcpp_0.12.13      
-## [31] readr_1.1.1        scales_0.4.1       backports_1.1.2   
-## [34] webshot_0.5.1      lme4_1.1-12        hms_0.3           
-## [37] digest_0.6.10      stringi_1.1.1      AER_1.2-4         
-## [40] grid_3.4.4         rprojroot_1.2      tools_3.4.4       
-## [43] sandwich_2.4-0     magrittr_1.5       rdd_0.57          
-## [46] tibble_1.4.2       Formula_1.2-1      car_2.1-3         
-## [49] MASS_7.3-49        Matrix_1.2-12      xml2_1.1.1        
-## [52] minqa_1.2.4        rmarkdown_1.7      httr_1.2.1        
-## [55] rstudioapi_0.6     R6_2.1.2           nnet_7.3-12       
-## [58] nlme_3.1-131.1     compiler_3.4.4
+##  [1] Rcpp_1.0.1          assertthat_0.2.1    digest_0.6.10      
+##  [4] R6_2.4.0            plyr_1.8.4          backports_1.1.2    
+##  [7] acepack_1.3-3.3     evaluate_0.13       httr_1.4.0         
+## [10] highr_0.6           pillar_1.3.1        rlang_0.3.2        
+## [13] lazyeval_0.2.0      rstudioapi_0.10     data.table_1.12.0  
+## [16] rpart_4.1-13        Matrix_1.2-12       checkmate_1.8.2    
+## [19] tikzDevice_0.10-3   rmarkdown_1.12      splines_3.4.4      
+## [22] webshot_0.5.1       readr_1.1.1         stringr_1.2.0      
+## [25] selectr_0.3-1       foreign_0.8-69      htmlwidgets_0.7    
+## [28] munsell_0.4.3       compiler_3.4.4      xfun_0.5           
+## [31] pkgconfig_2.0.2     base64enc_0.1-3     htmltools_0.3.5    
+## [34] nnet_7.3-12         tidyselect_0.2.5    tibble_2.1.1       
+## [37] gridExtra_2.2.1     htmlTable_1.9       XML_3.98-1.5       
+## [40] viridisLite_0.2.0   crayon_1.3.4        grid_3.4.4         
+## [43] gtable_0.2.0        magrittr_1.5        scales_0.4.1       
+## [46] stringi_1.1.1       latticeExtra_0.6-28 xml2_1.1.1         
+## [49] RColorBrewer_1.1-2  tools_3.4.4         glue_1.3.1         
+## [52] DEoptimR_1.0-8      purrr_0.3.2         hms_0.3            
+## [55] colorspace_1.2-6    cluster_2.0.6       filehash_2.3       
+## [58] rvest_0.3.2
 ```

@@ -804,10 +804,10 @@ The three sets of results are in Table \ref{tab:alt}.
 
 The local linear approach used the widest window, including
 observations with $R<$\Sexpr{round(IK[['W']][2],2)}, and the local
-permutation approach used the smallest window, only including
+permutation approach used the smallest window, including only
 observations with $R<$\Sexpr{CFT[['W']][2]}.
 The effect estimates from our method and local linear regression
-largely agree, while the local permutation approach finds a smaller
+largely agree, whereas the local permutation approach finds a smaller
 effect, with a confidence interval excluding the other two point
 estimates.
 
@@ -828,7 +828,7 @@ Table~\ref{tab:alt}---too wide, from viewpoints either of
 Section~\ref{sec:model-eey-c-r}, or of local permutation
 analysis.  For example, Section~\ref{sec:bandwidthChoice}'s placebo tests reject comparability
 of detrended covariate residuals when applied with this $\mathcal{W}$
-($p$=\Sexpr{round(IK[['bal.pval']],3)})%; \citet[][p. 2304]{cct}
+($p$ = \Sexpr{round(IK[['bal.pval']],3)})%; \citet[][p. 2304]{cct}
 %and \citet[][p. 14]{kolesarRothe17} have discussion of this
 %possibility.
 . %\marginpar{AS: Removed refs to CCT \& KR, for length \& flow.---B \ldots}
@@ -851,7 +851,7 @@ z_{\alpha/2} \mathrm{SE}(\hat{\tau})$,
 where $z_{\alpha/2}$ is an appropriate normal or $t$-distribution
 quantile---rather than inversions of a family of hypothesis tests.
 Recent elaborations and extensions include those of \citet{cct},
-\citet{imbens2017optimized} and \citet{kolesarRothe17}.
+\citet{imbens2017optimized}, and \citet{kolesarRothe17}.
 % More recent iterations of the local linear approach
 % \citep[e.g.][]{cct,kolesarRothe17} include bias corrections and
 % other modifications to the confidence interval, while retaining the
@@ -885,7 +885,7 @@ The Bayesian method of \citet{liMatteiMealli2015BayesianRD}, which
 begins from a similar ignorability assumption,
 nevertheless models the relationship between $R$ and $Y$ within the
 chosen region, to guard against the assumption's failure.
-Doing so in the LSO dataset yields a similar point estimate as the
+Doing so in the LSO dataset yields a similar point estimate as does the
 permutational approach, but with a wider confidence interval that
 includes the estimates from our and the local linear approach.
 
@@ -902,11 +902,11 @@ sims <- sort(grep('outcomeSim',list.files(dataResults_location),value=TRUE),decr
 #load(paste0(dataResults_location, sims[1]))
 @
 Our first simulation study compares the performance---bias and confidence interval
-coverage and width---of our ``limitless'' method to local-OLS, and
+coverage and width---of our ``limitless'' method to local-OLS and
 local-permutation methods.
-Across all simulation runs, the running variable $R$ was distributed as
-$\mathrm{Uniform}(-0.5,0.5)$, the cutoff was $c=0$, and control potential
-outcomes as $Y_C=0.75R+\epsilon$, where the 0.75 slope was chosen to
+Across all simulation runs, the running variable $R$ was generated as
+$\mathrm{Uniform}(-0.5,0.5)$ and control potential
+outcomes were generated as $Y_C=0.75R+\epsilon$, where the 0.75 slope was chosen to
 approximately match the estimated slope from the LSO study.
 Within this framework, we varied three factors: (a) sample size, (b)
 the distribution of regression error $\epsilon$, and (c) the
@@ -916,9 +916,9 @@ Regression errors were distributed as either Normal or Student's $t$
 with 3 d.f.; to mimic the LSO data, we forced the errors to have a
 standard deviation of 0.75.
 Finally, the treatment effect was either exactly
-zero---i.e. $Y_T= Y_C$---or was set as random, $Y_T=
-Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$, i.e. $\eta$
-was given the same distribution as $\epsilon$.
+zero---so $Y_T= Y_C$---or was generated randomly, as $Y_T=
+Y_C+\eta$, where $(\sqrt{3}/0.75)\eta\sim t_3$ (so $\eta$
+was drawn from the same distribution as was $\epsilon$).
 Each simulation scenario was run 5,000
 %\Sexpr{format(ncol(outcomeSim[[1]]),big.mark=',')}
 times.
@@ -928,9 +928,9 @@ times.
 
 
 The results are displayed in Table~\ref{tab:level}.
-With a linear data generating model and a symmetric window, the bias
+With a linear data-generating model and a symmetric window, the bias
 for the local permutation approach will generally be equal to the
-product of the slope and the bandwidth; in our scenario its bias was
+product of the slope and the bandwidth; in our scenario, its bias was
 approximately $0.75\times 0.5\approx 0.37$ across simulation runs.
 The coverage of permutation confidence intervals decreased with sample size.
 The limitless and local OLS methods were approximately unbiased, and
@@ -940,10 +940,10 @@ Notably, random treatment effect heterogeneity did not affect bias or
 coverage.
 
 Across the board, the local permutation method gave the smallest
-confidence intervals; however this came at the expense of coverage.
+confidence intervals; however, this came at the expense of coverage.
 Our limitless RD method tended to have equal or slightly narrower
 interval widths than the local OLS approach, with greater advantage
-when $\epsilon$ was distributed as $t_3$, than when $\epsilon$ was
+when $\epsilon$ was distributed as $t_3$ than when $\epsilon$ was
 normally distributed.
 
 
@@ -964,7 +964,7 @@ normally distributed.
 dgms()
 @
 
-\caption{Data generating models (DGMs) for the polynomial simulation.} %\texttt{(Note: If restoring polySim to body of paper, don't forget to take
+\caption{data-generating models (DGMs) for the polynomial simulation.} %\texttt{(Note: If restoring polySim to body of paper, don't forget to take
 %it out of appendix.)}}
 \label{fig:dgms}
 \end{figure}
@@ -994,10 +994,10 @@ Figure~\ref{fig:dgms} to form $Y_{C}$.
 %Appendix B.
 
 Table~\ref{tab:poly} displays the results.
-For the linear data generating model (DGM), all estimates were unbiased,
+For the linear data-generating model, all estimates were unbiased,
 while root mean squared errors (RMSEs) were lowest for the limitless
 method.
-For the non-linear data generating models, the limitless estimators
+For the non-linear data-generating models, the limitless estimators
 using linear and quadratic specifications had substantial bias, and
 bias was much lower for higher-order polynomial specifications.
 In contrast, OLS estimators of all polynomial degrees were heavily
@@ -1008,13 +1008,14 @@ higher RMSE than limitless with higher-order polynomials.
 
 OLS and limitless estimation sharply diverge in the quality of their
 point estimates, with the OLS estimates' RMSEs exceeding those of
-comparable robust M-estimates' by factors exceeding 200.
+comparable robust M-estimates by factors exceeding 200.
 As \citet{gelman2016high} would predict, OLS estimates' RMSEs
 increased sharply with each increment of polynomial degree, whatever
-the form of the DGM.  In marked contrast, under non-linear DGMs accuracy of
-the robust, limitless method was improved with higher-degree polynomials,
-and under linear DGMs including higher-degree terms imposed little
-penalty.
+the form of the data-generating model.
+In marked contrast, under non-linear data-generating models,
+higher-degree polynomial terms increased the accuracy of
+th robust, limitless method; under linear data-generating models,
+including higher-degree terms imposed little penalty.
 
 
 

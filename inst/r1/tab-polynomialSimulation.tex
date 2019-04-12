@@ -1,10 +1,11 @@
 
         \begin{table}[ht]
 \centering
-\begin{tabular}{cr|lllll|lllll|l } 
+\begin{tabular}{ll|ccccc|ccccc|c } 
   \hline 
-&& \multicolumn{5}{c|}{Limitless} &  \multicolumn{5}{c|}{OLS} &\makecell[c]{Local\\Linear}  \\
- DGM&\makecell[r]{Polynomial\\Degree}&1&2&3&4&5&1&2&3&4&5& n/a  \\
+&& \multicolumn{5}{c|}{Limitless} &  \multicolumn{5}{c|}{OLS} &Local  \\
+ && \multicolumn{5}{c|}{Polynomial Degree}&\multicolumn{5}{c|}{Polynomial Degree}&Linear  \\
+ DGM&Measure&1&2&3&4&5&1&2&3&4&5&   \\
 \hline
 \hline
 \multirow{2}{*}{Linear}& bias &0.0&0.0&0.0&0.0&0.0&0.0&-0.0&0.0&0.3&-1.7&0.0\\ 
@@ -20,6 +21,6 @@
 
  \hline
 \end{tabular}
-\caption{Results from 5000 simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data generating models (DGMs) were as depicted in Figure~\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.}
+\caption{Results from 5000 simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data-generating models (DGM) were as depicted in Figure~\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.}
 \label{tab:poly}
 \end{table}
