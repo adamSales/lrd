@@ -345,7 +345,6 @@ the year; \eqref{eq:ignore} cannot be sustained.
 \citet{cattaneo2015randomization},
 \citet{aronowRDDinterference}, or \citet{matteiMealliObsStud}.)
 
-
 Dependence between $R$ and $Y_C$, violating
 \eqref{eq:ignore}, is common in RDDs; when present, it must be addressed.
 %% This model is fit using the same data, namely $Y$, $R$, and $Z$, that
@@ -1113,7 +1112,7 @@ trend.
 %% window of analysis based on a sequence of specification tests.
 {%\small
 \bibliographystyle{apacite}
-\bibliography{causalinference}
+\bibliography{lrd-r1.bib}
 %\bibliography{../../../adam.sales/drafts/causalinference}
 }
 

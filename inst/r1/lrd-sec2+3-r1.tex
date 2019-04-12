@@ -378,10 +378,14 @@ increases with the square of $r -\bar{r}$.
 If analysts select a bandwidth $b$ that is slightly too large, then
 the analysis sample will include problematic observations near its outer
 boundaries, precisely where leverage is at its highest.
+If the analysis sample is contaminated near the cutpoint,
+the bad data may not threaten linear specifications, but with $J>1$
+they can still bear undue leverage.
 In order to identify leverage points that are also influential,
 OLS fitting is sometimes combined with specialized diagnostics such as
 plots of Cook's \citeyearpar{cook1982residuals} distances.
-The following section will discuss an alternate remedy.
+Section~\ref{sec:robustFitters} will discuss an alternate remedy.
+
 
 % \subsection{Robust Estimation of $\EE (Y_{C}| R)$}
 % \label{sec:robust-altern-ordin}
