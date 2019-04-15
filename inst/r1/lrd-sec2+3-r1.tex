@@ -23,7 +23,7 @@ where $\indicator{x}=1$ if $x$ is true and $0$ otherwise.
 Let $Y$ represent the outcome of interest.
 For simplicity assume non-interference, the model that
 a subject's response may depend on his but not also on other subjects'
-treatment assignments \citep{cox:1958,rubin:1978}.  Thus we may take each $i$
+treatment assignments \citep{cox:1958,rubin:1978}. Thus we may take each $i$
 to have two potential outcomes, $y_{Ti}$ and $y_{Ci}$, at most one of which is observed;
  observed
 responses $Y$ coincide with $ZY_{T}+(1-Z)Y_{C}$.
@@ -172,9 +172,9 @@ hypothesis-independent quantity
 
 \subsubsection{Robust Standard Error Estimation}\label{sec:sandwich}
 The \textsc{ancova} model for $(Y_{T}, Y_{C})$ is not readily dispensed with, but it
-may be relaxed.  OLS estimates of $\alpha_1-\alpha_{0}$ and
+may be relaxed. OLS estimates of $\alpha_1-\alpha_{0}$ and
 $\beta$ remain unbiased under non-Normality, provided
-the $\epsilon$s have expectation 0 and bounded variances.  The
+the $\epsilon$s have expectation 0 and bounded variances. The
 ordinary \textsc{ancova} standard error does not require Normality of
 the $( \epsilon_{i}: i )$, either, for use in large samples, although
 it does require that they have a common variance.
@@ -210,7 +210,7 @@ the following section.
 % $\mathrm{SE}_{u}$% \citep{samii2012equivalencies}
 % , a more straightforward quantity to compute; unfortunately, in RDDs
 % this is not the case
-% (Section~\ref{apnd:requ-forpr-eqref}).  On the
+% (Section~\ref{apnd:requ-forpr-eqref}). On the
 % other hand, in \textsc{ancova} as applied to RDDs, if standard
 % errors are calculated by the sandwich method then under
 % $H: Y_{T} = Y_{C}$, \eqref{eq:tedef} is algebraically equivalent to the
@@ -246,7 +246,7 @@ Of course, treatment cannot affect pre-treatment variables; this is
 model-checking (%\citealp{bayarriBerger2000pvalues};
 \citealp[][, \S~5.13]{cox2006pos}%; \citealp[][Ch.~6]{gelman:etal:2004};
 %\citealp[][Ch.~14]{lehmannRomano2006TSH}
-).  % Here as
+). % Here as
  % elsewhere \citep{box1980sab}, checks finding fault with a model prompt
  % refinement, not abandonment; refinements typical of RDD analysis remove portions of
  % the sample that are suspected of contamination.
@@ -291,9 +291,9 @@ McCrary's test for manipulation of treatment assignments
 placebo test with the density of $R$ as the independent variable.
 The test's
 purpose is to expose the circumstance of subjects finely manipulating their
-$R$ values in order to secure or avoid assignment to treatment.  Absent
+$R$ values in order to secure or avoid assignment to treatment. Absent
 such a circumstance, if $R$ has a density then it should appear to be
-roughly the same just below and above the cutpoint.  McCrary's
+roughly the same just below and above the cutpoint. McCrary's
 \citeyearpar{mccrary2008manipulation} test statistic is the difference
 in logs of two estimates of $R$'s density at 0, based on observations
 with $R<0$ and $R>0$ respectively.
@@ -362,7 +362,7 @@ $\EE (Y_{C}| R) = \alpha + \bm{f}(R)\bm{\beta}$, for
 $\bm{f}(\cdot)$ a $1 \times k$ vector valued function, and
 $\bm{\beta}$ a $k \times 1$ vector of coefficients.
 Unfortunately, if the model is fit by OLS, then such relaxation of assumptions can have the unwelcome
-side effect of undercutting the robustness of the analysis.  The
+side effect of undercutting the robustness of the analysis. The
 reasons have to do with mechanics of regression fitting.
 
 % \marginpar{Should we also say something about local linear regression
@@ -398,7 +398,7 @@ Section~\ref{sec:robustFitters} will discuss an alternate remedy.
 % the $Z$-coefficient in an OLS regression of $Y$
 % on the interaction of $Z$ and $R$ remains unbiased for
 % $\lim_{r\downarrow 0} \EE(Y | R=r) - \lim_{r\uparrow 0} \EE(Y |
-% R=r)$, as well as $\EE (Y_{T} - Y_{C} )$.  (It also coincides with $\overline{\dt[\hat\theta]{{Y}}{
+% R=r)$, as well as $\EE (Y_{T} - Y_{C} )$. (It also coincides with $\overline{\dt[\hat\theta]{{Y}}{
 %   {R}}}_{Z=1} - \overline{\dt[\hat\theta]{{Y}}{ {R}}}_{Z=0}$, where
 % $\dt[(a, b_{0}, b_{1})]{ \mathbf{y}}{ \mathrm{r}} = \mathbf{y} - a - (b_{0}
 % \indicator{r < 0} + b_{1} \indicator{r\geq 0})\mathrm{r}$
@@ -423,7 +423,7 @@ Section~\ref{sec:robustFitters} will discuss an alternate remedy.
 % ``True'' random numbers, on the other hand, derive from physical
 % processes that are either chaotic \citep[e.g.][]{uchida2008fast} or
 % quantum \citep[e.g.][]{stefanov2000optical}, and are not
-% predictable.  However, these processes often contain an element
+% predictable. However, these processes often contain an element
 % of predictability; % \citep{raz2005extractors};
 % true random
 % numbers are obtained only after separating predictable from
@@ -521,7 +521,7 @@ the variables comprising $\mathbf{A}$ are jointly
 %S-
 ancillary, just as $\bm{A}^*$ %$\mathbf{A}^{\dagger}$
 was seen to be
-in Section~\ref{sec:using-eqref-test}.  As in Fisher-style randomization inference for RCTs, some conditioning variables are
+in Section~\ref{sec:using-eqref-test}. As in Fisher-style randomization inference for RCTs, some conditioning variables are
 unobserved; but this is not an impediment, at least for large-sample
 inferences.
 
@@ -557,10 +557,10 @@ vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
 Our analysis of the LSO data posits systematic components that are
 linear and logistic-linear in $R$, depending on whether $X$ is
 a measurement or binary variable. %, paralleling its choice of a linear decomposition
-% for the primary outcome, subsequent GPA.  (It is fitting that the $X$- and
+% for the primary outcome, subsequent GPA. (It is fitting that the $X$- and
 % $Y$-specifications mirror each other in model complexity.)
 The placebo check adds $Z$ to the specification and tests whether its
-coefficient is zero.  We implement these checks as Wald tests with
+coefficient is zero. We implement these checks as Wald tests with
 heteroskedasticity-robust standard errors, as in
 \S~\ref{sec:robust-analys-covar}, using the Bonferroni method to
 combine placebo checks across covariates.
@@ -589,7 +589,7 @@ in the sense of \citet{rubin2007design}.
 
 % Writing $b$ for the half-width selected in this manner, i.e. $b=\max$
 % \{$b_{i}: H_{b_{i}}$ is not rejected\}, we next apply a McCrary
-% manipulation test to $(-b,b)$.   within windows
+% manipulation test to $(-b,b)$. within windows
 % $\{ i: |R_{i}| \in (a_{j}, b)\}$, $0 = a_{0} < a_{1}< \cdots < b$,
 
 
@@ -640,7 +640,7 @@ potential contamination of an RDD sample with the assistance of
 bounded influence MM-estimation.
 
 Surprisingly, given their common origins in %the work of
-Huber \citeyearpar{huber1964robust}, MM estimation is not routinely
+Huber \citeyearpar{huber1964robust}, MM-estimation is not routinely
 paired with sandwich estimates of variance, as in \S~\ref{sec:sandwich} and
 the surrounding discussion of \S~\ref{sec:robust-analys-covar}.
 Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
@@ -650,7 +650,7 @@ which optionally provide Huber-White standard errors
 
 
 % : with fitting via OLS,
-% this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM estimation we
+% this correspondence would be exact, as noted in Section~\ref{sec:robust-analys-covar}; with the robust MM-estimation we
 % favor, the correspondence is one of large-sample equivalence
 % %\citep[Section~\ref{sec:suppl-s-refs}]{lrdauthors:supp}
 % (Appendix~\ref{sec:suppl-s-refs}).
@@ -689,14 +689,14 @@ $\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
 the $t$-ratio comparing $\hat{\gamma}_{H}$ to
 $\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
 $t$-statistic with covariance adjustment for $R$ (with fitting via OLS,
-this correspondence would be exact, as noted in Section~\ref{sec:sandwich}; with the robust MM estimation we
+this correspondence would be exact, as noted in Section~\ref{sec:sandwich}; with the robust MM-estimation we
 favor, the correspondence is one of large-sample equivalence; see Appendix~\ref{sec:suppl-s-refs}).
 
 As in \S~\ref{sec:robust-analys-covar}, the corresponding
 M-estimate of the CACE is the value of $\tau_{0}$ making
 $\hat{\gamma}_{H}/\text{SE}_{s}(\hat{\gamma}_{H})$ equal 0; those $\tau_{0}$ for
 which $H: \tau = \tau_{0}$ is not rejected at level $\alpha$
-constitute a $100(1-\alpha)\%$ confidence interval.  Iteration is
+constitute a $100(1-\alpha)\%$ confidence interval. Iteration is
 facilitated by regressing $\mathbf{y}$ on $\mathbf{r}$ and
 $\mathbf{z}$ with offset variable $\mathbf{d}\tau_{0}$; then only the
 offset needs to be modified to test $H: \tau = \tau_{1}$,
@@ -706,7 +706,7 @@ $\tau_{1}\neq \tau_{0}$.
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
 Once the M-estimate for the treatment effect has been found, one
 inspects the corresponding regression fit for points of high influence.
-Robust MM regression is helpful here.  Besides making
+Robust MM-regression is helpful here. Besides making
 influential points easier to see in residual plots, it limits
 effects of data contamination, as non-conforming influence points are
 down-weighted as a result of the fitting process. This down-weighting

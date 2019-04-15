@@ -1,7 +1,7 @@
 ---
 title: "Tables from simulations presented in lrd paper"
 author: "lrd authors"
-date: "12 April, 2019"
+date: "15 April, 2019"
 output: html_document
 ---
 
@@ -13,6 +13,20 @@ General dependencies.
 library('knitr')
 #library('lrd')
 library('kableExtra')
+```
+
+```
+## 
+## Attaching package: 'kableExtra'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     group_rows
+```
+
+```r
 source('R/simCIhet.r')
 source('R/functions.r')
 source('R/ddsandwich.R')
@@ -89,7 +103,7 @@ This code creates Table 3:
 ```r
 capture.output({
   displayCIsimHet(outcomeSim,tau=0,
-    caption=paste('Empirical bias and 95\\% confidence interval coverage (\\%) and width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    caption=paste('Empirical bias and 95\\% confidence interval coverage (\\%) and width for the analyses of',prettyNum(ncol(outcomeSim[[1]]),big.mark=','),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
     label='tab:level')
   },file="inst/r1/tab-levelSimulation.tex")
 ```
@@ -943,7 +957,7 @@ results for normally-distributed errors.
 ```r
 tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
-polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',ncol(totalPoly[[1]]),' simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data generating models (DGMs) were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.'),label='tab:poly'),
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',prettyNum(ncol(totalPoly[[1]]),big.mark=','),' simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data-generating models (DGM) were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.'),label='tab:poly'),
     file="inst/r1/tab-polynomialSimulation.tex")
 
 tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)

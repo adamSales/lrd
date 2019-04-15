@@ -1,17 +1,25 @@
 Adam Sales MS.
 
+AS: I TRIED TO ADDRESS ALL OF THESE. MADE NOTES *ONLY* WHERE I THOUGHT
+IT MIGHT BE USEFUL. NOTES IN CAPS TO DISTINGUISH THEM, NOT CUZ I'M ANGRY
+
 General
 Note that superscript note symbols in the text would go outside periods and commas, but inside semicolons and colons.
 
-The text has a lot of space following periods at the ends of sentences.
+The text has a lot of space following periods at the ends of
+sentences. AS: TOOK OUT DOUBLE+ SPACES AFTER PERIODS
 
-With ranges of years, sometimes you use a hyphen (e.g., 2010-2016), sometimes an en-dash (e.g., 2010-2016); sometimes you have 2010-16, sometimes 2010-2016.
+With ranges of years, sometimes you use a hyphen (e.g., 2010-2016),
+sometimes an en-dash (e.g., 2010-2016); sometimes you have 2010-16,
+sometimes 2010-2016. AS: ALL N-DASH (IF I CAUGHT THEM ALL...)
 
-Sometimes values in the thousands have the comma, sometimes not (e.g., 5000 vs. 5,000).
+Sometimes values in the thousands have the comma, sometimes not (e.g.,
+5000 vs. 5,000). AS: GAVE THEM COMMAS
 
-Sometimes the p for probability is not italicized; sometimes it is (e.g., p-value vs. p-value).
+Sometimes the p for probability is not italicized; sometimes it is
+(e.g., p-value vs. p-value). AS: MADE ALL NON-ITALICIZED
 
-Sometimes MM-estimation is hyphenated, sometimes not.
+Sometimes MM-estimation is hyphenated, sometimes not. AS: MADE ALL HYPHENATED
 
 Abstract
 "the method of this paper assumes"

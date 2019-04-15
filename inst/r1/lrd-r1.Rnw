@@ -25,7 +25,7 @@ if(grepl('acs',Sys.info()['login'])){
 %     University of Michigan Causal Inference in Education Research
 %     Seminar and anonymous reviewers for helpful suggestions. They
 %     also thank Jeffrey Howard and Alexis Santos-Lozada, for sharing
-%     non-public research replication materials.  This
+%     non-public research replication materials. This
 %     research was supported by the Institute of Education Sciences,
 %     U.S. Department of Education (R305B1000012), the U.S. National
 %     Science Foundation (SES 0753164) and an NICHD center grant (R24 HD041028).
@@ -98,7 +98,7 @@ the limit of ATEs over concentric ever-shrinking regions, essentially
 an ATE over an infinitesimal interval.
 Following this ``limit understanding,'' it is common to analyze RDDs
 using regression to estimate the functional
-relationships of $r$ to $\EE( Y | R=r)$ on either side of the cutoff.  The difference between the
+relationships of $r$ to $\EE( Y | R=r)$ on either side of the cutoff. The difference between the
 two regression functions, as evaluated at the cut-point,
 is interpreted as the treatment effect
 \citep[e.g.,][]{berk1983capitalizing,angrist1999using}.%,oreopoulos2006estimating}.
@@ -106,11 +106,13 @@ is interpreted as the treatment effect
 However,
 the GPAs in the academic probation study are
 discrete, measured in 1/100s of a grade point;
-hence, limits of functions of GPA do not exist\footnote{Non-existence
-  of the LATE when $R$ is discrete
-  \emph{by definition} is arguably a more severe problem than bias due
-  to rounding in $R$, as discussed in,
-  e.g. \citet{dong2015regression} and \citet{kolesarRothe17}.}.
+hence, limits of functions of GPA do not exist.\footnote{For recent
+  methods addressing bias when $R$ is rounded see, e.g.,
+  \citet{dong2015regression} and \citet{kolesarRothe17}.
+  In those cases, there is a continuous running variable, say $R*$,
+  that is unobserved, while observed $R=f(R*)$ for some
+  $f(\cdot)$ that may be unknown or non-invertible; then the LATE may be defined in terms of limits of realizations of $R*$. In contrast, in the LSO example $R$ is discrete \emph{by
+    definition}.}
 Further,
 re-analysis of LSO's RDD uncovers evidence of ``social corruption''
 \citep{wongWing}---some students appear to have
@@ -146,17 +148,17 @@ of sample pruning and robust M-estimation is uniquely equipped
 to address.
 
 The remainder of Section~\ref{sec:introduction} uses a public health
-example to introduce residual ignorability and to review distribution-free analysis of RCTs.  Limitless RDD analysis
+example to introduce residual ignorability and to review distribution-free analysis of RCTs. Limitless RDD analysis
 combines these ideas with classical, wholly
 parametric methods for RDDs (\S~\ref{sec:robust-analys-covar}),
 %robust estimation (\S~\ref{sec:robust-altern-ordin});
 and RDD specification
-tests (\S~\ref{sec:specification}).  Section~\ref{sec:theMethod}
+tests (\S~\ref{sec:specification}). Section~\ref{sec:theMethod}
 adapts residual ignorability to data configurations typical of education studies, and sets out an analysis plan anticipating common challenges
-of RDD analysis.  Section~\ref{sec:appl-effect-acad} executes the plan
+of RDD analysis. Section~\ref{sec:appl-effect-acad} executes the plan
 with the LSO study, Section~\ref{sec:simulation}
 explores the method's performance in simulations, and
-Section~\ref{sec:discussion} takes stock.  Replication materials,
+Section~\ref{sec:discussion} takes stock. Replication materials,
 including R code, are provided in an online
 supplement \citep{saleslrd2019}.
 
@@ -166,7 +168,7 @@ supplement \citep{saleslrd2019}.
 % manipulation checks suggest that it calls for a form of robustness to
 % sample contamination that only such methods can provide
 % (\S~\ref{sec:discussion}). Even when underlying data deficits
-% are not suspected, the hybrid of MM estimation with generalized score
+% are not suspected, the hybrid of MM-estimation with generalized score
 % testing that this paper presents (\S~\ref{sec:test-hypoth-no}) can be
 % strikingly efficient and robust to misspecification
 % of $\EE (Y_{C} | R)$ (\S~\ref{sec:simulation}).
@@ -293,7 +295,7 @@ researchers were higher.
 Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
 analysis considered recorded mortality in
 months before and after the hurricane, estimating
-Maria to have caused 1139 deaths, in excess of those that would have
+Maria to have caused 1,139 deaths, in excess of those that would have
 occurred otherwise. This section demonstrates residual ignorability,
 if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
 in a reanalysis of these monthly death counts.
@@ -313,7 +315,7 @@ For each $i$, at most one of $Y_{Ci}$ and $Y_{Ti}$ is
 observed, depending on $Z_i$; observed responses $Y$ coincide with
 $ZY_{T}+(1-Z)Y_{C}$.
 Differences $\tau_i=Y_{Ti}-Y_{Ci}$, $i=9,
-\ldots, 12$, represent mortality caused by Maria.  We will discuss RDD estimation
+\ldots, 12$, represent mortality caused by Maria. We will discuss RDD estimation
 of total excess mortality for 2017, $\sum_{i\ge 9} \tau_{i}$, in due
 course.%\marginpar{AS: I think $\ge 9$ in the sum avoids confusion}
 The remainder of this section demonstrates how to test the
@@ -336,7 +338,7 @@ the absence of exposure to \maria. %% N.B. John didn't see need for
                                 %% without, too--BH: feel free to restore
 The distribution underlying the September through December counts would
 be no different than that of the year's first eight months.
-Monthly mortality in Puerto Rico for the period 2010-2017, shown in the left panel of
+Monthly mortality in Puerto Rico for the period 2010--2017, shown in the left panel of
 Figure~\ref{fig:maria}, shows there is no precedent for such an equivalence.
 Rather, a marked seasonal trend is apparent, with death counts being higher
 in the winter months than during the rest of
@@ -358,7 +360,7 @@ Inspection of the 2010--16 mortality series (Figure~\ref{fig:maria}) reveals
 a periodic, non-linear relationship
 between calendar month and death count, with some years appearing to be
 more hazardous than others.
-To accommodate these factors, we regressed 2010-2016 monthly death counts
+To accommodate these factors, we regressed 2010--2016 monthly death counts
 on dummy variables for year and a periodic b-spline for month order,
 with knots at February, May, August, and November.
 There are several outlying observations, one of which \citet{santos2018use} remove
@@ -439,21 +441,21 @@ For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fix
 inference will be made after conditioning not only on $\bm{\resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
 To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
 we likewise condition on the realized sizes $N_{1}$
-and $N_{0}$ of the treatment and control group samples%
-\footnote{\textit{Design of Experiments} (\citeyear[ch.~1, ]{fisher:1935})
+and $N_{0}$ of the treatment and control group samples,%
+\footnote{\textit{Design of Experiments} (\citeyear[, ch.~1]{fisher:1935})
 takes sample sizes to be fixed, but Fisher's example of the purple flowers %NB: In Little's version,
-%% the flowers are red not purple.  (In case a reviewer says they couldn't locate the
+%% the flowers are red not purple. (In case a reviewer says they couldn't locate the
 %% example there...)
 (\citealp[e.g.,][]{little:1989,upton1992FET}) demonstrates his view that random $N_{0}$ and $N_{1}$
 should be treated as fixed after conditioning upon them.
 For quite different assumptions supporting permutation tests in RDDs,
 see \citet{canayKamat17RDDpermutations}.
-}%
-, where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
+} %
+where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
 is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\resid_{T}-\resid_{C})$.  ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
+$\EE (\resid_{T}-\resid_{C})$. ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
 or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
 
@@ -535,11 +537,11 @@ Maria caused precisely no change to each month's death count, nor to its residua
 Under $H_0$, we condition on $\bm{A}^*$ and calculate the
 sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
 value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
-of $\bm{Z}$.  The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the
+of $\bm{Z}$. The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the
 mean of a size-4, without-replacement sample from $\{E_1, \ldots, E_{12}\}$.
 It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
 test statistic values than the realized value
-$\bar{\resid}_{z=1}=$\Sexpr{round(testStat(z,rr))} (which is unique in
+$\bar{\resid}_{z=1}=$\Sexpr{prettyNum(round(testStat(z,rr)),big.mark=',')} (which is unique in
   the distribution).
 This implies a two-sided ``mid'' p-value \citep{agresti2005comment} of
 $2(\Sexpr{pval['nmore']}+0.5)/\Sexpr{cardZ}\approx\Sexpr{round(pval['p'],2)}$
@@ -549,9 +551,9 @@ for $H_0$.
 
 This combination of regression and permutation testing applies just as
 readily to test the hypothesis $\resid_T = \resid_C + c$, for any
-constant $c$.  In the Maria example, no such hypothesis is sustainable
+constant $c$. In the Maria example, no such hypothesis is sustainable
 at level 0.05 unless $c\geq$ \Sexpr{round(lb,-1)}, corresponding to
-\Sexpr{round(4*lb, -1)} excess deaths due to the hurricane.  Upper
+\Sexpr{round(4*lb, -1)} excess deaths due to the hurricane. Upper
 confidence limits and Hodges-Lehmann-type estimates of the effect can
 also be obtained in this way. Rather that pursuing this approach
 further, we now turn to developing a residual ignorability-based
@@ -600,13 +602,13 @@ The university in question had three campuses, two having
 cutoffs of 1.5 and the other having a cutoff of 1.6.
 To combine data from the three schools, LSO centered each student's
 first-year GPA at the appropriate $c$, making $r_i$ the difference of student $i$'s
-realized first-year GPA and the cutoff at his or her campus.   Figure~\ref{LSO}
+realized first-year GPA and the cutoff at his or her campus. Figure~\ref{LSO}
 follows LSO in this, displaying these $r_{i}$s on its $x$-axis; it also averages \texttt{nextGPA} values over students
 with equal first-year GPA, as opposed to plotting students individually.
 %Then, $Z=\indicator{R\le 0}$.
 There is both a discontinuity in \texttt{nextGPA} values as $R$
 crosses 0, and a distinctly non-null regression relationship on either side of that
-threshold.   How large an AP effect may we infer from
+threshold. How large an AP effect may we infer from
 these features?  How much of the data bear directly in this inference?
 
 \subsection{Choosing $\mathcal{W}$ and $\mu_{\beta}(\cdot)$} \label{sec:choosing-mathcalw-f}
@@ -641,7 +643,7 @@ in both cases subsequent Wald tests of $Z$'s coefficient used
 Huber-White standard errors.
 % High school grade percentiles were
 % logit-transformed, improving the fit of the linear model.
-For $\mathcal{W}_{0.5}$  each (Bonferroni-corrected) $p$-value
+For $\mathcal{W}_{0.5}$  each (Bonferroni-corrected) p-value
 exceeds $0.2$; downward adjustment of the bandwidth
 is not indicated.
 
@@ -649,7 +651,7 @@ is not indicated.
 % \citep{maynard2013strengthening}; the data do not speak to the
 % possibility of
 % $\EE( Y_{C}| R= r)$ being more nearly linear to the left than to
-% the right of the threshold, where it is not directly estimable.  On
+% the right of the threshold, where it is not directly estimable. On
 % the other hand, Figure~(\ref{LSO}) %\marginpar{Remember to connect
 % %  to IK failure!}
 % indicates that the regression of (logit-transformed)
@@ -667,7 +669,7 @@ is not indicated.
 %% %for testing
 %% applied to the 7 residual vectors as determined on
 %% $\mathcal{W}_{0.5}$, yielded a p-value of $p=$Sexpr{round(balance0.5,2)}, greater
-%% than $\alpha_\mathcal{F}=0.1$.  (This is an approximate, Normal-theory
+%% than $\alpha_\mathcal{F}=0.1$. (This is an approximate, Normal-theory
 %% $p$-value, as computed with software of \citet{bowers2016ritools}.)
 
 <<echo=FALSE,include=FALSE>>=
@@ -713,7 +715,7 @@ narrowly avoids rejecting the hypothesis of no manipulation
 {\centering
 \includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
 }
-\caption{Robustness weights from robust MM estimation of the model
+\caption{Robustness weights from robust MM-estimation of the model
   that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
 \label{fig:robweights}
 %\end{figure}
@@ -826,7 +828,7 @@ to facilitate comparisons across methods.
 The resulting $\mathcal{W}$ is the widest shown in
 Table~\ref{tab:alt}---too wide, from viewpoints either of
 Section~\ref{sec:model-eey-c-r}, or of local permutation
-analysis.  For example, Section~\ref{sec:bandwidthChoice}'s placebo tests reject comparability
+analysis. For example, Section~\ref{sec:bandwidthChoice}'s placebo tests reject comparability
 of detrended covariate residuals when applied with this $\mathcal{W}$
 ($p$ = \Sexpr{round(IK[['bal.pval']],3)})%; \citet[][p. 2304]{cct}
 %and \citet[][p. 14]{kolesarRothe17} have discussion of this
@@ -866,7 +868,7 @@ However, its covariate balance tests do not adjust for $R$, instead
 seeking a $\mathcal{W}$ over which $X \independent Z$ is not
 rejected.
 In the LSO case, $\mathcal{W}_{b}$ is rejected as long as $b\geq$
-\Sexpr{CFT[['W']][2]}.  Recall that our $R$-adjusted check found
+\Sexpr{CFT[['W']][2]}. Recall that our $R$-adjusted check found
 no fault with bandwidths as large as \Sexpr{SHdataDriven[['W']][2]}.
 (In both cases, we tested each $\mathcal{W}$
 at level $\alpha=0.15$, addressing multiplicity of covariates using
@@ -877,7 +879,7 @@ under the assumption of
 ignorability of treatment assignment, $Z \independent Y_C$.
 Failure of this assumption may explain differences between the
 permutation-based estimate of the AP effect and estimates from the
-other two methods shown in Table~\ref{tab:alt}.  A
+other two methods shown in Table~\ref{tab:alt}. A
 correlation between \texttt{nextGPA} and $R$---possible even in
 regions in which covariate balance cannot be rejected---would
 bias a positive effect toward zero.
@@ -955,7 +957,7 @@ normally distributed.
 \begin{figure}
 \centering
 % chunk below  generates figure/dgms-1.pdf , but also includes
-% unwanted warnings in latex file.  To regenerate dgms-1.pdf,
+% unwanted warnings in latex file. To regenerate dgms-1.pdf,
 % set eval to TRUE, comments out the \includegraphics{} and compile;
 % then come back and reset it to FALSE
 %\includegraphics[width=\maxwidth]{../figure/dgms-1}
@@ -1075,7 +1077,7 @@ bandwidth $b$ will be uncertain.
   Likewise, if the initial sample
 includes subjects who manipulated their recorded $R$
 values, then the use of donut-shaped $\mathcal{W}$ may
-remove some, but not all such subjects.  % With finite samples, sample pruning guided by specification
+remove some, but not all such subjects. % With finite samples, sample pruning guided by specification
 % tests is expected to leave an $O(n^{-1/2})$-sized share of the sample
 % that perfect information would have counseled removing.
 Robust
