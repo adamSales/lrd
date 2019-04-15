@@ -478,8 +478,7 @@ met with our preferred fitters (\S~\ref{sec:robustFitters}).
 Then, causal inference in an RDD proceeds from the following assumption:
 \begin{ass}{Residual Ignorability}
 \sloppy
-Given $\mathcal{W}$ with $0< \PP( R \in
-\mathcal{W}, R\leq 0) < 1$ and a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
+Given $\mathcal{W}$ with $0< \PP( R \in \mathcal{W}) < 1$ and $0< \PP( R\leq 0|R\in\mathcal{W})<1$ and a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
 \begin{equation}\label{ycheck}
 \dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
 \independent {Z}| \{R \in \mathcal{W}\}

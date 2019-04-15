@@ -23,6 +23,42 @@
     urlcolor=cyan}
 \usepackage{xr}
 
+
+\newcommand{\maria}{Maria}
+\newcommand{\TildeTheta}{\hat{\theta}}
+\newcommand{\InfPar}[1]{\ensuremath{{#1}_{\infty}}}
+\newcommand{\thetaInf}{\InfPar{\theta}}
+\newcommand{\IC}[3][\hat\theta]{\mathrm{IF}_{#1}(#2, #3)}
+\newcommand{\bty}{\mathbf{y}_H}
+\newcommand{\btY}{\mathbf{Y}_H}
+\newcommand{\tyi}{{y}_{Hi}}
+\newcommand{\tYi}{{Y}_{Hi}}
+\newcommand{\xch}{\check{X}}
+\newcommand{\g}{g}
+\newcommand{\ych}{e}
+\newcommand{\Ych}{\ensuremath{E}}
+\newcommand{\dt}[3][\theta]{\ensuremath{e_{#1}(#2| {#3})}}
+\newcommand{\indicator}[1]{\ensuremath{\mathcal{I}\left[#1 \right]}}
+                                %alternatives:
+                                % {\ensuremath{\llbracket #1 \rrbracket}} % or \mathbbm{1}_{\left\{ {#1} \right\} }
+                                % or maybe \chi_ instead of 1_
+%\newcommand\independent{\protect\mathpalette{\protect\independenT}{\independent}}
+\newcommand{\independent}{\perp}
+\newcommand\hsg{\texttt{hsgrade\_pct}}
+\newcommand{\hyp}{H_{\tau_0}}
+\newcommand{\ychphib}{\boldsymbol{\check{Y}_{\phi_0}}}
+\newcommand{\ychphi}{\check{Y}_{\boldsymbol{\phi_0}i}}
+\newcommand{\PP}{\mathrm{Pr}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\var}{\mathrm{Var}}
+\newcommand{\cov}{\mathrm{Cov}}
+\newcommand{\htO}{H_{\tau_0}}
+\newcommand{\tht}{\tilde{H}_{\tau_0}}
+\newcommand{\resid}{E}
+\newcommand{\meanDiffT}{T_{\tau}}
+
+
+
 \externaldocument{lrd-r1}
 \externaldocument{lrd-sec2+3-r1}
 
@@ -31,8 +67,6 @@
 \begin{document}
 \maketitle
 
-[Note: for the time being I'm using this for bookkeeping---it will
-have to be edited before we can send it in]\\
 
 \section{Reviewer 1}
 Thank you for your valuable comments, which, along with those of the
@@ -204,13 +238,13 @@ and describe the result in Table 3. We agree that this is an important
 issue, and plan to delve more deeply into it in future work.
 
 
-\section{Reviewer 3 (report.pdf)}
+\section{Reviewer 3}
 
 \subsection{Major Comments}
 \begin{quote}
 In their “practical introduction to regression discontinuity designs,”
 Cattaneo et al. (2018, Cambridge University Press) compare the
-strength of the assump- tions in the continuity- and local
+strength of the assumptions in the continuity- and local
 randomization-based frameworks for regression discontinuity
 designs. They state that the assumptions required in the local ran-
 domization framework are stronger than in the continuity one. Please
@@ -218,47 +252,107 @@ comment on this. Please also compare the strength of your assumptions
 to the ones of the two other frameworks.
 \end{quote}
 
-We edited the discussion section to explicitly place our method
-between local randomization and limit-based methods, and point out
-that under different configurations, it can return versions of each
-type of estimator.
+Thank you for this valuable pointer. In a sense, the method we are
+presenting falls neatly between those two frameworks.
+This is explicit in the revised discussion section, which points out
+that both the classical \textsc{ancova} estimator for RDDs and the
+local-randomization estimator are special cases of our approach.
 
 \begin{quote}
 Please articulate how your approach is different to the approach by
 Cattaneo et al. (2014, Journal of Causal Inference).
 \end{quote}
+Like Cattaneo et al. (2014), our method takes an explicitly
+randomization-based approach to RDDs, comparing outcomes on either
+side of the cutoff. Unlike Cattaneo et al., our approach allows
+analysts to model a relationship between the running variable and the
+outcome, so that it becomes unnecessary to assume that there is no
+relationship in the window of analysis. A more detailed comparison
+between the two methods can be found in section 4.3.
 
 \begin{quote}
 Like in every approach to regression discontinuity designs, the
 selection of the window seems to be central in your approach. In the
 simulations, can you explore the selection of the window?
 \end{quote}
+We agree that this is a crucial question. However, simulating bandwidth
+selection would be a complicated endeavor. Since our approach relies on
+covariate balance, we would need to simulate covariates, which in turn
+would require choices for functional form as well as relationships
+between the simulated covariates and outcomes. The result of the
+simulation study would likely depend heavily on all of those factors, so a
+convincing study would require well-motivated range of parameter
+choices. Based on these considerations, we decided to devote future
+work to exploring covariate-based bandwidth selection, rather than
+attempting it in the current paper.
 
 \begin{quote}
 Please work on the writing of sections 5 and 6
 \end{quote}
+Thank you for this advice. We largely rewrote both sections for our
+revised manuscript.
 
 \subsection{Minor Comments}
 \begin{itemize}
-\item In 3.1, the notation $\dt[\thetaInf]$ is unclear.
-\item ``In (4), don’t you need something similar for $R\ge 0$?'' I
-  think this refers to the ``overlap'' condition. We don't because
-  $Pr(R>0)=1$ implies $Pr(R<0)=0$ violating stated condition, etc etc.
+\item ``In 3.1, the notation $\dt[\thetaInf]$ is unclear.''
+\begin{itemize}
+  \item (we didn't really address this one. Ben?)
+\end{itemize}
+\item ``In (4), don’t you need something similar for $R\ge 0$?''
+\begin{itemize}
+ \item Thank you for this comment---you are correct. We fixed the
+   statement in the revision.
+ \end{itemize}
 \item Parametric models are mentioned here and there in the
   manuscript, but can the residuals be obtained by means of
   nonparametric models in connection to Rosenbaum (2002, Statistical
   Science) where the model is just a ``fit''?
+\begin{itemize}
+ \item Unlike the covariance adjustment models in Rosenbaum (2002), our parametric models play an
+   essential role in causal identification, rather than just reduce
+   noise. Further, while in Rosenbaum (2002) $Z$ is independent of
+   covariates, in our case $Z$ and $R$ are dependent. Therefore,
+   residualizing $Y_C$ with a model fit to $\{Y_C,R\}$
+   can \emph{induce} a dependence between residuals and $Z$, which, in turn, leads to
+   bias in treatment effect estimates. For that reason, our inference
+   depends on asymptotic (i.e. $\dt[\thetaInf]$) rather than
+   permutation tests. That said, our results regarding higher-order
+   polynomials (Section 5.2) suggests that there may be a role for nonparametric
+   regression modeling.
+\end{itemize}
 \item For estimation, would it make sense to use matching as in Keele
   et al. (2015, Journal of the Royal Statistical Society: Series A)
   and the “rebar” method by Sales et al. (2018, Journal of Educational
   and Behavioral Statistics)?
+ \begin{itemize}
+   \item This is an intriguing suggestion. Indeed, we implemented
+     something similar to rebar in the new Section 1.1. Using a
+     rebar-like procedure or matching for further covariate control
+     could work well with our method, and we may try it in the
+     future.
+  \end{itemize}
 \item Please extend on the choice of $\alpha_B=0.15$.
+\begin{itemize}
+ \item We attempted to clarify the choice for $\alpha_B$ in 3.2 as a
+   conservative choice---choosing a level $\alpha_B$ higher than 0.05
+   leads to more rejection in specification checks, and hence stricter
+   bounds on possible specifications.
+\end{itemize}
 \item In the final discussion, there seems to be something missing in
   the following sentence: “Our analysis effects adjustment for R using
   bounded influence MM- estimation.”
+\begin{itemize}
+\item This sentence has been removed in the revision.
+\end{itemize}
 \item Please clarify the passage on the contamination fraction being of
 order $n^{-1/2}$
-
+\begin{itemize}
+ \item Our clarification of this concept is in the new Section 3.3;
+   the ``contamination fraction'' refers to the fraction of
+   observations in $\mathcal{W}$ that don't satisfy Residual
+   Ignorability
+\end{itemize}
+\end{itemize}
 
 \section{Editor (Dan M)}
 
@@ -296,7 +390,7 @@ the uncommon terminology and notation has significant advantages use
 them but draw the connections to the more common forms and heuristic
 understandings.
 \end{quote}
-We substited boldfance for overbar arrow notation for vectors, and removed reference to
+We substituted boldface for overbar arrow notation for vectors, and removed reference to
 the ``intersection hypothesis'' but retained reference to the
 ``sequential intersection-union principal.'' We referred to MM
 regression as ``robust'' regression, unless the distinction between MM
@@ -310,14 +404,14 @@ was not sufficiently clear.
 \end{quote}
 We moved our discussion of Fisherian randomization based inference to
 Section \ref{sec:using-eqref-test}, and re-worded around our
-analysis of Hurricaine Maria death tolls. We hope this clarifies its
-connection with our method. We removed the discussion of Neymann-style
+analysis of Hurricane Maria death tolls. We hope this clarifies its
+connection with our method. We removed the discussion of Neyman-style
 inference which was less directly connected to our method.
 
 \begin{quote}
 Section 2.3 is confusing. The importance of leverage and contamination
 are not made clear. Contamination needs to be clearly defined. If the
-window is small, the leverage from the edges doesn’t seem that
+window is small, the leverage from the edges doesn't seem that
 great. Is this also the case where the model is assumed nonlinear and
 so failure in the approximation with a linear function also breaks
 down further from the discontinuity. The use of the window to motivate
@@ -334,7 +428,7 @@ Also the discussion starts with a robustness to functional form but
 the discussion transitions to robust regression and robustness to
 leverage. How these are the same issue needs to be clearer than the
 current discussion. The transition from describing problem with
-regression to your preferred fix isn’t clear. MM estimation is one of
+regression to your preferred fix isn't clear. MM estimation is one of
 the key contributions of the paper but it is introduced in the middle
 of a paragraph with an introductory sentence that does not signal this
 a focusing on a key innovation. Moreover the language seems offhand as
@@ -377,10 +471,10 @@ We simplified the sentence and replaced ``entropy'' with
 ``randomness.''
 
 \begin{quote}
-Pp 14­15, setting alpha to 0.15 to compensate for the conservatism in
+Pp 14--15, setting alpha to 0.15 to compensate for the conservatism in
 the Bonferroni correct seems odd. You will reject less but you lost
 the control of familywise error at the originally desired
-level. Wouldn’t a less conservative method with the desired alpha
+level. Wouldn't a less conservative method with the desired alpha
 level be better?
 \end{quote}
 Setting alpha to a higher level will increase the power of the
@@ -419,7 +513,7 @@ sinusoidal function, for which all the methods are misspecified.
 
 \begin{quote}
 In your inference, the fact that the same data are used to select W
-and test the RDD is not considered and doesn’t seem to matter in the
+and test the RDD is not considered and doesn't seem to matter in the
 simulation. Can you provide some insight for this or a reference that
 discusses this?
 \end{quote}
