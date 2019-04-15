@@ -34,109 +34,148 @@
 [Note: for the time being I'm using this for bookkeeping---it will
 have to be edited before we can send it in]\\
 
-\section{Reviewer 1 ``Litmitless RDD.pdf''}
+\section{Reviewer 1}
+Thank you for your valuable comments, which, along with those of the
+other reviewers, have strengthened the paper considerably. Your
+overall critique that ``the current structure of the manuscript
+and writing style \dots are a poor fit for general JEBS readers'' was
+shared by other reviewers as well, and upon reflection we agreed.
 
+As we mentioned in the overall response, we added an example data
+analysis that we think will help illustrate our central points. We
+also considerably revised the structure and writing style of the paper
+to improve the logical flow and accessibility. Finally, we enlisted
+the help of a professional academic editor to improve the writing. In
+our revisions, we added ``guiding sentences'' and other structure to
+better ``connect the ideas closely toward the newly proposed method,''
+and removed ``background information that was not pertinent'' to our
+argument, as your review suggested.
+
+Finally, we are happy that you asked to see code! In fact, we had been
+planning on sharing our github repo with replication code, but
+neglected to mention that in our manuscript; that omission has been
+fixed. We heartily agree that code sharing should be more widespread.
+
+\subsection{Specific Comments}
+\subsubsection{Writing Style and Terminology}
 \begin{quote}
-However, the authors did not explain how this limit concept is
-differently (or in the same manner) defined or interpreted from what
-many people usually named as local average treatment effect
-(LATE). The important concept is statistically defined but it is also
-important to provide conceptual definition which would be changed or
-not changed under the limit understanding.
+[T]he authors did not explain how [the] limit concept [of Imbens and
+Lemieux (2008)] is differently (or in the same manner) defined or
+interpreted from what many people usually named as local average
+treatment effect (LATE).
 \end{quote}
-
-put ``LATE'' in intro.
-
-\begin{quote}
-I also appreciate the motivate example but was also not sure how these
-contaminated data and discrete assignment variable issues are actually
-related to the presented simulation conditions or authors even tries
-this or not.
-\end{quote}
-
-\begin{quote}
-Furthermore, it seems that concern about discrete variable measured in
-1/100s of a grade is a bit overly exaggerated concern. In social
-science, many scales that have more than seven levels are often
-considered as continuous variables in analysis and considering the
-second decimal points actually allows pretty much continuous
-variable. If we follow this standard that authors pointed out, all of
-latent scores that even use the item response pattern should be
-considered as discrete.
-\end{quote}
-
-\begin{quote}
-In addition, providing more information on how much (proportion) of
-the data were actually contaminated by social corruption would make
-the argument mode valid.
-\end{quote}
+The concept we were referring to is indeed the ``LATE.'' We have made
+that clear (see the 3rd paragraph of Section 1), and now refer to the
+LATE estimand throughout the paper.
 
 \begin{quote}
 On page 3, the authors stated “Either circumstance calls into question
 the appropriateness of limit-based methods” but did not explain why it
 is so.
 \end{quote}
-Added explanations into the paragraph in the intro
+In the fourth paragraph of the new manuscript, we added brief
+explanations of the problems discrete running variables and donut
+designs cause to the LATE approach.
+
+
+
 
 \begin{quote}
-The authors fail to reference Dong (2015) which provides a correction
+The authors often choose terms that are less common in the education
+literature when a more appropriate term exists. For example, they use
+“window” instead of “bandwidth,” \dots, “local average treatment
+effect”,\dots, “level” instead of “Type I error
+rate,” and the format of the number themselves, in Table 3.
+\end{quote}
+Thank you for these pointers. In our revision, we used the common term
+wherever possible. You'll notice, however, that we retain the term
+``window,'' alongside ``bandwidth,'' since the concept of a bandwidth
+typically refers to the exclusion of data points far from the cutoff,
+while we also exclude some data \emph{at} the cutoff, as in a donut
+design.
+
+\begin{quote}
+Last but not least, the article does not follow APA formatting at
+all.
+\end{quote}
+We, in consultation with the editor we hired, revised the manuscript
+to follow APA formatting by reformatting tables, captions, and
+citations, and added the serial (``Oxford'') comma where appropriate.
+
+\subsubsection{Discrete Running Variables}
+\begin{quote}
+[I]t seems that concern about discrete variable measured in 1/100s of a
+grade is a bit overly exaggerated concern. In social science, many
+scales that have more than seven levels are often considered as
+continuous variables in analysis and considering the second decimal
+points actually allows pretty much continuous variable. If we follow
+this standard that authors pointed out, all of latent scores that even
+use the item response pattern should be considered as discrete. In
+addition, providing more information on how much (proportion) of the
+data were actually contaminated by social corruption would make the
+argument mode valid. \dots The authors fail to reference Dong (2015) which provides a correction
 for running variables that are discretized due to rounding or heaping
 (such as in their motivating example).
 \end{quote}
-added a footnote to the intro citing Dong and related literature, and
-clarifying the difference between Dong's concern and ours.
+
+This is an interesting point, and we really appreciate your pointer to
+Dong (2015). As we see it, using continuous models to analyze discrete
+data potentially poses two types of problems. First, the model
+misspecification may cause bias, inconsistency, or some other form of
+systematic error. That is the central concern of Dong (2015), as we
+understand it---bias due to rounding in the running variable. In these
+cases, the degree of discreteness is a crucial factor. This does not
+appear to be a substantial problem in the academic probation
+example---notably, our method and the conventional local-OLS method
+give very similar results.
+
+The second potential problem is that the estimand itself may be
+undefined, rendering questions of bias and consistency moot. When the running variable is
+rounded, the limits in the LATE refer to an underlying, unobserved
+continuous running variable (denoted $X^*$ in Dong, 2015). $X^*$
+could, in theory, be arbitrarily close to the RDD cutoff. In our
+example, GPA is defined as discrete, so the limits that define the
+LATE do not exist. We explained this distinction briefly in footnote
+1, in the introduction section, where we also included citations to
+Dong (2015) and another paper addressing discrete running variables.
+
+Finally, we agree that an estimate of the amount of social
+corruption/sorting around the cutoff would be interesting and add
+weight to our argument. Unfortunately, we are unaware of a method for
+estimating that proportion. As we note in section 4.1, removing
+students with GPAs equal to the cutoff seems to resolve much of the
+problem.
+
+
+
+\subsubsection{ Simulation Studies}
 
 \begin{quote}
-From line 45, the authors explain the organization of each subsection
-by stating the limitless RDD analysis combines ideas from each
-subsection. However, by the time I reach p. 12, I am almost lost why
-each section was explained because the authors did not connect the
-ideas closely toward the newly proposed method. Providing more guiding
-sentences that tell readers why the authors discuss each section and
-connecting ideas directly in a logical manner will be much appreciated
-by the readers.
-\end{quote}
-
-\begin{quote}
-In general, it seemed to me that the authors provided too much
-background information that was not pertinent to their argument in
-section 2. The first paragraph of section 3 was somewhat out of place
-in the article and I suggest to drop and add sentences to remind the
-readers the purpose of section 3.
-\end{quote}
-
-\begin{quote}
-In section 4, the authors provide an empirical application of their
-new method and compare the results to standard RD methods. However,
-the details about implementation (e.g., R package or written code) are
-not provided (with an exception of bandwidth calculation) and it is
-not easy for readers to adopt the method even after reading the
-manuscript. Like many of published manuscripts in JEBS, I strongly
-recommend to providing code or more details on implementation of the
-proposed method.
-\end{quote}
-We will provide R code in an online supplement, and added a sentence
-saying so to the end of the introduction.
-
-
-\begin{quote}
-The authors also conducted two simulations \dots Most importantly, there was no justification for the considered
+I also appreciate the motivate example but was also not sure how these
+contaminated data and discrete assignment variable issues are actually
+related to the presented simulation conditions or authors even tries
+this or not. \dots Most importantly, there was no justification for the considered
 conditions (e.g., sample size, effect size). These studies do not
 provide sufficient information about the quality of the treatment
 effect estimates themselves.
 \end{quote}
+
+The goal of our simulation studies was to illustrate some of the
+advantages of our method, and to explore its operating characteristics
+compared to other methods. Since our estimates roughly agreed with
+those from the local-OLS approach, we saw little need to use
+simulations to adjudicate between them. That said, we acknowledge the
+need for more motivation for the simulation parameters. In our revised
+manuscript, the slope and error variance were chosen based on
+estimated parameters from the academic probation study.
 
 \begin{quote}
 The article would benefit from focusing more on the treatment effect
 estimates by providing results in the form of treatment estimate bias,
 95\% interval coverage, and quality of standard error estimates.
 \end{quote}
-We now report results in Table 3 as bias, and 95\% CI coverage and
-width. Since the confidence intervals result from the inversion of a
-hypothesis test, the standard errors are not directly
-relevant. Instead, CI width and coverage are the relevant measurements
-of statistical precision and the quality of statistical inference,
-respectively.
+We now report bias, and 95\% CI coverage and width in Table 3, and
+bias and RMSE in Table 4.
 
 \begin{quote}
 Furthermore, more conditions should be included in the simulations. In
@@ -148,43 +187,21 @@ compared to standard RD using several different bandwidths, or
 windows.
 \end{quote}
 
-The bandwidth selection procedure we recommend relies on covariate
-balance, and the importance of bandwidth choice depends on the form of
-the E[Y|R=r] function inside and outside of the bandwidth, among other
-factors.
-While we agree that exploring these questions in simulation studies is
-valuable and important, doing it well would add considerable length
-and complexity to the manuscript.
+We agree that these are interesting and important questions to explore
+in simulation studies. However, we believe that they would be better
+addressed in future work. Since our bandwidth selection technique depends on
+covariate balance, a simulation study would require simulating
+covariates as well as running variables and outcomes. Describing and
+justifying the required simulation design choices would
+add considerable length and complexity to the manuscript.
 Instead, we hope to address these questions in future work.
-
-\begin{quote}
-The authors often choose terms that are less common in the education
-literature when a more appropriate term exists. For example, they use
-“window” instead of “bandwidth” to describe the area surrounding the
-cutoff, in which the RD analysis is conducted. Similarly, they state
-that standard RD estimates the average treatment effect within a
-region but fail to call that estimate the “local average treatment
-effect”. In addition, the use of “level” instead of “Type I error
-rate,” and the format of the number themselves, in Table 3.
-\end{quote}
-Changed
-
-\begin{quote}
-Last but not least, the article does not follow APA formatting at
-all. The tables and figures are not properly titled or captioned. The
-tables are improperly formatted, and the reference list is not in APA
-format. In text citations also need to be correct to follow APA
-format.
-\end{quote}
-- Labeled every table column
-- Edited some captions
 
 \section{Reviewer 2}
 
 \begin{quote}
 This manuscript provides a motivation for a refinement of ``local randomization''-based approach to the regression discontinuity design.
 
-The manuscript is very polished and is largely publishable as-is in JEBS. My one recommendation is to add discussion of the constant effects assumption considered in Section 3. Where does it matter? If so, in what ways should the applied researcher worry about heterogeneity if inference on average effects are of interest? Simulations including heterogeneity might shed some light on this.  
+The manuscript is very polished and is largely publishable as-is in JEBS. My one recommendation is to add discussion of the constant effects assumption considered in Section 3. Where does it matter? If so, in what ways should the applied researcher worry about heterogeneity if inference on average effects are of interest? Simulations including heterogeneity might shed some light on this.
 \end{quote}
 
 
