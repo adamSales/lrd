@@ -949,7 +949,7 @@ when $\epsilon$ was distributed as $t_3$ than when $\epsilon$ was
 normally distributed.
 
 
-\subsection{Polynomial Regression}
+\subsection{Polynomial Regression}\label{sec:polynomialSimulation}
 
 \input{tab-polynomialSimulation}
 
