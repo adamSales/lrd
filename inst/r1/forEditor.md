@@ -10,7 +10,7 @@ but also significantly improved the paper.
 As you'll recall from Ben's telephone consultation with you of October
 12, we were led to consider adding an additional example by the
 combination of your concerns about accessibility (in particular to
-readers "not primarily working on theoretical developments) and
+readers "not primarily working on theoretical developments") and
 Reviewer 1's suggestion that the paper explore connections to the
 "rebar" method we had developed with Brian Rowan and published in
 JEBS. We had identified such an example in the mortality series
@@ -31,18 +31,32 @@ In adding it we also took the opportunity to streamline and reduce the
 density of section 2 of our paper, by relocating our discussion of
 Fisherian conditioning in causal inference to these new sections of
 the introduction. In contrast to our initial submission, in this
-version the material that remains in Section 2 ("Review of selected
-methods") all feeds directly into our development of the limitless
-regression discontinuity method, helping to address your comment that
+version the material that remains in Section 2 (now title "Review of
+selected RDD methods") is all background material, and all feeds
+directly into our development of the limitless regression
+discontinuity method, helping to address your comment that 
 "the formal development of randomization inference in Section 2 [was]
 useful but the distinction of the purely background material from the
 development that was [of] specific importance to your innovations was
-not sufficiently clear."  Furthermore the contributions to our
-"limitless" method of the methods under review are made more explicit
-as they are introduced. The current Section 2.1, for example, begins
-by laying out an objective of explaining how Neyman's method enables
-the statistician to test weak rather than strong null hypotheses, a
-benefit largely inherited by our method; this stands in contrast with
-our initial submission's Section 2.1, which began with an admittedly
-pedantic contrast of Neyman's and Fisher's approaches to
-randomization-based inference.
+not sufficiently clear." In particular, we rewrote and relocated our
+discussion of the role of robust regression to the following section
+(Section 3, "Randomness and Regression in RDDs"),
+which presents the paper's main methodological contributions. Moving
+and re-writing the material related to robust regression also
+addresses your comment that our discussion of MM estimation did not
+sufficiently "MM estimation .... is introduced in the middle of a
+paragraph with an introductory sentence that does not signal ...  a
+key innovation. Moreover the language seems offhand as 
+if this is a method that could be considered but not one that is being 
+recommended."
+
+We have included specific responses to your other comments, as well as
+those of the referees, in a separate document. We are grateful for
+your insightful suggestions and those of the reviewers, as well as for
+the opportunity to revise the paper. We look forward to your comments
+on the revision.
+
+Sincerely,
+Adam Sales and Ben Hansen
+
+
