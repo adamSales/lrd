@@ -159,8 +159,7 @@ of RDD analysis. Section~\ref{sec:appl-effect-acad} executes the plan
 with the LSO study, Section~\ref{sec:simulation}
 explores the method's performance in simulations, and
 Section~\ref{sec:discussion} takes stock. Replication materials,
-including R code, are provided in an online
-supplement \citep{saleslrd2019}.
+including R code, are available as a GitHub repository, [Blinded].
 
 % Although Huber-White standard errors are common in RDD analysis,
 % ``Huberized'' fitting methods are not; they should be.
@@ -344,7 +343,7 @@ Rather, a marked seasonal trend is apparent, with death counts being higher
 in the winter months than during the rest of
 the year; \eqref{eq:ignore} cannot be sustained.
 (For RDD methodology founded on \eqref{eq:ignore}, see
-\citet{cattaneo2015randomization},
+\citet{cattaneo2014randomization},
 \citet{aronowRDDinterference}, or \citet{matteiMealliObsStud}.)
 
 Dependence between $R$ and $Y_C$, violating
@@ -1115,8 +1114,7 @@ trend.
 %% window of analysis based on a sequence of specification tests.
 {%\small
 \bibliographystyle{apacite}
-\bibliography{lrd-r1.bib}
-%\bibliography{../../../adam.sales/drafts/causalinference}
+\bibliography{lrd-r1}
 }
 
 \input{lrd-mathyappendix-r1}
