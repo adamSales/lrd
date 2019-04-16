@@ -50,6 +50,12 @@ key innovation. Moreover the language seems offhand as
 if this is a method that could be considered but not one that is being 
 recommended."
 
+Finally, in response to your comment that "the paper needs to be
+revised with a goal of making its methodological contributions clearer
+and being more accessible to readers," and similar comments from Reviewers 1 and 3,
+we asked John Bellquist, a professional editor at the University of
+Texas, to edit our final document for grammar and for style. 
+
 We have included specific responses to your other comments, as well as
 those of the referees, in a separate document. We are grateful for
 your insightful suggestions and those of the reviewers, as well as for
