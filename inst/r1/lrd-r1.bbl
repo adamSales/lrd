@@ -630,7 +630,7 @@ Freedman, D\BPBI A.%
 \newblock
 {\BBOQ}\APACrefatitle {On The So-Called ``{H}uber Sandwich Estimator'' and
   ``Robust Standard Errors"} {On the so-called ``{H}uber sandwich estimator''
-  and ``robust standard errors"}.{\BBCQ}
+  and ``robust standard errors."}{\BBCQ}
 \newblock
 \APACjournalVolNumPages{The American Statistician}{60}{4}{299--302}.
 \PrintBackRefs{\CurrentBib}
@@ -811,9 +811,9 @@ Huber, P\BPBI J.%
   nonstandard conditions} {The behavior of maximum likelihood estimates under
   nonstandard conditions}.{\BBCQ}
 \newblock
-\BIn{} \APACrefbtitle {Proceedings of the fifth Berkeley symposium on
-  mathematical statistics and probability} {Proceedings of the fifth berkeley
-  symposium on mathematical statistics and probability}\ (\BVOL~1, \BPGS\
+\BIn{} \APACrefbtitle {Proceedings of the Fifth Berkeley Symposium on
+  Mathematical Statistics and Probability} {Proceedings of the Fifth Berkeley
+  Symposium on Mathematical Statistics and Probability}\ (\BVOL~1, \BPGS\
   221--233).
 \PrintBackRefs{\CurrentBib}
 
@@ -1075,7 +1075,7 @@ Lin, W.%
 {\BBOQ}\APACrefatitle {Supplement to ``{A}gnostic notes on regression
   adjustments to experimental data: reexamining {F}reedman's critique''}
   {Supplement to ``{A}gnostic notes on regression adjustments to experimental
-  data: reexamining {F}reedman's critique''}.{\BBCQ}
+  data: reexamining {F}reedman's critique.''}{\BBCQ}
 \newblock
 \APACjournalVolNumPages{The Annals of Applied Statistics}{}{}{}.
 \PrintBackRefs{\CurrentBib}
