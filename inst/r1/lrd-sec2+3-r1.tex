@@ -478,14 +478,16 @@ met with our preferred fitters (\S~\ref{sec:robustFitters}).
 Then, causal inference in an RDD proceeds from the following assumption:
 \begin{ass}{Residual Ignorability}
 \sloppy
-Given $\mathcal{W}$ with $\PP( R \in \mathcal{W}) >0$ and $0< \PP( R\leq 0|R\in\mathcal{W})<1$ and a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
+Given a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
 \begin{equation}\label{ycheck}
 \dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
-\independent {Z}| \{R \in \mathcal{W}\}
+\independent {Z}| \{R \in \mathcal{W}\}.
 \end{equation}
-for a fixed $\thetaInf$ such that
+Here $Z = f(R)$, with probability 1, for some deterministic
+$f$ (such as $f(r) = \indicator{r < 0}$);  $\thetaInf$ is a constant such that
 $\sqrt{n}(\hat\theta - \thetaInf)$ is bounded in probability (and thus
-$\hat\theta \stackrel{P}{\rightarrow} \thetaInf$).
+$\hat\theta \stackrel{P}{\rightarrow} \thetaInf$); $\mathcal{W}$
+satisfies $\PP( R \in \mathcal{W}) >0$ and $0< \PP(Z=1|R\in\mathcal{W})<1$.
 \end{ass}
 Residual ignorability states that, though $Y_C$ may not be independent of
 $Z$,  it admits a residual transformation bringing about such
