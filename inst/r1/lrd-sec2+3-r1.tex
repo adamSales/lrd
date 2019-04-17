@@ -593,14 +593,16 @@ in the sense of \citet{rubin2007design}.
 
 
 \subsection{Robust Fitters}\label{sec:robustFitters}
-Influential observations in the analysis sample that do not satisfy residual
+Observations in the analysis sample that do not satisfy residual
 ignorability %but include influential observations
  can undercut the validity of an RDD analysis.
-If such moderate sample contamination may be present---specifically, contamination of
+Even moderate amounts of such contamination---specifically, contamination of
 a $O(n^{-1/2})$-sized
-share of the sample---an OLS fitter will not be consistent for $\hat{\theta}$;
-nor will many robust regression methods engineered to meet
-objectives other than bounding the influence function
+share of the sample that happens to contain influential
+observations---can defeat OLS-based estimation strategies, rendering
+them inconsistent for $\hat{\theta}$.
+Indeed, even some robust regression methods---those engineered to meet
+objectives other than bounding the influence function---may be misled
 \citep{stefanski1991note}.
 The inclusion of problematic observations in the analysis sample can
 be due to misspecification of the model for $\EE (Y_{C}|R)$
@@ -608,15 +610,15 @@ be due to misspecification of the model for $\EE (Y_{C}|R)$
 (\S~\ref{sec:mccrary}), or other violations of residual ignorability,
 coupled with the failure of specification tests to detect these problems.
 However, no specification test is powerful enough
-to reliably detect moderate contamination; power to detect anomalies
+to reliably detect moderate contamination; if the probability of a 
+false alarm is controlled, then power to detect anomalies
 affecting only $O(n^{-1/2})$ of the sample can only tend to a number
 strictly less than 1.
-Hence, the
-proper bandwidth $b$ will be uncertain
+However $b$ and $\mathcal{W}$ are selected, at least some
 % (cf. \S~\ref{sec:bandwidth}, \S~\ref{sec:bandwidthChoice}, below),
-and some sample contamination may be present.
+sample contamination may be present.
 
-Instead, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
+Accordingly, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
  as to possess a bounded influence function (\citealp[, Thm.~3]{he1991localbreakdown};
 \citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
 maximum likelihood.
