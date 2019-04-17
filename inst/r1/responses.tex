@@ -348,10 +348,42 @@ revised in this version of the paper.
 \item ``Please clarify the passage on the contamination fraction being of
 order $n^{-1/2}$''
 \begin{itemize}
- \item Our clarification of this concept is in the new Section \ref{sec:robustFitters};
-   the ``contamination fraction'' refers to the fraction of
+ \item ``Contamination fraction'' 
+   refers to the fraction of
    observations in $\mathcal{W}$ that don't satisfy Residual
-   Ignorability
+   Ignorability.   (More precisely, if  there are $n$ observations of
+   which at most $m$ can correctly be said jointly to satisfy residual
+   ignorability, then the contamination fraction is $1-m/n$.)  
+
+   We have both revised and relocated our discussion of this
+   concept.  It's now in Section \ref{sec:robustFitters}:
+   \begin{quote}
+Observations in the analysis sample that do not satisfy residual
+ignorability %but include influential observations
+ can undercut the validity of an RDD analysis.
+Even moderate amounts of such contamination---specifically, contamination of
+a $O(n^{-1/2})$-sized
+share of the sample that happens to contain influential
+observations---can defeat OLS-based estimation strategies, rendering
+them inconsistent.
+Indeed, even some robust regression methods---those engineered to meet
+objectives other than bounding the influence function---may be misled
+(L.A. Stefanski, 1991).
+The inclusion of problematic observations in the analysis sample can
+be due to misspecification of the model for $\EE (Y_{C}|R)$
+(\S~\ref{sec:nonlinear}), manipulation of treatment assignments
+(\S~\ref{sec:mccrary}), or other violations of residual ignorability,
+coupled with the failure of specification tests to detect these problems.
+However, no specification test is powerful enough
+to reliably detect moderate contamination; if the probability of a 
+false alarm is controlled, then power to detect anomalies
+affecting only $O(n^{-1/2})$ of the sample can only tend to a number
+strictly less than 1.
+However $b$ and $\mathcal{W}$ are selected, at least some
+% (cf. \S~\ref{sec:bandwidth}, \S~\ref{sec:bandwidthChoice}, below),
+contamination may remain in the sample.
+   \end{quote}
+   
 \end{itemize}
 \end{itemize}
 
