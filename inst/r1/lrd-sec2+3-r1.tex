@@ -600,7 +600,7 @@ Even moderate amounts of such contamination---specifically, contamination of
 a $O(n^{-1/2})$-sized
 share of the sample that happens to contain influential
 observations---can defeat OLS-based estimation strategies, rendering
-them inconsistent for $\hat{\theta}$.
+them inconsistent.
 Indeed, even some robust regression methods---those engineered to meet
 objectives other than bounding the influence function---may be misled
 \citep{stefanski1991note}.
@@ -616,13 +616,14 @@ affecting only $O(n^{-1/2})$ of the sample can only tend to a number
 strictly less than 1.
 However $b$ and $\mathcal{W}$ are selected, at least some
 % (cf. \S~\ref{sec:bandwidth}, \S~\ref{sec:bandwidthChoice}, below),
-sample contamination may be present.
+contamination may remain in the sample.
 
-Accordingly, consistent estimation of $\thetaInf$ requires a modern MM,  SM, or similar estimator so designed
- as to possess a bounded influence function (\citealp[, Thm.~3]{he1991localbreakdown};
-\citealp{yohaiZamar1997locallyrobustMestimates}), as opposed to
-maximum likelihood.
-Such procedures address influence in the course of the fitting process.
+Accordingly, consistent estimation of $\thetaInf$ requires robust
+M-estimators, in Yohai and and Zamar's
+\citeyearpar{yohaiZamar1997locallyrobustMestimates} sense, a class 
+excluding maximum likelihood estimation while including
+modern MM-,  SM-, and other
+estimators with bounded influence function \citep[see also][, Thm.~3]{he1991localbreakdown}.
  In MM-estimation as in OLS,
 coefficients $\bm{\beta}$ of a linear specification solve estimating equations
 $\sum_{i} \psi\left\{ ({y}_{i} -
@@ -633,20 +634,22 @@ estimates of residual scale and OLS's $\psi(t) = t$ with a continuous $\psi$
 that satisfies $\int_{0}^{\infty}\psi(t)dt < \infty$. This limits
 the loss incurred by the fitter for failing to adapt itself to a small
 portion of aberrant observations;
-it is permitted to instead systematically down-weight them.
+it is permitted to systematically down-weight them instead.
+
+
 The analyses and simulations presented below use MM-estimators with bisquare $\psi$ and
-the ``fast S'' initialization of \citet{salibian-barreraYohai2006fastS}.
+``fast S'' initialization \citep{salibian-barreraYohai2006fastS}.
 We are not aware of prior work addressing
 potential contamination of an RDD sample with the assistance of
 bounded influence MM-estimation.
-
 Surprisingly, given their common origins in %the work of
 Huber \citeyearpar{huber1964robust}, MM-estimation is not routinely
-paired with sandwich estimates of variance, as in \S~\ref{sec:sandwich} and
-the surrounding discussion of \S~\ref{sec:robust-analys-covar}.
+paired with sandwich estimates of variance, as in
+\S~\ref{sec:sandwich} above.
 Exceptions include Stata's \texttt{mmregress} and R's \texttt{lmrob},
 which optionally provide Huber-White standard errors
-\citep{verardiCroux2009robust,rousseuwetal2015robustbase}.
+\citep{verardiCroux2009robust,rousseuwetal2015robustbase}; our
+analyses use the latter.
 
 
 
