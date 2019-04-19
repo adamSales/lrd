@@ -45,8 +45,8 @@ A potential outcomes version of the model is
 $Y_{Ti} = \alpha_{1}  + \beta R_{i} + \epsilon_{Ti}$, with
  $\epsilon_{Ci} \sim \mathrm{Normal}(0, \sigma^{2})$ and
  $\epsilon_{Ti} \sim \mathrm{Normal}(0, \sigma^{2})$.
-In marked contrast to RCTs, it does
-not require that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
+In marked contrast to RCTs, it is
+not required that $(Y_{T}, Y_{C}) \independent Z$: to the contrary, both
 $Y_{C}$ and $Y_{T}$ are presumed to associate with $R$, which in turn
 determines $Z$.
 Nonetheless, under this model the estimated $Z$ coefficient from the
@@ -58,10 +58,10 @@ fit using ordinary least squares (OLS), is unbiased for
 $\alpha_{1} - \alpha_{0}$.
 Under the \textsc{ancova} model, this estimation target coincides with  $\lim_{r\downarrow 0} \EE(Y | R=r) -
 \lim_{r\uparrow 0} \EE(Y | R=r)$ and, simultaneously,
-targets of limitless estimation such as $\EE Y_{T}  - \EE Y_{C}$.
+limit-free estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
 
 The OLS approach estimates $\tau$ as a parameter in regression model
-\eqref{eq:classicOLS}. In contrast, the approach in
+\eqref{eq:classicOLS}. In contrast, the analysis of
 \S~\ref{sec:using-eqref-test} took place in two separate steps:
 first adjust outcomes for $R$; then, test hypotheses by contrasting
 adjusted outcomes of treated and untreated subjects.
@@ -82,8 +82,9 @@ Finally, test $H$ with statistic
 with dependent variable $\mathbf{y}_{H}$.
 Because of the structural relationship
 between $R$ and $Z$, the null distribution
-of \eqref{eq:MeanDiffTestStat} is not tractable. (In \S~\ref{sec:using-eqref-test}, statistics
-$T(\mathbf{Y}_{H}, \cdot)$ had straightforward permutation distributions
+of \eqref{eq:MeanDiffTestStat} is not tractable. (In
+\S~\ref{sec:using-eqref-test}, test statistics'
+permutation distributions were straightforwardly enumerable
 because slope and intercept parameters had been estimated
 from a separate sample.) However, under the parametric \textsc{ancova} model, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
@@ -157,7 +158,7 @@ Statistical hypotheses about the TOTE take the form
 $H_\tau:Y_T=Y_C+D\tau$.
 To test $H_\tau$ under non-compliance, let $Y_H=Y-\tau D$,
 designate $t (\mathbf{y}_H,\mathbf{r})$ as test statistic, and compare
-its value to a standard normal distribution.
+its value to a standard Normal distribution.
 (The only difference between hypothesis testing for a ``strict'' RDD, one
 with full compliance, versus a fuzzy RDD, is in the formulation of
 hypothesis $H$, and the construction of $Y_H$---the rest of the

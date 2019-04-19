@@ -304,7 +304,7 @@ In this example, let $i=1,\dots,12$ denote the months of 2017 and let Puerto
 Rico's monthly death counts constitute the outcome, $Y_i$.
 The running variable $R_i=i$ is month order and months are
 ``treated,'' $Z_i=1$,
-if and only if $R\ge 9$, Hurricane Maria having occurred on September 20.
+if and only if $R\ge 9$, Hurricane Maria having occurred in September.
 Following \citet{neyman:1923} and \citet{rubin1974estimating}, we may
 then take each $i$ to have two potential outcomes: $Y_{Ti}$, a potential
 response under the treatment condition (the number of deaths that
@@ -1015,7 +1015,7 @@ increased sharply with each increment of polynomial degree, whatever
 the form of the data-generating model.
 In marked contrast, under non-linear data-generating models,
 higher-degree polynomial terms increased the accuracy of
-th robust, limitless method; under linear data-generating models,
+the robust, limitless method; under linear data-generating models,
 including higher-degree terms imposed little penalty.
 
 
@@ -1038,7 +1038,7 @@ LSO data.
 % encounters problems when $R$ is discrete, when donut designs are
 % called for, or when researchers are interested in estimating an effect
 % for a specific set of subjects.
-An alternative approach \citep[e.g.]{cattaneo2014randomization,liMatteiMealli2015BayesianRD} takes the ``local
+An alternative approach \citep[e.g.][]{cattaneo2014randomization,liMatteiMealli2015BayesianRD} takes the ``local
 randomization'' heuristic more literally, analyzing data in a small
 region around the cutoff as if it were from a randomized experiment.
 However, this approach assumes that potential outcomes are
