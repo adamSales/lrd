@@ -382,15 +382,15 @@ with potential values $\dt[]{Y_{Ci}}{R_i}=Y_{Ci}-\hat{Y}_C(R_i)$ and
 $\dt[]{Y_{Ti}}{R_i}=Y_{Ti}-\hat{Y}_C(R_i)$.
 Instead of \eqref{eq:ignore}, we assume only that the model we have fit to
 pre-2017 monthly death counts captured and removed seasonal
-mortality trends, such that the potential residuals $\{{\resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$
+mortality trends, such that the potential residuals $\{{\Resid}_{Ci}: i\} \equiv \{ \dt[]{Y_{Ci}}{R_i} : i\}$
 can be regarded as random, at least as far as $Z$ is concerned:
-%\begin{ass}{$\resid$-Ignorability}
+%\begin{ass}{$\Resid$-Ignorability}
 \begin{equation}\label{eq:ignore2}
-\resid_{C} \independent Z .
+\Resid_{C} \independent Z .
 \end{equation}
 %\end{ass}
 The right panel of Figure \ref{fig:maria} shows residualized death
-counts $\resid = \dt[]{Y}{R}$ as a function of month order $R$.
+counts $\Resid = \dt[]{Y}{R}$ as a function of month order $R$.
 Seasonal mean trends are no longer in evidence; \eqref{eq:ignore2} is
 thus more plausible than the standard ignorability assumption \eqref{eq:ignore}.
 Aside from a technical elaboration that will be necessary to apply our method
@@ -417,27 +417,27 @@ to Strong Ignorability as a basis for analysis of RDDs.
 In parallel with Fisherian analysis of RCTs \citep{fisher:1935},
 which can be regarded as conditioning on the potential outcome random vector $\bm{Y}_C \equiv \{Y_{Ci}: i\}$,
 our Maria analysis conditions on the potential residual vector
-$\bm{\resid}_C\equiv\{\resid_{Ci}\}_{i=1}^{12}$.
+$\bm{\Resid}_C\equiv\{\Resid_{Ci}\}_{i=1}^{12}$.
 (Here and throughout, boldface indicates the concatenation of
 $n$ variables or constants.)
-%An oddity of conditioning on $\bm{\resid}_C$, or $\bm{Y}_C$,
+%An oddity of conditioning on $\bm{\Resid}_C$, or $\bm{Y}_C$,
 %is that it does not correspond to any simple reduction of observed
-%data, since neither $\bm{Y}_C$ nor $\resid_{Ci}$ is observed unless $Z_{i}=0$.
+%data, since neither $\bm{Y}_C$ nor $\Resid_{Ci}$ is observed unless $Z_{i}=0$.
 The approach is feasible when testing
 ``strict'' null hypotheses, hypotheses that designate a value for each
-$\resid_{Ti} - \resid_{Ci}$ with
-$Z_{i}=1$, not just $\EE(\resid_{T} - \resid_{C} | Z =1)$.
+$\Resid_{Ti} - \Resid_{Ci}$ with
+$Z_{i}=1$, not just $\EE(\Resid_{T} - \Resid_{C} | Z =1)$.
 This includes the hypothesis
 of strictly no effect, $H_{0}: Y_{T} \equiv Y_{C}$, under which
-$\bm{\resid}_{T} \equiv \bm{\resid}_{C}=\bm{\resid}$.
-%Recall that $\resid_T-\resid_C=Y_T-Y_C$, so null hypotheses about
+$\bm{\Resid}_{T} \equiv \bm{\Resid}_{C}=\bm{\Resid}$.
+%Recall that $\Resid_T-\Resid_C=Y_T-Y_C$, so null hypotheses about
 %$Y$, which are ultimately of interest,
-%are exactly equivalent to null hypotheses about $\resid$, which may be
+%are exactly equivalent to null hypotheses about $\Resid$, which may be
 %more readily tested.
 
 
 For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed---formally,
-inference will be made after conditioning not only on $\bm{\resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
+inference will be made after conditioning not only on $\bm{\Resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
 To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
 we likewise condition on the realized sizes $N_{1}$
 and $N_{0}$ of the treatment and control group samples,%
@@ -452,11 +452,11 @@ see \citet{canayKamat17RDDpermutations}.
 } %
 where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
-$\bm{A}^*=\{\bm{\resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
+$\bm{A}^*=\{\bm{\Resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
 is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\resid_{T}-\resid_{C})$. ($\bm{A}^*$ carries full information about $\bm{\resid}_{C}$ but none on $\bm{\resid}_T$.
+$\EE (\Resid_{T}-\Resid_{C})$. ($\bm{A}^*$ carries full information about $\bm{\Resid}_{C}$ but none on $\bm{\Resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
-or $\EE(\resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
+or $\EE(\Resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -525,21 +525,21 @@ hl <- diff[which.min(diff[,2]),1]
 
 @
 Under $H_0$, we may exactly enumerate the sampling distribution of any
-test statistic $T(\bm{\resid}_C,\bm{Z})=T(\bm{\resid},\bm{Z})$ conditional on
+test statistic $T(\bm{\Resid}_C,\bm{Z})=T(\bm{\Resid},\bm{Z})$ conditional on
 $\bm{A}^*$; the permutational p-value is found by comparing a test statistic
 to its conditional distribution thus enumerated.
 In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
 since it is based on a model fit to pre-\maria\ death counts \citep[cf.][]{rebarPaper}.
-Hence, the effect of \maria\ on $\resid$ (i.e. $\resid_T-\resid_C$) is exactly equal to its effect on $Y$.
+Hence, the effect of \maria\ on $\Resid$ (i.e. $\Resid_T-\Resid_C$) is exactly equal to its effect on $Y$.
 The null hypothesis $H_0$ states that Hurricane
 Maria caused precisely no change to each month's death count, nor to its residual.
 Under $H_0$, we condition on $\bm{A}^*$ and calculate the
 sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
 value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
 of $\bm{Z}$. The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the
-mean of a size-4, without-replacement sample from $\{E_1, \ldots, E_{12}\}$.
-It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in higher
-test statistic values than the realized value
+mean of a size-4, without-replacement sample from $\{\resid_1, \ldots, \resid_{12}\}$.
+It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in 
+test statistic values higher than the realized value
 $\bar{\resid}_{z=1}=$\Sexpr{prettyNum(round(testStat(z,rr)),big.mark=',')} (which is unique in
   the distribution).
 This implies a two-sided ``mid'' p-value \citep{agresti2005comment} of
@@ -549,7 +549,7 @@ for $H_0$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This combination of regression and permutation testing applies just as
-readily to test the hypothesis $\resid_T = \resid_C + c$, for any
+readily to test the hypothesis $\Resid_T = \Resid_C + c$, for any
 constant $c$. In the Maria example, no such hypothesis is sustainable
 at level 0.05 unless $c\geq$ \Sexpr{round(lb,-1)}, corresponding to
 \Sexpr{round(4*lb, -1)} excess deaths due to the hurricane. Upper
