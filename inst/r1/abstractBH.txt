@@ -1,4 +1,4 @@
-Many modern analyses of regression discontinuity studies contrast
+Regression discontinuity studies typically contrast
 the limits of a regression as the independent variable, $R$, approaches
 a cut-point, $c$, from either side. Other methods require that
 assignment to treatment conditions, $\indicator{R<c}$, be ignorable
