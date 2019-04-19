@@ -525,7 +525,7 @@ hl <- diff[which.min(diff[,2]),1]
 
 @
 Under $H_0$, we may exactly enumerate the sampling distribution of any
-test statistic $T(\bm{\Resid}_C,\bm{Z})=T(\bm{\Resid},\bm{Z})$ conditional on
+test statistic $t(\bm{\Resid}_C,\bm{Z})=t(\bm{\Resid},\bm{Z})$ conditional on
 $\bm{A}^*$; the permutational p-value is found by comparing a test statistic
 to its conditional distribution thus enumerated.
 In this analysis $\hat{Y}_C(R_i)$ cannot itself be influenced by \maria,
@@ -534,9 +534,9 @@ Hence, the effect of \maria\ on $\Resid$ (i.e. $\Resid_T-\Resid_C$) is exactly e
 The null hypothesis $H_0$ states that Hurricane
 Maria caused precisely no change to each month's death count, nor to its residual.
 Under $H_0$, we condition on $\bm{A}^*$ and calculate the
-sampling distribution of the treatment group residual mean $T(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
+sampling distribution of the treatment group residual mean $t(\bm{\resid},\bm{Z})=\bar{\resid}_{Z=1}$, by calculating its
 value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
-of $\bm{Z}$. The null distribution of $T(\bm{\resid}, \bm{Z})$ is simply that of the
+of $\bm{Z}$. The null distribution of $t(\bm{\resid}, \bm{Z})$ is simply that of the
 mean of a size-4, without-replacement sample from $\{\resid_1, \ldots, \resid_{12}\}$.
 It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in 
 test statistic values higher than the realized value
