@@ -1,7 +1,7 @@
 Regression discontinuity studies typically contrast
 the limits of a regression as the independent variable, $R$, approaches
-a cut-point, $c$, from either side. Other methods require that
-assignment to treatment conditions, $\indicator{R<c}$, be ignorable
+a cut-point, $c$, from either side. However, some assume that
+assignment to treatment conditions, $\indicator{R<c}$, is ignorable
 vis a vis the potential outcomes.
 
 Instead, the method presented in this paper assumes Residual Ignorability,
