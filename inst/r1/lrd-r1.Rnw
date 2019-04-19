@@ -294,7 +294,7 @@ researchers were higher.
 Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
 analysis considered recorded mortality in
 months before and after the hurricane, estimating
-Maria to have caused 1,139 deaths, in excess of those that would have
+Maria to have caused 1,139 deaths in excess of those that would have
 occurred otherwise. This section demonstrates residual ignorability,
 if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
 in a reanalysis of these monthly death counts.
