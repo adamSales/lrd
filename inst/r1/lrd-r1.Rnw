@@ -742,7 +742,7 @@ interval \Sexpr{ciChar(SHmain[['CI']][1:2])}.
 
 Table~\ref{tab:results}'s next three rows relax each of the main model's specifications.
 The row labeled ``Adaptive $\mathcal{W}$'' reports the results using
- the wider, adaptively chosen window $\mathcal{W}_{a}=\{i:R_i\in
+ the wider, adaptively chosen window $\mathcal{W}_{a}=\{i:|R_i|\in
 (0,$\Sexpr{SHdataDriven[['W']][2]}$)\}$.
 The ``Cubic'' row allows for a cubic
 relationship between first-year GPA and subsequent GPA, with
