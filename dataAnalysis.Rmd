@@ -1,6 +1,6 @@
 ---
-title: "LRD paper Appendix C, Data Analysis"
-author: "lrd authors"
+title: "LRD paper Appendix C, Data Analysis for AP Example"
+author: "Adam C Sales & Ben B Hansen"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
