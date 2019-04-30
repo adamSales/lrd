@@ -10,7 +10,7 @@ If the variable `paperdir` is supplied, LaTeX code for the tables is saved there
 
 
 ```{r setup, include=FALSE,cache=FALSE}
-if(!exists('paperdir')) paperdir <- '/r1'
+if(!exists('paperdir')) paperdir <- '.'
 knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,fig.path=paste0(paperdir,'/figure/'))
 options(scipen=1, digits=3)
 ```
