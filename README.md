@@ -49,8 +49,5 @@ knit('fullOutcomeSim.Rmd')
  5. In the console, compile the pdf:
  ```
  pdflatex lrd-r1.tex
- bibtex lrd-r1
- pdflatex lrd-r1.tex
- pdflatex lrd-r1.tex
  ```
 
