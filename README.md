@@ -8,7 +8,7 @@ To reproduce the results in the paper:
   - Required packages to carry out analyses:
 	- `robustbase`
 	- `rdd`
-	- `sadnwich`
+	- `sandwich`
 	- `nnet`
 	- `RItools`
   - Required packages to display results (paper, analysis documents):
