@@ -50,7 +50,10 @@ library('RItools')
 library('sandwich')
 library('nnet')
 
-if(require('parallel')&exists('cl')&inherits(cl,"cluster")){
+clust <- FALSE
+if(require('parallel')) if(exists('cl')) if(inherits(cl,"cluster")) clust <- TRUE
+
+if(clust){
   clusterEvalQ(cl,{
              library('robustbase')
              library('rdd')
@@ -63,7 +66,7 @@ if(require('parallel')&exists('cl')&inherits(cl,"cluster")){
 } else cl <- NULL
 
 set.seed(201609)
-st <- system.time(outcomeSim <- totalOutcomeSim(nrep,cl))
+st <- system.time(outcomeSim <- totalOutcomeSim(nreps,cl))
 save(outcomeSim, file=paste0('./outcomeSim',Sys.Date(),'.RData'))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
