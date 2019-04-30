@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r initialize}
-knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE)
+knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,message=FALSE)
 
 library(xtable)
 library(Hmisc)
@@ -75,8 +75,6 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYe
   stat_function(data=data.frame(x=datM$month_num,type='Death Counts',y=datM$deaths,year='avg',hurYear=TRUE),
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
-
-ggsave('figure/maria.png',width=6.4,height=3,dpi=300)
 ```
 
 Estimate/test death toll:
