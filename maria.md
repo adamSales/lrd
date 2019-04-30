@@ -9,13 +9,18 @@ output: html_document
 ```r
 knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,message=FALSE)
 
-library(xtable)
-library(Hmisc)
-library(dplyr)
+#library(Hmisc)
 library(ggplot2)
+```
+
+```
+## Need help getting started? Try the cookbook for R:
+## http://www.cookbook-r.com/Graphs/
+```
+
+```r
 library(robustbase)
 library(pbs)
-library(perm)
 ```
 
 Monthy mortality data in Puerto Rico generously provided by Alexis
