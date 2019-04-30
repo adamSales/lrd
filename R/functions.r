@@ -134,7 +134,7 @@ testSH <- function(dat,BW,tau=0,outcome='Y',return.coef=FALSE,rhs=NULL){
 
     mod <- lmrob(form,data=dat,method='MM',control=ctl)
 
-    newcov <- try(lrd:::sandwich(mod))
+    newcov <- try(LRDsandwich(mod))
     mod$cov <- if (inherits(newcov, "try-error")) NA else newcov
     Z.pos = pmatch("Z", names(coef(mod)))
     if(return.coef) return(coef(mod)[Z.pos])
