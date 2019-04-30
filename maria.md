@@ -7,89 +7,13 @@ output: html_document
 
 
 ```r
-knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE)
+knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,message=FALSE)
 
 library(xtable)
 library(Hmisc)
-```
-
-```
-## Loading required package: lattice
-```
-
-```
-## Loading required package: survival
-```
-
-```
-## Loading required package: Formula
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```
-## 
-## Attaching package: 'Hmisc'
-```
-
-```
-## The following objects are masked from 'package:xtable':
-## 
-##     label, label<-
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     format.pval, round.POSIXt, trunc.POSIXt, units
-```
-
-```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:Hmisc':
-## 
-##     combine, src, summarize
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
 library(robustbase)
-```
-
-```
-## 
-## Attaching package: 'robustbase'
-```
-
-```
-## The following object is masked from 'package:survival':
-## 
-##     heart
-```
-
-```r
 library(pbs)
 library(perm)
 ```
@@ -157,10 +81,6 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYe
 ```
 
 ![plot of chunk mariaFigs](figure/mariaFigs-1.png)
-
-```r
-ggsave('figure/maria.png',width=6.4,height=3,dpi=300)
-```
 
 Estimate/test death toll:
 
