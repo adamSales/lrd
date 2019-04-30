@@ -56,7 +56,7 @@ datM$Z <- datM$month_num>8
 ```
 
 Make Figure 1:
-```{r mariaFigs, fig.height=3.9,fig.width=3.9,dpi=300}
+```{r mariaFigs, fig.height=3,fig.width=6.4,dpi=300}
 pd <- rbind(datM,datM)
 pd$Deaths <- c(datM$deaths,datM$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(datM)),rep('Residual Death Counts',nrow(datM))),
@@ -118,7 +118,7 @@ pfun <- function(tau){
 }
 
 pval <- pfun(0)
-print(paste('P-value testing hypothesis of no excess deaths:',pval))
+print(paste('P-value testing hypothesis of no excess deaths:',pval['p']))
 
 tau <- 0
 rej <- TRUE
@@ -131,7 +131,7 @@ while(rej){
 }
 lb <- tau
 
-print(paste('95\% lower bound for excess deaths per month:',lb))
-print(paste('95\% lower bound for total excess deaths in 2017:',lb*4))
+print(paste('95% lower bound for excess deaths per month:',lb))
+print(paste('95% lower bound for total excess deaths in 2017:',lb*4))
 
 ```
