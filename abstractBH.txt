@@ -1,0 +1,16 @@
+Conventionally, regression discontinuity analysis contrasts
+a univariate regression's limits as its independent variable, $R$,
+approaches a cut-point, $c$, from either side. Alternative methods target the average treatment effect in a small region
+around $c$, at the cost of an assumption that treatment assignment,
+$\indicator{R<c}$, is ignorable vis a vis potential outcomes.
+
+Instead, the method presented in this paper assumes Residual Ignorability,
+ignorability of treatment assignment vis a vis detrended potential
+outcomes.  Detrending is effected not with ordinary least squares but with MM-estimation,
+following a distinct phase of sample decontamination.  The method's inferences
+acknowledge uncertainty in both of these adjustments, despite its
+applicability whether $R$ is discrete or continuous; it
+is uniquely robust to leading validity threats facing regression
+discontinuity designs.
+
+

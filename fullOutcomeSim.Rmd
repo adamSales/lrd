@@ -1,0 +1,170 @@
+---
+title: "Tables from simulations presented in lrd paper"
+author: "lrd authors"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,error=FALSE)
+knitr::opts_knit$set(root.dir = '.')
+```
+
+General dependencies.
+```{r}
+library('knitr')
+#library('lrd')
+library('kableExtra')
+source('R/simCIhet.r')
+source('R/functions.r')
+source('R/ddsandwich.R')
+source('R/displaySim.r')
+```
+
+
+
+Initialization. Note that `nreps=0` corresponds to no simulations,
+just print results from previously saved simulations.
+In order to re-run the simulations, the `nreps`
+variable should have been set to a positive integer before initiating this script.
+
+##Level/Power Simulation
+The following code (optionally, if `nreps>0`) runs the simulation
+reported in Table 3 of "Limitless Regression Discontinuity"
+
+To run the simulations in parallel, using the `parallel` package in
+`R`,
+register a cluster, called `cl` with the desired number of nodes, with
+code similar to the following:
+```{r eval=FALSE,echo=TRUE}
+library(parallel)
+cl <- makeCluster(5)
+```
+
+```{r  runLoadOutSim, warning=FALSE, message=FALSE}
+if (!exists('nreps') ) nreps <- 0
+nreps
+if (nreps) {
+library('robustbase')
+library('rdd')
+library('RItools')
+library('sandwich')
+library('nnet')
+
+if(require('parallel')&exists('cl')&inherits(cl,"cluster")){
+  clusterEvalQ(cl,{
+             library('robustbase')
+             library('rdd')
+             library('RItools')
+             library('sandwich')
+             library('nnet')
+             source('R/functions.r')
+             source('R/simCIhet.r')
+             })
+} else cl <- NULL
+
+set.seed(201609)
+st <- system.time(outcomeSim <- totalOutcomeSim(nrep,cl))
+save(outcomeSim, file=paste0('inst/outcomeSim',Sys.Date(),'.RData'))
+cat(paste0(date(), ', nreps=', nreps, '\n'),
+    paste(c(names(st),'\n', collapse=T)),
+    st,
+    file='dataResults/fullOutcomeSim-runtime.txt', append=TRUE)
+} else{ ### load the most recent simulation
+  sims <- sort(grep('outcomeSim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',sims[1]))
+}
+```
+
+This code creates Table 3:
+```{r table3}
+capture.output({
+  displayCIsimHet(outcomeSim,tau=0,
+    caption=paste('Empirical bias and 95\\% confidence interval coverage (\\%) and width for the analyses of',prettyNum(ncol(outcomeSim[[1]]),big.mark=','),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
+    label='tab:level')
+  },file="inst/r1/tab-levelSimulation.tex")
+```
+Here are the results, for all cases run:
+
+```{r fullOutSim}
+allRes <- dispAllSimp(outcomeSim)
+rownames(allRes) <- NULL
+save(allRes,file=paste0('inst/levelSimResults',Sys.Date(),'.RData'))
+```
+
+###Full Results: Bias
+```{r biasTab}
+kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
+```
+
+###95% CI Coverage
+```{r coverTab}
+kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% confidence interval coverage for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
+```
+
+###95% CI Width
+```{r widthTab}
+kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% confidence interval width for the analyses of ',ncol(outcomeSim[[1]]),'simulated datasets using either permutation tests, limitless or local OLS methods. Results for all conditions'),digits=2,format='html')%>%
+  kable_styling(full_width=FALSE)%>%
+#  group_rows("n=50",1,24)%>%group_rows("n=250",25,48)%>%group_rows("n=2500",49,72)%>%
+  collapse_rows(columns = 1:4)#, valign = "center")
+```
+
+
+
+##Polynomial Simulation
+
+```{r  runLoadPolySim, warning=FALSE, message=FALSE}
+if (!exists('nreps') ) nreps <- 0
+nreps
+if (nreps) {
+
+
+set.seed(201609)
+st2 <- system.time(totalPoly <- totalPolySim(nreps,cl))
+save(totalPoly,file=paste0("inst/totalPolySim",Sys.Date(),".RData"))
+cat(paste0(date(), ', nreps=', nreps, '\n'),
+    paste(c(names(st),'\n', collapse=T)),
+    st,
+    file='dataResults/totalPolySim-runtime.txt', append=TRUE)
+} else{
+  psims <- sort(grep('totalPolySim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+
+  load(paste0('inst/',psims[1]))
+}
+```
+
+The following gives the results in Table 4 of the paper, in addition
+to the break-down of RMSE into bias and variance, and analogous
+results for normally-distributed errors.
+
+```{r}
+tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
+capture.output(
+polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',prettyNum(ncol(totalPoly[[1]]),big.mark=','),' simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data-generating models (DGM) were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.'),label='tab:poly'),
+    file="inst/r1/tab-polynomialSimulation.tex")
+
+tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
+#rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)
+colnames(tab) <- gsub('(sh|ik)\\.est.','deg=',colnames(tab))#c(rep(paste0('deg=',1:4),2),'')
+colnames(tab)[ncol(tab)] <- 'n/a'
+kable(tab,format='html',caption='Full results for polynomial simulation',digits=2)%>%
+    kable_styling()%>% column_spec( 6,border_right=TRUE)%>%column_spec(11,border_right=TRUE)%>%
+        add_header_above(c(" " = 1, "Limitless" = 5, "OLS" = 5, "Loc. Lin." = 1))%>%
+            #group_rows("$t_3$ Error",1,12)%>%group_rows("N(0,1) Error",13,24)%>%
+            group_rows("linear",1,3)%>%group_rows('antiSym',4,6)%>%group_rows('sine',7,9)#%>%
+                #group_rows("linear",13,16)%>%group_rows('antiSym',17,20)%>%group_rows('oneSide',21,24)
+```
+
+
+Session information
+```{r}
+sessionInfo()
+```
