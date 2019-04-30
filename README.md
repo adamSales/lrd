@@ -11,6 +11,7 @@ To reproduce the results in the paper:
 	- `sandwich`
 	- `nnet`
 	- `RItools`
+	- `pbs`
   - Required packages to display results (paper, analysis documents):
     - `knitr`
     - `kableExtra`
@@ -18,17 +19,24 @@ To reproduce the results in the paper:
 	- `gridExtra`
   - Optional packages:
     - `parallel` to run simulations in parallel
-	- `rmarkdown` to make analysis documents more easily
-2. In `R`, Run data analysis:
+    - `rmarkdown` to make analysis documents more easily
+2. In `R`, Run data analysis for Maria Study:
+    - Dataset available from private github repo https://github.com/alexisrsantos/Deaths_Puerto_Rico_JAMA
+    - Store data as `extdata/death_file_JAMA.csv`
+    - Then run to create analysis file `maria.md`
 ```
 library(knitr)
+knit('maria.Rmd')
+```
+3. In `R`, Run data analysis for AP Study: (this automatically downloads publicly available data)
+```
 knit('dataAnalysis.Rmd')
 ```
   - Creates files:
     - `dataAnalysis.md` analysis document
-	- `RDanalysis-[M][D][Time].RData` analysis output
-	- `tab-results.tex` `tab-alt.tex` tables 1 & 2 for paper
-3. In `R` Run simulation studies
+    - `RDanalysis-[M][D][Time].RData` analysis output
+    - `tab-results.tex` `tab-alt.tex` tables 1 & 2 for paper
+4. In `R` Run simulation studies
 ```
 nrep <- 5000 ## number of simulation replications
 knit('fullOutcomeSim.Rmd')
@@ -42,12 +50,5 @@ knit('fullOutcomeSim.Rmd')
 	 - `tab-levelSimulation.tex` latex for table 3
 	 - `tab-polynomialSimulation.tex` latex for table 4
 	 - some other random files.
- 4. In `R` compile LaTeX for the manuscript:
- ```
- knit('lrd-r1.Rnw')
- ```
- 5. In the console, compile the pdf:
- ```
- pdflatex lrd-r1.tex
- ```
+ 
 
