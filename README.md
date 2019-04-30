@@ -42,7 +42,8 @@ nrep <- 5000 ## number of simulation replications
 knit('fullOutcomeSim.Rmd')
 ```
    - Substitute `nrep <- X` for `X` simulation replications
-   - `nrep <- 0` loads previously-run simulation
+   - `nrep <- 0` loads previously-run simulation files (files
+     corresponding to results in the paper are in the repo)
    - Creates files:
      - `fullOutcomeSim.md` analysis document
 	 - `outcomeSim-YYYY-MM-DD.RData` simulation results for table 3
