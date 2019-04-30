@@ -6,6 +6,8 @@ output: html_document
 ---
 
 ```{r initialize}
+knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE)
+
 library(xtable)
 library(Hmisc)
 library(dplyr)
@@ -13,7 +15,11 @@ library(ggplot2)
 library(robustbase)
 library(pbs)
 library(perm)
+```
 
+Monthy mortality data in Puerto Rico generously provided by Alexis
+R. Santos-Lozada [sites.psu.edu/alexisrsantos]
+```{r loadData}
 
 datM <- read.csv('extdata/death_file_JAMA.csv')
 
@@ -22,22 +28,11 @@ datM$hurYear <- datM$year==2017
 datM$year <- as.factor(datM$year)
 rownames(datM) <- paste0(month.abb[datM$month_num],substr(datM$year,3,4))
 
-month_lengths  <-
-    c(31, 28.25, 31, 30, 31, 30,
-      31, 31, 30, 31, 30, 31)
-
-datM$dailyDeath <- datM$deaths_original/month_lengths[datM$month_num]
-datM$adjDeath <- datM$dailyDeath*mean(month_lengths)
-
-## are we adjusting deaths for month length??
-## choose one of the following:
-#dat$deaths <- dat$adjDeath
 datM$deaths <- datM$deaths_original
+```
 
-
-
-## ----modelMariaDeaths,include=FALSE--------------------------------------
-### model monthly deaths prior to 2017
+model monthly deaths prior to 2017:
+```{r modelMariaDeaths}
 mod  <-   lmrob(deaths~year+
                      pbs(month_num, knots=seq(2,11,by=3)),
                  data=datM,subset=!hurYear)
@@ -58,19 +53,10 @@ datM$yhat[datM$hurYear] <- fitCurve(datM$month_num[datM$hurYear],'avg')
 datM$resid <- datM$deaths-datM$yhat
 
 datM$Z <- datM$month_num>8
+```
 
-
-
-## ----bandwidth,include=FALSE,eval=FALSE----------------------------------
-## ## are we limiting the window of analysis?
-## ## set eval=FALSE if not.
-## ## modify the following for a different window:
-## window <- 6:11
-## datM <- subset(datM,month_num%in%window)
-##
-
-
-## ----mariaFigs,eval=TRUE,include=FALSE,cache=TRUE------------------------
+Make Figure 1:
+```{r mariaFigs, fig.height=3.9,fig.width=3.9,dpi=300}
 pd <- rbind(datM,datM)
 pd$Deaths <- c(datM$deaths,datM$resid)
 pd$type <- factor(c(rep('Death Counts',nrow(datM)),rep('Residual Death Counts',nrow(datM))),
@@ -91,9 +77,10 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYe
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
 
 ggsave('figure/maria.png',width=6.4,height=3,dpi=300)
+```
 
-
-## ----estimates,include=FALSE---------------------------------------------
+Estimate/test death toll:
+```{r estimates}
 N1 <- sum(datM$hurYear&datM$Z)
 N0 <- sum(datM$hurYear&!datM$Z)
 N <- N1+N0
@@ -131,6 +118,7 @@ pfun <- function(tau){
 }
 
 pval <- pfun(0)
+print(paste('P-value testing hypothesis of no excess deaths:',pval))
 
 tau <- 0
 rej <- TRUE
@@ -142,15 +130,8 @@ while(rej){
   rej <- p['p']<0.05
 }
 lb <- tau
-p.lower <- p
-while(!rej){
-  tau <- tau+1
-  p <- pfun(tau)
-  diff <- rbind(diff,c(tau,p['diff']))
-  rej <- p['p']<0.05
-}
-ub <- tau
-p.upper <- p
 
-hl <- diff[which.min(diff[,2]),1]
+print(paste('95\% lower bound for excess deaths per month:',lb))
+print(paste('95\% lower bound for total excess deaths in 2017:',lb*4))
 
+```
