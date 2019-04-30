@@ -3,12 +3,12 @@
 ##' This is part of a workaround for an issue in the robustbase code
 ##' affecting sandwich covariance estimation.
 ##' The issue in question is issue #6471, robustbase project on R-Forge.
-##' 
+##'
 ##' @title Bread method for lmrob objects
 ##' @param x an lmrob object produced using an MM/SM estimator chain
-##' @param ... 
+##' @param ...
 ##' @return k by (k+1) matrix, with first column for scale estimate and rows, remaining cols for coefficients
-##' 
+##'
 ##' @author lrd author 2
 ##' @export
 bread.lmrob <- function(x, ...)
@@ -19,7 +19,7 @@ bread.lmrob <- function(x, ...)
       stop("bread.lmrob() supports only SM or MM estimates")
 
        psi <- chi <- ctrl$psi
-    if (is.null(psi)) 
+    if (is.null(psi))
         stop("parameter psi is not defined")
     stopifnot(is.numeric(c.chi <- ctrl$tuning.chi), is.numeric(c.psi <- ctrl$tuning.psi))
     r0 <- x$init$resid
@@ -35,10 +35,10 @@ bread.lmrob <- function(x, ...)
     w <- robustbase::Mpsi(r.s, cc = c.psi, psi = psi, deriv = 1)
     w0 <- robustbase::Mchi(r0.s, cc = c.chi, psi = chi, deriv = 1)
     x.wx <- crossprod(xmat, xmat * w)
-    if (inherits(A <- tryCatch(solve(x.wx) * scale, error = function(e) e), 
+    if (inherits(A <- tryCatch(solve(x.wx) * scale, error = function(e) e),
         "error")) {
         A <- tryCatch(solve(x.wx, tol = 0) * scale, error = function(e) e)
-        if (inherits(A, "error")) 
+        if (inherits(A, "error"))
             { stop("X'WX is singular.") } else warning("X'WX is almost singular.")
     }
     ## At this point A has no sample size scaling, as in robustbase:::.vcov.avar1
@@ -47,16 +47,16 @@ bread.lmrob <- function(x, ...)
     colnames(a) <- "sigma"
     ## Now we restore sample size scaling to A
     A <- n * A
-    
+
     cbind(a, A)
 }
-##' 
+##'
 ##'
 ##' Only SM or MM estimates supported
-##' 
+##'
 ##' @title Estfun method for lmrob objects
 ##' @param x a fitted lmrob
-##' @param ... 
+##' @param ...
 ##' @return an estfun object, as in the sandwich package
 ##' @author lrd author 2
 ##' @export
@@ -70,7 +70,7 @@ estfun.lmrob <- function(x, ...)
   xmat <- model.matrix(x)
     xmat <- naresid(x$na.action, xmat)
        psi <- chi <- ctrl$psi
-    if (is.null(psi)) 
+    if (is.null(psi))
         stop("parameter psi is not defined")
     stopifnot(is.numeric(c.chi <- ctrl$tuning.chi), is.numeric(c.psi <- ctrl$tuning.psi))
     r0 <- x$init$resid
@@ -103,21 +103,21 @@ estfun.lmrob <- function(x, ...)
 ##' This is part of a workaround for an issue in the robustbase code
 ##' affecting sandwich covariance estimation.
 ##' The issue in question is issue #6471, robustbase project on R-Forge.
-##' 
+##'
 ##' @title Sandwich estimate of covariance
 ##' @param x a fitted model object, as in sandwich::sandwich
-##' @param bread. function or matrix, 
+##' @param bread. function or matrix,
 ##' @param meat. function or matrix, as in sandwich::sandwich
 ##' @param ... additional arguments to downstream methods, as in sandwich::sandwich
 ##' @return matrix, bread %*% meat %*% t(bread)
 ##' @author lrd author 2
-sandwich <- function (x, bread. = sandwich::bread, meat. = sandwich::meat, ...) 
+LRDsandwich <- function (x, bread. = sandwich::bread, meat. = sandwich::meat, ...)
 {
-    if (is.list(x) && !is.null(x$na.action)) 
+    if (is.list(x) && !is.null(x$na.action))
         class(x$na.action) <- "omit"
-    if (is.function(bread.)) 
+    if (is.function(bread.))
         bread. <- bread.(x)
-    if (is.function(meat.)) 
+    if (is.function(meat.))
         meat. <- meat.(x, ...)
     n <- NROW(sandwich::estfun(x))
     ## the t() in the below is the only difference from sandwich::sandwich()
