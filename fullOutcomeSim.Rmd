@@ -6,14 +6,13 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,error=FALSE)
+knitr::opts_chunk$set(echo = TRUE,error=FALSE,message=FALSE,warning=FALSE)
 knitr::opts_knit$set(root.dir = '.')
 ```
 
 General dependencies.
 ```{r}
 library('knitr')
-#library('lrd')
 library('kableExtra')
 source('R/simCIhet.r')
 source('R/functions.r')
@@ -65,15 +64,15 @@ if(require('parallel')&exists('cl')&inherits(cl,"cluster")){
 
 set.seed(201609)
 st <- system.time(outcomeSim <- totalOutcomeSim(nrep,cl))
-save(outcomeSim, file=paste0('inst/outcomeSim',Sys.Date(),'.RData'))
+save(outcomeSim, file=paste0('./outcomeSim',Sys.Date(),'.RData'))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
-    file='dataResults/fullOutcomeSim-runtime.txt', append=TRUE)
+    file='fullOutcomeSim-runtime.txt', append=TRUE)
 } else{ ### load the most recent simulation
-  sims <- sort(grep('outcomeSim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+  sims <- sort(grep('outcomeSim',list.files('.'),value=TRUE),decreasing=TRUE)
 
-  load(paste0('inst/',sims[1]))
+  load(paste0('./',sims[1]))
 }
 ```
 
@@ -83,14 +82,14 @@ capture.output({
   displayCIsimHet(outcomeSim,tau=0,
     caption=paste('Empirical bias and 95\\% confidence interval coverage (\\%) and width for the analyses of',prettyNum(ncol(outcomeSim[[1]]),big.mark=','),'simulated datasets using either permutation tests, limitless or local OLS methods. The average treatment effect was zero in all conditions; in six conditions the effect was uniquely zero, and in three it was distributed as $t_3$.'),
     label='tab:level')
-  },file="inst/r1/tab-levelSimulation.tex")
+  },file="./tab-levelSimulation.tex")
 ```
 Here are the results, for all cases run:
 
 ```{r fullOutSim}
 allRes <- dispAllSimp(outcomeSim)
 rownames(allRes) <- NULL
-save(allRes,file=paste0('inst/levelSimResults',Sys.Date(),'.RData'))
+save(allRes,file=paste0('./levelSimResults',Sys.Date(),'.RData'))
 ```
 
 ###Full Results: Bias
@@ -129,15 +128,15 @@ if (nreps) {
 
 set.seed(201609)
 st2 <- system.time(totalPoly <- totalPolySim(nreps,cl))
-save(totalPoly,file=paste0("inst/totalPolySim",Sys.Date(),".RData"))
+save(totalPoly,file=paste0("./totalPolySim",Sys.Date(),".RData"))
 cat(paste0(date(), ', nreps=', nreps, '\n'),
     paste(c(names(st),'\n', collapse=T)),
     st,
     file='dataResults/totalPolySim-runtime.txt', append=TRUE)
 } else{
-  psims <- sort(grep('totalPolySim',list.files('./inst/'),value=TRUE),decreasing=TRUE)
+  psims <- sort(grep('totalPolySim',list.files('.'),value=TRUE),decreasing=TRUE)
 
-  load(paste0('inst/',psims[1]))
+  load(paste0('./',psims[1]))
 }
 ```
 
@@ -149,7 +148,7 @@ results for normally-distributed errors.
 tab.paper <- prntTab(totalPoly,5,full=FALSE,md=FALSE)
 capture.output(
 polyLatex5(tab.paper,full=FALSE,caption=paste0('Results from ',prettyNum(ncol(totalPoly[[1]]),big.mark=','),' simulations of polynomial specifications for RDD analysis, using limitless, OLS, or local linear regression. Data-generating models (DGM) were as depicted in Figure~\\ref{fig:dgms}, with $t_{3}$ errors; sample size for all runs was 500; there was no treatment effect.'),label='tab:poly'),
-    file="inst/r1/tab-polynomialSimulation.tex")
+    file="./tab-polynomialSimulation.tex")
 
 tab <- prntTab(totalPoly,5,full=TRUE,md=FALSE)
 #rownames(tab) <- rep(c('level','RMSE','bias','sd'),6)

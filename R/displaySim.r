@@ -1,3 +1,114 @@
+###########################################################################################
+### Table 3 simulation (linear)
+###########################################################################################
+eachCase <- function(case,eff=0)
+    sapply(c('sh','ik','cft'),
+           function(method) c(bias=case[paste0(method,'.est')]-eff,
+                              cover=case[paste0(method,'.CIl')]<=eff &
+                                  case[paste0(method,'.CIh')]>=eff,
+                              width=case[paste0(method,'.CIh')]-
+                                  case[paste0(method,'.CIl')])
+        )
+
+levTabCI <- function(res,eff=0){
+    out <- NULL
+     for(n in c(50,250,2500))
+         for(err in c('norm','t')){
+             run <- res[[paste(n,eff,err,sep='_')]]
+            row <- NULL
+            for(meth in c('cft','sh','ik'))
+                row <- c(row,
+                         if(is.list(run))
+                             mean(sapply(run,function(x) x[paste0(meth,'.p')])<0.05,na.rm=TRUE)
+                         else mean(run[paste0(meth,'.p'),]<0.05))
+
+             out <- rbind(out,row)
+             rownames(out)[nrow(out)] <- paste(err,n)
+         }
+    colnames(out) <- c('cft','sh','ik')
+    out
+}
+
+displayCIsimHet <- function(res,tau=0,caption='',label=''){
+  ## omit cases where one of the methods (ours?) didn't converge, gave NA
+  res <- lapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]))
+
+  res <- res[grep(paste0('_tau',tau,'W'),names(res),fixed=TRUE)]
+  res <- res[grepl('Wnone|Wt',names(res))]
+
+
+  tab0 <- lapply(res,function(x)
+    apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
+      1:2,mean))
+
+  tab0 <- lapply(tab0,function(xx){
+    out <- rbind(sprintf("%.2f",round(xx[1,],2)),sprintf("%i",as.integer(round(xx[2,]*100))),sprintf("%.2f",round(xx[3,],2)))
+    dimnames(out) <- dimnames(xx)
+    out})
+
+  cat('
+\\begin{table}
+\\footnotesize
+\\begin{tabular}{ccc|ccc|ccc|ccc}
+\\hline
+
+&&& \\multicolumn{ 3 }{c}{Permutation}&\\multicolumn{ 3 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 3 }{c}{Local OLS}\\\\
+$n$& Effect& Error &', paste(rep(c('Bias','Cover.','Width'),3),collapse='&'),'\\\\
+\\hline \n')
+  for(n in c(50,250,2500))
+#    for(err in c('norm','t')){
+    for(rr in c('n0','t0','tt')){
+      row <- NULL
+      err <- ifelse(rr=='n0','norm','t')
+      eff <- ifelse(rr=='tt','$t_3$',0)
+      for(meth in c('cft','sh','ik'))
+        row <- c(row,tab0[[paste0(n,'_err',err,'_tau',tau,'W',ifelse(rr=='tt','t','none'))]][,meth])
+      if(err=='norm'){
+        cat('\\hline \n')
+        cat('\\multirow{3}{*}{',n,'} &0& $\\mathcal{N}(0,1)$ &')
+      } else cat(' & ',eff,'& $t_3$ &')
+      cat(paste(row,collapse='&'),'\\\\ \n')
+    }
+  cat('\\hline
+\\end{tabular}
+  \\caption{',caption,'}
+  \\label{',label,'}\n',sep='')
+  cat('\\end{table}\n')
+}
+
+dispAllSimp <- function(res){
+  res <- sapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]),simplify=FALSE)
+  tab0 <- lapply(names(res),function(nn){
+    x <- res[[nn]]
+    tau <- ifelse(grepl('tau0.2',nn,fixed=TRUE),0.2,0)
+    apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
+      1:2,mean)
+  })
+
+  cond <- strsplit(names(res),'_')
+  cond <- lapply(cond,function(x) gsub('err|tau','',x))
+  cond <- lapply(cond,function(x) c(x[1],x[2],strsplit(x[3],'W')[[1]]))
+  cond <- do.call('rbind',cond)
+  out <- data.frame(tab0[[1]],stringsAsFactors=FALSE)
+  out <- cbind(cond[rep(1,3),],c('Bias','Coverage','Width'),out)
+
+  for(i in 2:length(tab0))
+    out <- rbind(out,cbind(cond[rep(i,3),],
+      c('Bias','Coverage','Width'),
+      data.frame(tab0[[i]],stringsAsFactors=FALSE)))
+
+
+  names(out) <- c('n','error','ATE','TE randomness','meas','Limitless','Local-OLS','Permutation')
+
+  out
+}
+
+
+###########################################################################################
+### Table 4 simulation (polynomial)
+###########################################################################################
+
+
 #' @export
 ## dgms <- function(tp){
 
@@ -188,80 +299,3 @@ polyLatex5 <- function(tab,full,caption='',label='tab:poly'){
 }
 
 
-##### functions to summarize outcome simulation
-###
-
-
-toMat <- function(run){
-    if(is.matrix(run) | is.data.frame(run)) return(t(run))
-    ncomp <- sapply(run,length)
-    run <- run[ncomp==12]
-    do.call('rbind',run)
-}
-
-#' @export
-simlevels <- function(os){
-    tab <- NULL
-    for(n in c(50,250,2500))
-        for(err in c('norm','t')){
-            run <- toMat(os[[paste0(n,'_0_',err)]])
-            #colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
-            row <- NULL
-            for(meth in c('cft','sh','ik')){
-                col <- pmatch(paste0(meth,'.p'),colnames(run))
-                row <- c(row,mean(run[,col]<0.05,na.rm=TRUE))
-                names(row)[length(row)] <- meth
-            }
-            tab <- rbind(tab,row)
-            rownames(tab)[nrow(tab)] <- paste(err,n)
-        }
-
-    tab
-}
-
-#' @export
-simpower <- function(os){
-    tab <- NULL
-    for(n in c(50,250,2500))
-        for(err in c('norm','t')){
-            run <- toMat(os[[paste0(n,'_0.2_',err)]])
-            #colnames(run)[-c(1:9)] <- gsub('sh','ik',colnames(run)[-c(1:9)])
-            row <- NULL
-            for(meth in c('cft','sh','ik')){
-                col <- pmatch(paste0(meth,'.p'),colnames(run))
-                row <- c(row,mean(run[,col]<0.05,na.rm=TRUE))
-                    names(row)[length(row)] <- meth
-                }
-            tab <- rbind(tab,row)
-            rownames(tab)[nrow(tab)] <- paste(err,n)
-        }
-
-    tab
-}
-
-#' @export
-prntOutcomeSim <- function(levTab,powTab,caption,label){
-cat('
-\\begin{table}
-\\footnotesize
-\\begin{tabular}{cc|ccccccc}
-\\hline
-
-&&& \\multicolumn{ 2 }{c}{Permutation}&\\multicolumn{ 2 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 2 }{c}{Local OLS}\\\\
-$n$& Error &&', paste(rep('Level&Power',ncol(levTab)),collapse='&'),'\\\\
-\\hline \n')
-for(i in 1:nrow(levTab)){
-    spec <- strsplit(rownames(levTab)[i],' ')[[1]]
-    if(spec[1]=='norm'){
-        cat('\\hline \n')
-        cat('\\multirow{2}{*}{',round(as.numeric(spec[2])),'} & $\\mathcal{N}(0,1)$ &&')
-    } else cat(' & $t_3$ &&')
-    cat(paste(paste(round(levTab[i,]*100),round(powTab[i,]*100),sep='&'),collapse='&'),'\\\\ \n')
-}
-cat('\\hline
-\\end{tabular}
-\\caption{',caption,'}
-\\label{',label,'}',sep='')
-cat('\\end{table}\n')
-
-}

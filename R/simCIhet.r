@@ -8,7 +8,7 @@ tryNA <- function(expr,num=1){
 }
 
 ####################################
-#### Simulation Functions
+#### Table 3 simulation (linear)
 ##############################
 #' Create simulated data set
 #'
@@ -143,7 +143,7 @@ totalOutcomeSim <- function(nreps=5000,cluster=NULL){
         for(tauErr in c('none','some')){
           for(tauMean in c(0,0.2)){
             if(tauErr=='some') tauErr <- ifelse(tdist,'t','norm')
-            print(paste(n,tdist,tauErr,tauMean))
+            message(paste(n,tdist,tauErr,tauMean))
             res[[paste0(n,'_','err',ifelse(tdist,'t','norm'),'_','tau',tauMean,'W',tauErr)]] <-
               appFunc(1:nreps,function(i) totalOutcomeOne(n,tdist,frc=0,tauErr=tauErr,tauMean=tauMean))
           }
@@ -154,165 +154,19 @@ totalOutcomeSim <- function(nreps=5000,cluster=NULL){
 }
 
 
-### make table with bias, coverage, CI width
-
-eachCase <- function(case,eff=0)
-    sapply(c('sh','ik','cft'),
-           function(method) c(bias=case[paste0(method,'.est')]-eff,
-                              cover=case[paste0(method,'.CIl')]<=eff &
-                                  case[paste0(method,'.CIh')]>=eff,
-                              width=case[paste0(method,'.CIh')]-
-                                  case[paste0(method,'.CIl')])
-        )
-
-levTabCI <- function(res,eff=0){
-    out <- NULL
-     for(n in c(50,250,2500))
-         for(err in c('norm','t')){
-             run <- res[[paste(n,eff,err,sep='_')]]
-            row <- NULL
-            for(meth in c('cft','sh','ik'))
-                row <- c(row,
-                         if(is.list(run))
-                             mean(sapply(run,function(x) x[paste0(meth,'.p')])<0.05,na.rm=TRUE)
-                         else mean(run[paste0(meth,'.p'),]<0.05))
-
-             out <- rbind(out,row)
-             rownames(out)[nrow(out)] <- paste(err,n)
-         }
-    colnames(out) <- c('cft','sh','ik')
-    out
-}
 
 
-
-displayCIsim <- function(res,tau=0,add){
-  ## omit cases where one of the methods (ours?) didn't converge, gave NA
-  #res <- lapply(res,function(x) if(is.list(x)) do.call('rbind',x[sapply(x,length)==15]) else t(x))
-  res <- lapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]))
-
-  res <- res[grep(paste0('_tau',tau,'W'),names(res),fixed=TRUE)]
-  res <- res[grepl('Wnone',names(res),fixed=TRUE)&add]
-
-  tab0 <- lapply(res,function(x)
-    apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
-      1:2,mean))
-
-
-  cat('
-\\begin{table}
-\\footnotesize
-\\begin{tabular}{cc|ccc|ccc|ccc}
-\\hline
-
-&& \\multicolumn{ 3 }{c}{Permutation}&\\multicolumn{ 3 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 3 }{c}{Local OLS}\\\\
-$n$& Error &', paste(rep(c('Bias','Coverage','Width'),3),collapse='&'),'\\\\
-\\hline \n')
-  for(n in c(50,250,2500))
-    for(err in c('norm','t')){
-      row <- NULL
-      for(meth in c('cft','sh','ik'))
-        row <- c(row,tab0[[paste0(n,'_err',err,'_tau',tau,'W',het)]][,meth])
-      if(err=='norm'){
-        cat('\\hline \n')
-        cat('\\multirow{2}{*}{',n,'} & $\\mathcal{N}(0,1)$ &')
-      } else cat(' & $t_3$ &')
-      cat(paste(round(row,2),collapse='&'),'\\\\ \n')
-    }
-  cat('\\hline
-\\end{tabular}\n')
-  #\\caption{',caption,'}
-  #\\label{',label,'}',sep='')
-  cat('\\end{table}\n')
-}
-
-
-
-displayCIsimHet <- function(res,tau=0,caption='',label=''){
-  ## omit cases where one of the methods (ours?) didn't converge, gave NA
-  res <- lapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]))
-
-  res <- res[grep(paste0('_tau',tau,'W'),names(res),fixed=TRUE)]
-  res <- res[grepl('Wnone|Wt',names(res))]
-
-
-  tab0 <- lapply(res,function(x)
-    apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
-      1:2,mean))
-
-  tab0 <- lapply(tab0,function(xx){
-    out <- rbind(sprintf("%.2f",round(xx[1,],2)),sprintf("%i",as.integer(round(xx[2,]*100))),sprintf("%.2f",round(xx[3,],2)))
-    dimnames(out) <- dimnames(xx)
-    out})
-
-  cat('
-\\begin{table}
-\\footnotesize
-\\begin{tabular}{ccc|ccc|ccc|ccc}
-\\hline
-
-&&& \\multicolumn{ 3 }{c}{Permutation}&\\multicolumn{ 3 }{c}{\`\`Limitless\'\'}&\\multicolumn{ 3 }{c}{Local OLS}\\\\
-$n$& Effect& Error &', paste(rep(c('Bias','Cover.','Width'),3),collapse='&'),'\\\\
-\\hline \n')
-  for(n in c(50,250,2500))
-#    for(err in c('norm','t')){
-    for(rr in c('n0','t0','tt')){
-      row <- NULL
-      err <- ifelse(rr=='n0','norm','t')
-      eff <- ifelse(rr=='tt','$t_3$',0)
-      for(meth in c('cft','sh','ik'))
-        row <- c(row,tab0[[paste0(n,'_err',err,'_tau',tau,'W',ifelse(rr=='tt','t','none'))]][,meth])
-      if(err=='norm'){
-        cat('\\hline \n')
-        cat('\\multirow{3}{*}{',n,'} &0& $\\mathcal{N}(0,1)$ &')
-      } else cat(' & ',eff,'& $t_3$ &')
-      cat(paste(row,collapse='&'),'\\\\ \n')
-    }
-  cat('\\hline
-\\end{tabular}
-  \\caption{',caption,'}
-  \\label{',label,'}\n',sep='')
-  cat('\\end{table}\n')
-}
-
-
-dispAllSimp <- function(res){
-  res <- sapply(res,function(x) t(x[,apply(x,2,function(cc) !any(is.na(cc)))]),simplify=FALSE)
-  tab0 <- lapply(names(res),function(nn){
-    x <- res[[nn]]
-    tau <- ifelse(grepl('tau0.2',nn,fixed=TRUE),0.2,0)
-    apply(sapply(1:nrow(x),function(i) eachCase(x[i,],eff=tau),simplify='array'),
-      1:2,mean)
-  })
-
-  cond <- strsplit(names(res),'_')
-  cond <- lapply(cond,function(x) gsub('err|tau','',x))
-  cond <- lapply(cond,function(x) c(x[1],x[2],strsplit(x[3],'W')[[1]]))
-  cond <- do.call('rbind',cond)
-  out <- data.frame(tab0[[1]],stringsAsFactors=FALSE)
-  out <- cbind(cond[rep(1,3),],c('Bias','Coverage','Width'),out)
-
-  for(i in 2:length(tab0))
-    out <- rbind(out,cbind(cond[rep(i,3),],
-      c('Bias','Coverage','Width'),
-      data.frame(tab0[[i]],stringsAsFactors=FALSE)))
-
-
-  names(out) <- c('n','error','ATE','TE randomness','meas','Limitless','Local-OLS','Permutation')
-
-  out
-}
 
 
 ###############
-### polynomial sim
+### table 4 simulation (polynomial)
 ###############
 mu3 <- function(x){
     ifelse(x<0,1.27*x-.5*7.18*x^2+0.7*20.21*x^3+1.1*21.54*x^4+1.5*7.33*x^5,
     .84*x-0.1*3.00*x^2-0.3*7.99*x^3-0.1*9.01*x^4+3.56*x^5)
 }
 
-### from Wasserman "all of nonparametric stats" p.99
+### from Wasserman "all of nonparametric stats" p.99 (just the sine function really)
 mu4 <- function(x)
   sin(3*x)
 
@@ -421,51 +275,5 @@ totalPolySim <- function(nreps=5000,cluster=NULL){
     res
 }
 
-
-
-polySimShape <- function(nreps=5000,shape,cluster=NULL){
-
-    appFunc <- if(is.null(cluster)) sapply else function(X,FUN) parSapply(cl=cluster,X=X,FUN=FUN)
-
-    res <- list()
-                                        #B=5000
-    n=500
-    tau=0
-    degs <- 1:5
-
-    for(tdist in c(TRUE,FALSE)){
-        res[[paste0(shape,'_',ifelse(tdist,'t','norm'))]] <-
-            appFunc(1:nreps,function(i) polySim(n,degs,shape,tdist,tau))
-    }
-
-    res
-}
-
-
-levTabCI <- function(res,tau){
-    out <- NULL
-    rn <- NULL
-    for(n in c(50,250,2500))
-        for(err in c('t','norm')){
-            rn <- c(rn,paste(err,n))
-            r1 <- t(res[[paste0(n,'_err',err,'_tau',tau)]])
-            out <- rbind(out,c(sh=mean(r1[,'sh.p']<0.05,na.rm=TRUE),ols=mean(r1[,'ik.p']<0.05),cft=mean(r1[,'cft.p']<0.05)))
-        }
-    rownames(out) <- rn
-    out
-}
-
-levTabCI <- function(res,tau){
-    out <- NULL
-    rn <- NULL
-    for(n in c(50,250,2500))
-        for(err in c('t','norm')){
-            rn <- c(rn,paste(err,n))
-            r1 <- t(res[[paste0(n,'_err',err,'_tau',tau)]])
-            out <- rbind(out,c(sh=mean(r1[,'sh.p']<0.05,na.rm=TRUE),ols=mean(r1[,'ik.p']<0.05),cft=mean(r1[,'cft.p']<0.05)))
-        }
-    rownames(out) <- rn
-    out
-}
 
 
