@@ -21,14 +21,13 @@ To reproduce the results in the paper:
     - `parallel` to run simulations in parallel
     - `rmarkdown` to make analysis documents more easily
 2. In `R`, Run data analysis for Maria Study:
-    - Dataset available from private github repo [https://github.com/alexisrsantos/Deaths_Puerto_Rico_JAMA]
+    - Dataset available from private github repo https://github.com/alexisrsantos/Deaths_Puerto_Rico_JAMA
     - Store data as `extdata/death_file_JAMA.csv`
-    - Then run:
+    - Then run to create analysis file `maria.md`
 ```
 library(knitr)
 knit('maria.Rmd')
 ```
-    - Creates analysis file `maria.md`
 3. In `R`, Run data analysis for AP Study: (this automatically downloads publicly available data)
 ```
 knit('dataAnalysis.Rmd')
