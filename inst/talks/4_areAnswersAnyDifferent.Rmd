@@ -29,15 +29,19 @@ its very narrow $\mathcal{W}$, and consequent loss of power; its discrepant esti
 </div>
 
 
-## Simulations with $E(Y_C | R)$ linear, well-specified {.build .smaller}
+## Simulations: linear, well-spec.'d $E(Y \vert R$) {.build .smaller}
 
- <img src="images/tab-levelSimulation.jpg" width="768px" height="324px" />
+![linear simulation](./images/tab-levelSimulation.jpg)
+<!--<img src="images/tab-levelSimulation.jpg" width="770px" height="335px" />-->
 
 - Permutation (Cattaneo et al '14) shows inadmissible bias, undercoverage.
 - Limitless, Local OLS use a well-specified $E(Y_C | R)$ model. They cover well, w/ little bias.
 - Limitless's CIs narrower with heavier-tailed effects ($Y_{Ti}-Y_{Ci}$) and/or errors ($Y_i-E(Y | R)$). 
 
+## Simulations: polynomial regression
 
+![Polynomial sim conditions](./images/dgms-1.jpg)
+![Polynomial sim results](./images/tab-polynomialSimulation.jpg)
 
 ## Are the answers any different?
 
