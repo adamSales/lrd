@@ -1,8 +1,8 @@
 ---
 title: "Limitless Regression Discontinuity"
 author: "Adam Sales & Ben Hansen*"
-date: "Biostatistics Seminar, Ohio State (Mar. '19)"
-bibliography: ../r1/causalinference.bib
+date: "ORC Seminar, MIT (May '19)"
+bibliography: ../r1/lrd-r1.bib
 output: 
   ioslides_presentation:
      widescreen: false
