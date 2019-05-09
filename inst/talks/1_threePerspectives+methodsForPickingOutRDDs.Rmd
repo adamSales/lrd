@@ -42,7 +42,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 
 <div class="notes">
-- It's one thing to say "there was natural randomization," another to assert that every treatment assignment was random in this way. 
+- It's one thing to say "there was natural randomization," another to assert a precise analogy to a specific hypothetical RCT. 
 - To address this challenge, methodologists have proposed preliminary specification tests, and procedures built on specification tests.
 - I'll review 2 of the most common tests and procedures before arguing that they aren't quite up to the task.
 </div>
@@ -66,7 +66,7 @@ Problem: _net of the running variable_ $R$ (college year 1 grade avg. or GPA), w
 
 - In general, $H'$ is sustainable with wider $\mathcal{W}$ than $H$. (Don't throw away good data!)
 - In Lindo et al dataset, permutation tests comparing $X$es above and below 0 reject for windows w/ half-width $> .3$
-- The window we considered had half-width $.5$.  Removing linear trend, its residuals are perfectly balanced.  
+- Our analysis sets width of $\mathcal{W}$ to precisely 1 grade point, our guess at the S.E. of measurent for freshman year GPA.  Removing linear trend, its residuals are perfectly balanced.  
 
 </div>
 

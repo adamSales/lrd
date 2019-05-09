@@ -19,7 +19,7 @@
 |Local Permutation |0.11     |(0.05,0.17) |[0.01,0.18)   |  3400|
 
 - Here limit-based Local OLS, Limitless tell similar stories.  (If present, contamination was benign.)
-- Here OLS's CI narrower, due to its $n$/$\mathcal{W}$ being larger. (Characteristic of this analysis, not these methods.) 
+- Here OLS's CI narrower, due to its $\mathcal{W}$ & $n$ being larger. (Characteristic of this analysis, not these methods.) 
 - Local Permutation tells a different story.  (Also suffers known bias...)
 
 <div class="notes"> 
@@ -36,7 +36,7 @@
 ![linear simulation](./images/tab-levelSimulation.jpg)
 <!--<img src="images/tab-levelSimulation.jpg" width="770px" height="335px" />-->
 
-- Permutation (Cattaneo et al '14) shows inadmissible bias, undercoverage.
+- Permutation (Cattaneo et al 2015) shows inadmissible bias, undercoverage.
 - Limitless, Local OLS use a well-specified $E(Y_C | R)$ model. They cover well, w/ little bias.
 - Limitless's CIs narrower with heavier-tailed effects ($Y_{Ti}-Y_{Ci}$) and/or errors ($Y_i-E(Y | R)$). 
 
