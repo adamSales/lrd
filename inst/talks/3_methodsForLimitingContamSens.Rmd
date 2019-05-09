@@ -38,7 +38,7 @@ How does this affect $\hat\tau$? --- A _contamination sensitivity_ problem, if n
 - After much study, robustness literature identified pairs $(\psi, s)$ that handle groups of outliers while retaining $\sqrt{n}$ rates, efficiency.
 - E.g., "MM with bisquare psi-function and robust scale",...
 - In R, `robustbase::lmrob`; in Stata, `mmregress`.
-- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample, OLS won't do. Need robust MM regression [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
+- <!-- Asymptotically,--> To limit sensitivity to contamination of a $O(n^{-1/2})$ share of the sample --- the smallest contamination share you can expect specification testing to detect --- OLS won't do. Need robust MM regression [@he1991localbreakdown; @yohaiZamar1997locallyrobustMestimates].
 
 
 ## Methods for limiting contamination sensitivity

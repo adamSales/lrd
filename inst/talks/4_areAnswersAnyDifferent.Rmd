@@ -10,26 +10,28 @@
 
 ##  Data analysis
 
- Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare psi tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
+ Academic probation and later GPA at the 3 Canadian colleges:
  
 |                  |Estimate |95\% CI     |$\mathcal{W}$ |n     |
 |:-----------------|:--------|:-----------|:-------------|-----:|
+|Local OLS         |0.23     |(0.19,0.28) |[0.01,1.24)   | 26000| 
 |Limitless         |0.24     |(0.17,0.31) |[0.01,0.50)   | 10000|
 |Local Permutation |0.11     |(0.05,0.17) |[0.01,0.18)   |  3400|
-|Local OLS         |0.23     |(0.19,0.28) |[0.01,1.24)   | 26000| 
+
+- Here limit-based Local OLS, Limitless tell similar stories.  (If present, contamination was benign.)
+- Here OLS's CI narrower, due to its $n$/$\mathcal{W}$ being larger. (Characteristic of this analysis, not these methods.) 
+- Local Permutation tells a different story.  (Also suffers known bias...)
 
 <div class="notes"> 
 
-- "Local OLS" method targets a difference of limits.  That, other diff's
-  from our method didn't change much in this case. (The McCrary test
-  finding says contamination could have occurred, not that it did.)
--  "Local Permutation" fails to adjust for the running variable, explaining both:
-its very narrow $\mathcal{W}$, and consequent loss of power; its discrepant estimate, as a result of residual bias from the running variable.
-    
+- (The McCrary test finding said contamination _could have_ occurred, not that it did.)
+- 
+-  "Local Permutation" suffers known bias, of the type we saw in using permutations to test for imbalance at baseline.  But is it enough to distort the estimate?  Simulations will suggest the answer is yes.
+
 </div>
 
 
-## Simulations: linear, well-spec.'d $E(Y \vert R$) {.build .smaller}
+## Simulation: linear, well-spec.'d $E(Y \vert R$) {.build .smaller}
 
 ![linear simulation](./images/tab-levelSimulation.jpg)
 <!--<img src="images/tab-levelSimulation.jpg" width="770px" height="335px" />-->
@@ -38,7 +40,7 @@ its very narrow $\mathcal{W}$, and consequent loss of power; its discrepant esti
 - Limitless, Local OLS use a well-specified $E(Y_C | R)$ model. They cover well, w/ little bias.
 - Limitless's CIs narrower with heavier-tailed effects ($Y_{Ti}-Y_{Ci}$) and/or errors ($Y_i-E(Y | R)$). 
 
-## Simulations: polynomial regression
+## Simulation: polynomial regression
 
 ![Polynomial sim conditions](./images/dgms-1.jpg)
 ![Polynomial sim results](./images/tab-polynomialSimulation.jpg)

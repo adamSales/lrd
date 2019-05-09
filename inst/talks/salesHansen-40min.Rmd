@@ -48,14 +48,15 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 - In limit-based literature, main concern is with possibility that bandwidth/$\mathcal{W}$ is too wide.  (What about $\mathcal{W}$s that are too narrow, magnifying impact of contaminants?) To be "robust" to overly wide $\mathcal{W}$, prominent limit-based methods use local polynomials --- along w/ unbounded $\rho(\cdot)$, non-robust $s(\cdot)$.
 - In the local randomization camp, recent methods narrow $\mathcal{W}$ until $H: X \perp Z| R\in \mathcal{W}$ is not rejected. Typically there is no allowance for $Y$--$R$ association other than via $Z=\mathcal{I}[R<0]$.  (What about $X$s that are plainly tied up with $R$?)
 - Both camps wind up reducing $n$, if for different reasons.  Contamination becomes harder to detect, and more difficult to compensate for.
-- Our robust M-estimation-based method avoids these traps. 
-- Furthermore, under moderate departure from linearity, robust M-estimation markedly improves power & type 1 error rates; see Sec. 5 of manuscript (`arxiv.org/abs/1403.5478`)
+- Our "Limitless" method avoids these traps. 
+- Furthermore, due to its use of robust M-estimation, it avoids
+OLS's notorious instability with higher-order polynomials [@gelman2016high]. 
 <!--
 - Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to sample purification via specification tests.
 -->
 
 
-## Appendix: robustness weights diagnostic {.build}
+## Appendix: robustness weights {.build}
 
 - Robust regression fitting generates "robustness" weights $\in [0,1]$, showing which observations the fitter deemed to be anomalous.
 - If $\mathcal{W}$ is still too wide, or its donut hole isn't wide enough, plot of robustness weights against $R$ gives an additional shot at detection.  
