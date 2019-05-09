@@ -54,6 +54,16 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 - Does a narrow enough "bandwidth" such as our $R\in [-.5, .5]$ entail that MM estimates are also bounded influence GM estimates?  If so, then $\mathrm{MaxBias}_\epsilon = O(\epsilon)$, not $O(\sqrt{\epsilon})$, as $\epsilon \downarrow 0$ [@he1991localbreakdown] --- a more satisfying complement to sample purification via specification tests.
 -->
 
+
+## Appendix: robustness weights diagnostic {.build}
+
+- Robust regression fitting generates "robustness" weights $\in [0,1]$, showing which observations the fitter deemed to be anomalous.
+- If $\mathcal{W}$ is still too wide, or its donut hole isn't wide enough, plot of robustness weights against $R$ gives an additional shot at detection.  
+- ![](./images/robwts.jpeg)
+
+<!--  (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)-->
+
+
 ## References {.smaller}
 
 <style>

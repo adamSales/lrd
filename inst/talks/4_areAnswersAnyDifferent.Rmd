@@ -8,16 +8,6 @@
 > A: Sometimes yes, sometimes no....
 
 
-## Simulation {.build .smaller}
-
- <img src="images/tab-levelSimulation.jpg" width="768px" height="324px" />
- 
-- Each method mildly anti-conservative for small $n$.  
-- Only limitless, local OLS improve as $n$ increases.
-
-- Under Normal errors, limitless and local OLS are similarly powered.
-- Under $t_3$ errors, limitless has much more power.
-
 ##  Data analysis
 
  Regarding academic probation at the 3 Canadian universities, MM estimation w/ bisquare psi tells a different story than local randomization methods without detrending, but a similar story to a common limit-based method.
@@ -38,13 +28,15 @@ its very narrow $\mathcal{W}$, and consequent loss of power; its discrepant esti
     
 </div>
 
-## The robustness weights diagnostic {.build}
 
-- Robust regression fitting generates "robustness" weights $\in [0,1]$, showing which observations the fitter deemed to be anomalous.
-- If $\mathcal{W}$ is still too wide, or its donut hole isn't wide enough, plot of robustness weights against $R$ gives an additional shot at detection.  
-- ![](./images/robwts.jpeg)
+## Simulations with $E(Y_C | R)$ linear, well-specified {.build .smaller}
 
-<!--  (To assign 0's to truly anomalous observations, not just any robust method will do; you need bounded influence regression.)-->
+ <img src="images/tab-levelSimulation.jpg" width="768px" height="324px" />
+
+- Permutation (Cattaneo et al '14) shows inadmissible bias, undercoverage.
+- Limitless, Local OLS use a well-specified $E(Y_C | R)$ model. They cover well, w/ little bias.
+- Limitless's CIs narrower with heavier-tailed effects ($Y_{Ti}-Y_{Ci}$) and/or errors ($Y_i-E(Y | R)$). 
+
 
 
 ## Are the answers any different?
