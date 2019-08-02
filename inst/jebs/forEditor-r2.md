@@ -1,0 +1,1 @@
+We've removed the undefined and potentially confusing symbol $\alpha_B$, following your and reviewer 3's suggestion. 
