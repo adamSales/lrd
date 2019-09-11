@@ -610,7 +610,7 @@ crosses 0, and a distinctly non-null regression relationship on either side of t
 threshold. How large an AP effect may we infer from
 these features?  How much of the data bear directly in this inference?
 
-\subsection{Choosing $\mathcal{W}$ and $\mu_{\beta}(\cdot)$} \label{sec:choosing-mathcalw-f}
+\subsection{Choosing $\mathcal{W}$ and $\mu_{\theta}(\cdot)$} \label{sec:choosing-mathcalw-f}
 The region %A relevant region in which to estimate a treatment effect is within
 $\mathcal{W}_{0.5} =  \pm $ 0.5 %$0.3$
 grade points %.
@@ -623,7 +623,7 @@ to C).
 Simplicity recommends a linear specification for the outcome
 regression on the forcing variable, and the scatter of $Y$ versus $R$
 did not suggest otherwise; so we designated
-$\mu_{\beta}(R_i)=\beta_0+\beta_1 R_i$
+$\mu_{\theta}(R_i)=\alpha+\beta R_i$
 %(subject to potential revision following diagnostic checks).
 and proceeded to specification checks, as
 discussed in Section~\ref{sec:specification}.
@@ -726,7 +726,7 @@ using the robust procedure of \S~\ref{sec:robustFitters}--\ref{sec:test-hypoth-n
 The first row of Table~\ref{tab:results} gives our main result, with
 window of analysis
 $\mathcal{W}=\{i: |R_i|\in (0,0.5)\}$ and a linear model of $\EE(Y_C|R)$,
-$\mu_\beta(R)=\beta_0+\beta_1 R$, estimating the TOTE based on subjects'
+$\mu_\theta(R)=\alpha+\beta R$, estimating the TOTE based on subjects'
 received treatments $D$. For the best fitting version
 of the model, robustness weights range from .28 to 1.
 These weights
@@ -746,7 +746,7 @@ The row labeled ``Adaptive $\mathcal{W}$'' reports the results using
 (0,$\Sexpr{SHdataDriven[['W']][2]}$)\}$.
 The ``Cubic'' row allows for a cubic
 relationship between first-year GPA and subsequent GPA, with
-$\mu_\beta(R)=\beta_0+\beta_1R+\beta_2R^2+\beta_3 R^3$.
+$\mu_\theta(R)=\alpha+\beta_1R+\beta_2R^2+\beta_3 R^3$.
 This specification performed well in simulations %available in an
 %online supplement.%
 described in Section~\ref{sec:simulation}. %Supplemental Appendix \ref{apnd:poly-sim}. %
@@ -971,7 +971,7 @@ dgms()
 \end{figure}
 
 When $Y$ may not be linear in $R$, flexibility in the
-$\mu_{\bm{\beta}}(R)$ function takes on added importance.
+$\mu_{\bm{\theta}}(R)$ function takes on added importance.
 % Though higher-order polynomials in $R$ offer that flexibility,
 % \citet{gelmanImbens} argue against using them in RDD settings, in part
 % because they magnify the leverage of outliers.
@@ -980,7 +980,7 @@ We ran an additional simulation to explore the potential of robust
 polynomial regression to mitigate influence, as discussed in
 \S~\ref{sec:test-hypoth-no} above, while adding flexibility
 to the specification of the $Y_{C}$ on $R$ regression.
-We compared limitless RD analysis, with $\mu_{\bm{\beta}}$ a polynomial in $R$ with
+We compared limitless RD analysis, with $\mu_{\bm{\theta}}$ a polynomial in $R$ with
 degree 1, 2, 3, 4, or 5 to analogous estimates from OLS.
 In the OLS regressions, we followed the advice of \citet[e.g.][, p. 318]{lee2010regression} and
 included interactions between the $R$-polynomial and $Z$.

@@ -670,7 +670,7 @@ $Y_{T} = Y_{C} + \tau D_{T}$, select a specification
 $\mu_{\beta}(\cdot)$ for $\EE(Y_{C}| R)$ %, %in the application of
 %Section~\ref{sec:appl-effect-acad}
 such as the
-linear model $\mu_{\beta}(R) =\beta_{0} + R\beta_{1}$, a window of
+linear model $\mu_{\beta}(R) =\alpha + R\beta$, a window of
 analysis $\mathcal{W}$, and a fitter.
 
 Then, separately for each hypothesis $H: \tau=\tau_0$ under
@@ -689,10 +689,10 @@ In practice it is expedient to use a near-equivalent
 test by modifying the detrending
 procedure.
 When regressing $Y_{H}$ on $R$, include an additive
-contribution from $Z$, so that $\mu_{\beta}(R) =\beta_{0} +
-R\beta_{1}$ is replaced with $\mu_{(\beta,\gamma)}(R) =\beta_{0} +
-\beta_{1}R + \gamma Z$. With sandwich estimates of
-$\text{Cov}\{(\hat{\beta}_{H}, \hat{\gamma}_{H})\}$,
+contribution from $Z$, so that $\mu_{\theta}(R) =\alpha +
+R\beta$ is replaced with $\mu_{(\theta,\gamma)}(R) =\alpha +
+\beta R + \gamma Z$. With sandwich estimates of
+$\text{Cov}\{(\hat{\theta}_{H}, \hat{\gamma}_{H})\}$,
 the $t$-ratio comparing $\hat{\gamma}_{H}$ to
 $\text{SE}_{s}(\hat{\gamma}_{H})$ induces a generalized score test \citep{boos1992genscoretest}. Implicitly it is a two-sample
 $t$-statistic with covariance adjustment for $R$ (with fitting via OLS,
@@ -739,7 +739,7 @@ Plotting % As
 % an indicator of robustness to non-constant effects.
 % (But is this overloading the discussion here?)
 robustness weights against residuals may expose opportunities to
-improve the fit of $\mu_{\beta}(R)$, or of the treatment effect model;
+improve the fit of $\mu_{\theta}(R)$, or of the treatment effect model;
 plotting them against $R$ may expose contaminated sub-regions
 of $\mathcal{W}$ that specification testing failed to remove
 \citep{maronna2006robust}.
