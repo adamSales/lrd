@@ -7,8 +7,8 @@
 
 <<echo=FALSE,include=FALSE>>=
 if(grepl('acs',Sys.info()['login'])){
-    dataResults_location <- '~/lrd/inst/' #(I suppose)
-    lrd_package_location <- '~/lrd/'
+    dataResults_location <- '~/lrdFull/lrd/inst/' #(I suppose)
+    lrd_package_location <- '~/lrdFull/lrd/'
 } else {
     dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
     lrd_package_location <- #modify as needed to fit your setup
@@ -193,7 +193,7 @@ library(perm)
 
 if(grepl('acs',Sys.info()['login'])){
     #dataResults_location <- '../jebs/dataResults/' #(I suppose)
-    lrd_package_location <- '~/lrd/'
+    lrd_package_location <- '~/lrdFull/lrd/'
 } else {
     #dataResults_location <- '~/Dropbox/adam.sales/jebs/dataResults/'
     lrd_package_location <- #modify as needed to fit your setup
@@ -538,7 +538,7 @@ sampling distribution of the treatment group residual mean $t(\bm{\resid},\bm{Z}
 value for all $\binom{N_0 + N_1}{N_1} =\binom{\Sexpr{N}}{\Sexpr{N1}}=\Sexpr{cardZ}$ possible permutations
 of $\bm{Z}$. The null distribution of $t(\bm{\resid}, \bm{Z})$ is simply that of the
 mean of a size-4, without-replacement sample from $\{\resid_1, \ldots, \resid_{12}\}$.
-It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in 
+It turns out that only \Sexpr{round(pval['nmore'])} permutations of $\bm{Z}$ result in
 test statistic values higher than the realized value
 $\bar{\resid}_{z=1}=$\Sexpr{prettyNum(round(testStat(z,rr)),big.mark=',')} (which is unique in
   the distribution).
@@ -1046,15 +1046,15 @@ independent of $R$ in a window around the cutoff.
 That assumption is plausible of neither the Hurricane Maria example nor the
 LSO case study.  In both settings, it is necessary to acknowledge
 and model the $R$--$Y$ relationship in order to set the stage for a
-credible claim of independence. The 
+credible claim of independence. The
 method of \citet{cattaneo2014randomization}
 %\marginpar{$\leftarrow$ Outdated cross-ref?}
 %(\S~\ref{sec:local-rand-based})
 performed poorly in our simulations
 (\S~\ref{sec:simulation}); its discrepant estimate of LSO's AP effect
-(Table~\ref{tab:alt}) embodies systematic error. 
+(Table~\ref{tab:alt}) embodies systematic error.
 
-In contrast, this paper's RDD analysis framework links 
+In contrast, this paper's RDD analysis framework links
 \textsc{ancova}- and local randomization heuristics.
 Residual ignorability \eqref{ycheck} assumes that the component of
 $Y_c$ that depends on $R$ may be modeled and removed, leaving
