@@ -566,8 +566,8 @@ trends in the absence of treatment.
 \input{lrd-sec2+3-r1}
 
 \section{The Effect of Academic Probation}\label{sec:appl-effect-acad}
-\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
-%\begin{figure}[!ht]
+%\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
+\begin{figure}[!ht]
 \centering
 %\mbox{
 %\subfigure[]{
@@ -584,8 +584,8 @@ Data are plotted with binning by unique value of first-year GPA, vertical coordi
 % GPAs.
 }
 \label{LSO}
-%\end{figure}
-\end{wrapfigure}
+\end{figure}
+%\end{wrapfigure}
 % Their research question was whether AP caused a change in
 % \texttt{nextGPA}: did students on AP tend to have higher (or lower) subsequent
 % GPAs?
@@ -709,16 +709,16 @@ narrowly avoids rejecting the hypothesis of no manipulation
 ($p$ = \Sexpr{signif(mccraryDougnut,2)}).
 
 \subsection{AP Outcome Analysis}
-\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
-%\begin{figure}[ht!]
-{\centering
+%\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
+\begin{figure}[ht!]
+\centering
 \includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
-}
+
 \caption{Robustness weights from robust MM-estimation of the model
   that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
 \label{fig:robweights}
-%\end{figure}
-\end{wrapfigure}
+\end{figure}
+%\end{wrapfigure}
 Table~\ref{tab:results} gives a set of %p-values, point estimates, and
 %interval
 estimates for the effect of AP, each obtained
