@@ -709,21 +709,26 @@ $\mathbf{z}$ with offset variable $\mathbf{d}\tau_{0}$; then only the
 offset needs to be modified to test $H: \tau = \tau_{1}$,
 $\tau_{1}\neq \tau_{0}$.
 
-This estimation procedure, like others based on inversion of a
-hypothesis test, may appear to require an assumption of a constant
-additive treatment effect, such as $Y_T=Y_C+\tau_0$ or
-$Y_T=Y_C+D\tau_0$, for some constant $\tau_0$.
-However, the use of robust standard error estimates weakens this assumption.
-Under \eqref{ycheck}, $\hat\tau$ is consistent for $\bar\tau$ solving
+Strictly speaking, this estimation procedure relies on the assumption of a constant
+additive treatment effect, so that 
+$Y_T=Y_C+D\tau_0$, for some constant $\tau_0$ (or, more generally, an
+exact model for treatment effects under which $Y_C$ could be recovered
+without error).
+This requirement is typical of estimators derived from the inversion
+of hypothesis tests \citep[e.g.][]{imbens:rose:2005}.
+However, due to its use of sandwich standard errors
+$\text{SE}_{s}(\cdot)$, our M-estimator is robust to some
+departures from this assumption. 
+Specifically, under \eqref{ycheck}, $\hat\tau$ is consistent for $\bar\tau$ solving
 \begin{equation} \label{eq:concl1}
 \EE \big\{\dt[\thetaInf]{\mathbf{Y}_{H}}{ R } \big| R \big\}
 \equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \big\},
 \end{equation}
 providing such a $\bar\tau$ exists.
-That is, there must be a hypothesis $H$ such that detrended $Y_H$ are
+That is, we assume the existence of a constant $\tau_0$ such that detrended $Y_H=Y-D\tau_0$ is
 equal to detrended $Y_C$ on average, not exactly.
-This flexibility is borne out in the simulation study in
-\S~\ref{sec:levelPower}.
+The simulation study in \S~\ref{sec:levelPower} bears out this
+robustness property.
 
 
 \subsection{Post-Fitting Diagnostics} \label{sec:post-fitt-diagn}
