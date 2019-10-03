@@ -90,7 +90,7 @@ first-year GPA ($R$) just below and above the cutoff should
 reveal the effectiveness of the policy at
 promoting satisfactory grades.
 
-LSO's data analysis, like most RDD studies, used ordinary regression analyses to target an extraordinary parameter.
+LSO's data analysis, like that of most RDD studies, used ordinary regression analyses to target an extraordinary parameter.
 In Imbens and Lemieux's \citeyearpar{imbens2008regression} telling, for example, the target of estimation is not
 the average treatment effect (ATE) in any one region around the cutoff
 but rather the ``local'' average treatment effect, or ``LATE'':
@@ -295,7 +295,7 @@ Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
 analysis considered recorded mortality in
 months before and after the hurricane, estimating
 Maria to have caused 1,139 deaths in excess of those that would have
-occurred otherwise. This section demonstrates residual ignorability,
+occurred otherwise. This section demonstrates the concept of residual ignorability,
 if not the scope and particulars of the method detailed in Section~\ref{sec:theMethod},
 in a reanalysis of these monthly death counts.
 
@@ -328,14 +328,11 @@ Y_{C} \independent Z.
 \end{ass}
 
 Although RCTs validate \eqref{eq:ignore} as a
-matter of course, the assumption is too strong to plausibly apply to the mortality series surrounding
+matter of course, the assumption is implausibly strong for the mortality series surrounding
 Maria.
 For \eqref{eq:ignore} to hold, $Z$ must be independent
 of monthly death counts that would have been observed in
-the absence of exposure to \maria. %% N.B. John didn't see need for
-                                %% quotes, I (AS) think it works fine
-                                %% without, too--BH: feel free to restore
-The distribution underlying the September through December counts would
+the absence of exposure to \maria: the distribution underlying the September through December counts must
 be no different than that of the year's first eight months.
 Monthly mortality in Puerto Rico for the period 2010--2017, shown in the left panel of
 Figure~\ref{fig:maria}, shows there is no precedent for such an equivalence.
@@ -343,8 +340,8 @@ Rather, a marked seasonal trend is apparent, with death counts being higher
 in the winter months than during the rest of
 the year; \eqref{eq:ignore} cannot be sustained.
 (For RDD methodology nonetheless founded on \eqref{eq:ignore}, see
-\citet{cattaneo2014randomization},
-\citet{aronowRDDinterference}, or \citet{matteiMealliObsStud}.)
+\citet{cattaneo2014randomization}
+or \citet{matteiMealliObsStud}.)
 
 Dependence between $R$ and $Y_C$, violating
 \eqref{eq:ignore}, is common in RDDs; when present, it must be addressed.
@@ -423,7 +420,7 @@ $n$ variables or constants.)
 %An oddity of conditioning on $\bm{\Resid}_C$, or $\bm{Y}_C$,
 %is that it does not correspond to any simple reduction of observed
 %data, since neither $\bm{Y}_C$ nor $\Resid_{Ci}$ is observed unless $Z_{i}=0$.
-The approach is feasible when testing
+The approach applies to the testing of
 ``strict'' null hypotheses, hypotheses that designate a value for each
 $\Resid_{Ti} - \Resid_{Ci}$ with
 $Z_{i}=1$, not just $\EE(\Resid_{T} - \Resid_{C} | Z =1)$.
@@ -436,7 +433,7 @@ $\bm{\Resid}_{T} \equiv \bm{\Resid}_{C}=\bm{\Resid}$.
 %more readily tested.
 
 
-For this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed---formally,
+In this analysis $Y$, $R$, and $Z$ data for years 2010--2016 are treated as fixed---formally,
 inference will be made after conditioning not only on $\bm{\Resid}_C$ but also on the values of $\{(Y_i, R_i, Z_i) : i \leq 0\}$.
 To make use of Fisher's \citeyearpar{fisher:1935} permutation technique,
 we likewise condition on the realized sizes $N_{1}$
@@ -454,9 +451,9 @@ where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\Resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
 is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\Resid_{T}-\Resid_{C})$. ($\bm{A}^*$ carries full information about $\bm{\Resid}_{C}$ but none on $\bm{\Resid}_T$.
+$\EE (\Resid_{T}-\Resid_{C})$.\footnote{$\bm{A}^*$ carries full information about $\bm{\Resid}_{C}$ but none on $\bm{\Resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
-or $\EE(\Resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.)
+or $\EE(\Resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -747,9 +744,9 @@ The row labeled ``Adaptive $\mathcal{W}$'' reports the results using
 The ``Cubic'' row allows for a cubic
 relationship between first-year GPA and subsequent GPA, with
 $\mu_\theta(R)=\alpha+\beta_1R+\beta_2R^2+\beta_3 R^3$.
-This specification performed well in simulations %available in an
-%online supplement.%
-described in Section~\ref{sec:simulation}. %Supplemental Appendix \ref{apnd:poly-sim}. %
+This specification performed well in simulations (\S~\ref{sec:simulation}), suggesting that the
+warnings in \citet{gelmanImbens} against higher-order global
+polynomials may not apply to analyses which use robust fitters.
 Finally, the ``ITT'' row gives an ``intent to treat'' analysis,
 ignoring the difference between students' actual probation and what we
 would have expected based on their GPAs.
@@ -851,7 +848,7 @@ Confidence intervals are of the Wald type---that is, $\hat{\tau} \pm
 z_{\alpha/2} \mathrm{SE}(\hat{\tau})$,
 where $z_{\alpha/2}$ is an appropriate normal or $t$-distribution
 quantile---rather than inversions of a family of hypothesis tests.
-Recent elaborations and extensions include those of \citet{cct},
+Recent elaborations and extensions include those of \citet{calonico2014robust},
 \citet{imbens2017optimized}, and \citet{kolesarRothe17}.
 % More recent iterations of the local linear approach
 % \citep[e.g.][]{cct,kolesarRothe17} include bias corrections and

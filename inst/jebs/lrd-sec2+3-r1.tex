@@ -63,11 +63,12 @@ limit-free estimation targets such as $\EE Y_{T}  - \EE Y_{C}$.
 The OLS approach estimates $\tau$ as a parameter in regression model
 \eqref{eq:classicOLS}. In contrast, the analysis of
 \S~\ref{sec:using-eqref-test} took place in two separate steps:
-first adjust outcomes for $R$; then, test hypotheses by contrasting
+first, adjust outcomes for $R$; then, test hypotheses by contrasting
 adjusted outcomes of treated and untreated subjects.
-However, the OLS estimator may be restated in the manner of
-\S~\ref{sec:using-eqref-test}---a more involved procedure, to be sure,
-but one with an important advantage to be described in \S~\ref{sec:fuzzy-regr-disc}.
+OLS and the \textsc{ancova} model can be also be used for
+hypothesis testing, with steps paralleling those of
+\S~\ref{sec:using-eqref-test}; this brings an important advantage to
+be described in \S~\ref{sec:fuzzy-regr-disc}.
 Consider the hypothesis $H: Y_{T} = Y_{C} + \tau$.
 Define ${{Y}_H} = {Y} - \tau {Z}$ (so that under $H$, $Y_H=Y_C$)
 and $\dt[(a, b)]{\mathbf{y}_{H}}{ \mathbf{r}} = {\mathbf{y}_H} - a -
@@ -80,13 +81,15 @@ Finally, test $H$ with statistic
 \end{equation}
 ---where $\hat{\alpha}$ and $\hat{\beta}$ are estimated from an OLS fit of the variant of \eqref{eq:classicOLS}
 with dependent variable $\mathbf{y}_{H}$.
-Because of the structural relationship
-between $R$ and $Z$, the null distribution
+A more essential difference between the current section's procedure
+and the permutational method of \S~\ref{sec:using-eqref-test} is that the null distribution
 of \eqref{eq:MeanDiffTestStat} is not tractable. (In
 \S~\ref{sec:using-eqref-test}, test statistics'
 permutation distributions were straightforwardly enumerable
 because slope and intercept parameters had been estimated
-from a separate sample.) However, under the parametric \textsc{ancova} model, with
+from a separate sample; in \eqref{eq:MeanDiffTestStat}, one cannot
+consider alternate realizations of $Z$ without also considering
+alternate realizations of $(\hat\alpha,\hat\beta)$.) However, under the parametric \textsc{ancova} model, with
 conditioning on $\mathbf{R}$ rather than on $(N_{0}, N_{1},
 \mathbf{Y}_{C})$ as in \S~\ref{sec:using-eqref-test},
 $\meanDiffT(\mathbf{Y}_H , \mathbf{Z})$ is straightforwardly Normal, with
@@ -484,7 +487,7 @@ Given a detrending procedure $(\hat{\theta}, \dt{y}{r})$,
 \dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
 \independent {Z}| \{R \in \mathcal{W}\}.
 \end{equation}
-Here $Z = f(R)$, with probability 1, for some deterministic
+Here $Z = f(R)$, for some deterministic
 $f$ (such as $f(r) = \indicator{r < 0}$);  $\thetaInf$ is a constant such that
 $\sqrt{n}(\hat\theta - \thetaInf)$ is bounded in probability (and thus
 $\hat\theta \stackrel{P}{\rightarrow} \thetaInf$); $\mathcal{W}$
@@ -538,17 +541,19 @@ We will discuss each of these steps in sequence.
 \label{sec:bandwidthChoice}
 
 If subject matter knowledge suggests that the ATE or TOTE would be
-most relevant for subjects with $|R|\le b$, then $b$ might form an an
-initial bandwidth choice. But it
+most relevant for subjects with $|R|\le b$, then $b$ might form an initial bandwidth choice. But it
 is also sensible to subject this choice to specification
 testing (\S~\ref{sec:specification}).
 
-Balance tests in an an RDD (\S~\ref{sec:balanceTesting})
-can be regarded as testing residual ignorability with a multivariate
+Covariate balance or placebo tests for RDDs (\S~\ref{sec:balanceTesting})
+assess residual ignorability with a multivariate
 ``outcome'' $Y^{*}$ combining the actual outcome $Y$ with covariates $X$---\eqref{ycheck} with
 $\mathbf{Y}_{C}^{*} = (\mathbf{X}, {Y}_C)$ in place of $Y_{C}$.
 
-This calls for preliminary detrending procedures, mechanisms to
+Of the placebo testing procedures discussed in
+\S~\ref{sec:balanceTesting}, that of \citet{lee2010regression} is best
+suited to this conception.
+In effect, it begins with preliminary detrending procedures---mechanisms to
 decompose  $X$ into components that are systematic or unpredictable,
 vis a vis $\mathbf{R}$, just as ${\mathbf{Y}_C}$ will later be decomposed.
 %% Since $Z$ cannot have an effect on a pre-treatment
@@ -569,6 +574,9 @@ combine placebo checks across covariates.
 To ensure adequate power to detect misspecification,
 %the Bonferroni method,
 we test at level $.15$, not $.05$.
+% In contrast to \citet{lee2010regression}, we use robust regression, as
+% described in \S~\ref{sec:robustFitters}, for our preliminary
+% detrending.
 
 We use sequential balance tests to adjust the bandwidth $b$, alongside
 McCrary density tests to further
