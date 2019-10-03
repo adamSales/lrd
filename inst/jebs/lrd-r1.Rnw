@@ -450,10 +450,11 @@ see \citet{canayKamat17RDDpermutations}.
 where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\Resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
-is ancillary to, i.e. carries no information about, the target of estimation
-$\EE (\Resid_{T}-\Resid_{C})$.\footnote{$\bm{A}^*$ carries full information about $\bm{\Resid}_{C}$ but none on $\bm{\Resid}_T$.
+is ancillary to, i.e. carries no information about\footnote{%
+$\bm{A}^*$ carries full information about $\bm{\Resid}_{C}$ but none on $\bm{\Resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
-or $\EE(\Resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.}
+or $\EE(\Resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.%
+}, the target of estimation $\EE (\Resid_{T}-\Resid_{C})$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
