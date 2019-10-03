@@ -159,7 +159,7 @@ of RDD analysis. Section~\ref{sec:appl-effect-acad} executes the plan
 with the LSO study, Section~\ref{sec:simulation}
 explores the method's performance in simulations, and
 Section~\ref{sec:discussion} takes stock. Replication materials,
-including R code, are available as a GitHub repository, [Blinded].
+including R code, are available as a GitHub repository, \url{https://github.com/adamSales/lrd}.
 
 % Although Huber-White standard errors are common in RDD analysis,
 % ``Huberized'' fitting methods are not; they should be.
