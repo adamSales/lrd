@@ -19,17 +19,18 @@ if(grepl('acs',Sys.info()['login'])){
 \title{Limitless Regression Discontinuity}
 %  Discontinuity Designs}%
 
-% \author{Adam Sales \& Ben B. Hansen\thanks{The authors thank Susan
-%     Dynarski, Roc\'{i}o Titiunik, Matias Cattaneo, Guido Imbens, Brian Junker,
-%     Justin McCrary, Walter Mebane, Kerby Shedden, Jeff Smith, the participants in the
-%     University of Michigan Causal Inference in Education Research
-%     Seminar and anonymous reviewers for helpful suggestions. They
-%     also thank Jeffrey Howard and Alexis Santos-Lozada, for sharing
-%     non-public research replication materials. This
-%     research was supported by the Institute of Education Sciences,
-%     U.S. Department of Education (R305B1000012), the U.S. National
-%     Science Foundation (SES 0753164) and an NICHD center grant (R24 HD041028).
-%     Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors. }}
+\author{Adam Sales \& Ben B. Hansen\thanks{The authors thank Susan
+    Dynarski, Roc\'{i}o Titiunik, Matias Cattaneo, Guido Imbens, Brian Junker,
+    Justin McCrary, Walter Mebane, Kerby Shedden, Jeff Smith, the participants in the
+    University of Michigan Causal Inference in Education Research
+    Seminar and anonymous reviewers for helpful suggestions. They
+    also thank Jeffrey Howard and Alexis Santos-Lozada, for sharing
+    non-public research replication materials, and John E. Bellquist
+    for editing. This
+    research was supported by the Institute of Education Sciences,
+    U.S. Department of Education (R305B1000012), the U.S. National
+    Science Foundation (SES 0753164) and an NICHD center grant (R24 HD041028).
+    Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors. }}
 
 
 \begin{document} % ordinary compilation
@@ -276,7 +277,7 @@ ggplot(pd,aes(month_num,Deaths,group=year,color=hurYear,size=hurYear,alpha=hurYe
     aes(x=x,y=y), fun=fitCurve,size=2,color='black',linetype='twodash')+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),legend.pos='top')
 
-ggsave('figure/maria.png',width=6.4,height=3,dpi=300)
+ggsave('maria.png',width=6.4,height=3,dpi=300)
 @
 
 
@@ -397,7 +398,7 @@ to Strong Ignorability as a basis for analysis of RDDs.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\textwidth]{figure/maria.png}
+\includegraphics[width=0.95\textwidth]{maria.png}
 \caption{Monthly death counts in Puerto Rico from years 2010--2017, before and after
   residualization. The plot on the left shows monthly death counts,
   adjusted for month length. A vertical dotted line denotes September,
@@ -450,11 +451,11 @@ see \citet{canayKamat17RDDpermutations}.
 where $N_{j} \equiv \sum_{i=1}^{12} \indicator{Z_{i}=j}$.
 Such conditioning is appropriate because the conditioning statistic
 $\bm{A}^*=\{\bm{\Resid}_C,N_1,N_0; (Y_{-71}, R_{-71}), \ldots, (Y_{-1}, R_{-1})\}$
-is ancillary to, i.e. carries no information about\footnote{%
+is ancillary to, i.e. carries no information about,\footnote{%
 $\bm{A}^*$ carries full information about $\bm{\Resid}_{C}$ but none on $\bm{\Resid}_T$.
 $\bm{A}^*$ would not be ancillary to targets of the form $\EE(Z| \mathcal{E})$
 or $\EE(\Resid_{C}| \mathcal{E})$, some event $\mathcal{E}$.%
-}, the target of estimation $\EE (\Resid_{T}-\Resid_{C})$.
+} the target of estimation $\EE (\Resid_{T}-\Resid_{C})$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -569,7 +570,7 @@ trends in the absence of treatment.
 \centering
 %\mbox{
 %\subfigure[]{
-\includegraphics[width=0.58\textwidth]{figure/rddFig-1.png}%}
+\includegraphics[width=0.58\textwidth]{rddFig-1.png}%}
 %\quad
 %\subfigure[]{\includegraphics[width=.45\textwidth]{../figure/hs_gpaFig-1.png}}
 %}
@@ -710,7 +711,7 @@ narrowly avoids rejecting the hypothesis of no manipulation
 %\begin{wrapfigure}{l}{0.6\textwidth}%[htb]
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=.58\textwidth]{figure/weightPlot-1.png}
+\includegraphics[width=.58\textwidth]{weightPlot-1.png}
 
 \caption{Robustness weights from robust MM-estimation of the model
   that $\EE(Y_{C} | R=r)$ is linear in $r$ while $Y_{T} = Y_{C} + \tau_{0} D_{T}$, with $\tau_{0}$ set at $\hat{\tau}=$\Sexpr{round(SHmain[['CI']][3], 2)}.}
@@ -746,7 +747,7 @@ The ``Cubic'' row allows for a cubic
 relationship between first-year GPA and subsequent GPA, with
 $\mu_\theta(R)=\alpha+\beta_1R+\beta_2R^2+\beta_3 R^3$.
 This specification performed well in simulations (\S~\ref{sec:simulation}), suggesting that the
-warnings in \citet{gelmanImbens} against higher-order global
+warnings in \citet{gelman2016high} against higher-order global
 polynomials may not apply to analyses which use robust fitters.
 Finally, the ``ITT'' row gives an ``intent to treat'' analysis,
 ignoring the difference between students' actual probation and what we
@@ -953,11 +954,11 @@ normally distributed.
 
 \begin{figure}
 \centering
-% chunk below  generates figure/dgms-1.pdf , but also includes
+% chunk below  generates dgms-1.pdf , but also includes
 % unwanted warnings in latex file. To regenerate dgms-1.pdf,
 % set eval to TRUE, comments out the \includegraphics{} and compile;
 % then come back and reset it to FALSE
-%\includegraphics[width=\maxwidth]{../figure/dgms-1}
+%\includegraphics[width=\maxwidth]{../dgms-1}
 <<dgms,fig.height=2,fig.width=6,cache=TRUE,eval=TRUE>>=
 #par(mfrow=c(1,3))
 dgms()
