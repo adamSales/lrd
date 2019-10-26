@@ -292,7 +292,7 @@ In spite of widespread devastation, for nearly a year official
 statistics pegged the number of hurricane-induced deaths at just 64.
 Estimates from investigative journalists and academic
 researchers were higher.
-Santos-Lozada and Howard's \citeyearpar{santos2018use} authoritative
+Santos-Lozada and Howard's \citeyearpar{santos2018use}
 analysis considered recorded mortality in
 months before and after the hurricane, estimating
 Maria to have caused 1,139 deaths in excess of those that would have
