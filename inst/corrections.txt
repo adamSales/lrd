@@ -85,8 +85,10 @@ Other edits:
   remove the comma after "assume" so that it reads:
   "For simplicity assume noninterference, the model..."
 
+- p. 7: Please replace "[4]" with "Equation 4" 
+
 - p. 11: In the sentence beginning "Uncoupled to...," the 'A' in the
-  notation "A*" should be bold, not intalicized, as it is on page 5.
+  notation "A*" should be bold, not italicized, as it is on page 5.
 
 - p. 12: Please remove the comma after "However" in the last sentence
   on the page, so that it reads:
@@ -97,7 +99,7 @@ Other edits:
   is in the sentence beginning "This specification..." and on page 22
   it is in the sentence beginning "The method of Cattaneo...")
 
-- p. 28. Please replace the "Acknowlegements" text to the following:
+- p. 28. Please replace the "Acknowledgements" text to the following:
 
 "The authors thank Susan Dynarski, Xinzhou Guo, Xuming He, Guido
 Imbens, Brian Junker, Justin McCrary, Walter Mebane, Kerby Shedden,
