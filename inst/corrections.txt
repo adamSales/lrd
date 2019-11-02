@@ -85,6 +85,10 @@ Other edits:
   remove the comma after "assume" so that it reads:
   "For simplicity assume noninterference, the model..."
 
+- p. 10: Please change the ending of Section 2.2.4's next-to-last
+  sentence from "such as plots of Cook and Weisberg's (1982)
+  distances" to "such as plots of Cook's distances (Cook and Weisberg, 1982)"
+
 - p. 11: In the sentence beginning "Uncoupled to...," the 'A' in the
   notation "A*" should be bold, not italicized, as it is on page 5.
 
