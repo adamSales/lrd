@@ -114,8 +114,10 @@ Questions:
 
 - p. 7: Should "[4]" read "Equation 4?" 
 
-- p. 16 & 22: Should "section sign" for Section 5 was not replaced by
+- p. 16, 3rd line from bottom, and p. 22, third line from top:
+  A "section symbol" (§) to indicate "Section 5" was not replaced by
   the word "Section" as in the rest of the manuscript. (On page 16 it
   is in the sentence beginning "This specification..." and on page 22
-  it is in the sentence beginning "The method of Cattaneo...")
+  it is in the sentence beginning "The method of Cattaneo...")  Is
+  this intended?
 
