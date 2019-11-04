@@ -96,6 +96,19 @@ Other edits:
   on the page, so that it reads:
   "However b and W are selected, at least..."
 
+- p.14:  We noticed an error (due to us) in the displayed equation here.
+   The LaTeX code behind the equation as it now stands is:
+```latex
+\EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| R \big\}
+\equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \big\},
+```
+   It should be replaced with:
+```latex
+\EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| Z=1, R \in \mathcal{W}\big\}
+\equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \in \mathcal{W} \big\},
+```
+   that is, on either side of the equation the _R_ appearing after the vertical bar
+   should be repaced with a condition involving _R_.    
 - p. 28. Please replace the "Acknowledgements" text to the following:
 
 "The authors thank Susan Dynarski, Xinzhou Guo, Xuming He, Guido
@@ -106,6 +119,13 @@ anonymous reviewers for helpful suggestions. They also thank Jeffrey
 Howard and Alexis Santos-Lozada for sharing nonpublic research
 replication materials and John E. Bellquist for editing." 
 
+- p.26, paragraph following displayed equation A4.  between sentence
+  ending with "Proposition 1 below" and sentence beginning with "When...",
+  please insert the following sentence.
+      Approximation A4 justifies the robustness to non-additivity claimed in Section 3.4.
+  Also, please replace the phrase "this relationship warrants the use of Huber-White" with "approximation A4 warrants the use of Huber-White". 
+- p. 27.  Please insert space between "chapter" and "16" in reference
+   to Ferguson, 1996.
 - p. 28, note 3. Same as the note to p. 11. The 'A' of "A*" should be
   bold, not italicized, in both cases.
 
