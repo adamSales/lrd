@@ -85,7 +85,9 @@ Other edits:
   remove the comma after "assume" so that it reads:
   "For simplicity assume noninterference, the model..."
 
-- p. 7: Please replace "[4]" with "Equation 4" 
+- p. 10: Please change the ending of Section 2.2.4's next-to-last
+  sentence from "such as plots of Cook and Weisberg's (1982)
+  distances" to "such as plots of Cook's distances (Cook and Weisberg, 1982)"
 
 - p. 11: In the sentence beginning "Uncoupled to...," the 'A' in the
   notation "A*" should be bold, not italicized, as it is on page 5.
@@ -93,11 +95,6 @@ Other edits:
 - p. 12: Please remove the comma after "However" in the last sentence
   on the page, so that it reads:
   "However b and W are selected, at least..."
-
-- p. 16 & 22: The "section sign" for Section 5 was not replaced by
-  the word "Section" as in the rest of the manuscript. (On page 16 it
-  is in the sentence beginning "This specification..." and on page 22
-  it is in the sentence beginning "The method of Cattaneo...")
 
 - p. 28. Please replace the "Acknowledgements" text to the following:
 
@@ -112,4 +109,13 @@ replication materials and John E. Bellquist for editing."
 - p. 28, note 3. Same as the note to p. 11. The 'A' of "A*" should be
   bold, not italicized, in both cases.
 
+
+Questions:
+
+- p. 7: Should "[4]" read "Equation 4?" 
+
+- p. 16 & 22: Should "section sign" for Section 5 was not replaced by
+  the word "Section" as in the rest of the manuscript. (On page 16 it
+  is in the sentence beginning "This specification..." and on page 22
+  it is in the sentence beginning "The method of Cattaneo...")
 
