@@ -6,36 +6,34 @@ Abstract:
 In a regression discontinuity design (RDD), assignment to treatment
 versus a control condition is determined by the value of a particular
 baseline variable, $R$. In one recent RDD, $R$ is the average of a
-student's grades in his first year at university; the treatment
+student's grades in his first year at university, while the treatment
 condition is academic probation, forced upon a student if his $R$
-falls below a threshold; and downstream effects of the academic
-probation regime are estimated with ordinary least squares.  The RDD
+falls below a threshold.  The RDD
 setup can be used to estimate deaths attributable to a natural
 disaster, for example Hurricane Maria, by contrast of mortality
 series before and after the catastrophic event.
 
-Some recent RDD methods contrast limits of $\mathrm{E}(Y|R=r)$ as $r$
-approaches a cut-point, $c$, from either side; this conceptualization
-is ill suited to natural disaster applications, where it is necessary
-to estimate excess mortality over specific periods of non-negligible
-duration. Other RDD methodology avoids passing to limits by supposing
-that in sufficiently narrow neighborhoods of the threshold, there is
-random assignment.  Both frameworks are difficult to reconcile with
-examples such as the academic probation study, where
-running-variable-manipulation tests find the experimental analogy to
-be at its weakest in the immediate vicinity of the cut-point.
+Classical analysis of RDDs parametrically models outcomes as linear in
+R and the intervention variable, using ordinary least squares for
+model fitting.  Some recent RDD methods relax linearity assumptions by
+contrasting limits of $\mathrm{E}(Y|R=r)$ as $r$ approaches a
+cut-point, $c$, from either side; others avoid passing to limits by
+supposing that falling to the left or the right of the threshold is
+essentially random, conditionally upon falling close to the threshold.
+Either of these approaches turns out to be difficult to reconcile with
+the academic probation and Hurricane Maria examples.  Limitless
+regression discontinuity relaxes assumptions of classical regression
+discontinuity analysis in a somewhat different manner, involving
+potential outcomes but also integrating methods and insights from
+robust statistics.
 
-"Limitless regression discontinuity" avoids these limitations by
-formulating a relaxed variant of the classical RDD model within the
-Neyman-Rubin causal framework, then estimating that model with the help of
-M-estimators of regression enjoying certain specific robustness
-properties.  The model is equally comfortable with discrete and
-continuous running variables; the method is straightforward to
-implement, at least in R or Stata.  It is uniquely equipped to meet a
-significant, somewhat misunderstood threat associating with sample
-contamination, and it appears to remedy in dramatic fashion a known
-vulnerability of the classical approach, in realistic scenarios
-reducing those methods' RMSEs by factors upwards of 100.
+The method is straightforward to implement, at least in R or Stata. It
+is equally comfortable with discrete and continuous running variables.
+It is uniquely equipped to meet the significant, somewhat
+misunderstood threat indicated by failure of McCrary's test. It in
+dramatic fashion remedies the known fragility of polynomial regression
+under the classical approach, reducing its RMSE by factors upwards of
+100.
 
 This is joint work with Adam C. Sales, University of Texas-Austin
 
