@@ -1,0 +1,43 @@
+\documentclass[12pt]{article}
+\usepackage{setspace}
+\input{lrd-preamble.tex}
+\pagestyle{plain}
+\begin{document}
+
+On \textbf{p.~14}, the displayed equation  
+\begin{equation*} %\label{eq:concl1}
+\EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| R \big\}
+\equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \big\},
+\end{equation*}
+should become 
+\begin{equation*} %\label{eq:concl1}
+\EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| Z=1, R \in \mathcal{W}\big\}
+\equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \in \mathcal{W} \big\},
+\end{equation*}
+.\\
+
+On \textbf{p.~23}, please make the following additions or changes:
+\begin{enumerate}
+\item ``(of $(D_C, D_T)$)'' should become ``(of $(D_C, D_T)$; see
+  Section 2.1.1)''.
+\item ``where $(\theta, \eta)$ denotes the full parameter, and $w =
+({y},d,r)$ must satisfy'' should become ``where $(\theta, \eta)$
+denotes the full parameter and $w = ({y},d,r)$, must satisfy''.
+\item ``each solution of $\EE[\IC{W}{(\theta, \eta)}] =0$ makes''
+  should become ``each $(\theta, \eta)$ solving $\EE[\IC{W}{(\theta, \eta)}] =0$
+  makes''. 
+\end{enumerate}
+
+On \textbf{p.~24}, please replace phrase
+   ``$\Psi_1$s $z$ factor has been centered on $p_z$''  with ``the factor of $\Psi_1$ involving $z$,
+   $f_1(r) = z - p_{z}$, has been centered on $p_z$.''
+
+On \textbf{p.~26}, please insert spaces on the right side of the
+inline equation involving $\vec{f}(\cdot)$.  In the proofs it appears
+as ``$\vec{f}(\cdot) = [f_{0}(\cdot) f_{1}(\cdot) \ldots
+f_{k}(\cdot)]$''; wexo're asking that it instead be
+``$\vec{f}(\cdot)=[f_{0}(\cdot)\, f_{1}(\cdot)\, \ldots\,
+f_{k}(\cdot)]$'', i.e. that spaces be added to the left and the right
+of ``$f_{1}(\cdot)$'' as well as to the left of ``$f_{k}(\cdot)$''.
+
+\end{document}

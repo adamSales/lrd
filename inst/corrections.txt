@@ -98,27 +98,34 @@ Other edits:
 
 - p.14:  We noticed an error (due to us) in the displayed equation here.
    The LaTeX code behind the equation as it now stands is:
-```latex
+```
 \EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| R \big\}
 \equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \big\},
 ```
    It should be replaced with:
-```latex
+```
 \EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| Z=1, R \in \mathcal{W}\big\}
 \equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \in \mathcal{W} \big\},
 ```
    that is, on either side of the equation the _R_ appearing after the vertical bar
-   should be repaced with a condition involving _R_.    
-- p. 28. Please replace the "Acknowledgements" text to the following:
-
-"The authors thank Susan Dynarski, Xinzhou Guo, Xuming He, Guido
-Imbens, Brian Junker, Justin McCrary, Walter Mebane, Kerby Shedden,
-Jeff Smith, Rocio Titiunik, the participants in the University of
-Michigan Causal Inference in Education Research Seminar, and three
-anonymous reviewers for helpful suggestions. They also thank Jeffrey
-Howard and Alexis Santos-Lozada for sharing nonpublic research
-replication materials and John E. Bellquist for editing." 
-
+   should be repaced with a condition involving _R_.
+ - p.23, second paragraph.  To the parenthetical reading "(of (D_C,
+   D_T))", please add cross-reference to Section 2.1.1, so that it
+   reads "(of (D_C, D_T); see Section 2.1.1)".
+- p. 23, sentence preceding beginning of section A.1. Please remove
+   comma following "the full parameter," while adding a comma before
+   "must satisfy".  This passage should read "denotes the full
+   parameter and _w = (y, d, r), must satisfy".  Also, later in the
+   same sentence, please replace the phrase "each solution of" with
+   "each $(\theta, \eta)$ solving".  (The typesetting of this
+   replacement is also given in the PDF accompaniment to this
+   listing.) 
+- p. 24, 6th line from bottom. Please replace phrase
+   "$\Psi_1$ s _z_ factor"  with "the factor of $\Psi_1$ involving $z$,
+   $f_1 = z - p_z$, has been centered on $p_z$."
+- p. 26, sixth line from top.  Please add space to the left and right
+   of "f_1(.)", and to the left of "f_k(.)".  (See also PDF file that
+   we're sending, showing this as typesetted in LaTeX.)
 - p.26, paragraph following displayed equation A4.  between sentence
   ending with "Proposition 1 below" and sentence beginning with "When...",
   please insert the following sentence.
@@ -128,6 +135,15 @@ replication materials and John E. Bellquist for editing."
    to Ferguson, 1996.
 - p. 28, note 3. Same as the note to p. 11. The 'A' of "A*" should be
   bold, not italicized, in both cases.
+- p. 28. Please replace the "Acknowledgements" text to the following:
+
+"The authors thank Susan Dynarski, Xinzhou Guo, Xuming He, Guido
+Imbens, Brian Junker, Justin McCrary, Walter Mebane, Kerby Shedden,
+Jeff Smith, Rocio Titiunik, the participants in the University of
+Michigan Causal Inference in Education Research Seminar, and three
+anonymous reviewers for helpful suggestions. They also thank Jeffrey
+Howard and Alexis Santos-Lozada for sharing nonpublic research
+replication materials and John E. Bellquist for editing." 
 
 
 Questions:
