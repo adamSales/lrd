@@ -89,6 +89,16 @@ Other edits:
   sentence from "such as plots of Cook and Weisberg's (1982)
   distances" to "such as plots of Cook's distances (Cook and Weisberg, 1982)"
 
+- p. 11: In paragraph beginning with "Assuming residual ignorability,
+   inference about treatment effects", please insert the following
+   parenthetical statement between first and second sentences,
+   i.e. just prior to sentence beginning "Conditioning on the full
+   data vector":
+           ($D_C$s are omitted because of our assumption
+	   $D_C\equiv 0$; see Section 2.1.1.)
+   (Here "$" indicates the beginning or end of an inline mathematical
+   expression, not a character to appear in the text.  Please see
+   accompanying PDF for a rendered version of this parenthetical. 
 - p. 11: In the sentence beginning "Uncoupled to...," the 'A' in the
   notation "A*" should be bold, not italicized, as it is on page 5.
 
