@@ -25,7 +25,7 @@ examples such as the academic probation study, where
 running-variable-manipulation tests find the experimental analogy to
 be at its weakest in the immediate vicinity of the cut-point.
 
-"Limitless regression discontinuity" avoids these limitations by using
+"Limitless regression discontinuity" avoids these limitations by
 formulating a relaxed variant of the classical RDD model within the
 Neyman-Rubin causal framework, then estimating that model with the help of
 M-estimators of regression enjoying certain specific robustness
