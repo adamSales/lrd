@@ -8,32 +8,30 @@ versus a control condition is determined by the value of a particular
 baseline variable, $R$. In one recent RDD, $R$ is the average of a
 student's grades in his first year at university, while the treatment
 condition is academic probation, forced upon a student if his $R$
-falls below a threshold.  The RDD
-setup can be used to estimate deaths attributable to a natural
-disaster, for example Hurricane Maria, by contrast of mortality
-series before and after the catastrophic event.
+falls below a threshold.  The RDD setup can also be used to estimate
+deaths attributable to a natural disaster, for example Hurricane
+Maria, by contrast of mortality series before and after the catastrophic event.
 
 Classical analysis of RDDs parametrically models outcomes as linear in
-R and the intervention variable, using ordinary least squares for
-model fitting.  Some recent RDD methods relax linearity assumptions by
-contrasting limits of $\mathrm{E}(Y|R=r)$ as $r$ approaches a
+$R$ and the intervention variable, using ordinary least squares to
+estimate the slope, intercept and intervention effect.  Some recent
+RDD methods relax linearity assumptions by
+contrasting limits of $E(Y|R=r)$ as $r$ approaches a
 cut-point, $c$, from either side; others avoid passing to limits by
 supposing that falling to the left or the right of the threshold is
 essentially random, conditionally upon falling close to the threshold.
-Either of these approaches turns out to be difficult to reconcile with
-the academic probation and Hurricane Maria examples.  Limitless
-regression discontinuity relaxes assumptions of classical regression
-discontinuity analysis in a somewhat different manner, involving
-potential outcomes but also integrating methods and insights from
-robust statistics.
+Each of these approaches turns out to be difficult to reconcile with
+the academic probation and Hurricane Maria examples.
 
-The method is straightforward to implement, at least in R or Stata. It
-is equally comfortable with discrete and continuous running variables.
-It is uniquely equipped to meet the significant, somewhat
-misunderstood threat indicated by failure of McCrary's test. It in
-dramatic fashion remedies the known fragility of polynomial regression
-under the classical approach, reducing its RMSE by factors upwards of
-100.
+Limitless regression discontinuity relaxes assumptions of classical
+regression discontinuity analysis in a somewhat different manner,
+involving potential outcomes but also integrating concepts and methods 
+from robust statistics. The method is equally comfortable with discrete and
+continuous running variables.  It is uniquely equipped to meet the
+significant, somewhat misunderstood threat indicated by failure of
+McCrary's test. In combination with polynomial specifications, it
+dramatically improves the classical method, reducing RMSE
+by factors upwards of 100. It is straightforward to implement in R and Stata.
 
-This is joint work with Adam C. Sales, University of Texas-Austin
+This is joint work with Adam C. Sales, University of Texas-Austin.
 
