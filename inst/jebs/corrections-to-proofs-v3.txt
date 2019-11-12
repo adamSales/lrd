@@ -1,0 +1,2 @@
+
+- p.24, 6th line from bottom. Please check spacing between phrase "involving z," and subsequent inline mathematical expression ("$f_1(r) = z - p_z$"). There should be an ordinary inter-word space there. (Perhaps there is but the typesetting algorithm has decided to compress it; I'm not sure.)
