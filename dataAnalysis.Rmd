@@ -64,7 +64,7 @@ if(!is.element('dat',ls())){
   dat <- foreign::read.dta(LSO_dta_location)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
   dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
-  dat$lhsgrade_pct=plogis(dat$hsgrade_pct)
+  dat$lhsgrade_pct=qlogis(dat$hsgrade_pct/100)
   dat$R <- dat$dist_from_cut
   dat$Z <- dat$gpalscutoff
 }
@@ -99,6 +99,14 @@ ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,l
 
 The McCrary density test failure and recovery described in Section 4.1
 ```{r}
+ggplot(figDat,aes(R,n))+
+  geom_point()+
+  geom_vline(xintercept=0,linetype='dashed',size=.5)+
+  xlab('First-Year GPA (Distance from Cutoff)')+
+  ylab('Number of Observations')+
+  scale_size_continuous(range=c(0.2,2),guide=FALSE)+
+  theme(text = element_text(size=12))
+
 (mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE) )
 ( mccraryDougnut <- rdd::DCdensity(dat$R[dat$R!=0],-0.005, bin=0.01,plot=FALSE) )
 ```

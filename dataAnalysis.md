@@ -1,7 +1,7 @@
 ---
-title: "LRD paper Appendix C, Data Analysis"
-author: "lrd authors"
-date: "30 April, 2019"
+title: "LRD paper Appendix C, Data Analysis for AP Example"
+author: "Adam C Sales & Ben B Hansen"
+date: "18 November, 2019"
 output: html_document
 ---
 
@@ -20,6 +20,59 @@ library(ggplot2)
 library(xtable)
 library(robustbase)
 library(rdd)
+```
+
+```
+## Loading required package: sandwich
+```
+
+```
+## Loading required package: lmtest
+```
+
+```
+## Loading required package: zoo
+```
+
+```
+## 
+## Attaching package: 'zoo'
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+```
+
+```
+## Loading required package: AER
+```
+
+```
+## Loading required package: car
+```
+
+```
+## Loading required package: survival
+```
+
+```
+## 
+## Attaching package: 'survival'
+```
+
+```
+## The following object is masked from 'package:robustbase':
+## 
+##     heart
+```
+
+```
+## Loading required package: Formula
+```
+
+```r
 source("R/functions.r")
 source("R/data.r")
 source("R/ddsandwich.r")
@@ -44,7 +97,7 @@ Wfunc <- function(W)
 ```
 
 
-Load data. This routine will download and unzip the Lind et al. replication
+Load data. This routine will download and unzip the Lindo et al. replication
 material into the `extdata` subdirectory.
 
 ```r
@@ -58,7 +111,7 @@ if(!is.element('dat',ls())){
   dat <- foreign::read.dta(LSO_dta_location)
   dat$dist_from_cut <- round(dat$dist_from_cut,2)
   dat$hsgrade_pct[dat$hsgrade_pct==100]=99.5
-  dat$lhsgrade_pct=plogis(dat$hsgrade_pct)
+  dat$lhsgrade_pct=qlogis(dat$hsgrade_pct/100)
   dat$R <- dat$dist_from_cut
   dat$Z <- dat$gpalscutoff
 }
@@ -97,6 +150,18 @@ ggplot(figDat,aes(R,lhsgrade_pct,size=n))+geom_point()+geom_vline(xintercept=0,l
 ![plot of chunk hs_gpaFig](./figure/hs_gpaFig-1.png)
 
 The McCrary density test failure and recovery described in Section 4.1
+
+```r
+ggplot(figDat,aes(R,n))+
+  geom_point()+
+  geom_vline(xintercept=0,linetype='dashed',size=.5)+
+  xlab('First-Year GPA (Distance from Cutoff)')+
+  ylab('Number of Observations')+
+  scale_size_continuous(range=c(0.2,2),guide=FALSE)+
+  theme(text = element_text(size=12))
+```
+
+![plot of chunk unnamed-chunk-4](./figure/unnamed-chunk-4-1.png)
 
 ```r
 (mccrary1 <- rdd::DCdensity(dat$R,-0.005, bin=0.01,plot=FALSE) )
@@ -181,9 +246,9 @@ unlist(SHdataDriven)
 
 ```
 ##  p.value   CI.CI1   CI.CI2   CI.est       BW bal.pval       W1       W2 
-## 4.56e-24 1.83e-01 2.70e-01 2.27e-01 1.13e+00 1.51e-01 1.00e-02 1.13e+00 
+## 1.33e-19 1.68e-01 2.61e-01 2.15e-01 1.03e+00 1.54e-01 1.00e-02 1.03e+00 
 ##        n 
-## 2.39e+04
+## 2.16e+04
 ```
 
 ```r
@@ -233,7 +298,7 @@ kable(resultsTab)
 |            |Estimate |95\% CI      |$\mathcal{W}$ |$n$    |
 |:-----------|:--------|:------------|:-------------|:------|
 |main        |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
-|data_driven |0.23     |(0.18, 0.27) |[0.01, 1.13)  |23,874 |
+|data_driven |0.21     |(0.17, 0.26) |[0.01, 1.03)  |21,593 |
 |cubic       |0.24     |(0.15, 0.34) |[0.01, 0.50)  |10,014 |
 |ITT         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
 
@@ -274,7 +339,7 @@ kable(altTab)
 |:-----------------|:--------|:------------|:-------------|:------|
 |Local Linear      |0.24     |(0.19, 0.28) |[0.00, 1.25)  |26,647 |
 |Limitless         |0.24     |(0.17, 0.31) |[0.01, 0.50)  |10,014 |
-|Local Permutation |0.10     |(0.04, 0.15) |[0.01, 0.19)  |3,766  |
+|Local Permutation |0.11     |(0.05, 0.17) |[0.01, 0.18)  |3,436  |
 
 ```r
 altTab <- cbind(Method=rownames(altTab),altTab)
@@ -457,7 +522,7 @@ sessionInfo()
 ## other attached packages:
 ##  [1] mgcv_1.8-27       nlme_3.1-131.1    rdd_0.57         
 ##  [4] Formula_1.2-1     AER_1.2-4         survival_2.41-3  
-##  [7] car_2.1-3         lmtest_0.9-34     zoo_1.7-13       
+##  [7] car_2.1-3         lmtest_0.9-37     zoo_1.7-13       
 ## [10] sandwich_2.4-0    robustbase_0.93-0 xtable_1.8-2     
 ## [13] ggplot2_2.2.1     knitr_1.22       
 ## 
