@@ -1,6 +1,6 @@
 ---
 title: "LRD paper Appendix D, Tables from simulations presented in lrd paper"
-author: "lrd authors"
+author: "Adam C Sales & Ben B Hansen"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---

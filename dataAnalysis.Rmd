@@ -51,7 +51,7 @@ Wfunc <- function(W)
 ```
 
 
-Load data. This routine will download and unzip the Lind et al. replication
+Load data. This routine will download and unzip the Lindo et al. replication
 material into the `extdata` subdirectory.
 ```{r}
 if(!is.element('dat',ls())){

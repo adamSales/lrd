@@ -1,7 +1,7 @@
 ---
 title: "LRD paper Appendix B, Data Analysis for Hurricane Maria Example"
 author: "Adam C Sales & Ben B Hansen"
-date: "30 April, 2019"
+date: "18 November, 2019"
 output: html_document
 ---
 
@@ -9,13 +9,26 @@ output: html_document
 ```r
 knitr::opts_chunk$set(echo = TRUE,error=FALSE, warning=FALSE,cache=FALSE,message=FALSE)
 
-library(xtable)
-library(Hmisc)
-library(dplyr)
-library(ggplot2)
 library(robustbase)
 library(pbs)
-library(perm)
+library(tidyverse)
+```
+
+```
+## -- Attaching packages ---------------------------------- tidyverse 1.2.1 --
+```
+
+```
+## v ggplot2 2.2.1       v purrr   0.3.2  
+## v tibble  2.1.1       v dplyr   0.8.0.1
+## v tidyr   0.8.3       v stringr 1.2.0  
+## v readr   1.1.1       v forcats 0.2.0
+```
+
+```
+## -- Conflicts ------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
 ```
 
 Monthy mortality data in Puerto Rico generously provided by Alexis
