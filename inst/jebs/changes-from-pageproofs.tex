@@ -60,3 +60,20 @@ of ``$f_{1}(\cdot)$'' as well as to the left of ``$f_{k}(\cdot)$''.
 
 \end{document}
 
+\newpage
+One can have
+$$\dt[\thetaInf]{Y_{C}}{ R }%\mathbf{\Ych}_{C}
+\independent {Z}| \{R \in \mathcal{W}\}$$
+without having 
+$$\dt[\thetaInf]{Y_{T} - \tau_{0}D_{T}}{ R }%\mathbf{\Ych}_{C}
+\independent {Z}| \{R \in \mathcal{W}\} .$$
+(That's particularly easy when the treatment effect non-additive and
+also associated with $R$!) As a result, in such circumstances 
+$$ \EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| Z=1, R \in
+\mathcal{W}\big\} \neq \EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R }
+\big| R \in \mathcal{W}\big\}$$
+and the relationship implicitly defining $\tau_{0}$, 
+$$ \EE \big\{\dt[\thetaInf]{Y_T-D_T\tau_0}{ R } \big| Z=1, R \in \mathcal{W}\big\}
+\equiv \EE \big\{ \dt[\thetaInf]{Y_{C}}{ R } \big| R \in \mathcal{W} \big\},$$
+\textbf{does not} also implicitly define an average treatment effect,
+complier average treatment effect or any such quantity.
