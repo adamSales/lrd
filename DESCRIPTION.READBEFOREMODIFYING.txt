@@ -1,2 +1,0 @@
-- When the lrd version number is bumped in DESCRIPTION, the name of the package tarball
-as referenced in README.md needs to be updated correspondingly.  
