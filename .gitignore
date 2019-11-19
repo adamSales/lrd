@@ -36,8 +36,10 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 .Rproj.user
+*.Rproj
 
 data
+man
 
 *.r~
 *#
@@ -45,18 +47,20 @@ data
 extdata/death_file_JAMA.csv
 inst/cache/
 inst/figureOLD/
-inst/r1/cache/
-inst/r1/danResponse.pdf
-inst/r1/figure/dgms-1.tex
-inst/r1/figure/hs_gpaFig-1.png
-inst/r1/figure/hs_gpaFig-2.png
-inst/r1/figure/mariaFigs-1.pdf
-inst/r1/figure/mariaFigs-1.tex
-inst/r1/figure/weightNoDonutPlot-1.png
-inst/r1/lrd-r1.pdf
-inst/r1/lrd-sec2+3-r1a.tex
-inst/r1/mariaM.r
-inst/r1/revNotes.txt
-inst/r1/reviews/
+inst/jebs/cache/
+inst/jebs/*.pdf
+inst/jebs/figure/dgms-1.tex
+inst/jebs/figure/hs_gpaFig-1.png
+inst/jebs/figure/hs_gpaFig-2.png
+inst/jebs/figure/mariaFigs-1.pdf
+inst/jebs/figure/mariaFigs-1.tex
+inst/jebs/figure/weightNoDonutPlot-1.png
+inst/jebs/lrd-sec2+3-r1a.tex
+inst/jebs/mariaM.r
+inst/jebs/revNotes.txt
+inst/jebs/reviews/
+inst/talks/*.pdf
+inst/talks/*.tex
+inst/simstudy
 
 *.log
