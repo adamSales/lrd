@@ -27,6 +27,12 @@
 
 ##' Retrieve Lindo et al replication materials, including data
 ##'
+##' THIS ISN'T AUTOMATIC ANYMORE (as of 6/17/21)
+##' To get the data, download by-hand from ICPSR
+##' (requires free account)
+##' Now the function just sends you to the data url
+##'
+##'
 ##' Downloads the data from the AEJ website.
 ##'
 ##' The \code{whereto} parameter should be a character string not ending
@@ -41,9 +47,10 @@ fetchLSOdata <- function(whereto="extdata")
 {
     stopifnot(is.character(whereto), length(whereto)==1,
               substr(whereto, nchar(whereto), nchar(whereto))!="/")
-    temp <- tempfile()
-    download.file('https://www.aeaweb.org/aej/app/data/2008-0202_data.zip',temp)
-    unzip(temp,'AEJApp2008-0202_data/data_for_analysis.dta',
-          junkpaths=TRUE,exdir=whereto)
+    browseURL('https://www.openicpsr.org/openicpsr/project/113751/version/V1/view?path=/openicpsr/113751/fcr:versions/V1/AEJApp2008-0202_data/data_for_analysis.dta&type=file')
+    ## temp <- tempfile()
+    ## download.file('https://www.aeaweb.org/aej/app/data/2008-0202_data.zip',temp)
+    ## unzip(temp,'AEJApp2008-0202_data/data_for_analysis.dta',
+    ##       junkpaths=TRUE,exdir=whereto)
     paste0(whereto, "/data_for_analysis.dta")
     }
