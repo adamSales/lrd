@@ -6,7 +6,7 @@ tryNA <- function(expr,num=1){
     if(inherits(out,'try-error')) return(rep(NA,num))
     out
 }
-
+1
 ####################################
 #### Table 3 simulation (linear)
 ##############################
@@ -202,14 +202,14 @@ makeDataShapes <- function(n,shape,tdist=FALSE,tau=0,plt=FALSE){
 
 
 ikPoly <- function(dat,deg){
-    mod <- lm(Y~poly(R,deg)*Z,data=dat)
+    mod <- lm(Y~poly(R,deg,raw=TRUE)*Z,data=dat)
     Z.pos <- which(grepl('Z',names(coef(mod))) & !grepl(':',names(coef(mod))))
     setNames(c(p=summary(mod)$coef[Z.pos,4],est=coef(mod)[Z.pos]),
              paste0(c('ik.p.','ik.est.'),deg))
 }
 
 shPoly <- function(dat,deg){
-    rhs <- paste0('~poly(R,',deg,')+Z')
+    rhs <- paste0('~poly(R,',deg,',raw=TRUE)+Z')
     setNames(c(p=testSH(dat,1,rhs=rhs),est=HLsh(dat,1,rhs=rhs)),
             paste0(c('sh.p.','sh.est.'),deg))
 }
@@ -274,6 +274,3 @@ totalPolySim <- function(nreps=5000,cluster=NULL){
     }
     res
 }
-
-
-
