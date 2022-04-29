@@ -62,6 +62,7 @@ if(clust){
              library('nnet')
              source('R/functions.r')
              source('R/simCIhet.r')
+	     source('R/ddsandwich.R')
              })
 } else cl <- NULL
 
