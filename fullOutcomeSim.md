@@ -1,7 +1,7 @@
 ---
 title: "LRD paper Appendix D, Tables from simulations presented in lrd paper"
 author: "Adam C Sales & Ben B Hansen"
-date: "30 April, 2019"
+date: "29 April, 2022"
 output: html_document
 ---
 
@@ -46,7 +46,7 @@ nreps
 ```
 
 ```
-## [1] 0
+## [1] 5000
 ```
 
 ```r
@@ -69,6 +69,7 @@ if(clust){
              library('nnet')
              source('R/functions.r')
              source('R/simCIhet.r')
+	     source('R/ddsandwich.R')
              })
 } else cl <- NULL
 
@@ -130,28 +131,28 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
 <tbody>
   <tr>
    <td style="text-align:left;"> 1 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 4 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.01 </td>
    <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.01 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 7 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.01 </td>
@@ -160,48 +161,48 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 10 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> -0.01 </td>
-   <td style="text-align:right;"> 0.37 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.36 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 13 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.01 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 16 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> -0.01 </td>
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.37 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 19 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> -0.01 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.36 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.37 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 22 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -210,8 +211,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 25 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -220,8 +221,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 28 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -230,8 +231,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 31 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -240,8 +241,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 34 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -250,8 +251,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 37 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -260,8 +261,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 40 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -270,18 +271,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 43 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.37 </td>
+   <td style="text-align:right;"> 0.38 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 46 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -290,8 +291,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 49 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -300,8 +301,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 52 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -310,18 +311,18 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 55 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.00 </td>
    <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.37 </td>
+   <td style="text-align:right;"> 0.38 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 58 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -330,8 +331,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 61 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -340,8 +341,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 64 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -350,8 +351,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 67 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -360,8 +361,8 @@ kable(subset(allRes,meas=='Bias',select=-meas),caption=paste('Empirical bias for
   </tr>
   <tr>
    <td style="text-align:left;"> 70 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.00 </td>
@@ -397,78 +398,78 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
 <tbody>
   <tr>
    <td style="text-align:left;"> 2 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.50 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 5 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.49 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 8 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.92 </td>
    <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.65 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 11 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.66 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 14 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;"> 0.64 </td>
+   <td style="text-align:right;"> 0.63 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 17 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;"> 0.64 </td>
+   <td style="text-align:right;"> 0.93 </td>
+   <td style="text-align:right;"> 0.63 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 20 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.93 </td>
    <td style="text-align:right;"> 0.93 </td>
-   <td style="text-align:right;"> 0.76 </td>
+   <td style="text-align:right;"> 0.73 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 23 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.93 </td>
@@ -477,8 +478,8 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 26 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -487,18 +488,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 29 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 32 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -507,8 +508,8 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 35 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -517,58 +518,58 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 38 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.95 </td>
-   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.03 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 41 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.94 </td>
-   <td style="text-align:right;"> 0.04 </td>
+   <td style="text-align:right;"> 0.03 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 44 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.95 </td>
-   <td style="text-align:right;"> 0.13 </td>
+   <td style="text-align:right;"> 0.12 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 47 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.95 </td>
-   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.13 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 50 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.96 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 53 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -577,18 +578,18 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 56 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 0.94 </td>
+   <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 59 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -597,8 +598,8 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 62 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -607,8 +608,8 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 65 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -617,8 +618,8 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 68 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.95 </td>
@@ -627,11 +628,11 @@ kable(subset(allRes,meas=='Coverage',select=-meas),caption=paste('Empirical 95% 
   </tr>
   <tr>
    <td style="text-align:left;"> 71 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 0.95 </td>
+   <td style="text-align:right;"> 0.94 </td>
    <td style="text-align:right;"> 0.95 </td>
    <td style="text-align:right;"> 0.00 </td>
   </tr>
@@ -664,78 +665,78 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
 <tbody>
   <tr>
    <td style="text-align:left;"> 3 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 50 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 1.41 </td>
-   <td style="text-align:right;"> 1.66 </td>
+   <td style="text-align:right;"> 1.42 </td>
+   <td style="text-align:right;"> 1.67 </td>
    <td style="text-align:right;"> 0.74 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 6 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 1.40 </td>
-   <td style="text-align:right;"> 1.66 </td>
+   <td style="text-align:right;"> 1.41 </td>
+   <td style="text-align:right;"> 1.67 </td>
    <td style="text-align:right;"> 0.74 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 9 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:right;"> 1.82 </td>
+   <td style="text-align:right;"> 2.04 </td>
+   <td style="text-align:right;"> 0.95 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 12 </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> t </td>
+   <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 1.80 </td>
    <td style="text-align:right;"> 2.04 </td>
    <td style="text-align:right;"> 0.95 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> 12 </td>
-   
-   
-   <td style="text-align:left;"> 0.2 </td>
-   <td style="text-align:left;"> t </td>
-   <td style="text-align:right;"> 1.82 </td>
-   <td style="text-align:right;"> 2.05 </td>
-   <td style="text-align:right;"> 0.95 </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> 15 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
-   <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 1.75 </td>
-   <td style="text-align:right;"> 1.69 </td>
-   <td style="text-align:right;"> 0.91 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 18 </td>
-   
-   
-   <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 1.74 </td>
    <td style="text-align:right;"> 1.68 </td>
    <td style="text-align:right;"> 0.90 </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> 18 </td>
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
+   <td style="text-align:left;"> 0.2 </td>
+   <td style="text-align:left;"> none </td>
+   <td style="text-align:right;"> 1.75 </td>
+   <td style="text-align:right;"> 1.69 </td>
+   <td style="text-align:right;"> 0.91 </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> 21 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
-   <td style="text-align:right;"> 2.11 </td>
-   <td style="text-align:right;"> 2.05 </td>
+   <td style="text-align:right;"> 2.12 </td>
+   <td style="text-align:right;"> 2.06 </td>
    <td style="text-align:right;"> 1.10 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 24 </td>
-   
-   
+   <td style="text-align:left;"> 50 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 2.11 </td>
@@ -744,8 +745,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 27 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 250 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.57 </td>
@@ -754,18 +755,18 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 30 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.57 </td>
    <td style="text-align:right;"> 0.74 </td>
-   <td style="text-align:right;"> 0.30 </td>
+   <td style="text-align:right;"> 0.29 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 33 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.73 </td>
@@ -774,8 +775,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 36 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.73 </td>
@@ -784,18 +785,18 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 39 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
-   <td style="text-align:right;"> 0.77 </td>
-   <td style="text-align:right;"> 0.75 </td>
+   <td style="text-align:right;"> 0.76 </td>
+   <td style="text-align:right;"> 0.74 </td>
    <td style="text-align:right;"> 0.39 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> 42 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.77 </td>
@@ -804,8 +805,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 45 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.93 </td>
@@ -814,8 +815,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 48 </td>
-   
-   
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.93 </td>
@@ -824,8 +825,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 51 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="8"> 2500 </td>
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> t </td>
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.17 </td>
@@ -834,8 +835,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 54 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.17 </td>
@@ -844,8 +845,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 57 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.22 </td>
@@ -854,8 +855,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 60 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> t </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> t </td>
    <td style="text-align:right;"> 0.22 </td>
@@ -864,8 +865,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 63 </td>
-   
-   <td style="text-align:left;vertical-align: middle !important;" rowspan="4"> norm </td>
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.24 </td>
@@ -874,8 +875,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 66 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> none </td>
    <td style="text-align:right;"> 0.24 </td>
@@ -884,8 +885,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 69 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.29 </td>
@@ -894,8 +895,8 @@ kable(subset(allRes,meas=='Width',select=-meas),caption=paste('Empirical 95% con
   </tr>
   <tr>
    <td style="text-align:left;"> 72 </td>
-   
-   
+   <td style="text-align:left;"> 2500 </td>
+   <td style="text-align:left;"> norm </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> norm </td>
    <td style="text-align:right;"> 0.29 </td>
@@ -916,7 +917,7 @@ nreps
 ```
 
 ```
-## [1] 0
+## [1] 5000
 ```
 
 ```r
@@ -962,13 +963,13 @@ kable(tab,format='html',caption='Full results for polynomial simulation',digits=
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>Full results for polynomial simulation</caption>
  <thead>
-  <tr>
-<th style="border-bottom:hidden" colspan="1"></th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Limitless</div></th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">OLS</div></th>
-<th style="border-bottom:hidden; padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Loc. Lin.</div></th>
-</tr>
 <tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Limitless</div></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="5"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">OLS</div></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">Loc. Lin.</div></th>
+</tr>
+  <tr>
    <th style="text-align:left;">   </th>
    <th style="text-align:right;"> deg=1 </th>
    <th style="text-align:right;"> deg=2 </th>
@@ -986,132 +987,132 @@ kable(tab,format='html',caption='Full results for polynomial simulation',digits=
 <tbody>
   <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>linear</strong></td></tr>
 <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> bias </td>
    <td style="text-align:right;"> 0.01 </td>
-   <td style="text-align:right;"> 0.02 </td>
-   <td style="text-align:right;"> 0.07 </td>
-   <td style="text-align:right;"> 0.07 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
-   <td style="text-align:right;"> 0.02 </td>
-   <td style="text-align:right;"> 0.25 </td>
-   <td style="text-align:right;"> 0.38 </td>
-   <td style="text-align:right;"> 0.53 </td>
-   <td style="text-align:right;border-right:1px solid;"> -6.66 </td>
-   <td style="text-align:right;"> 0.08 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.01 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.01 </td>
+   <td style="text-align:right;"> 0.01 </td>
   </tr>
   <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.29 </td>
-   <td style="text-align:right;"> 0.29 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.34 </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.23 </td>
+   <td style="text-align:right;"> 0.30 </td>
    <td style="text-align:right;"> 0.31 </td>
-   <td style="text-align:right;"> 1.18 </td>
-   <td style="text-align:right;"> 4.56 </td>
-   <td style="text-align:right;"> 21.69 </td>
-   <td style="text-align:right;border-right:1px solid;"> 104.06 </td>
-   <td style="text-align:right;"> 0.49 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.37 </td>
+   <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;"> 0.47 </td>
+   <td style="text-align:right;"> 0.62 </td>
+   <td style="text-align:right;"> 0.79 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.97 </td>
+   <td style="text-align:right;"> 0.48 </td>
   </tr>
   <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.04 </td>
-   <td style="text-align:right;"> 0.04 </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
    <td style="text-align:right;"> 0.05 </td>
    <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.03 </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;"> 0.04 </td>
-   <td style="text-align:right;"> 0.07 </td>
    <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
    <td style="text-align:right;"> 0.07 </td>
   </tr>
   <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>antiSym</strong></td></tr>
 <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
-   <td style="text-align:right;"> -0.62 </td>
-   <td style="text-align:right;"> -0.62 </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> bias </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> -0.02 </td>
+   <td style="text-align:right;"> -0.02 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.13 </td>
+   <td style="text-align:right;"> -0.63 </td>
+   <td style="text-align:right;"> 0.16 </td>
+   <td style="text-align:right;"> 0.15 </td>
+   <td style="text-align:right;"> -0.09 </td>
+   <td style="text-align:right;border-right:1px solid;"> -0.09 </td>
    <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.18 </td>
-   <td style="text-align:right;"> -0.60 </td>
-   <td style="text-align:right;"> 1.81 </td>
-   <td style="text-align:right;"> 2.26 </td>
-   <td style="text-align:right;"> -10.01 </td>
-   <td style="text-align:right;border-right:1px solid;"> -7.74 </td>
-   <td style="text-align:right;"> 0.06 </td>
   </tr>
   <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 0.66 </td>
-   <td style="text-align:right;"> 0.66 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;"> 0.30 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.39 </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> RMSE </td>
    <td style="text-align:right;"> 0.67 </td>
-   <td style="text-align:right;"> 2.10 </td>
-   <td style="text-align:right;"> 4.55 </td>
-   <td style="text-align:right;"> 22.54 </td>
-   <td style="text-align:right;border-right:1px solid;"> 98.41 </td>
-   <td style="text-align:right;"> 0.48 </td>
+   <td style="text-align:right;"> 0.67 </td>
+   <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;"> 0.31 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.39 </td>
+   <td style="text-align:right;"> 0.70 </td>
+   <td style="text-align:right;"> 0.51 </td>
+   <td style="text-align:right;"> 0.65 </td>
+   <td style="text-align:right;"> 0.81 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.98 </td>
+   <td style="text-align:right;"> 0.51 </td>
   </tr>
   <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
-   <td style="text-align:right;"> 0.80 </td>
-   <td style="text-align:right;"> 0.81 </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:right;"> 0.79 </td>
+   <td style="text-align:right;"> 0.79 </td>
    <td style="text-align:right;"> 0.05 </td>
-   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.06 </td>
    <td style="text-align:right;border-right:1px solid;"> 0.06 </td>
-   <td style="text-align:right;"> 0.47 </td>
-   <td style="text-align:right;"> 0.45 </td>
-   <td style="text-align:right;"> 0.04 </td>
+   <td style="text-align:right;"> 0.54 </td>
+   <td style="text-align:right;"> 0.07 </td>
    <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.04 </td>
-   <td style="text-align:right;"> 0.06 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.07 </td>
   </tr>
   <tr grouplength="3"><td colspan="12" style="border-bottom: 1px solid;"><strong>sine</strong></td></tr>
 <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> bias </td>
-   <td style="text-align:right;"> 1.13 </td>
-   <td style="text-align:right;"> 1.13 </td>
-   <td style="text-align:right;"> 0.15 </td>
-   <td style="text-align:right;"> 0.15 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.00 </td>
-   <td style="text-align:right;"> 1.12 </td>
-   <td style="text-align:right;"> -2.59 </td>
-   <td style="text-align:right;"> -2.27 </td>
-   <td style="text-align:right;"> 3.77 </td>
-   <td style="text-align:right;border-right:1px solid;"> 9.05 </td>
-   <td style="text-align:right;"> 0.06 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> RMSE </td>
-   <td style="text-align:right;"> 1.15 </td>
-   <td style="text-align:right;"> 1.15 </td>
-   <td style="text-align:right;"> 0.34 </td>
-   <td style="text-align:right;"> 0.34 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.36 </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> bias </td>
    <td style="text-align:right;"> 1.16 </td>
-   <td style="text-align:right;"> 2.83 </td>
-   <td style="text-align:right;"> 5.38 </td>
-   <td style="text-align:right;"> 23.77 </td>
-   <td style="text-align:right;border-right:1px solid;"> 96.79 </td>
-   <td style="text-align:right;"> 0.61 </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;"> 0.17 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.01 </td>
+   <td style="text-align:right;"> 1.16 </td>
+   <td style="text-align:right;"> -0.11 </td>
+   <td style="text-align:right;"> -0.09 </td>
+   <td style="text-align:right;"> -0.01 </td>
+   <td style="text-align:right;border-right:1px solid;"> -0.01 </td>
+   <td style="text-align:right;"> 0.06 </td>
   </tr>
   <tr>
-   <td style="text-align:left; padding-left: 2em;" indentlevel="1"> level </td>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> RMSE </td>
+   <td style="text-align:right;"> 1.19 </td>
+   <td style="text-align:right;"> 1.19 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;"> 0.35 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.36 </td>
+   <td style="text-align:right;"> 1.20 </td>
+   <td style="text-align:right;"> 0.47 </td>
+   <td style="text-align:right;"> 0.63 </td>
+   <td style="text-align:right;"> 0.78 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.95 </td>
+   <td style="text-align:right;"> 0.53 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;padding-left: 2em;" indentlevel="1"> level </td>
    <td style="text-align:right;"> 1.00 </td>
    <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;"> 0.06 </td>
+   <td style="text-align:right;"> 0.10 </td>
+   <td style="text-align:right;"> 0.10 </td>
    <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
-   <td style="text-align:right;"> 0.94 </td>
-   <td style="text-align:right;"> 0.64 </td>
-   <td style="text-align:right;"> 0.11 </td>
+   <td style="text-align:right;"> 0.96 </td>
    <td style="text-align:right;"> 0.06 </td>
-   <td style="text-align:right;border-right:1px solid;"> 0.03 </td>
-   <td style="text-align:right;"> 0.12 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;"> 0.05 </td>
+   <td style="text-align:right;border-right:1px solid;"> 0.05 </td>
+   <td style="text-align:right;"> 0.08 </td>
   </tr>
 </tbody>
 </table>
@@ -1128,49 +1129,42 @@ sessionInfo()
 ```
 
 ```
-## R version 3.4.4 (2018-03-15)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 7 x64 (build 7601) Service Pack 1
+## R version 4.1.2 (2021-11-01)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.3 LTS
 ## 
 ## Matrix products: default
+## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
+## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] nnet_7.3-12        RItools_0.2-0.9001 SparseM_1.77      
-##  [4] kableExtra_1.0.1   mgcv_1.8-27        nlme_3.1-131.1    
-##  [7] rdd_0.57           Formula_1.2-1      AER_1.2-4         
-## [10] survival_2.41-3    car_2.1-3          lmtest_0.9-34     
-## [13] zoo_1.7-13         sandwich_2.4-0     robustbase_0.93-0 
-## [16] xtable_1.8-2       ggplot2_2.2.1      rmarkdown_1.12    
-## [19] knitr_1.22        
+##  [1] nnet_7.3-16       RItools_0.1-18    SparseM_1.81      rdd_0.57         
+##  [5] Formula_1.2-4     AER_1.2-9         survival_3.2-13   car_3.0-12       
+##  [9] carData_3.0-5     lmtest_0.9-40     zoo_1.8-9         sandwich_3.0-1   
+## [13] robustbase_0.95-0 kableExtra_1.3.4  knitr_1.33       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.1         lattice_0.20-35    digest_0.6.10     
-##  [4] R6_2.4.0           plyr_1.8.4         MatrixModels_0.4-1
-##  [7] evaluate_0.13      httr_1.4.0         highr_0.6         
-## [10] pillar_1.3.1       rlang_0.3.2        lazyeval_0.2.0    
-## [13] svd_0.4.1          minqa_1.2.4        rstudioapi_0.10   
-## [16] nloptr_1.0.4       Matrix_1.2-12      labeling_0.3      
-## [19] splines_3.4.4      lme4_1.1-12        webshot_0.5.1     
-## [22] readr_1.1.1        stringr_1.2.0      selectr_0.3-1     
-## [25] foreign_0.8-69     munsell_0.4.3      compiler_3.4.4    
-## [28] xfun_0.5           pkgconfig_2.0.2    htmltools_0.3.5   
-## [31] tibble_2.1.1       codetools_0.2-15   XML_3.98-1.5      
-## [34] viridisLite_0.2.0  crayon_1.3.4       MASS_7.3-49       
-## [37] grid_3.4.4         gtable_0.2.0       magrittr_1.5      
-## [40] scales_0.4.1       stringi_1.1.1      xml2_1.1.1        
-## [43] tools_3.4.4        glue_1.3.1         DEoptimR_1.0-8    
-## [46] hms_0.3            lrd_0.0.2.9000     abind_1.4-5       
-## [49] pbkrtest_0.4-6     yaml_2.2.0         colorspace_1.2-6  
-## [52] rvest_0.3.2        quantreg_5.29
+##  [1] xfun_0.24         splines_4.1.2     lattice_0.20-45   colorspace_2.0-2 
+##  [5] vctrs_0.3.8       htmltools_0.5.1.1 viridisLite_0.4.0 utf8_1.2.1       
+##  [9] rlang_0.4.11      pillar_1.6.1      glue_1.4.2        lifecycle_1.0.0  
+## [13] stringr_1.4.0     munsell_0.5.0     rvest_1.0.0       svd_0.5.1        
+## [17] evaluate_0.14     fansi_0.5.0       DEoptimR_1.0-11   highr_0.9        
+## [21] xtable_1.8-4      scales_1.1.1      webshot_0.5.3     abind_1.4-5      
+## [25] systemfonts_1.0.4 digest_0.6.27     stringi_1.6.2     grid_4.1.2       
+## [29] tools_4.1.2       magrittr_2.0.1    tibble_3.1.2      pkgconfig_2.0.3  
+## [33] crayon_1.4.1      ellipsis_0.3.2    Matrix_1.3-4      xml2_1.3.2       
+## [37] rmarkdown_2.9     svglite_2.1.0     httr_1.4.2        rstudioapi_0.13  
+## [41] R6_2.5.0          compiler_4.1.2
 ```

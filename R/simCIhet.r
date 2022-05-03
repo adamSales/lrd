@@ -1,5 +1,5 @@
 library(knitr)
-library(kableExtra)
+#library(kableExtra)
 
 tryNA <- function(expr,num=1){
     out <- try(expr,silent=TRUE)
